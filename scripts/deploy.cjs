@@ -2,7 +2,7 @@
  * Deploy the panel by pulling from git. The panel checkout mirrors origin/main;
  * nothing is uploaded from the local machine.
  *
- *   $env:PANEL_HOST="193.5.64.172"; $env:PANEL_PASS="..."
+ *   $env:PANEL_HOST="93.95.228.175"; $env:PANEL_PASS="..."
  *   node scripts/deploy.cjs
  *   node scripts/deploy.cjs --branch=main --force
  *
