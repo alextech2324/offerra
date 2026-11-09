@@ -17,10 +17,11 @@ use App\Services\DeployService;
 use App\Services\InfrastructureProvisioner;
 use App\Services\OfferAvailabilityProbe;
 use App\Services\OfferGenerator;
-use App\Services\OfferGscSubmitter;
 use App\Services\OfferGoogleIndexInspector;
+use App\Services\OfferGscSubmitter;
 use App\Services\OfferRestoreService;
 use App\Services\OfferTeardownService;
+use App\Services\OfferZipExporter;
 use App\Services\OriginEvacuationService;
 use App\Services\StaleDeadOfferService;
 use App\Services\TemplateCatalog;
@@ -32,6 +33,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class OfferController extends Controller
 {
@@ -452,7 +454,7 @@ class OfferController extends Controller
                 'template' => $request->string('template')->toString(),
                 'vitals_enabled' => $request->boolean('vitals_enabled'),
                 'from_search_team' => $request->boolean('from_search_team'),
-                                'infra_cloudflare_zone' => $request->boolean('infra_cloudflare_zone'),
+                'infra_cloudflare_zone' => $request->boolean('infra_cloudflare_zone'),
                 'infra_cloudflare_dns' => $request->boolean('infra_cloudflare_dns'),
                 'infra_dynadot_ns' => $request->boolean('infra_dynadot_ns'),
                 'infra_cloudflare_ssl' => $request->boolean('infra_cloudflare_ssl'),
@@ -474,9 +476,15 @@ class OfferController extends Controller
             $message .= ' · інфраструктура запущена у фоні';
         }
 
-        return redirect()
+        $redirect = redirect()
             ->route('offers.index')
             ->with('success', $message);
+
+        if ($request->boolean('download_zip') && $request->user()?->canDownloadOfferZip()) {
+            $redirect->with('zip_offer_id', $result['offer']->id);
+        }
+
+        return $redirect;
     }
 
     public function storeBulk(
@@ -494,7 +502,7 @@ class OfferController extends Controller
             'phone_countries' => $request->input('phone_countries', []),
             'vitals_enabled' => $request->boolean('vitals_enabled'),
             'from_search_team' => $request->boolean('from_search_team'),
-                        'infra_cloudflare_zone' => $request->boolean('infra_cloudflare_zone'),
+            'infra_cloudflare_zone' => $request->boolean('infra_cloudflare_zone'),
             'infra_cloudflare_dns' => $request->boolean('infra_cloudflare_dns'),
             'infra_dynadot_ns' => $request->boolean('infra_dynadot_ns'),
             'infra_cloudflare_ssl' => $request->boolean('infra_cloudflare_ssl'),
@@ -567,6 +575,27 @@ class OfferController extends Controller
         return redirect()
             ->route('offers.index')
             ->with($failed === [] ? 'success' : 'warning', implode(' · ', $parts));
+    }
+
+    public function downloadZip(Offer $offer, OfferZipExporter $exporter): BinaryFileResponse|RedirectResponse
+    {
+        $this->authorizeZipDownload();
+
+        $offer->loadMissing('user.settings');
+
+        try {
+            $built = $exporter->build($offer);
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['zip' => $e->getMessage()]);
+        }
+
+        return response()
+            ->download($built['path'], $built['filename'], [
+                'Content-Type' => 'application/zip',
+            ])
+            ->deleteFileAfterSend(true);
     }
 
     public function deploy(Offer $offer, DeployService $deploy): RedirectResponse
@@ -687,10 +716,12 @@ class OfferController extends Controller
                 if (! $gsc->canSubmit($offer)) {
                     $skipped++;
                     $failed[] = $offer->domain.': ще не готовий до GSC';
+
                     continue;
                 }
                 $gsc->queue($offer, force: true);
                 $queued++;
+
                 continue;
             }
 
@@ -699,6 +730,7 @@ class OfferController extends Controller
                     if (! $offer->user) {
                         $skipped++;
                         $failed[] = $offer->domain.': немає власника';
+
                         continue;
                     }
                     $deploy->enqueueDeploy($offer->user, $offer);
@@ -707,6 +739,7 @@ class OfferController extends Controller
                     $skipped++;
                     $failed[] = $offer->domain.': '.$e->getMessage();
                 }
+
                 continue;
             }
 
@@ -715,12 +748,14 @@ class OfferController extends Controller
                     if (str_starts_with($cloudflareTarget, 'spare:') && ! $authUser->isAdmin()) {
                         $skipped++;
                         $failed[] = $offer->domain.': запасний CF з пулу може перемикати лише адмін';
+
                         continue;
                     }
                     $settings = $offer->user?->settings;
                     if ($settings === null) {
                         $skipped++;
                         $failed[] = $offer->domain.': немає власника';
+
                         continue;
                     }
                     $resolved = $provisioner->resolveCloudflareSwitchTarget($settings, $cloudflareTarget);
@@ -741,6 +776,7 @@ class OfferController extends Controller
                             $skipped++;
                             $failed[] = $offer->domain.': вже на цьому Cloudflare';
                         }
+
                         continue;
                     }
 
@@ -750,6 +786,7 @@ class OfferController extends Controller
                     $skipped++;
                     $failed[] = $offer->domain.': '.$e->getMessage();
                 }
+
                 continue;
             }
 
@@ -1165,6 +1202,13 @@ class OfferController extends Controller
     private function authorizeArchive(): void
     {
         if (! auth()->user()?->canArchiveOffers()) {
+            abort(403);
+        }
+    }
+
+    private function authorizeZipDownload(): void
+    {
+        if (! auth()->user()?->canDownloadOfferZip()) {
             abort(403);
         }
     }

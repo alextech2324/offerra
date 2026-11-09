@@ -614,7 +614,9 @@ export default function OffersIndex({
     downCount = 0,
 }) {
     const { flash, errors, auth } = usePage().props;
+    const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
     const [deployingId, setDeployingId] = useState(null);
+    const [zippingId, setZippingId] = useState(null);
     const [provisioningId, setProvisioningId] = useState(null);
     const [indexingId, setIndexingId] = useState(null);
     const [gscSubmitId, setGscSubmitId] = useState(null);
@@ -727,6 +729,15 @@ export default function OffersIndex({
             clearWizardState();
         }
     }, [flash?.success]);
+
+    useEffect(() => {
+        const offerId = flash?.zip_offer_id;
+        if (!offerId || !canDownloadOfferZip) {
+            return;
+        }
+
+        window.location.assign(route('offers.download-zip', offerId));
+    }, [flash?.zip_offer_id, canDownloadOfferZip]);
 
     useEffect(() => {
         setBrandQuery(filters.brand ?? '');
@@ -844,6 +855,16 @@ export default function OffersIndex({
 
         return () => window.clearInterval(interval);
     }, [hasDnsPending]);
+
+    const downloadOfferZip = (offer) => {
+        if (!canDownloadOfferZip) {
+            return;
+        }
+
+        setZippingId(offer.id);
+        window.location.assign(route('offers.download-zip', offer.id));
+        window.setTimeout(() => setZippingId(null), 2500);
+    };
 
     const deployOffer = (offer) => {
         setDeployingId(offer.id);
@@ -1311,6 +1332,22 @@ export default function OffersIndex({
                         {provisioningId === offer.id ? '…' : 'Інфра'}
                     </button>
                 )}
+                {canDownloadOfferZip && (
+                    <button
+                        type="button"
+                        className="btn btn-ghost btn-sm"
+                        disabled={zippingId === offer.id}
+                        onClick={() => downloadOfferZip(offer)}
+                        title="Скачати зібраний бойовий ленд ZIP"
+                        aria-label={`Скачати ZIP ${offer.domain}`}
+                    >
+                        {zippingId === offer.id ? (
+                            <span className="btn-spinner" aria-hidden="true" />
+                        ) : (
+                            'ZIP'
+                        )}
+                    </button>
+                )}
                 {canDeployOffer(offer) ? (
                     <button
                         type="button"
@@ -1445,6 +1482,11 @@ export default function OffersIndex({
             {errors?.provision && (
                 <div className="card" style={{ marginBottom: '1rem', borderColor: '#f87171' }}>
                     <p className="card-desc" style={{ color: '#f87171' }}>{errors.provision}</p>
+                </div>
+            )}
+            {errors?.zip && (
+                <div className="card" style={{ marginBottom: '1rem', borderColor: '#f87171' }}>
+                    <p className="card-desc" style={{ color: '#f87171' }}>{errors.zip}</p>
                 </div>
             )}
             {(errors?.archive || errors?.delete) && (

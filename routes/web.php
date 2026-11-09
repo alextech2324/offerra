@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BackupServerController;
+use App\Http\Controllers\CloudflareAccountController;
 use App\Http\Controllers\CrmLeadController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DomainBalanceController;
@@ -10,8 +12,6 @@ use App\Http\Controllers\GeoMinDepositController;
 use App\Http\Controllers\MirrorDomainController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferStatsController;
-use App\Http\Controllers\BackupServerController;
-use App\Http\Controllers\CloudflareAccountController;
 use App\Http\Controllers\OriginServerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
@@ -35,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/offers/bulk-action', [OfferController::class, 'bulkAction'])->name('offers.bulk-action');
     Route::post('/offers/scan-availability', [OfferController::class, 'scanAvailability'])->name('offers.scan-availability');
     Route::post('/offers/{offer}/deploy', [OfferController::class, 'deploy'])->name('offers.deploy');
+    Route::get('/offers/{offer}/zip', [OfferController::class, 'downloadZip'])->name('offers.download-zip');
     Route::post('/offers/{offer}/archive', [OfferController::class, 'archive'])->name('offers.archive');
     Route::delete('/offers/{offer}', [OfferController::class, 'destroy'])->name('offers.destroy');
     Route::post('/offers/{offer}/archive/retry', [OfferController::class, 'retryArchive'])->name('offers.archive.retry');

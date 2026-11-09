@@ -91,6 +91,11 @@ class User extends Authenticatable
         return $this->isAdmin();
     }
 
+    public function canDownloadOfferZip(): bool
+    {
+        return $this->isAdmin();
+    }
+
     public function twoFactorEnabled(): bool
     {
         return (bool) $this->two_factor_enabled;

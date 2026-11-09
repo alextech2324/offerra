@@ -72,6 +72,7 @@ class StoreOfferRequest extends FormRequest
             'infra_cloudflare_ssl' => ['boolean'],
             'infra_cloudflare_https' => ['boolean'],
             'infra_cloudflare_www_redirect' => ['boolean'],
+            'download_zip' => ['boolean'],
         ];
     }
 

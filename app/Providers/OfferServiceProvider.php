@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\CloudflareClient;
 use App\Services\DeployConnection;
 use App\Services\DeployService;
-use App\Services\CloudflareClient;
 use App\Services\DynadotClient;
 use App\Services\GoogleSearchConsoleClient;
 use App\Services\OfferConfigBuilder;
@@ -13,6 +13,7 @@ use App\Services\OfferScanner;
 use App\Services\OfferStatusReconciler;
 use App\Services\OfferTeardownService;
 use App\Services\OfferVerificationFileService;
+use App\Services\OfferZipExporter;
 use App\Services\OriginHostService;
 use App\Services\OriginPool;
 use App\Services\TemplateCatalog;
@@ -56,6 +57,13 @@ class OfferServiceProvider extends ServiceProvider
                 $app->make(OfferVerificationFileService::class),
                 config('offerra.offers_path'),
                 config('offerra.templates_path'),
+            );
+        });
+
+        $this->app->singleton(OfferZipExporter::class, function ($app) {
+            return new OfferZipExporter(
+                $app->make(OfferGenerator::class),
+                config('offerra.offers_path'),
             );
         });
 

@@ -313,7 +313,8 @@ export default function OffersCreate({
     initialLang = null,
     initialFromSearch = false,
 }) {
-    const { errors, panel } = usePage().props;
+    const { errors, panel, auth } = usePage().props;
+    const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
     const geoMinDeposits = panel?.geo_min_deposits || {};
     const defaults = useMemo(
         () => buildDefaults(templates, initialFromSearch),
@@ -342,6 +343,7 @@ export default function OffersCreate({
     const [domainPurchasedViaPanel, setDomainPurchasedViaPanel] = useState(initial.domainPurchasedViaPanel);
     const [bulkItems, setBulkItems] = useState(initial.bulkItems);
     const [bulkSubmitting, setBulkSubmitting] = useState(false);
+    const [generating, setGenerating] = useState(false);
     const [brandLookup, setBrandLookup] = useState(null);
     const [brandLookupLoading, setBrandLookupLoading] = useState(false);
     const brandLookupSeq = useRef(0);
@@ -595,16 +597,16 @@ export default function OffersCreate({
     }, [bulkItems, isBulkMode, setData]);
 
     useEffect(() => {
-        if (skipPersist.current || processing || bulkSubmitting) {
+        if (skipPersist.current || processing || generating || bulkSubmitting) {
             return;
         }
 
         saveWizardState(step, data, { bulkItems, domainPurchasedViaPanel });
-    }, [step, data, bulkItems, domainPurchasedViaPanel, processing, bulkSubmitting]);
+    }, [step, data, bulkItems, domainPurchasedViaPanel, processing, generating, bulkSubmitting]);
 
     useEffect(() => {
         const flushDraft = () => {
-            if (skipPersist.current || processing || bulkSubmitting) {
+            if (skipPersist.current || processing || generating || bulkSubmitting) {
                 return;
             }
 
@@ -624,7 +626,7 @@ export default function OffersCreate({
             window.removeEventListener('pagehide', flushDraft);
             document.removeEventListener('visibilitychange', onVisibility);
         };
-    }, [step, data, bulkItems, domainPurchasedViaPanel, processing, bulkSubmitting]);
+    }, [step, data, bulkItems, domainPurchasedViaPanel, processing, generating, bulkSubmitting]);
 
     const discardDraft = () => {
         if (!draftHasProgress({ step, data, bulkItems, domainPurchasedViaPanel })) {
@@ -1417,7 +1419,7 @@ export default function OffersCreate({
         }
     }, [step, firstSubmitError, generateBlockReason]);
 
-    const generate = () => {
+    const generate = (downloadZip = false) => {
         if (generateBlockReason) {
             return;
         }
@@ -1429,6 +1431,7 @@ export default function OffersCreate({
             reset();
             setBulkItems([]);
             setBulkSubmitting(false);
+            setGenerating(false);
             setDomainPurchasedViaPanel(false);
         };
 
@@ -1464,27 +1467,35 @@ export default function OffersCreate({
             return;
         }
 
+        setGenerating(true);
+
         if (bulkItems.length === 1) {
             router.post(route('offers.store'), {
                 ...data,
                 domain: bulkItems[0].domain,
                 template: bulkItems[0].template || data.template,
+                download_zip: downloadZip,
             }, {
                 preserveScroll: true,
                 onSuccess,
                 onError: () => {
                     setStep(steps.length - 1);
                 },
+                onFinish: () => setGenerating(false),
             });
             return;
         }
 
-        post(route('offers.store'), {
+        router.post(route('offers.store'), {
+            ...data,
+            download_zip: downloadZip,
+        }, {
             preserveScroll: true,
             onSuccess,
             onError: () => {
                 setStep(steps.length - 1);
             },
+            onFinish: () => setGenerating(false),
         });
     };
 
@@ -2329,19 +2340,32 @@ export default function OffersCreate({
                         Далі →
                     </button>
                 ) : (
+                    <>
                     <button
                         type="button"
                         className="btn btn-primary"
-                        disabled={processing || bulkSubmitting || Boolean(generateBlockReason)}
-                        onClick={generate}
+                        disabled={processing || generating || bulkSubmitting || Boolean(generateBlockReason)}
+                        onClick={() => generate(false)}
                         title={generateBlockReason ?? undefined}
                     >
-                        {processing || bulkSubmitting
+                        {processing || generating || bulkSubmitting
                             ? 'Генерація…'
                             : isBulkMode
                                 ? `Згенерувати ${bulkItems.length} оферів`
                                 : 'Згенерувати оффер'}
                     </button>
+                    {canDownloadOfferZip && !isBulkMode && (
+                        <button
+                            type="button"
+                            className="btn btn-ghost"
+                            disabled={processing || generating || bulkSubmitting || Boolean(generateBlockReason)}
+                            onClick={() => generate(true)}
+                            title={generateBlockReason ?? 'Зібрати бойовий ленд і скачати ZIP. Origin не чіпає.'}
+                        >
+                            Згенерувати і скачати ZIP
+                        </button>
+                    )}
+                    </>
                 )}
             </div>
         </PanelLayout>
