@@ -54,6 +54,10 @@ git. The backup box only stores ciphertext. Restore: `scripts/panel-backup-resto
 
 ## Origin servers
 
+Never SSH/SFTP from this machine to an origin IP — not even a new empty VPS.
+Connect only to the panel (`PANEL_HOST`). From there, jump with `OriginSsh` or
+`sshpass`. Origins must see the panel address, not the agent PC.
+
 Servers belong to the admin, not to user settings. `OriginPool` assigns each new
 offer to the `pool` server with the fewest other offers of the same brand, then
 the least total load, so a multi-domain funnel is not stacked on one IP; `spare`
