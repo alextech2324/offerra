@@ -180,7 +180,86 @@ class TemplateCatalog
             return $templatePath;
         }
 
-        return $this->resolveSourcePath($templateId, $codes[0]);
+        $defaultLang = in_array('en', $codes, true) ? 'en' : $codes[0];
+
+        return $this->resolveSourcePath($templateId, $defaultLang);
+    }
+
+    /**
+     * Language packs often omit static/ and shared integration CSS.
+     * Preview URLs still request them from /preview/{id}/static/… — look in
+     * the template root, then langs/en, then any other lang pack that has the file.
+     */
+    public function resolvePreviewAsset(string $templateId, string $relativePath): ?string
+    {
+        $relativePath = str_replace('\\', '/', $relativePath);
+        $relativePath = ltrim($relativePath, '/');
+
+        if ($relativePath === '' || str_contains($relativePath, '..')) {
+            return null;
+        }
+
+        $templatePath = $this->templatePath($templateId);
+
+        if (! $templatePath) {
+            return null;
+        }
+
+        $root = realpath($templatePath);
+
+        if (! $root) {
+            return null;
+        }
+
+        $candidates = [$templatePath.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $relativePath)];
+
+        foreach ($this->previewAssetLangOrder($templateId) as $code) {
+            try {
+                $dir = $this->resolveSourcePath($templateId, $code);
+            } catch (InvalidArgumentException) {
+                continue;
+            }
+
+            $candidates[] = $dir.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $relativePath);
+        }
+
+        $seen = [];
+
+        foreach ($candidates as $candidate) {
+            if (isset($seen[$candidate])) {
+                continue;
+            }
+
+            $seen[$candidate] = true;
+            $real = realpath($candidate);
+
+            if ($real && is_file($real) && str_starts_with($real, $root)) {
+                return $real;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function previewAssetLangOrder(string $templateId): array
+    {
+        $codes = $this->languageCodesFor($templateId);
+        $ordered = [];
+
+        if (in_array('en', $codes, true)) {
+            $ordered[] = 'en';
+        }
+
+        foreach ($codes as $code) {
+            if ($code !== 'en') {
+                $ordered[] = $code;
+            }
+        }
+
+        return $ordered;
     }
 
     /**
