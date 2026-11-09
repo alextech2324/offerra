@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Kodėl mes ' . SITE_NAME;
-$page_description = Kodėl žmonės pasirenka pradėti nuo ' . SITE_NAME;
+$page_title = 'Kodėl mes ' . SITE_NAME;
+$page_description = 'Kodėl žmonės pasirenka pradėti nuo ' . SITE_NAME;
 $page_canonical = page_url("offer.php");
 $active_page = "offer";
 require __DIR__ . '/includes/head.php';
@@ -39,7 +39,7 @@ require __DIR__ . '/includes/header.php';
 <section class="onxr8te" data-u="sec">
   <div class="ggh3sm">
     <div class="fduhcv"><b>01</b><i></i></div>
-    <h2>Tai, ką jūs gaunate, negauna „pasidaryk pats“ sąranka</h2>
+    <h2>Tai, ką jūs gaunate, negauna 'pasidaryk pats' sąranka</h2>
     <ul class="skvsaz4">
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b style="color:var(--heading)">Po sekundės vykdymas kiekvienoje prijungtoje rinkoje.</b> <?= e(SITE_NAME) ?>palaiko nuolatinius mažos delsos API ryšius su kiekvienu palaikomu mainu. Kai modelis generuoja signalą, užsakymas išsiunčiamas, užpildomas ir registruojamas prietaisų skydelyje prieš kitą pažymint.</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b style="color:var(--heading)">Jis veikia 24 valandas per parą, 7 dienas per savaitę, per kiekvieną rinkos sesiją.</b> Kripto nerimsta ir nesiilsi<?= e(SITE_NAME) ?>. Variklis nuolat analizuoja poras savaitgaliais ir švenčių dienomis, kad nepraleistumėte progos.</span></li>

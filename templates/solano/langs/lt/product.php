@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = SITE_NAME . ' ᐉ Kaip tai veikia – nuo ​​pirmojo paspaudimo iki pirmosios pozicijos;
-$page_description = „Visa kelionė su ' . SITE_NAME . ' nuo pradžios iki pabaigos.“;
+$page_title = SITE_NAME . ' ᐉ Kaip tai veikia – nuo ​​pirmojo paspaudimo iki pirmosios pozicijos';
+$page_description = 'Visa kelionė su ' . SITE_NAME . ' nuo pradžios iki pabaigos.';
 $page_canonical = page_url("product.php");
 $active_page = "product";
 require __DIR__ . '/includes/head.php';

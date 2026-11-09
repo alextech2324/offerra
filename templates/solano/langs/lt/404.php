@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Puslapis nerastas ᐉ ' . SITE_NAME;
-$page_description = „Puslapis nerastas – ' . SITE_NAME;
+$page_title = 'Puslapis nerastas ᐉ ' . SITE_NAME;
+$page_description = 'Puslapis nerastas – ' . SITE_NAME;
 $page_canonical = page_url("404.php");
 $active_page = "404";
 require __DIR__ . '/includes/head.php';

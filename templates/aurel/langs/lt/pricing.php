@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Kainodara ' . SITE_NAME;
-$page_description = „Paprasta, skaidri kainodara – ' . SITE_NAME;
+$page_title = 'Kainodara ' . SITE_NAME;
+$page_description = 'Paprasta, skaidri kainodara – ' . SITE_NAME;
 $page_canonical = page_url("pricing.php");
 $active_page = "pricing";
 require __DIR__ . '/includes/head.php';

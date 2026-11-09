@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
 
-$page_title = 'Susisiekite su palaikymo tarnyba | Pagalba iš'. SITE_NAME . ' Komanda;
+$page_title = 'Susisiekite su palaikymo tarnyba | Pagalba iš'. SITE_NAME . ' Komanda';
 $page_description = 'Susisiekite su' . SITE_NAME . 'palaikymo komanda, kuri padės su sąskaitomis, indėliais, išėmimais ir platformos užklausomis.';
 $page_canonical = page_url("contacts.php");
 $active_page = "contacts";
@@ -30,7 +30,7 @@ require_once __DIR__ . '/includes/header.php';
 <h1>Susisiekite su mumis</h1>
   <p class="lead max-w-3xl justify-self-center text-center md:text-left"><?= e(SITE_NAME) ?> komanda palaiko užklausas apie sąskaitas, finansavimą, išėmimus, diagramas ir AI įrankius. Parama teikiama oficialiais kanalais – jokių asmeninių investavimo rekomendacijų ar pelno garantijų.</p>
 <div class="grid gap-4 text-center md:gap-6 md:text-left max-w-3xl justify-self-center">
-  <h3>Jei reikia daugiau pagalbos, atsiųskite mums el. laišką</h3>  <p>Prieš susisiekdami su mumis, paruoškite paskyros el. pašto adresą, užklausos temą (registracija, mokėjimas, techninė) ir visas susijusias ekrano kopijas. Pateikę išsamią informaciją padėsime greičiau išspręsti jūsų problemą ir sumažins važiavimo pirmyn ir atgal skaičių.</p>  <p>Užklausoms apie aktyvius sandorius arba laukiančius išėmimus teikiama pirmenybė, jei įmanoma. Jūsų saugumo sumetimais mes niekada neprašome įvesti viso slaptažodžio ar 2FA kodų nepageidaujamuose el. laiškuose.</p>  <p>Jei dar neužsiregistravote, prisiregistravimo puslapyje per kelias minutes galite atsidaryti paskyrą, tada grįžti čia, jei turite klausimų. Be to, informacijos apie mokesčius, saugumą ir galimas rinkas rasite DUK.</p>  <p>Įtraukite aiškią temos eilutę (pvz., „Laukiama išėmimo“, „2FA problema“, „Mokesčio klausimas“). Į daugumą užklausų pirmasis atsakymas gaunamas per kelias valandas; didelės apimties arba mokėjimų čekiai gali uždelsti atsakymą, tačiau naujinimai bus pateikti.</p></div>
+  <h3>Jei reikia daugiau pagalbos, atsiųskite mums el. laišką</h3>  <p>Prieš susisiekdami su mumis, paruoškite paskyros el. pašto adresą, užklausos temą (registracija, mokėjimas, techninė) ir visas susijusias ekrano kopijas. Pateikę išsamią informaciją padėsime greičiau išspręsti jūsų problemą ir sumažins važiavimo pirmyn ir atgal skaičių.</p>  <p>Užklausoms apie aktyvius sandorius arba laukiančius išėmimus teikiama pirmenybė, jei įmanoma. Jūsų saugumo sumetimais mes niekada neprašome įvesti viso slaptažodžio ar 2FA kodų nepageidaujamuose el. laiškuose.</p>  <p>Jei dar neužsiregistravote, prisiregistravimo puslapyje per kelias minutes galite atsidaryti paskyrą, tada grįžti čia, jei turite klausimų. Be to, informacijos apie mokesčius, saugumą ir galimas rinkas rasite DUK.</p>  <p>Įtraukite aiškią temos eilutę (pvz., 'Laukiama išėmimo', '2FA problema', 'Mokesčio klausimas'). Į daugumą užklausų pirmasis atsakymas gaunamas per kelias valandas; didelės apimties arba mokėjimų čekiai gali uždelsti atsakymą, tačiau naujinimai bus pateikti.</p></div>
             <a class="h3 inline-flex flex-wrap items-center justify-center gap-4 justify-self-center text-center" href="mailto:<?= e(SUPPORT_EMAIL) ?>">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

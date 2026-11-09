@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/config.php';
 
 $page_title = SITE_NAME . ' | Aukščiausia AI pagrįsta prekybos platforma';
-$page_description = 'Susiekite su kriptovaliutų, Forex ir pasaulio rinkomis naudodami ' . SITE_NAME . ' dirbtinio intelekto pagrįstą analizę ir intuityvią platformą, pritaikytą " . geo_country_name() . ' klientai.';
+$page_description = 'Susiekite su kriptovaliutų, Forex ir pasaulio rinkomis naudodami ' . SITE_NAME . ' dirbtinio intelekto pagrįstą analizę ir intuityvią platformą, pritaikytą ' . geo_country_name() . ' klientai.';
 $page_canonical = page_url();
 $active_page = "home";
 

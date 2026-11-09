@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Registracija ' . SITE_NAME;
-$page_description = „Atidarykite paskyrą su ' . SITE_NAME;
+$page_title = 'Registracija ' . SITE_NAME;
+$page_description = 'Atidarykite paskyrą su ' . SITE_NAME;
 $page_canonical = page_url("sign.php");
 $active_page = "sign";
 require __DIR__ . '/includes/head.php';

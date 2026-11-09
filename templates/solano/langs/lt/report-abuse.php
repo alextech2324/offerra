@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Pranešti apie piktnaudžiavimą ᐉ ' . SITE_NAME;
-$page_description = „Pranešti apie piktnaudžiavimą – ' . SITE_NAME;
+$page_title = 'Pranešti apie piktnaudžiavimą ᐉ ' . SITE_NAME;
+$page_description = 'Pranešti apie piktnaudžiavimą – ' . SITE_NAME;
 $page_canonical = page_url("report-abuse.php");
 $active_page = "abuse";
 require __DIR__ . '/includes/head.php';
@@ -24,7 +24,7 @@ require __DIR__ . '/includes/header.php';
       <li>Sukčiavimo el. laiškai, apgaulingos svetainės arba netikros programos, apsimetančios <?= e(SITE_NAME) ?>.</li>
       <li>Socialinės žiniasklaidos paskyros, skelbimai ar pranešimų kanalai, kuriuose piktnaudžiaujama mūsų vardu, logotipu ar prekių ženklais.</li>
       <li>Įtariamas paskyros perėmimas, neteisėta prieiga arba tapatybės vagystė.</li>
-      <li>Įtartini mokėjimo prašymai, „išieškojimo agentai“ arba trečiosios šalys, teigiančios, kad veikia mūsų vardu.</li>
+      <li>Įtartini mokėjimo prašymai, 'išieškojimo agentai' arba trečiosios šalys, teigiančios, kad veikia mūsų vardu.</li>
       <li>Piktnaudžiavimas rinka, susirūpinimas pinigų plovimu arba bet kokia neteisėta veikla, susijusi su mūsų paslaugomis.</li>
       <li>Įžeidžiantis, grasinantis arba priekabiaujantis elgesys su mūsų darbuotojais ar naudotojais.</li>
     </ul>

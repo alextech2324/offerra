@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „DUK ' . SITE_NAME;
-$page_description = „Klausimai, atsakyti – ' . SITE_NAME;
+$page_title = 'DUK ' . SITE_NAME;
+$page_description = 'Klausimai, atsakyti – ' . SITE_NAME;
 $page_canonical = page_url("faq.php");
 $active_page = "faq";
 require __DIR__ . '/includes/head.php';

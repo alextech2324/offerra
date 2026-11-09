@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Rizikos atskleidimas ᐉ ' . SITE_NAME;
-$page_description = „Rizikos atskleidimas – ' . SITE_NAME;
+$page_title = 'Rizikos atskleidimas ᐉ ' . SITE_NAME;
+$page_description = 'Rizikos atskleidimas – ' . SITE_NAME;
 $page_canonical = page_url("risk-disclosure.php");
 $active_page = "risk";
 require __DIR__ . '/includes/head.php';

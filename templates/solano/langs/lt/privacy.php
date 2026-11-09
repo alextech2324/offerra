@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Privatumo politika ᐉ ' . SITE_NAME;
-$page_description = „Kaip ' . SITE_NAME . ' renka, naudoja ir saugo jūsų asmeninę informaciją.“;
+$page_title = 'Privatumo politika ᐉ ' . SITE_NAME;
+$page_description = 'Kaip ' . SITE_NAME . ' renka, naudoja ir saugo jūsų asmeninę informaciją.';
 $page_canonical = page_url("privacy.php");
 $active_page = "privacy";
 require __DIR__ . '/includes/head.php';
@@ -21,7 +21,7 @@ require __DIR__ . '/includes/header.php';
     <p class="cs7fii">Paskutinį kartą atnaujinta: 2025 m. sausio mėn</p>
 
     <h2>1. Įvadas</h2>
-    <p><?= e(SITE_NAME) ?>(„mes“, „mes“, „mūsų“) yra įsipareigojusi saugoti lankytojų ir klientų privatumą. Šioje privatumo politikoje paaiškinama, kokius asmens duomenis renkame, kodėl juos renkame ir kaip juos tvarkome, kai naudojatės mūsų svetaine ir paslaugomis.</p>
+    <p><?= e(SITE_NAME) ?>('mes', 'mes', 'mūsų') yra įsipareigojusi saugoti lankytojų ir klientų privatumą. Šioje privatumo politikoje paaiškinama, kokius asmens duomenis renkame, kodėl juos renkame ir kaip juos tvarkome, kai naudojatės mūsų svetaine ir paslaugomis.</p>
 
     <h2>2. Informacija, kurią renkame</h2>
     <ul>

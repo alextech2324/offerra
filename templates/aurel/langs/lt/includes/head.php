@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/config.php';
-$page_title = $page_title ?? (SITE_NAME . ' ᐉ Visiškai valdykite tiesiogines investicijas);
-$page_description = $page_description ?? („Stebėkite realiu laiku, kaip veikia jūsų kapitalas su ' . SITE_NAME . ': aiškios ataskaitos, asmeninis analitikas ir dirbtinis intelektas. Gaukite papildomų pajamų iš " . money_min());
+$page_title = $page_title ?? (SITE_NAME . ' ᐉ Visiškai valdykite tiesiogines investicijas');
+$page_description = $page_description ?? ('Stebėkite realiu laiku, kaip veikia jūsų kapitalas su ' . SITE_NAME . ': aiškios ataskaitos, asmeninis analitikas ir dirbtinis intelektas. Gaukite papildomų pajamų iš ' . money_min());
 $page_canonical = $page_canonical ?? page_url();
 $active_page = $active_page ?? 'home';
 ?><!doctype html>

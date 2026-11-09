@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Susisiekite su ' . SITE_NAME . ' ᐉ Esame pasiruošę padėti“;
-$page_description = „Turite klausimų apie ' . SITE_NAME . ' arba savo paskyrą?“;
+$page_title = 'Susisiekite su ' . SITE_NAME . ' ᐉ Esame pasiruošę padėti';
+$page_description = 'Turite klausimų apie ' . SITE_NAME . ' arba savo paskyrą?';
 $page_canonical = page_url("contacts.php");
 $active_page = "contacts";
 require __DIR__ . '/includes/head.php';

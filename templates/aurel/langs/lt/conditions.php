@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-$page_title = „Naudojimo sąlygos ᐉ ' . SITE_NAME;
-$page_description = „' . SITE_NAME naudojimo sąlygos;
+$page_title = 'Naudojimo sąlygos ᐉ ' . SITE_NAME;
+$page_description = SITE_NAME . ' naudojimo sąlygos';
 $page_canonical = page_url("conditions.php");
 $active_page = "conditions";
 require __DIR__ . '/includes/head.php';
@@ -50,7 +50,7 @@ require __DIR__ . '/includes/header.php';
     <p>Platformoje gali būti nuorodų į trečiųjų šalių paslaugas arba jos gali būti integruotos. Mes nesame atsakingi nei už tokias paslaugas, nei už jų prieinamumą, tikslumą ar turinį.</p>
 
     <h2>9. Atsisakymas</h2>
-    <p>Paslaugos teikiamos „tokios, kokios yra“ ir „kaip prieinamos“ be jokių garantijų. Prekyba susijusi su didele nuostolių rizika. Žiūrėkite mūsų<a href="<?= page_url('risk-disclosure.php') ?>" style="color:var(--accent)">Rizikos atskleidimas</a>Norėdami gauti daugiau informacijos.</p>
+    <p>Paslaugos teikiamos 'tokios, kokios yra' ir 'kaip prieinamos' be jokių garantijų. Prekyba susijusi su didele nuostolių rizika. Žiūrėkite mūsų<a href="<?= page_url('risk-disclosure.php') ?>" style="color:var(--accent)">Rizikos atskleidimas</a>Norėdami gauti daugiau informacijos.</p>
 
     <h2>10. Atsakomybės ribojimas</h2>
     <p>Tiek, kiek leidžia įstatymai, <?= e(SITE_NAME) ?> nėra atsakinga už jokią netiesioginę, atsitiktinę, specialią, pasekminę ar baudžiamąją žalą arba bet kokį pelno ar pajamų praradimą, atsiradusį jums naudojantis paslaugomis.</p>

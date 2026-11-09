@@ -61,7 +61,7 @@ function render_schema(string $page = 'home', array $extra = []): void {
             ],
             [
                 '@type' => 'Question',
-                'vardas' => 'yra' . $site . „Patikimas tvarkant mano pinigus ir informaciją?,
+                'name' => 'Ar ' . $site . ' patikimas tvarkant mano pinigus ir informaciją?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
                     'text' => 'Seansai yra apsaugoti SSL šifravimu, galimas dviejų veiksnių autentifikavimas, o finansinės operacijos tvarkomos per patikimus partnerius. Svetainėje aprašyta privatumo praktika.',
