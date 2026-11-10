@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Offer;
+use App\Support\PublicDnsLookup;
 use Illuminate\Http\Client\Pool;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +17,8 @@ class OfferAvailabilityProbe
 
     /** @var list<int> */
     private const CF_EDGE_ERRORS = [521, 522, 523, 525, 526];
+
+    public function __construct(private readonly PublicDnsLookup $publicDns) {}
 
     /**
      * Probe a single offer and persist availability fields.
@@ -73,9 +76,9 @@ class OfferAvailabilityProbe
             return ['ok' => false, 'error' => 'Empty domain'];
         }
 
-        $aRecords = $this->lookupARecords($domain);
+        $aRecords = $this->publicDns->aRecords($domain);
         if ($aRecords === []) {
-            $ns = $this->lookupNsRecords($domain);
+            $ns = $this->publicDns->nameservers($domain);
             if ($ns === []) {
                 return ['ok' => false, 'error' => 'NXDOMAIN / no public DNS'];
             }
@@ -83,7 +86,7 @@ class OfferAvailabilityProbe
             return ['ok' => false, 'error' => 'No A record (NS: '.implode(', ', array_slice($ns, 0, 2)).')'];
         }
 
-        return $this->httpProbe($domain);
+        return $this->httpProbe($domain, $aRecords);
     }
 
     /**
@@ -102,45 +105,43 @@ class OfferAvailabilityProbe
 
         $hosts = array_keys($normalized);
         $out = [];
+        $ipsByHost = [];
 
         foreach ($hosts as $host) {
-            $aRecords = $this->lookupARecords($host);
+            $aRecords = $this->publicDns->aRecords($host);
             if ($aRecords === []) {
-                $ns = $this->lookupNsRecords($host);
+                $ns = $this->publicDns->nameservers($host);
                 $out[$host] = [
                     'ok' => false,
                     'error' => $ns === []
                         ? 'NXDOMAIN / no public DNS'
                         : 'No A record (NS: '.implode(', ', array_slice($ns, 0, 2)).')',
                 ];
+
+                continue;
             }
+
+            $ipsByHost[$host] = $aRecords;
         }
 
-        $httpHosts = array_values(array_filter(
-            $hosts,
-            static fn (string $host) => ! isset($out[$host]),
-        ));
+        $httpHosts = array_keys($ipsByHost);
 
         foreach (array_chunk($httpHosts, 25) as $chunk) {
             try {
-                $responses = Http::pool(function (Pool $pool) use ($chunk) {
+                $responses = Http::pool(function (Pool $pool) use ($chunk, $ipsByHost) {
                     foreach ($chunk as $host) {
                         $pool->as($host)
                             ->timeout(self::TIMEOUT_SECONDS)
                             ->connectTimeout(5)
                             ->withHeaders($this->browserHeaders())
-                            ->withOptions([
-                                'verify' => true,
-                                'allow_redirects' => true,
-                                'http_errors' => false,
-                            ])
+                            ->withOptions($this->httpOptions($host, $ipsByHost[$host]))
                             ->head('https://'.$host.'/');
                     }
                 });
             } catch (\Throwable $e) {
                 Log::warning('Offer availability pool failed', ['error' => $e->getMessage()]);
                 foreach ($chunk as $host) {
-                    $out[$host] = $this->httpProbe($host);
+                    $out[$host] = $this->httpProbe($host, $ipsByHost[$host]);
                 }
 
                 continue;
@@ -156,14 +157,14 @@ class OfferAvailabilityProbe
 
                 if (! $response instanceof Response) {
                     // HEAD may have thrown; fall back to GET for this host.
-                    $out[$host] = $this->httpProbe($host);
+                    $out[$host] = $this->httpProbe($host, $ipsByHost[$host]);
 
                     continue;
                 }
 
                 $classified = $this->classifyHttpResponse($host, $response, usedHead: true);
                 if ($classified['retry_get'] ?? false) {
-                    $out[$host] = $this->httpProbe($host, forceGet: true);
+                    $out[$host] = $this->httpProbe($host, $ipsByHost[$host], forceGet: true);
                 } else {
                     $out[$host] = [
                         'ok' => $classified['ok'],
@@ -226,26 +227,23 @@ class OfferAvailabilityProbe
     }
 
     /**
+     * @param  list<string>  $aRecords
      * @return array{ok: bool, error: ?string}
      */
-    private function httpProbe(string $domain, bool $forceGet = false): array
+    private function httpProbe(string $domain, array $aRecords, bool $forceGet = false): array
     {
         try {
             $request = Http::timeout(self::TIMEOUT_SECONDS)
                 ->connectTimeout(5)
                 ->withHeaders($this->browserHeaders())
-                ->withOptions([
-                    'verify' => true,
-                    'allow_redirects' => true,
-                    'http_errors' => false,
-                ]);
+                ->withOptions($this->httpOptions($domain, $aRecords));
 
             $response = $forceGet
                 ? $request->get('https://'.$domain.'/')
                 : $request->head('https://'.$domain.'/');
         } catch (\Throwable $e) {
             if (! $forceGet) {
-                return $this->httpProbe($domain, forceGet: true);
+                return $this->httpProbe($domain, $aRecords, forceGet: true);
             }
 
             return ['ok' => false, 'error' => $this->shortConnectError($e->getMessage())];
@@ -253,13 +251,41 @@ class OfferAvailabilityProbe
 
         $classified = $this->classifyHttpResponse($domain, $response, usedHead: ! $forceGet);
         if (($classified['retry_get'] ?? false) && ! $forceGet) {
-            return $this->httpProbe($domain, forceGet: true);
+            return $this->httpProbe($domain, $aRecords, forceGet: true);
         }
 
         return [
             'ok' => $classified['ok'],
             'error' => $classified['error'],
         ];
+    }
+
+    /**
+     * Pin HTTPS to public A records so a stale systemd-resolved NXDOMAIN
+     * on the panel cannot keep a live lander red.
+     *
+     * @param  list<string>  $aRecords
+     * @return array<string, mixed>
+     */
+    private function httpOptions(string $domain, array $aRecords): array
+    {
+        $resolve = [];
+        foreach ($aRecords as $ip) {
+            $resolve[] = $domain.':443:'.$ip;
+            $resolve[] = $domain.':80:'.$ip;
+        }
+
+        $options = [
+            'verify' => true,
+            'allow_redirects' => true,
+            'http_errors' => false,
+        ];
+
+        if ($resolve !== [] && defined('CURLOPT_RESOLVE')) {
+            $options['curl'] = [CURLOPT_RESOLVE => $resolve];
+        }
+
+        return $options;
     }
 
     /**
@@ -341,48 +367,6 @@ class OfferAvailabilityProbe
         $domain = explode(':', $domain)[0] ?? $domain;
 
         return rtrim($domain, '.');
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function lookupARecords(string $domain): array
-    {
-        $records = @dns_get_record($domain, DNS_A);
-        if (! is_array($records)) {
-            return [];
-        }
-
-        $ips = [];
-        foreach ($records as $record) {
-            $ip = trim((string) ($record['ip'] ?? ''));
-            if ($ip !== '' && filter_var($ip, FILTER_VALIDATE_IP)) {
-                $ips[] = $ip;
-            }
-        }
-
-        return array_values(array_unique($ips));
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function lookupNsRecords(string $domain): array
-    {
-        $records = @dns_get_record($domain, DNS_NS);
-        if (! is_array($records)) {
-            return [];
-        }
-
-        $out = [];
-        foreach ($records as $record) {
-            $ns = strtolower(rtrim(trim((string) ($record['target'] ?? '')), '.'));
-            if ($ns !== '') {
-                $out[] = $ns;
-            }
-        }
-
-        return array_values(array_unique($out));
     }
 
     private function shortConnectError(string $message): string
