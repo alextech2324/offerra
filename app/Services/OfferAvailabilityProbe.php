@@ -230,20 +230,26 @@ class OfferAvailabilityProbe
      * @param  list<string>  $aRecords
      * @return array{ok: bool, error: ?string}
      */
-    private function httpProbe(string $domain, array $aRecords, bool $forceGet = false): array
+    private function httpProbe(string $domain, array $aRecords, bool $forceGet = false, bool $pinIps = true): array
     {
         try {
             $request = Http::timeout(self::TIMEOUT_SECONDS)
                 ->connectTimeout(5)
                 ->withHeaders($this->browserHeaders())
-                ->withOptions($this->httpOptions($domain, $aRecords));
+                ->withOptions($this->httpOptions($domain, $pinIps ? $aRecords : []));
 
             $response = $forceGet
                 ? $request->get('https://'.$domain.'/')
                 : $request->head('https://'.$domain.'/');
         } catch (\Throwable $e) {
             if (! $forceGet) {
-                return $this->httpProbe($domain, $aRecords, forceGet: true);
+                return $this->httpProbe($domain, $aRecords, forceGet: true, pinIps: $pinIps);
+            }
+
+            // Pinned CF anycast / stale A can fail TLS from the panel even when
+            // a normal HTTPS GET through the local resolver succeeds.
+            if ($pinIps && $aRecords !== []) {
+                return $this->httpProbe($domain, $aRecords, forceGet: true, pinIps: false);
             }
 
             return ['ok' => false, 'error' => $this->shortConnectError($e->getMessage())];
@@ -251,13 +257,27 @@ class OfferAvailabilityProbe
 
         $classified = $this->classifyHttpResponse($domain, $response, usedHead: ! $forceGet);
         if (($classified['retry_get'] ?? false) && ! $forceGet) {
-            return $this->httpProbe($domain, $aRecords, forceGet: true);
+            return $this->httpProbe($domain, $aRecords, forceGet: true, pinIps: $pinIps);
+        }
+
+        if (! $classified['ok'] && $pinIps && $aRecords !== [] && $this->shouldRetryUnpinned($classified['error'] ?? '')) {
+            return $this->httpProbe($domain, $aRecords, forceGet: true, pinIps: false);
         }
 
         return [
             'ok' => $classified['ok'],
             'error' => $classified['error'],
         ];
+    }
+
+    private function shouldRetryUnpinned(string $error): bool
+    {
+        $m = strtolower($error);
+
+        return str_contains($m, 'tls')
+            || str_contains($m, 'ssl')
+            || str_contains($m, 'couldn\'t connect')
+            || str_contains($m, 'failed to connect');
     }
 
     /**
