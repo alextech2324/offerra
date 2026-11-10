@@ -32,6 +32,8 @@ class DynadotClientTest extends TestCase
             array_map(fn (string $tld) => 'pestotracer.'.ltrim($tld, '.'), $tlds),
             $domains,
         );
+        $this->assertNotContains('online', $tlds);
+        $this->assertNotContains('pestotracer.online', $domains);
     }
 
     public function test_sort_search_results_by_price_desc(): void

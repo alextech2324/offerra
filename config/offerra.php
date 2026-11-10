@@ -13,7 +13,7 @@ return [
     // TLD для швидкого пошуку (без зони в полі). Іншу зону — вкажіть повний домен, напр. brand.io
     // Результати сортуються за ціною (від найвищої до найнижчої) у DynadotClient.
     'domain_search_tlds' => [
-        'net', 'com', 'org', 'live', 'online', 'tech', 'info', 'biz', 'pro',
+        'net', 'com', 'org', 'live', 'tech', 'info', 'biz', 'pro',
     ],
 
     'templates_path' => base_path(env('TEMPLATES_PATH', 'templates')),

@@ -859,7 +859,7 @@ class DynadotClient
             return [];
         }
 
-        $tlds = config('offerra.domain_search_tlds', ['com', 'org', 'online']);
+        $tlds = config('offerra.domain_search_tlds', ['com', 'org', 'net']);
         $domains = [];
 
         if (str_contains($raw, '.')) {
