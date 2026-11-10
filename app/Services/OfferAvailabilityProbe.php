@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Offer;
+use App\Support\InfrastructureDnsReadiness;
 use App\Support\PublicDnsLookup;
 use Illuminate\Http\Client\Pool;
 use Illuminate\Http\Client\Response;
@@ -76,7 +77,9 @@ class OfferAvailabilityProbe
             return ['ok' => false, 'error' => 'Empty domain'];
         }
 
-        $aRecords = $this->publicDns->aRecords($domain);
+        $aRecords = InfrastructureDnsReadiness::preferCloudflareProxyIps(
+            $this->publicDns->aRecords($domain),
+        );
         if ($aRecords === []) {
             $ns = $this->publicDns->nameservers($domain);
             if ($ns === []) {
@@ -108,7 +111,9 @@ class OfferAvailabilityProbe
         $ipsByHost = [];
 
         foreach ($hosts as $host) {
-            $aRecords = $this->publicDns->aRecords($host);
+            $aRecords = InfrastructureDnsReadiness::preferCloudflareProxyIps(
+                $this->publicDns->aRecords($host),
+            );
             if ($aRecords === []) {
                 $ns = $this->publicDns->nameservers($host);
                 $out[$host] = [

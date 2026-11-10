@@ -466,7 +466,7 @@ class InfrastructureProvisioner
                 continue;
             }
 
-            if ($ip === $serverIp || $this->isCloudflareProxyIp($ip)) {
+            if ($ip === $serverIp || InfrastructureDnsReadiness::isCloudflareProxyIp($ip)) {
                 return true;
             }
         }
@@ -480,18 +480,6 @@ class InfrastructureProvisioner
         return str_starts_with($ip, '185.53.')
             || str_starts_with($ip, '207.244.')
             || str_starts_with($ip, '173.236.');
-    }
-
-    private function isCloudflareProxyIp(string $ip): bool
-    {
-        // Типові anycast CF (proxied orange cloud); точний список не потрібен —
-        // достатньо відрізнити від «DNS ще не встав» / NXDOMAIN.
-        return str_starts_with($ip, '104.')
-            || str_starts_with($ip, '172.64.')
-            || str_starts_with($ip, '172.65.')
-            || str_starts_with($ip, '172.66.')
-            || str_starts_with($ip, '172.67.')
-            || str_starts_with($ip, '188.114.');
     }
 
     private function httpsLooksLive(string $domain): bool

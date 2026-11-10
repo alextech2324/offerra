@@ -46,4 +46,24 @@ class InfrastructureDnsReadinessTest extends TestCase
             ['pam.ns.cloudflare.com', 'randy.ns.cloudflare.com'],
         ));
     }
+
+    public function test_prefer_cloudflare_proxy_ips_drops_stale_parking(): void
+    {
+        $this->assertSame(
+            ['104.21.74.45', '172.67.197.246'],
+            InfrastructureDnsReadiness::preferCloudflareProxyIps([
+                '137.131.40.164',
+                '104.21.74.45',
+                '172.67.197.246',
+            ]),
+        );
+    }
+
+    public function test_prefer_cloudflare_proxy_ips_keeps_origin_when_alone(): void
+    {
+        $this->assertSame(
+            ['45.61.177.8'],
+            InfrastructureDnsReadiness::preferCloudflareProxyIps(['45.61.177.8']),
+        );
+    }
 }

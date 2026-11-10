@@ -46,6 +46,48 @@ final class InfrastructureDnsReadiness
     }
 
     /**
+     * Orange-cloud anycast. Broad prefixes on purpose — enough to drop
+     * parking / old-origin A that a recursive cache still serves.
+     */
+    public static function isCloudflareProxyIp(string $ip): bool
+    {
+        $ip = trim($ip);
+
+        return str_starts_with($ip, '104.')
+            || str_starts_with($ip, '172.64.')
+            || str_starts_with($ip, '172.65.')
+            || str_starts_with($ip, '172.66.')
+            || str_starts_with($ip, '172.67.')
+            || str_starts_with($ip, '188.114.');
+    }
+
+    /**
+     * When resolvers disagree, keep CF proxy IPs and drop stale parking/origin.
+     * Grey-cloud origin-only answers stay as-is.
+     *
+     * @param  list<string>  $ips
+     * @return list<string>
+     */
+    public static function preferCloudflareProxyIps(array $ips): array
+    {
+        $valid = [];
+        foreach ($ips as $ip) {
+            $ip = trim((string) $ip);
+            if ($ip !== '' && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $valid[] = $ip;
+            }
+        }
+        $valid = array_values(array_unique($valid));
+
+        $proxy = array_values(array_filter(
+            $valid,
+            static fn (string $ip): bool => self::isCloudflareProxyIp($ip),
+        ));
+
+        return $proxy !== [] ? $proxy : $valid;
+    }
+
+    /**
      * @param  list<string>  $hosts
      * @return list<string>
      */

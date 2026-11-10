@@ -55,4 +55,120 @@ class PublicDnsLookupTest extends TestCase
 
         $this->assertSame(['104.21.58.45', '172.67.156.56'], $ips);
     }
+
+    public function test_stale_cloudflare_doh_parking_a_loses_to_google(): void
+    {
+        Http::fake(function ($request) {
+            $type = (string) ($request->data()['type'] ?? '');
+            if (str_contains($request->url(), 'dns-query')) {
+                if ($type === 'NS') {
+                    return Http::response(['Status' => 0, 'Answer' => []]);
+                }
+
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => '137.131.40.164']],
+                ]);
+            }
+
+            if ($type === 'NS') {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [
+                        ['data' => 'aron.ns.cloudflare.com.'],
+                        ['data' => 'jasper.ns.cloudflare.com.'],
+                    ],
+                ]);
+            }
+
+            return Http::response([
+                'Status' => 0,
+                'Answer' => [
+                    ['data' => '104.21.74.45'],
+                    ['data' => '172.67.197.246'],
+                ],
+            ]);
+        });
+
+        $dns = new PublicDnsLookup;
+
+        $this->assertSame(
+            ['aron.ns.cloudflare.com', 'jasper.ns.cloudflare.com'],
+            $dns->nameservers('epargniture-be.net'),
+        );
+        $this->assertSame(
+            ['104.21.74.45', '172.67.197.246'],
+            $dns->aRecords('epargniture-be.net'),
+        );
+    }
+
+    public function test_cloudflare_nxdomain_does_not_hide_google_records(): void
+    {
+        Http::fake(function ($request) {
+            $type = (string) ($request->data()['type'] ?? '');
+            if (str_contains($request->url(), 'dns-query')) {
+                return Http::response(['Status' => 3, 'Answer' => []]);
+            }
+            if ($type === 'NS') {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [
+                        ['data' => 'julian.ns.cloudflare.com.'],
+                        ['data' => 'shaz.ns.cloudflare.com.'],
+                    ],
+                ]);
+            }
+
+            return Http::response([
+                'Status' => 0,
+                'Answer' => [['data' => '104.21.68.82']],
+            ]);
+        });
+
+        $dns = new PublicDnsLookup;
+
+        $this->assertSame(
+            ['julian.ns.cloudflare.com', 'shaz.ns.cloudflare.com'],
+            $dns->nameservers('maturidence-uk.com'),
+        );
+        $this->assertSame(['104.21.68.82'], $dns->aRecords('maturidence-uk.com'));
+    }
+
+    public function test_mixed_a_records_keep_only_cloudflare_proxy(): void
+    {
+        Http::fake([
+            'https://cloudflare-dns.com/dns-query*' => Http::response([
+                'Status' => 0,
+                'Answer' => [['data' => '45.61.177.8']],
+            ]),
+            'https://dns.google/resolve*' => Http::response([
+                'Status' => 0,
+                'Answer' => [['data' => '188.114.96.0']],
+            ]),
+        ]);
+
+        $this->assertSame(
+            ['188.114.96.0'],
+            (new PublicDnsLookup)->aRecords('split-brain.example'),
+        );
+    }
+
+    public function test_grey_cloud_origin_a_is_kept_when_no_proxy_ip(): void
+    {
+        Http::fake([
+            'https://cloudflare-dns.com/dns-query*' => Http::response([
+                'Status' => 0,
+                'Answer' => [['data' => '45.61.177.8']],
+            ]),
+            'https://dns.google/resolve*' => Http::response([
+                'Status' => 0,
+                'Answer' => [['data' => '45.61.177.8']],
+            ]),
+        ]);
+
+        $this->assertSame(
+            ['45.61.177.8'],
+            (new PublicDnsLookup)->aRecords('grey-cloud.example'),
+        );
+    }
 }

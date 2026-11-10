@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Http;
 /**
  * What the public internet sees — not the panel's recursive cache.
  *
- * php dns_get_record() uses glibc / systemd-resolved. After a restore the
- * new Cloudflare zone gets a new NS pair, but that stub can keep the old
- * pair until TTL dies. Asking 1.1.1.1 / 8.8.8.8 matches the spinner to
- * "is it registered globally".
+ * php dns_get_record() uses glibc / systemd-resolved, which can keep a
+ * dead NS pair after a Cloudflare cutover. Asking 1.1.1.1 / 8.8.8.8 is
+ * better, but a single recursive cache can itself be stale (old parking
+ * A, empty NS) while the other resolver already has the live zone.
+ * Query both and prefer the answer that still matches Cloudflare.
  */
 class PublicDnsLookup
 {
@@ -21,13 +22,18 @@ class PublicDnsLookup
     ];
 
     /**
+     * @var array<string, array{ns: list<string>, a: list<string>, sawPublic: bool}>
+     */
+    private array $resolved = [];
+
+    /**
      * @return list<string>
      */
     public function nameservers(string $domain): array
     {
-        $fromPublic = $this->queryPublic($domain, 'NS');
-        if ($fromPublic !== null) {
-            return $this->normalizeNs($fromPublic);
+        $resolved = $this->resolve($domain);
+        if ($resolved['ns'] !== [] || $resolved['sawPublic']) {
+            return $resolved['ns'];
         }
 
         return $this->localNs($domain);
@@ -38,72 +44,156 @@ class PublicDnsLookup
      */
     public function aRecords(string $domain): array
     {
-        $fromPublic = $this->queryPublic($domain, 'A');
-        if ($fromPublic !== null) {
-            return $this->normalizeA($fromPublic);
+        $resolved = $this->resolve($domain);
+        if ($resolved['a'] !== [] || $resolved['sawPublic']) {
+            return $resolved['a'];
         }
 
-        return $this->localA($domain);
+        return InfrastructureDnsReadiness::preferCloudflareProxyIps($this->localA($domain));
     }
 
     /**
-     * @return list<string>|null null = transport failure, try the local stub
+     * @return array{ns: list<string>, a: list<string>, sawPublic: bool}
      */
-    private function queryPublic(string $domain, string $type): ?array
+    private function resolve(string $domain): array
     {
         $domain = strtolower(trim($domain));
         if ($domain === '') {
-            return [];
+            return ['ns' => [], 'a' => [], 'sawPublic' => true];
         }
 
+        if (isset($this->resolved[$domain])) {
+            return $this->resolved[$domain];
+        }
+
+        $candidates = [];
+        $sawPublic = false;
         foreach (self::ENDPOINTS as $url) {
-            try {
-                $response = Http::timeout(4)
-                    ->accept('application/dns-json')
-                    ->get($url, [
-                        'name' => $domain,
-                        'type' => $type,
-                    ]);
-
-                if (! $response->successful()) {
-                    continue;
-                }
-
-                $json = $response->json();
-                if (! is_array($json) || ! isset($json['Status'])) {
-                    continue;
-                }
-
-                $status = (int) $json['Status'];
-                // 0 NOERROR, 3 NXDOMAIN — both are answers. Do not fall
-                // back to a stale local cache after a public NXDOMAIN.
-                if ($status !== 0 && $status !== 3) {
-                    continue;
-                }
-
-                $answers = $json['Answer'] ?? [];
-                if (! is_array($answers)) {
-                    return [];
-                }
-
-                $out = [];
-                foreach ($answers as $row) {
-                    if (! is_array($row)) {
-                        continue;
-                    }
-                    $data = trim((string) ($row['data'] ?? ''));
-                    if ($data !== '') {
-                        $out[] = $data;
-                    }
-                }
-
-                return $out;
-            } catch (\Throwable) {
+            $nsFetch = $this->fetch($url, $domain, 'NS');
+            $aFetch = $this->fetch($url, $domain, 'A');
+            if ($nsFetch === null && $aFetch === null) {
                 continue;
+            }
+
+            $sawPublic = true;
+            $candidates[] = [
+                'ns' => $this->normalizeNs($nsFetch['records'] ?? []),
+                'a' => $this->normalizeA($aFetch['records'] ?? []),
+            ];
+        }
+
+        $picked = $this->pickCandidate($candidates);
+
+        return $this->resolved[$domain] = [
+            'ns' => $picked['ns'],
+            'a' => InfrastructureDnsReadiness::preferCloudflareProxyIps($picked['a']),
+            'sawPublic' => $sawPublic,
+        ];
+    }
+
+    /**
+     * @param  list<array{ns: list<string>, a: list<string>}>  $candidates
+     * @return array{ns: list<string>, a: list<string>}
+     */
+    private function pickCandidate(array $candidates): array
+    {
+        if ($candidates === []) {
+            return ['ns' => [], 'a' => []];
+        }
+
+        $best = $candidates[0];
+        $bestScore = -1;
+        $allA = [];
+        foreach ($candidates as $candidate) {
+            foreach ($candidate['a'] as $ip) {
+                $allA[] = $ip;
+            }
+
+            $score = 0;
+            if ($candidate['ns'] !== []) {
+                $score += 10;
+                foreach ($candidate['ns'] as $ns) {
+                    if (InfrastructureDnsReadiness::isCloudflareNameserver($ns)) {
+                        $score += 5;
+                        break;
+                    }
+                }
+            }
+            $proxy = false;
+            foreach ($candidate['a'] as $ip) {
+                if (InfrastructureDnsReadiness::isCloudflareProxyIp($ip)) {
+                    $proxy = true;
+                    break;
+                }
+            }
+            if ($proxy) {
+                $score += 20;
+            } elseif ($candidate['a'] !== []) {
+                $score += 1;
+            }
+
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $best = $candidate;
             }
         }
 
-        return null;
+        $mergedA = $allA !== [] ? $allA : $best['a'];
+
+        return [
+            'ns' => $best['ns'],
+            'a' => $mergedA,
+        ];
+    }
+
+    /**
+     * @return array{records: list<string>}|null null = transport failure
+     */
+    private function fetch(string $url, string $domain, string $type): ?array
+    {
+        try {
+            $response = Http::timeout(4)
+                ->accept('application/dns-json')
+                ->get($url, [
+                    'name' => $domain,
+                    'type' => $type,
+                ]);
+
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $json = $response->json();
+            if (! is_array($json) || ! isset($json['Status'])) {
+                return null;
+            }
+
+            $status = (int) $json['Status'];
+            // 0 NOERROR, 3 NXDOMAIN — both are answers.
+            if ($status !== 0 && $status !== 3) {
+                return null;
+            }
+
+            $answers = $json['Answer'] ?? [];
+            if (! is_array($answers)) {
+                return ['records' => []];
+            }
+
+            $out = [];
+            foreach ($answers as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+                $data = trim((string) ($row['data'] ?? ''));
+                if ($data !== '') {
+                    $out[] = $data;
+                }
+            }
+
+            return ['records' => $out];
+        } catch (\Throwable) {
+            return null;
+        }
     }
 
     /**

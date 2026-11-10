@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\GoogleAccount;
 use App\Models\Offer;
 use App\Models\UserSetting;
+use App\Support\PublicDnsLookup;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -18,6 +19,7 @@ class GoogleSearchConsoleClient
 
     public function __construct(
         private readonly GoogleOAuthService $oauth,
+        private readonly PublicDnsLookup $publicDns,
     ) {}
 
     /**
@@ -587,20 +589,7 @@ class GoogleSearchConsoleClient
      */
     private function lookupARecords(string $domain): array
     {
-        $records = @dns_get_record($domain, DNS_A);
-        if (! is_array($records)) {
-            return [];
-        }
-
-        $ips = [];
-        foreach ($records as $record) {
-            $ip = trim((string) ($record['ip'] ?? ''));
-            if ($ip !== '' && filter_var($ip, FILTER_VALIDATE_IP)) {
-                $ips[] = $ip;
-            }
-        }
-
-        return array_values(array_unique($ips));
+        return $this->publicDns->aRecords($domain);
     }
 
     /**
@@ -608,20 +597,7 @@ class GoogleSearchConsoleClient
      */
     private function lookupNsRecords(string $domain): array
     {
-        $records = @dns_get_record($domain, DNS_NS);
-        if (! is_array($records)) {
-            return [];
-        }
-
-        $out = [];
-        foreach ($records as $record) {
-            $ns = strtolower(rtrim(trim((string) ($record['target'] ?? '')), '.'));
-            if ($ns !== '') {
-                $out[] = $ns;
-            }
-        }
-
-        return array_values(array_unique($out));
+        return $this->publicDns->nameservers($domain);
     }
 
     private function httpsResponds(string $host): bool
