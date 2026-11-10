@@ -2,8 +2,13 @@
 
 namespace Tests\Unit;
 
+use App\Models\GoogleAccount;
 use App\Services\GoogleOAuthService;
+use App\Services\GoogleSearchConsoleClient;
 use App\Services\OfferGscSubmitter;
+use Illuminate\Support\Facades\Cache;
+use Mockery;
+use RuntimeException;
 use Tests\TestCase;
 
 class OfferGscRetryableErrorTest extends TestCase
@@ -87,5 +92,27 @@ class OfferGscRetryableErrorTest extends TestCase
                 'Google токен протух для fuegodorn@gmail.com. Перепідключіть цей акаунт у Settings і натисніть «Подати в GSC».',
             ),
         );
+    }
+
+    public function test_find_site_skips_a_dead_token_instead_of_aborting_submit(): void
+    {
+        Cache::flush();
+
+        $oauth = Mockery::mock(GoogleOAuthService::class);
+        $oauth->shouldReceive('accessTokenForAccount')
+            ->once()
+            ->andThrow(new RuntimeException(GoogleOAuthService::deadTokenMessage('jack.ego877@gmail.com')));
+        $this->app->instance(GoogleOAuthService::class, $oauth);
+
+        $account = new GoogleAccount([
+            'email' => 'jack.ego877@gmail.com',
+            'refresh_token' => 'revoked',
+        ]);
+        $account->id = 99;
+
+        $found = $this->app->make(GoogleSearchConsoleClient::class)
+            ->findSiteOnAccount($account, 'soldivia.live');
+
+        $this->assertNull($found);
     }
 }

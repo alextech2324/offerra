@@ -55,12 +55,19 @@ class GoogleSearchConsoleClient
             }
         }
 
-        $tried = $owner ? [$owner] : $accounts;
+        $tried = $accounts;
+        if ($owner !== null) {
+            $tried = [$owner, ...array_values(array_filter(
+                $accounts,
+                static fn (GoogleAccount $account) => (int) $account->id !== (int) $owner->id,
+            ))];
+        }
         $sawFullAccount = false;
         $lastError = null;
 
         foreach ($tried as $account) {
-            if ($owner === null && $this->accountLooksFull($account)) {
+            $isExistingOwner = $owner !== null && (int) $account->id === (int) $owner->id;
+            if (! $isExistingOwner && $this->accountLooksFull($account)) {
                 $sawFullAccount = true;
 
                 continue;
@@ -69,6 +76,12 @@ class GoogleSearchConsoleClient
             try {
                 return $this->submitOfferOnAccount($account, $siteUrl, $sitemapUrl);
             } catch (RuntimeException $e) {
+                if (GoogleOAuthService::isDeadTokenError($e->getMessage())) {
+                    $lastError = $e;
+
+                    continue;
+                }
+
                 if (! self::isAccountFullError($e->getMessage())) {
                     throw $e;
                 }
@@ -299,7 +312,7 @@ class GoogleSearchConsoleClient
         try {
             $listed = $this->listSiteEntries($account);
         } catch (RuntimeException $e) {
-            if ($this->isNotOwnerError($e)) {
+            if ($this->isNotOwnerError($e) || GoogleOAuthService::isDeadTokenError($e->getMessage())) {
                 return null;
             }
 
