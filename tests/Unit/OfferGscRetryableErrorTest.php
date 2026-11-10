@@ -38,6 +38,18 @@ class OfferGscRetryableErrorTest extends TestCase
         ));
     }
 
+    public function test_site_capacity_quota_is_not_retryable_and_has_clear_label(): void
+    {
+        $message = 'Search Console sites.add failed (HTTP 403): {"error": {"code": 403, "message": "Cannot add any more sites to this Search Console account.", "errors": [{ "message": "Cannot add any more sites to this Search Console account.", "domain": "usageLimits", "reason": "quotaExceeded" }] }}';
+
+        $this->assertTrue(\App\Services\GoogleSearchConsoleClient::isAccountFullError($message));
+        $this->assertFalse(OfferGscSubmitter::isRetryableError($message));
+        $this->assertSame(
+            \App\Services\GoogleSearchConsoleClient::ACCOUNT_FULL_MESSAGE,
+            OfferGscSubmitter::publicErrorLabel($message),
+        );
+    }
+
     public function test_google_oauth_internal_failure_is_retryable(): void
     {
         $message = 'Google OAuth refresh failed: {

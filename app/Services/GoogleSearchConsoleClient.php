@@ -12,6 +12,10 @@ use RuntimeException;
 
 class GoogleSearchConsoleClient
 {
+    public const ACCOUNT_FULL_MESSAGE = 'Усі підключені Google-акаунти заповнені в Search Console (ліміт сайтів). Підключіть ще один у Settings і натисніть «Подати в GSC».';
+
+    private const SITE_SOFT_LIMIT = 990;
+
     public function __construct(
         private readonly GoogleOAuthService $oauth,
     ) {}
@@ -35,14 +39,58 @@ class GoogleSearchConsoleClient
             throw new RuntimeException('GSC verification HTML file is missing in Settings.');
         }
 
-        $account = $settings->primaryGoogleAccount();
-        if (! $account) {
+        $accounts = $this->accountsForSubmit($settings);
+        if ($accounts === []) {
             throw new RuntimeException('Google account is not connected.');
         }
 
         $this->assertVerificationFileLive($domain, $verificationFile);
         $this->assertHttpsLive($domain);
 
+        $owner = null;
+        foreach ($accounts as $candidate) {
+            if ($this->findSiteOnAccount($candidate, $domain, $siteUrl)) {
+                $owner = $candidate;
+                break;
+            }
+        }
+
+        $tried = $owner ? [$owner] : $accounts;
+        $sawFullAccount = false;
+        $lastError = null;
+
+        foreach ($tried as $account) {
+            if ($owner === null && $this->accountLooksFull($account)) {
+                $sawFullAccount = true;
+
+                continue;
+            }
+
+            try {
+                return $this->submitOfferOnAccount($account, $siteUrl, $sitemapUrl);
+            } catch (RuntimeException $e) {
+                if (! self::isAccountFullError($e->getMessage())) {
+                    throw $e;
+                }
+
+                $this->rememberAccountFull($account);
+                $sawFullAccount = true;
+                $lastError = $e;
+            }
+        }
+
+        throw new RuntimeException(
+            $sawFullAccount
+                ? self::ACCOUNT_FULL_MESSAGE
+                : ($lastError?->getMessage() ?? 'Google account is not connected.'),
+        );
+    }
+
+    /**
+     * @return array{site_url: string, sitemap_url: string, verified: bool, added: bool, sitemap_submitted: bool, email: string, google_account_id: int}
+     */
+    private function submitOfferOnAccount(GoogleAccount $account, string $siteUrl, string $sitemapUrl): array
+    {
         $accessToken = $this->oauth->accessTokenForAccount($account);
 
         // Search Console: add property first, then verify ownership, then sitemap.
@@ -50,6 +98,8 @@ class GoogleSearchConsoleClient
         $added = $this->addSite($accessToken, $siteUrl);
         $verified = $this->verifySiteFile($accessToken, $siteUrl);
         $sitemapSubmitted = $this->submitSitemap($accessToken, $siteUrl, $sitemapUrl);
+
+        Cache::forget('gsc.sites.v2.'.$account->id);
 
         return [
             'site_url' => $siteUrl,
@@ -637,6 +687,10 @@ class GoogleSearchConsoleClient
 
         $this->throwIfRateLimited($response->status(), $body, 'sites.add');
 
+        if (self::isAccountFullError($body) || self::isAccountFullError((string) $response->status().' '.$body)) {
+            throw new RuntimeException('Search Console account is full (sites.add): '.$this->shortError($body));
+        }
+
         // Property may already exist in the account.
         if ($response->status() === 403 && str_contains(strtolower($body), 'permission')) {
             // Try GET — if we can list it, treat as added.
@@ -776,9 +830,68 @@ class GoogleSearchConsoleClient
 
     private function throwIfRateLimited(int $status, string $body, string $action): void
     {
+        if (self::isAccountFullError($body)) {
+            return;
+        }
+
         if ($status === 429 || str_contains(strtolower($body), 'quota exceeded')) {
             throw new RuntimeException('Search Console '.$action.' rate-limited (HTTP 429)');
         }
+    }
+
+    public static function isAccountFullError(string $message): bool
+    {
+        $m = strtolower($message);
+
+        return str_contains($m, 'cannot add any more sites')
+            || str_contains($m, 'account is full (sites.add)')
+            || str_contains($m, 'заповнені в search console')
+            || (str_contains($m, 'quotaexceeded') && str_contains($m, 'usagelimits') && str_contains($m, 'sites'));
+    }
+
+    /**
+     * @return list<GoogleAccount>
+     */
+    private function accountsForSubmit(UserSetting $settings): array
+    {
+        $accounts = $settings->googleAccountsForInspect();
+        if ($accounts->isEmpty()) {
+            $primary = $settings->primaryGoogleAccount();
+
+            return $primary ? [$primary] : [];
+        }
+
+        return $accounts
+            ->sortBy(fn (GoogleAccount $account) => $account->is_primary ? 0 : 1)
+            ->values()
+            ->all();
+    }
+
+    private function accountLooksFull(GoogleAccount $account): bool
+    {
+        if (Cache::get('gsc.account_full.'.$account->id)) {
+            return true;
+        }
+
+        try {
+            $count = count($this->listSiteEntries($account));
+        } catch (RuntimeException) {
+            return false;
+        }
+
+        if ($count >= self::SITE_SOFT_LIMIT) {
+            $this->rememberAccountFull($account);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function rememberAccountFull(GoogleAccount $account): void
+    {
+        Cache::put('gsc.account_full.'.$account->id, 1, 86400);
+        Cache::forget('gsc.sites.v2.'.$account->id);
     }
 
     private function shortError(string $body): string

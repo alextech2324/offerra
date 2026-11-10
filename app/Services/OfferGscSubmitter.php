@@ -193,6 +193,10 @@ class OfferGscSubmitter
     {
         $m = strtolower($message);
 
+        if (GoogleSearchConsoleClient::isAccountFullError($message)) {
+            return false;
+        }
+
         if (str_contains($m, 'http 429')
             || str_contains($m, 'quota exceeded')
             || str_contains($m, 'rate-limited')
@@ -223,6 +227,10 @@ class OfferGscSubmitter
             }
 
             return GoogleOAuthService::deadTokenMessage();
+        }
+
+        if (GoogleSearchConsoleClient::isAccountFullError($message)) {
+            return GoogleSearchConsoleClient::ACCOUNT_FULL_MESSAGE;
         }
 
         return substr($message, 0, 400);

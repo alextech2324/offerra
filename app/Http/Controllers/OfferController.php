@@ -1027,11 +1027,11 @@ class OfferController extends Controller
         } catch (\InvalidArgumentException|\RuntimeException $e) {
             return redirect()
                 ->back()
-                ->with('error', "GSC {$offer->domain}: ".$e->getMessage());
+                ->with('error', "GSC {$offer->domain}: ".OfferGscSubmitter::publicErrorLabel($e->getMessage()));
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
-                ->with('error', "GSC {$offer->domain}: ".$e->getMessage());
+                ->with('error', "GSC {$offer->domain}: ".OfferGscSubmitter::publicErrorLabel($e->getMessage()));
         }
 
         return redirect()
