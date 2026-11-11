@@ -219,16 +219,19 @@ server {
         rewrite ^ /index.php last;
     }
 
-    location ~ ^/([a-z][a-z])/?$ {
-        if (-f \$offer_root/langs/\$1/index.php) {
-            rewrite ^ /langs/\$1/index.php last;
+    # Named captures + set: numbered \$1 is empty inside nginx `if`.
+    location ~ ^/(?<offerra_lang>[a-z][a-z])/?\$ {
+        set \$offerra_lang_index /langs/\$offerra_lang/index.php;
+        if (-f \$offer_root\$offerra_lang_index) {
+            rewrite ^ \$offerra_lang_index last;
         }
         rewrite ^ /index.php last;
     }
 
-    location ~ ^/([a-z][a-z])/(.+\\.php)$ {
-        if (-f \$offer_root/langs/\$1/\$2) {
-            rewrite ^ /langs/\$1/\$2 last;
+    location ~ ^/(?<offerra_lang>[a-z][a-z])/(?<offerra_php>.+\.php)\$ {
+        set \$offerra_lang_php /langs/\$offerra_lang/\$offerra_php;
+        if (-f \$offer_root\$offerra_lang_php) {
+            rewrite ^ \$offerra_lang_php last;
         }
         rewrite ^ /index.php last;
     }

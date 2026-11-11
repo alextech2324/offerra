@@ -35,8 +35,10 @@ else
   ok "/var/www/offers exists"
 fi
 
-if ! grep -q 'location ~ \^/(\[a-z\]{2\})/?\$' /etc/nginx/conf.d/offers.conf 2>/dev/null \
-  && ! grep -q 'langs/\$1/index.php' /etc/nginx/conf.d/offers.conf 2>/dev/null; then
+if ! grep -q 'offerra_lang_index' /etc/nginx/conf.d/offers.conf 2>/dev/null \
+  && ! grep -q 'location ~ \^/(\[a-z\]{2\})/?\$' /etc/nginx/conf.d/offers.conf 2>/dev/null \
+  && ! grep -q 'langs/\$1/index.php' /etc/nginx/conf.d/offers.conf 2>/dev/null \
+  && ! grep -q 'langs/\$offerra_lang/index.php' /etc/nginx/conf.d/offers.conf 2>/dev/null; then
   bad "nginx missing multilang /{lang}/ rewrite (hub stays on English)"
 else
   ok "multilang /{lang}/ rewrite present"
