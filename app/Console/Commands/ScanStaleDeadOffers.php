@@ -10,7 +10,7 @@ class ScanStaleDeadOffers extends Command
     protected $signature = 'offers:scan-stale-dead
         {--days=21 : Last brand GSC and last brand lead older than N days}';
 
-    protected $description = 'Daily 12:00 snapshot of stale-dead brands for the Archive banner (no archive)';
+    protected $description = 'Daily 10:00 snapshot of stale-dead brands for the Archive banner (no archive)';
 
     public function handle(StaleDeadOfferService $service): int
     {

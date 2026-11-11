@@ -76,7 +76,7 @@ class StaleDeadOfferService
     }
 
     /**
-     * Banner reads the daily 12:00 snapshot only — never a live recount.
+     * Banner reads the daily 10:00 snapshot only — never a live recount.
      *
      * @return array{count: int, last_scan_at: string|null}
      */

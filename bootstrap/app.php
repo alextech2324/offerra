@@ -22,6 +22,13 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withSchedule(function (Schedule $schedule): void {
+        // Daily 10:00 snapshot for Archive banner. First so the slot is not
+        // eaten by hourly availability. No live recount, no auto-archive.
+        $schedule->command('offers:scan-stale-dead')
+            ->dailyAt('10:00')
+            ->timezone(config('app.timezone'))
+            ->withoutOverlapping(30);
+
         $schedule->command('offers:recheck-infra-dns')->everyMinute()->withoutOverlapping(10);
         $schedule->command('origin:sync-servers')->hourly()->withoutOverlapping(10);
         $schedule->command('origin:check-health')->everyMinute()->withoutOverlapping(5);
@@ -42,12 +49,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('offers:inspect-google-index')
             ->hourly()
             ->withoutOverlapping(50);
-
-        // Daily 12:00 snapshot for Archive banner. No live recount, no auto-archive.
-        $schedule->command('offers:scan-stale-dead')
-            ->dailyAt('12:00')
-            ->timezone(config('app.timezone'))
-            ->withoutOverlapping(30);
 
         $schedule->command('clicks:prune')
             ->dailyAt('03:40')
