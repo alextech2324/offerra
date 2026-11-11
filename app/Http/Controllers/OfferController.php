@@ -82,7 +82,7 @@ class OfferController extends Controller
             'originServers' => $evacuation->moveTargets(),
             'geoPresets' => config('offerra.geo_presets'),
             'currencies' => config('offerra.currencies'),
-            'templates' => app(TemplateCatalog::class)->forWizard(),
+            'templates' => app(TemplateCatalog::class)->forPicker(),
             'brandTemplateUsage' => $this->brandTemplateUsage($user),
             'showUserColumn' => $user->canSeeAllOffers(),
             'canManageAllOffers' => $user->canManageAllOffers(),

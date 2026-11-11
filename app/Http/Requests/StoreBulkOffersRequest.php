@@ -78,7 +78,7 @@ class StoreBulkOffersRequest extends FormRequest
             'infra_cloudflare_www_redirect' => ['boolean'],
             'items' => ['required', 'array', 'min:1', 'max:10'],
             'items.*.domain' => ['required', 'string', 'max:120', 'regex:/^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/i', 'distinct'],
-            'items.*.template' => ['required', 'string', Rule::in($catalog->ids())],
+            'items.*.template' => ['required', 'string', Rule::in($catalog->enabledIds())],
         ];
     }
 
@@ -123,6 +123,7 @@ class StoreBulkOffersRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'items.*.template.in' => 'Цей шаблон вимкнено',
             'items.required' => 'Додайте хоча б один домен до пакету.',
             'items.max' => 'За раз можна згенерувати максимум 10 оферів.',
             'items.*.domain.regex' => 'Домен без https://, наприклад example.com',

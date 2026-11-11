@@ -1,5 +1,6 @@
 import PanelLayout from '@/Layouts/PanelLayout';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 
 function languageSummary(languages) {
     if (!languages?.length) {
@@ -10,7 +11,23 @@ function languageSummary(languages) {
 }
 
 function TemplateCard({ template }) {
+    const [busy, setBusy] = useState(false);
     const previewUrl = template.preview_url;
+    const active = Boolean(template.active);
+
+    const toggleAvailability = () => {
+        if (busy) {
+            return;
+        }
+
+        setBusy(true);
+        router.patch(route('templates.availability', template.id), {
+            enabled: !active,
+        }, {
+            preserveScroll: true,
+            onFinish: () => setBusy(false),
+        });
+    };
 
     const thumb = previewUrl ? (
         <div className="template-live-frame-wrap">
@@ -38,7 +55,7 @@ function TemplateCard({ template }) {
     );
 
     return (
-        <article className={`template-library-card${template.active ? '' : ' is-disabled'}`}>
+        <article className={`template-library-card${active ? '' : ' is-disabled'}`}>
             {previewUrl ? (
                 <a
                     className="template-thumb-link"
@@ -57,7 +74,11 @@ function TemplateCard({ template }) {
             <div className="template-library-body">
                 <div className="template-library-top">
                     <h3>{template.name}</h3>
-                    {template.active && <span className="badge badge-ok">Активний</span>}
+                    {active ? (
+                        <span className="badge badge-ok">Активний</span>
+                    ) : (
+                        <span className="badge badge-warn">Вимкнений</span>
+                    )}
                 </div>
                 <p className="template-library-desc">{template.description}</p>
                 <p className="template-library-meta">
@@ -75,12 +96,22 @@ function TemplateCard({ template }) {
                             ↗ Превʼю
                         </a>
                     )}
-                    <Link
-                        href={route('offers.create', { fresh: 1, template: template.id })}
+                    {active && (
+                        <Link
+                            href={route('offers.create', { fresh: 1, template: template.id })}
+                            className="btn btn-ghost"
+                        >
+                            Використати
+                        </Link>
+                    )}
+                    <button
+                        type="button"
                         className="btn btn-ghost"
+                        disabled={busy}
+                        onClick={toggleAvailability}
                     >
-                        Використати
-                    </Link>
+                        {active ? 'Вимкнути' : 'Увімкнути'}
+                    </button>
                 </div>
             </div>
         </article>
@@ -92,7 +123,10 @@ export default function TemplatesIndex({ templates }) {
         <PanelLayout title="Шаблони" wide>
             <header className="page-header">
                 <h2>Шаблони</h2>
-                <p>Живий PHP-ленд з templates/ — клік по превʼю відкриє повноцінний зразок у новій вкладці</p>
+                <p>
+                    Живий PHP-ленд з templates/ — клік по превʼю відкриє повноцінний зразок у новій вкладці.
+                    Вимкнений шаблон не зʼявляється при створенні офера; уже зроблені воронки лишаються.
+                </p>
             </header>
 
             <div className="template-library-grid">

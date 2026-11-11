@@ -62,7 +62,7 @@ class StoreOfferRequest extends FormRequest
             'phone' => ['required', 'string', 'regex:/^(ip|[a-zA-Z]{2})$/'],
             'phone_countries' => ['required', 'array', 'min:1'],
             'phone_countries.*' => ['string', 'size:2', 'alpha:ascii'],
-            'template' => ['required', 'string', Rule::in($catalog->ids())],
+            'template' => ['required', 'string', Rule::in($catalog->enabledIds())],
             'vitals_enabled' => ['boolean'],
             'from_search_team' => ['boolean'],
             'provision_infrastructure' => ['boolean'],
@@ -83,6 +83,7 @@ class StoreOfferRequest extends FormRequest
     {
         return [
             'domain.regex' => 'Домен без https://, наприклад example.com (IDN з ń, ö тощо — теж можна)',
+            'template.in' => 'Цей шаблон вимкнено',
             'lang.in' => 'Оберіть мову, доступну для обраного шаблону',
             'currency.in' => 'Оберіть валюту зі списку',
             'geo.size' => 'GEO — 2 літери, наприклад IE, IT, ZA',

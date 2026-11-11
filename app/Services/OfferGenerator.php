@@ -40,6 +40,11 @@ class OfferGenerator
 
         $input = TemplateCatalog::pinVesperaMarket($input);
         $template = $input['template'];
+
+        if (! in_array($template, $this->templateCatalog->enabledIds(), true)) {
+            throw new InvalidArgumentException("Шаблон «{$template}» вимкнено.");
+        }
+
         $templateLangForSource = TemplateCatalog::copiesWholeTree($template) ? 'en' : (string) $input['lang'];
         $templatePath = $this->templateCatalog->resolveSourcePath($template, $templateLangForSource);
 
@@ -651,6 +656,10 @@ class OfferGenerator
         $allowedTemplates = $this->templateCatalog->ids();
         if (! in_array($template, $allowedTemplates, true)) {
             throw new InvalidArgumentException("Шаблон «{$template}» недоступний.");
+        }
+
+        if ($template !== (string) $offer->template && ! $this->templateCatalog->isEnabled($template)) {
+            throw new InvalidArgumentException("Шаблон «{$template}» вимкнено.");
         }
 
         $allowedLangs = $this->templateCatalog->languageCodesFor($template);

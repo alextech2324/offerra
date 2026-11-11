@@ -62,6 +62,11 @@ export default function OfferEditModal({
         [brandTemplateUsage, data.brand, initialTemplate],
     );
 
+    const pickerTemplates = useMemo(
+        () => templates.filter((item) => item.active !== false || item.id === initialTemplate),
+        [templates, initialTemplate],
+    );
+
     useEffect(() => {
         const onKey = (event) => {
             if (event.key === 'Escape' && !processing) {
@@ -75,8 +80,8 @@ export default function OfferEditModal({
     }, [onClose, processing]);
 
     const selectedTemplate = useMemo(
-        () => templates.find((item) => item.id === data.template) ?? templates[0] ?? null,
-        [templates, data.template],
+        () => pickerTemplates.find((item) => item.id === data.template) ?? pickerTemplates[0] ?? null,
+        [pickerTemplates, data.template],
     );
     const availableLanguages = selectedTemplate?.languages ?? [];
     const isMarketMultilang = isMlOfferTemplate(data.template);
@@ -105,7 +110,7 @@ export default function OfferEditModal({
     }, [isMarketMultilang, availableLanguages, setData]);
 
     const onTemplateChange = (templateId) => {
-        const template = templates.find((item) => item.id === templateId);
+        const template = pickerTemplates.find((item) => item.id === templateId);
         const langs = template?.languages ?? [];
         const wasMultilang = isMlOfferTemplate(data.template);
         const isMultilang = isMlOfferTemplate(templateId);
@@ -273,7 +278,7 @@ export default function OfferEditModal({
                     <div className="field">
                         <label id="edit-template-label">Шаблон</label>
                         <TemplatePicker
-                            templates={templates}
+                            templates={pickerTemplates}
                             value={data.template}
                             onChange={onTemplateChange}
                             usedTemplateIds={usedTemplateIds}

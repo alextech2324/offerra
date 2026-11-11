@@ -56,6 +56,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/mirrors/{mirror}', [MirrorDomainController::class, 'destroy'])->name('mirrors.destroy');
 
     Route::get('/templates', [TemplateController::class, 'index'])->name('templates.index');
+    Route::patch('/templates/{template}/availability', [TemplateController::class, 'updateAvailability'])
+        ->where('template', '[A-Za-z0-9_-]+')
+        ->name('templates.availability');
     Route::get('/preview/{template}/{path?}', [TemplatePreviewController::class, 'show'])
         ->where('path', '.*')
         ->name('templates.preview');

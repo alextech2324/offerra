@@ -2,12 +2,17 @@
 
 namespace App\Services;
 
+use App\Models\DisabledTemplate;
 use App\Support\MarketOptions;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use InvalidArgumentException;
 
 class TemplateCatalog
 {
+    /** @var list<string>|null */
+    private ?array $disabledIds = null;
+
     public function __construct(
         private readonly string $templatesPath,
     ) {}
@@ -17,13 +22,56 @@ class TemplateCatalog
      */
     public function ids(): array
     {
-        return array_column($this->forWizard(), 'id');
+        return $this->discoverTemplateIds();
     }
 
     /**
-     * @return list<array{id: string, name: string, languages: list<array{code: string, name: string}>}>
+     * @return list<string>
      */
-    public function forWizard(): array
+    public function enabledIds(): array
+    {
+        return array_values(array_filter(
+            $this->ids(),
+            fn (string $id) => $this->isEnabled($id),
+        ));
+    }
+
+    /**
+     * Enabled templates plus one extra id (so an existing offer can keep a disabled template).
+     *
+     * @return list<string>
+     */
+    public function selectableIds(?string $include = null): array
+    {
+        $ids = $this->enabledIds();
+
+        if (is_string($include) && $include !== '' && in_array($include, $this->ids(), true) && ! in_array($include, $ids, true)) {
+            $ids[] = $include;
+        }
+
+        return $ids;
+    }
+
+    public function isEnabled(string $templateId): bool
+    {
+        return ! in_array($templateId, $this->disabledIds(), true);
+    }
+
+    public function setEnabled(string $templateId, bool $enabled): void
+    {
+        if ($enabled) {
+            DisabledTemplate::query()->where('template_id', $templateId)->delete();
+        } else {
+            DisabledTemplate::query()->firstOrCreate(['template_id' => $templateId]);
+        }
+
+        $this->disabledIds = null;
+    }
+
+    /**
+     * @return list<array{id: string, name: string, languages: list<array{code: string, name: string}>, active: bool}>
+     */
+    public function forPicker(): array
     {
         $templates = [];
 
@@ -32,10 +80,22 @@ class TemplateCatalog
                 'id' => $id,
                 'name' => $this->label($id),
                 'languages' => $this->languagesFor($id),
+                'active' => $this->isEnabled($id),
             ];
         }
 
         return $templates;
+    }
+
+    /**
+     * @return list<array{id: string, name: string, languages: list<array{code: string, name: string}>, active: bool}>
+     */
+    public function forWizard(): array
+    {
+        return array_values(array_filter(
+            $this->forPicker(),
+            fn (array $template) => $template['active'],
+        ));
     }
 
     /**
@@ -55,9 +115,17 @@ class TemplateCatalog
                 'languages' => $langs,
                 'pages' => 'index, product, offer, faq, contacts, sign, thanks',
                 'preview_url' => route('templates.preview', ['template' => $id]).'/',
-                'active' => true,
+                'active' => $this->isEnabled($id),
             ];
         }
+
+        usort($items, function (array $a, array $b): int {
+            if ($a['active'] !== $b['active']) {
+                return $a['active'] ? -1 : 1;
+            }
+
+            return strcmp($a['id'], $b['id']);
+        });
 
         return $items;
     }
@@ -260,6 +328,25 @@ class TemplateCatalog
         }
 
         return $ordered;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function disabledIds(): array
+    {
+        if ($this->disabledIds !== null) {
+            return $this->disabledIds;
+        }
+
+        if (! Schema::hasTable('disabled_templates')) {
+            return $this->disabledIds = [];
+        }
+
+        return $this->disabledIds = DisabledTemplate::query()
+            ->orderBy('template_id')
+            ->pluck('template_id')
+            ->all();
     }
 
     /**

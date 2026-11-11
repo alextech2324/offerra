@@ -82,13 +82,15 @@ class UpdateOfferRequest extends FormRequest
         $template = (string) $this->input('template');
         $catalog = app(TemplateCatalog::class);
         $currencyCodes = array_column(config('offerra.currencies', []), 'code');
+        $offer = $this->route('offer');
+        $currentTemplate = is_object($offer) ? (string) $offer->template : null;
 
         return [
             'brand' => ['required', 'string', 'max:120'],
             'min_deposit' => ['required', 'string', 'max:20'],
             'currency' => ['required', 'string', 'min:2', 'max:8', Rule::in($currencyCodes)],
             'geo' => ['required', 'string', 'size:2', 'alpha:ascii'],
-            'template' => ['required', 'string', Rule::in($catalog->ids())],
+            'template' => ['required', 'string', Rule::in($catalog->selectableIds($currentTemplate))],
             'lang' => TemplateCatalog::usesMlGeo($template)
                 ? ['required', 'string', 'max:8']
                 : ['required', 'string', Rule::in($catalog->languageCodesFor($template))],
@@ -106,6 +108,7 @@ class UpdateOfferRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'template.in' => 'Цей шаблон вимкнено',
             'lang.in' => 'Оберіть мову, доступну для обраного шаблону',
             'currency.in' => 'Оберіть валюту зі списку',
             'geo.size' => 'GEO — 2 літери, наприклад IE, IT, ZA',
