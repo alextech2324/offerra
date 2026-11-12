@@ -56,6 +56,61 @@ class PublicDnsLookupTest extends TestCase
         $this->assertSame(['104.21.58.45', '172.67.156.56'], $ips);
     }
 
+    public function test_stale_cloudflare_doh_ns_pair_loses_to_google_new_pair(): void
+    {
+        Http::fake(function ($request) {
+            $type = (string) ($request->data()['type'] ?? '');
+            if (str_contains($request->url(), 'dns-query')) {
+                if ($type === 'NS') {
+                    return Http::response([
+                        'Status' => 0,
+                        'Answer' => [
+                            ['data' => 'otto.ns.cloudflare.com.'],
+                            ['data' => 'reza.ns.cloudflare.com.'],
+                        ],
+                    ]);
+                }
+
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [
+                        ['data' => '172.67.164.165'],
+                        ['data' => '104.21.74.240'],
+                    ],
+                ]);
+            }
+
+            if ($type === 'NS') {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [
+                        ['data' => 'augustus.ns.cloudflare.com.'],
+                        ['data' => 'lina.ns.cloudflare.com.'],
+                    ],
+                ]);
+            }
+
+            return Http::response([
+                'Status' => 0,
+                'Answer' => [
+                    ['data' => '104.21.74.240'],
+                    ['data' => '172.67.164.165'],
+                ],
+            ]);
+        });
+
+        $dns = new PublicDnsLookup;
+
+        $this->assertSame(
+            ['augustus.ns.cloudflare.com', 'lina.ns.cloudflare.com'],
+            $dns->nameservers('xoveniq.org'),
+        );
+        $this->assertSame(
+            ['172.67.164.165', '104.21.74.240'],
+            $dns->aRecords('xoveniq.org'),
+        );
+    }
+
     public function test_stale_cloudflare_doh_parking_a_loses_to_google(): void
     {
         Http::fake(function ($request) {

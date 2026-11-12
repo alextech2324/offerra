@@ -104,9 +104,14 @@ class PublicDnsLookup
         $best = $candidates[0];
         $bestScore = -1;
         $allA = [];
+        $cfNsFingerprints = [];
         foreach ($candidates as $candidate) {
             foreach ($candidate['a'] as $ip) {
                 $allA[] = $ip;
+            }
+            $fp = $this->cloudflareNsFingerprint($candidate['ns']);
+            if ($fp !== null) {
+                $cfNsFingerprints[$fp] = true;
             }
 
             $score = 0;
@@ -140,10 +145,46 @@ class PublicDnsLookup
 
         $mergedA = $allA !== [] ? $allA : $best['a'];
 
+        // Cloudflare DoH often keeps the previous account's NS pair after a
+        // zone cutover while Google already has the new pair. Both score the
+        // same (CF NS + proxy A), so the first endpoint would win and the
+        // panel would keep «Очікується DNS» / probe the deleted zone.
+        if (count($cfNsFingerprints) > 1) {
+            for ($i = count($candidates) - 1; $i >= 0; $i--) {
+                if ($this->cloudflareNsFingerprint($candidates[$i]['ns']) !== null) {
+                    return [
+                        'ns' => $candidates[$i]['ns'],
+                        'a' => $mergedA,
+                    ];
+                }
+            }
+        }
+
         return [
             'ns' => $best['ns'],
             'a' => $mergedA,
         ];
+    }
+
+    /**
+     * @param  list<string>  $ns
+     */
+    private function cloudflareNsFingerprint(array $ns): ?string
+    {
+        $cf = [];
+        foreach ($ns as $name) {
+            if (InfrastructureDnsReadiness::isCloudflareNameserver($name)) {
+                $cf[] = strtolower(rtrim(trim($name), '.'));
+            }
+        }
+
+        if ($cf === []) {
+            return null;
+        }
+
+        sort($cf);
+
+        return implode(' ', $cf);
     }
 
     /**
