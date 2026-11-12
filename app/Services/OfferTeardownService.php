@@ -468,6 +468,13 @@ class OfferTeardownService
      */
     private function parkDynadotNameservers(Offer $offer): array
     {
+        if (DynadotClient::parkingDropsFromTld((string) $offer->domain)) {
+            return [
+                'status' => 'skipped_tld',
+                'detail' => 'not parking .online — CentralNic NXDOMAIN after Dynadot parking blocks restore',
+            ];
+        }
+
         $settings = $this->dynadotSettingsFor($offer);
         if (! $settings) {
             return ['status' => 'kept_no_key', 'detail' => ''];

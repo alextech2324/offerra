@@ -377,8 +377,17 @@ class InfrastructureProvisioner
 
         if (($options['dynadot_ns'] ?? false) && $nameservers !== []) {
             $liveNs = $this->publicDns->nameservers($domain);
-            $needsNs = ($meta['dynadot_ns'] ?? '') !== 'done'
-                || CloudflareZoneCutover::shouldRetrySetNs($liveNs, $nameservers);
+            // Restore recreates the CF zone on the same account. If public NS
+            // already match, another set_ns is an empty EPP update that can
+            // put CentralNic/Identity Digital into serverHold.
+            if (CloudflareZoneCutover::registrarNsMatch($liveNs, $nameservers)) {
+                $meta['dynadot_ns'] = 'done';
+                unset($meta['dynadot_ns_error']);
+                $needsNs = false;
+            } else {
+                $needsNs = ($meta['dynadot_ns'] ?? '') !== 'done'
+                    || CloudflareZoneCutover::shouldRetrySetNs($liveNs, $nameservers);
+            }
 
             if ($needsNs) {
                 try {

@@ -380,6 +380,10 @@ class DynadotPurchaseTest extends TestCase
 
         app(DynadotClient::class)->parkNameservers($this->makeSettings(), 'yieldario-ai.org');
 
+        $this->assertTrue(DynadotClient::parkingDropsFromTld('solaraaitrade.online'));
+        $this->assertFalse(DynadotClient::parkingDropsFromTld('solaraaitrade.live'));
+        $this->assertFalse(DynadotClient::parkingDropsFromTld('yieldario-ai.org'));
+
         Http::assertSent(function ($request) {
             $query = [];
             parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);

@@ -6,6 +6,7 @@ use App\Models\Offer;
 use App\Models\OriginServer;
 use App\Models\User;
 use App\Models\UserSetting;
+use App\Services\DynadotClient;
 use App\Services\OfferTeardownService;
 use App\Services\OriginHostService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -77,6 +78,46 @@ class OfferTeardownOriginTest extends TestCase
         );
         $this->assertStringContainsString($current->host.':deleted', (string) ($offer->teardown_meta['steps']['origin'] ?? ''));
         $this->assertStringContainsString($previous->host.':deleted', (string) ($offer->teardown_meta['steps']['origin'] ?? ''));
+    }
+
+    public function test_archive_does_not_park_online_nameservers(): void
+    {
+        $user = User::factory()->create();
+        $user->settings()->create(['dynadot_api_key' => 'dynadot-key']);
+        $this->origin('10.8.0.4');
+
+        $offer = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'solaraaitrade.online',
+            'brand' => 'Solara AI',
+            'domain' => 'solaraaitrade.online',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'noctra',
+            'status' => 'archiving',
+            'from_search_team' => false,
+            'teardown_meta' => [
+                'started_at' => now()->toIso8601String(),
+                'steps' => [],
+                'purge' => false,
+            ],
+        ]);
+
+        $dynadot = Mockery::mock(DynadotClient::class);
+        $dynadot->shouldNotReceive('parkNameservers');
+        $this->app->instance(DynadotClient::class, $dynadot);
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('deleteWebRoot')->andReturnNull();
+        $this->app->instance(OriginHostService::class, $origin);
+        $this->app->forgetInstance(OfferTeardownService::class);
+
+        app(OfferTeardownService::class)->run($offer->fresh());
+
+        $this->assertSame(
+            'skipped_tld',
+            $offer->fresh()->teardown_meta['steps']['dynadot'] ?? null,
+        );
     }
 
     private function origin(string $host): OriginServer
