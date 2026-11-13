@@ -115,4 +115,18 @@ class OfferGscRetryableErrorTest extends TestCase
 
         $this->assertNull($found);
     }
+
+    public function test_dead_primary_does_not_fall_through_to_inspect_account(): void
+    {
+        $primary = new GoogleAccount(['email' => 'lincoln@example.com', 'is_primary' => true]);
+        $primary->id = 40;
+        $inspect = new GoogleAccount(['email' => 'brobuyer88@gmail.com', 'is_primary' => false]);
+        $inspect->id = 27;
+
+        $this->assertTrue(GoogleSearchConsoleClient::deadPrimaryBlocksSubmitFallback($primary, null, $primary));
+        $this->assertTrue(GoogleSearchConsoleClient::deadPrimaryBlocksSubmitFallback($primary, $primary, $primary));
+        $this->assertFalse(GoogleSearchConsoleClient::deadPrimaryBlocksSubmitFallback($inspect, null, $primary));
+        $this->assertFalse(GoogleSearchConsoleClient::deadPrimaryBlocksSubmitFallback($inspect, $inspect, $primary));
+        $this->assertFalse(GoogleSearchConsoleClient::deadPrimaryBlocksSubmitFallback($primary, $inspect, $primary));
+    }
 }

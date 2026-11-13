@@ -66,6 +66,9 @@ class GoogleSearchConsoleClient
         }
         $sawFullAccount = false;
         $lastError = null;
+        $primary = collect($accounts)->first(
+            static fn (GoogleAccount $account) => $account->is_primary,
+        ) ?? $accounts[0];
 
         foreach ($tried as $account) {
             $isExistingOwner = $owner !== null && (int) $account->id === (int) $owner->id;
@@ -79,6 +82,13 @@ class GoogleSearchConsoleClient
                 return $this->submitOfferOnAccount($account, $siteUrl, $sitemapUrl);
             } catch (RuntimeException $e) {
                 if (GoogleOAuthService::isDeadTokenError($e->getMessage())) {
+                    // New offers go to the primary. A dead primary must not
+                    // silently fall through to a "перевірка" account — the UI
+                    // would then blame the wrong email.
+                    if (self::deadPrimaryBlocksSubmitFallback($account, $owner, $primary)) {
+                        throw $e;
+                    }
+
                     $lastError = $e;
 
                     continue;
@@ -836,6 +846,23 @@ class GoogleSearchConsoleClient
             || str_contains($m, 'account is full (sites.add)')
             || str_contains($m, 'заповнені в search console')
             || (str_contains($m, 'quotaexceeded') && str_contains($m, 'usagelimits') && str_contains($m, 'sites'));
+    }
+
+    /**
+     * Settings copy: new offers submit to the primary Google account.
+     * Fall through to a "перевірка" account only when that primary is full,
+     * or when the site already lives on another connected account.
+     */
+    public static function deadPrimaryBlocksSubmitFallback(
+        GoogleAccount $account,
+        ?GoogleAccount $owner,
+        GoogleAccount $primary,
+    ): bool {
+        if ((int) $account->id !== (int) $primary->id) {
+            return false;
+        }
+
+        return $owner === null || (int) $owner->id === (int) $primary->id;
     }
 
     /**
