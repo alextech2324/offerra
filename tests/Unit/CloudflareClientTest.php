@@ -96,6 +96,58 @@ class CloudflareClientTest extends TestCase
         });
     }
 
+    public function test_ensure_zone_recreates_moved_zone(): void
+    {
+        Http::fake(function ($request) {
+            $url = $request->url();
+            $method = $request->method();
+
+            if ($method === 'GET' && str_contains($url, '/zones') && str_contains($url, 'status=active')) {
+                return Http::response(['success' => true, 'result' => []]);
+            }
+
+            if ($method === 'GET' && str_contains($url, '/zones') && str_contains($url, 'name=moved.example')) {
+                return Http::response([
+                    'success' => true,
+                    'result' => [[
+                        'id' => 'old-zone',
+                        'status' => 'moved',
+                        'name_servers' => ['julian.ns.cloudflare.com', 'shaz.ns.cloudflare.com'],
+                    ]],
+                ]);
+            }
+
+            if ($method === 'DELETE' && str_ends_with($url, '/zones/old-zone')) {
+                return Http::response(['success' => true, 'result' => ['id' => 'old-zone']]);
+            }
+
+            if ($method === 'POST' && $url === 'https://api.cloudflare.com/client/v4/zones') {
+                return Http::response([
+                    'success' => true,
+                    'result' => [
+                        'id' => 'new-zone',
+                        'status' => 'pending',
+                        'name_servers' => ['julian.ns.cloudflare.com', 'shaz.ns.cloudflare.com'],
+                    ],
+                ]);
+            }
+
+            return Http::response(['success' => false], 500);
+        });
+
+        $settings = new UserSetting([
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct',
+        ]);
+
+        $zone = (new CloudflareClient)->ensureZone($settings, 'moved.example');
+
+        $this->assertSame('new-zone', $zone['zone_id']);
+        $this->assertSame('pending', $zone['status']);
+        Http::assertSent(fn ($request) => $request->method() === 'DELETE' && str_ends_with($request->url(), '/zones/old-zone'));
+        Http::assertSent(fn ($request) => $request->method() === 'POST' && $request->url() === 'https://api.cloudflare.com/client/v4/zones');
+    }
+
     public function test_delete_zone_treats_invalid_identifier_as_already_missing(): void
     {
         Http::fake([

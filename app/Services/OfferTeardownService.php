@@ -471,7 +471,7 @@ class OfferTeardownService
         if (DynadotClient::parkingDropsFromTld((string) $offer->domain)) {
             return [
                 'status' => 'skipped_tld',
-                'detail' => 'not parking .online — CentralNic NXDOMAIN after Dynadot parking blocks restore',
+                'detail' => 'not parking CentralNic TLD — NXDOMAIN after Dynadot parking blocks restore',
             ];
         }
 

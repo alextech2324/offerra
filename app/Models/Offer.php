@@ -167,7 +167,10 @@ class Offer extends Model
             if ($this->provision_infrastructure
                 && $this->availability_status === 'down'
                 && is_string($this->availability_error)
-                && str_starts_with($this->availability_error, 'No A record')
+                && (
+                    str_starts_with($this->availability_error, 'No A record')
+                    || str_starts_with($this->availability_error, 'NXDOMAIN')
+                )
             ) {
                 return 'pending';
             }

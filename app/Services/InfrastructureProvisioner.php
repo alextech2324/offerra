@@ -237,7 +237,12 @@ class InfrastructureProvisioner
             return;
         }
 
-        unset($meta['dns_error'], $meta['dns_via']);
+        unset($meta['dns_via']);
+        if ($this->publicDns->nameservers($domain) === [] && $this->publicDns->aRecords($domain) === []) {
+            $meta['dns_error'] = 'Реєстр не публікує домен (NXDOMAIN). NS у Dynadot уже Cloudflare — часто server hold, API його не знімає.';
+        } else {
+            unset($meta['dns_error']);
+        }
         $offer->update([
             'infra_status' => 'ready',
             'infra_error' => null,
@@ -357,6 +362,12 @@ class InfrastructureProvisioner
                 }
             }
         }
+
+        $zoneId = (string) ($meta['cloudflare_zone_id'] ?? $zoneId);
+        $nameservers = is_array($meta['nameservers'] ?? null) ? $meta['nameservers'] : $nameservers;
+        $dnsAlready = ($meta['cloudflare_dns'] ?? '') === 'done';
+        $edgeAlready = ($meta['cloudflare_edge'] ?? '') === 'done'
+            || (($meta['ssl'] ?? '') === 'done' && ($meta['ssl_force'] ?? '') === 'done');
 
         $serverIp = $offer !== null
             ? $this->origin->originIpForOffer($offer, $settings)
@@ -960,6 +971,25 @@ class InfrastructureProvisioner
         }
 
         if ($owned === null) {
+            return;
+        }
+
+        $status = strtolower((string) ($owned['status'] ?? ''));
+        if (in_array($status, ['moved', 'deleted'], true)) {
+            $fresh = $this->cloudflare->ensureZone($settings, $domain);
+            $zoneId = (string) ($fresh['zone_id'] ?? '');
+            $nameservers = is_array($fresh['nameservers'] ?? null) ? $fresh['nameservers'] : [];
+            $meta['cloudflare'] = 'done';
+            $meta['cloudflare_zone_id'] = $zoneId;
+            $meta['nameservers'] = $nameservers;
+            unset(
+                $meta['cloudflare_dns'],
+                $meta['cloudflare_www_dns'],
+                $meta['cloudflare_edge'],
+                $meta['ssl'],
+                $meta['ssl_force'],
+            );
+
             return;
         }
 

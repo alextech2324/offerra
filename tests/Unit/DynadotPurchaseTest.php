@@ -381,6 +381,7 @@ class DynadotPurchaseTest extends TestCase
         app(DynadotClient::class)->parkNameservers($this->makeSettings(), 'yieldario-ai.org');
 
         $this->assertTrue(DynadotClient::parkingDropsFromTld('solaraaitrade.online'));
+        $this->assertTrue(DynadotClient::parkingDropsFromTld('framtida-es.cfd'));
         $this->assertFalse(DynadotClient::parkingDropsFromTld('solaraaitrade.live'));
         $this->assertFalse(DynadotClient::parkingDropsFromTld('yieldario-ai.org'));
 

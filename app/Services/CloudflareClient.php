@@ -75,7 +75,7 @@ class CloudflareClient
     }
 
     /**
-     * @return array{zone_id: string, nameservers: list<string>}
+     * @return array{zone_id: string, nameservers: list<string>, status: string}
      */
     public function ensureZone(UserSetting $settings, string $domain): array
     {
@@ -87,6 +87,16 @@ class CloudflareClient
         }
 
         $existing = $this->findZone($settings, $domain);
+
+        if ($existing !== null) {
+            $status = strtolower((string) ($existing['status'] ?? ''));
+            // A "moved" zone keeps the old NS pair in the API but CF no longer
+            // terminates TLS for it — landers come back HTTP 403 / handshake fail.
+            if (in_array($status, ['moved', 'deleted'], true)) {
+                $this->deleteZone($settings, (string) ($existing['zone_id'] ?? ''));
+                $existing = null;
+            }
+        }
 
         if ($existing !== null) {
             return $existing;
@@ -115,13 +125,7 @@ class CloudflareClient
         /** @var array<string, mixed> $result */
         $result = $response['result'] ?? [];
 
-        return [
-            'zone_id' => (string) ($result['id'] ?? ''),
-            'nameservers' => array_values(array_filter(array_map(
-                static fn ($ns) => strtolower(trim((string) $ns)),
-                $result['name_servers'] ?? [],
-            ))),
-        ];
+        return $this->zoneSummary($result);
     }
 
     public function ensureRootARecord(UserSetting $settings, string $zoneId, string $domain, string $ip): void
@@ -255,7 +259,7 @@ class CloudflareClient
     }
 
     /**
-     * @return array{zone_id: string, nameservers: list<string>}|null
+     * @return array{zone_id: string, nameservers: list<string>, status: string}|null
      */
     public function findZone(UserSetting $settings, string $domain): ?array
     {
@@ -530,7 +534,7 @@ class CloudflareClient
     }
 
     /**
-     * @return array{zone_id: string, nameservers: list<string>}|null
+     * @return array{zone_id: string, nameservers: list<string>, status: string}|null
      */
     private function findZoneByName(UserSetting $settings, string $domain): ?array
     {
@@ -553,12 +557,22 @@ class CloudflareClient
             return null;
         }
 
+        return $this->zoneSummary($zone);
+    }
+
+    /**
+     * @param  array<string, mixed>  $zone
+     * @return array{zone_id: string, nameservers: list<string>, status: string}
+     */
+    private function zoneSummary(array $zone): array
+    {
         return [
             'zone_id' => (string) ($zone['id'] ?? ''),
             'nameservers' => array_values(array_filter(array_map(
                 static fn ($ns) => strtolower(trim((string) $ns)),
                 $zone['name_servers'] ?? [],
             ))),
+            'status' => strtolower(trim((string) ($zone['status'] ?? ''))),
         ];
     }
 

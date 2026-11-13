@@ -30,14 +30,27 @@ class DynadotClient
     ];
 
     /**
-     * CentralNic .online drops the name from the TLD zone when NS move to
-     * Dynadot parking, and a later set_ns back to Cloudflare often stays
-     * NXDOMAIN. Archive must not park these — deleting the CF zone is enough
-     * to take the lander down, and restore can recreate the zone on the same NS.
+     * CentralNic TLDs drop the name from the TLD zone when NS move to Dynadot
+     * parking, and a later set_ns back to Cloudflare often stays NXDOMAIN
+     * (server hold). Archive must not park these — deleting the CF zone is
+     * enough to take the lander down, and restore can recreate the zone on
+     * the same NS.
+     *
+     * @var list<string>
      */
+    private const PARKING_DROPS_TLDS = ['.online', '.cfd'];
+
     public static function parkingDropsFromTld(string $domain): bool
     {
-        return str_ends_with(strtolower(trim($domain)), '.online');
+        $domain = strtolower(trim($domain));
+
+        foreach (self::PARKING_DROPS_TLDS as $tld) {
+            if (str_ends_with($domain, $tld)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

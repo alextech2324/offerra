@@ -95,6 +95,23 @@ class OfferDnsStatusTest extends TestCase
         $this->assertSame('pending', $offer->dnsStatus());
     }
 
+    public function test_dns_status_reopens_when_done_but_public_dns_is_nxdomain(): void
+    {
+        $offer = new Offer([
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'availability_status' => 'down',
+            'availability_error' => 'NXDOMAIN / no public DNS',
+            'infra_meta' => [
+                'dns' => 'done',
+                'dns_via' => 'records',
+                'dynadot_ns' => 'done',
+            ],
+        ]);
+
+        $this->assertSame('pending', $offer->dnsStatus());
+    }
+
     public function test_dns_status_is_skipped_without_dns_wait_options(): void
     {
         $offer = new Offer([
