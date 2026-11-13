@@ -862,6 +862,8 @@ class InfrastructureProvisioner
         unset($meta['cloudflare_zone_id'], $meta['nameservers'], $meta['dns_error'], $meta['dns_via'], $meta['dns']);
         $meta['dynadot_ns'] = 'pending';
         $meta['options'] = $options;
+        $previousSlot = $currentSlot;
+        $previousPoolId = $oldPoolId;
         $meta['cloudflare_slot'] = $targetSlot;
         $meta['cloudflare_migrating_to'] = $targetSlot;
         if ($poolId !== null) {
@@ -940,9 +942,17 @@ class InfrastructureProvisioner
         } catch (\Throwable $e) {
             $meta['cloudflare_migrate_error'] = $e->getMessage();
             unset($meta['cloudflare_migrating_to']);
+            $meta['cloudflare_slot'] = $previousSlot;
+            if ($previousPoolId) {
+                $meta['cloudflare_pool_id'] = $previousPoolId;
+            } else {
+                unset($meta['cloudflare_pool_id']);
+            }
             $offer->update([
                 'infra_status' => 'failed',
-                'infra_error' => DynadotClient::redactSecrets($e->getMessage()),
+                'infra_error' => DynadotClient::redactSecrets(
+                    CloudflareClient::humanizeZoneCreateError($e->getMessage()),
+                ),
                 'infra_meta' => $meta,
             ]);
 

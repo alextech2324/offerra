@@ -214,6 +214,23 @@ class CloudflareClientTest extends TestCase
             && ! str_contains($request->url(), '?'));
     }
 
+    public function test_zone_create_errors_explain_domain_ban_vs_account_lock(): void
+    {
+        $this->assertSame(
+            'Cloudflare заблокував цей домен на всіх акаунтах. Зміна Cloudflare не створить зону — потрібен інший домен.',
+            CloudflareClient::humanizeZoneCreateError(
+                'Cloudflare HTTP 400 — This web property cannot be added to Cloudflare at this time. email abusereply@cloudflare.com (POST /zones)',
+            ),
+        );
+        $this->assertSame(
+            'Цей Cloudflare-акаунт більше не створює нові зони. Обери інший акаунт.',
+            CloudflareClient::humanizeZoneCreateError(
+                'You are not allowed to create new zones at this time.',
+            ),
+        );
+        $this->assertSame('other', CloudflareClient::humanizeZoneCreateError('other'));
+    }
+
     public function test_delete_zone_treats_invalid_identifier_as_already_missing(): void
     {
         Http::fake([

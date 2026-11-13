@@ -102,11 +102,15 @@ class CloudflareClient
             return $existing;
         }
 
-        $response = $this->request($settings, 'POST', '/zones', [
-            'name' => $domain,
-            'account' => ['id' => $accountId],
-            'jump_start' => false,
-        ]);
+        try {
+            $response = $this->request($settings, 'POST', '/zones', [
+                'name' => $domain,
+                'account' => ['id' => $accountId],
+                'jump_start' => false,
+            ]);
+        } catch (RuntimeException $e) {
+            throw new RuntimeException(self::humanizeZoneCreateError($e->getMessage()), 0, $e);
+        }
 
         if (! ($response['success'] ?? false)) {
             $message = $this->extractError($response);
@@ -119,7 +123,7 @@ class CloudflareClient
                 }
             }
 
-            throw new RuntimeException('Cloudflare zone: '.$message);
+            throw new RuntimeException(self::humanizeZoneCreateError('Cloudflare zone: '.$message));
         }
 
         /** @var array<string, mixed> $result */
@@ -680,6 +684,22 @@ class CloudflareClient
         $payload = $response->json() ?? [];
 
         return $payload;
+    }
+
+    public static function humanizeZoneCreateError(string $message): string
+    {
+        $m = strtolower($message);
+
+        if (str_contains($m, 'web property cannot be added')
+            || str_contains($m, 'abusereply@cloudflare.com')) {
+            return 'Cloudflare заблокував цей домен на всіх акаунтах. Зміна Cloudflare не створить зону — потрібен інший домен.';
+        }
+
+        if (str_contains($m, 'not allowed to create new zones')) {
+            return 'Цей Cloudflare-акаунт більше не створює нові зони. Обери інший акаунт.';
+        }
+
+        return $message;
     }
 
     /**
