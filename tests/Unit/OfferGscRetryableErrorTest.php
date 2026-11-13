@@ -129,4 +129,15 @@ class OfferGscRetryableErrorTest extends TestCase
         $this->assertFalse(GoogleSearchConsoleClient::deadPrimaryBlocksSubmitFallback($inspect, $inspect, $primary));
         $this->assertFalse(GoogleSearchConsoleClient::deadPrimaryBlocksSubmitFallback($primary, $inspect, $primary));
     }
+
+    public function test_missing_file_token_is_retryable(): void
+    {
+        $message = 'Site Verification FILE failed (HTTP 400): The necessary verification token could not be found on your site.';
+
+        $this->assertTrue(GoogleSearchConsoleClient::isMissingVerificationTokenError($message));
+        $this->assertTrue(OfferGscSubmitter::isRetryableError($message));
+        $this->assertTrue(OfferGscSubmitter::isRetryableError(
+            'Site Verification DNS_TXT failed (HTTP 400): could not find token',
+        ));
+    }
 }

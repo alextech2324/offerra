@@ -216,7 +216,9 @@ class OfferGscSubmitter
             || str_contains($message, 'не резолвиться')
             || str_contains($message, 'Timeout')
             || str_contains($message, 'DNS resolve')
-            || (str_contains($message, 'sitemaps.submit failed') && str_contains($message, '403'));
+            || (str_contains($message, 'sitemaps.submit failed') && str_contains($message, '403'))
+            || GoogleSearchConsoleClient::isMissingVerificationTokenError($message)
+            || str_contains($message, 'Site Verification DNS_TXT failed');
     }
 
     public static function publicErrorLabel(string $message): string

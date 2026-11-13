@@ -148,6 +148,72 @@ class CloudflareClientTest extends TestCase
         Http::assertSent(fn ($request) => $request->method() === 'POST' && $request->url() === 'https://api.cloudflare.com/client/v4/zones');
     }
 
+    public function test_ensure_txt_record_creates_apex_google_verification(): void
+    {
+        Http::fake(function ($request) {
+            if ($request->method() === 'GET' && str_contains($request->url(), '/dns_records')) {
+                return Http::response(['success' => true, 'result' => []]);
+            }
+
+            if ($request->method() === 'POST' && str_ends_with(parse_url($request->url(), PHP_URL_PATH) ?: '', '/dns_records')) {
+                return Http::response(['success' => true, 'result' => ['id' => 'txt1']]);
+            }
+
+            return Http::response(['success' => false], 500);
+        });
+
+        $settings = new UserSetting([
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct',
+        ]);
+
+        (new CloudflareClient)->ensureTxtRecord(
+            $settings,
+            'zone123',
+            'example.com',
+            'google-site-verification=abc',
+        );
+
+        Http::assertSent(function ($request) {
+            return $request->method() === 'POST'
+                && $request->url() === 'https://api.cloudflare.com/client/v4/zones/zone123/dns_records'
+                && ($request->data()['type'] ?? '') === 'TXT'
+                && ($request->data()['name'] ?? '') === 'example.com'
+                && ($request->data()['content'] ?? '') === 'google-site-verification=abc'
+                && ($request->data()['proxied'] ?? true) === false;
+        });
+    }
+
+    public function test_ensure_txt_record_skips_when_already_present(): void
+    {
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/zones/zone123/dns_records*' => Http::response([
+                'success' => true,
+                'result' => [[
+                    'id' => 'txt1',
+                    'type' => 'TXT',
+                    'content' => 'google-site-verification=abc',
+                ]],
+            ]),
+        ]);
+
+        $settings = new UserSetting([
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct',
+        ]);
+
+        (new CloudflareClient)->ensureTxtRecord(
+            $settings,
+            'zone123',
+            'example.com',
+            'google-site-verification=abc',
+        );
+
+        Http::assertNotSent(fn ($request) => in_array($request->method(), ['POST', 'PUT'], true)
+            && str_contains($request->url(), '/dns_records')
+            && ! str_contains($request->url(), '?'));
+    }
+
     public function test_delete_zone_treats_invalid_identifier_as_already_missing(): void
     {
         Http::fake([

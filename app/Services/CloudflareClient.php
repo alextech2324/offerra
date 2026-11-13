@@ -526,6 +526,61 @@ class CloudflareClient
     }
 
     /**
+     * Apex TXT used by Google siteVerification DNS_TXT. Never proxied.
+     */
+    public function ensureTxtRecord(UserSetting $settings, string $zoneId, string $domain, string $content): void
+    {
+        $zoneId = trim($zoneId);
+        $domain = strtolower(rtrim(trim($domain), '.'));
+        $content = trim($content);
+        if ($zoneId === '' || $domain === '' || $content === '') {
+            throw new RuntimeException('Cloudflare TXT: zone, domain and content are required.');
+        }
+
+        $response = $this->request($settings, 'GET', '/zones/'.$zoneId.'/dns_records', [
+            'type' => 'TXT',
+            'name' => $domain,
+            'per_page' => 100,
+        ]);
+
+        /** @var list<array<string, mixed>> $records */
+        $records = is_array($response['result'] ?? null) ? $response['result'] : [];
+
+        foreach ($records as $record) {
+            $existing = trim((string) ($record['content'] ?? ''), " \t\n\r\0\x0B\"");
+            if ($existing === $content) {
+                return;
+            }
+
+            $id = trim((string) ($record['id'] ?? ''));
+            if ($id === '') {
+                continue;
+            }
+
+            if (str_starts_with($existing, 'google-site-verification=')
+                && str_starts_with($content, 'google-site-verification=')) {
+                $this->request($settings, 'PUT', '/zones/'.$zoneId.'/dns_records/'.$id, [
+                    'type' => 'TXT',
+                    'name' => $domain,
+                    'content' => $content,
+                    'proxied' => false,
+                    'ttl' => 60,
+                ]);
+
+                return;
+            }
+        }
+
+        $this->request($settings, 'POST', '/zones/'.$zoneId.'/dns_records', [
+            'type' => 'TXT',
+            'name' => $domain,
+            'content' => $content,
+            'proxied' => false,
+            'ttl' => 60,
+        ]);
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     private function listDnsRecords(UserSetting $settings, string $zoneId, string $domain): array

@@ -20,6 +20,7 @@ class GoogleSearchConsoleClient
     public function __construct(
         private readonly GoogleOAuthService $oauth,
         private readonly PublicDnsLookup $publicDns,
+        private readonly CloudflareClient $cloudflare,
     ) {}
 
     /**
@@ -79,7 +80,7 @@ class GoogleSearchConsoleClient
             }
 
             try {
-                return $this->submitOfferOnAccount($account, $siteUrl, $sitemapUrl);
+                return $this->submitOfferOnAccount($account, $offer, $siteUrl, $sitemapUrl);
             } catch (RuntimeException $e) {
                 if (GoogleOAuthService::isDeadTokenError($e->getMessage())) {
                     // New offers go to the primary. A dead primary must not
@@ -114,14 +115,14 @@ class GoogleSearchConsoleClient
     /**
      * @return array{site_url: string, sitemap_url: string, verified: bool, added: bool, sitemap_submitted: bool, email: string, google_account_id: int}
      */
-    private function submitOfferOnAccount(GoogleAccount $account, string $siteUrl, string $sitemapUrl): array
+    private function submitOfferOnAccount(GoogleAccount $account, Offer $offer, string $siteUrl, string $sitemapUrl): array
     {
         $accessToken = $this->oauth->accessTokenForAccount($account);
 
         // Search Console: add property first, then verify ownership, then sitemap.
         // Submitting the sitemap before ownership has propagated often yields HTTP 403.
         $added = $this->addSite($accessToken, $siteUrl);
-        $verified = $this->verifySiteFile($accessToken, $siteUrl);
+        $verified = $this->verifySiteOwnership($account, $offer, $siteUrl);
         $sitemapSubmitted = $this->submitSitemap($accessToken, $siteUrl, $sitemapUrl);
 
         Cache::forget('gsc.sites.v2.'.$account->id);
@@ -666,6 +667,144 @@ class GoogleSearchConsoleClient
         throw new RuntimeException('Site Verification FILE failed (HTTP '.$response->status().'): '.$this->shortError($body));
     }
 
+    /**
+     * HTML file first. Orange-cloud + Always HTTPS + Browser Integrity Check
+     * often hide that file from Google's crawler, so fall back to DNS TXT.
+     */
+    private function verifySiteOwnership(GoogleAccount $account, Offer $offer, string $siteUrl): bool
+    {
+        $accessToken = $this->oauth->accessTokenForAccount($account);
+
+        try {
+            return $this->verifySiteFile($accessToken, $siteUrl);
+        } catch (RuntimeException $e) {
+            if (! self::isMissingVerificationTokenError($e->getMessage())) {
+                throw $e;
+            }
+        }
+
+        return $this->verifySiteDnsTxt($account, $offer);
+    }
+
+    private function verifySiteDnsTxt(GoogleAccount $account, Offer $offer): bool
+    {
+        $domain = strtolower(rtrim(trim((string) $offer->domain), '.'));
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        $zoneId = trim((string) ($meta['cloudflare_zone_id'] ?? ''));
+        if ($domain === '' || $zoneId === '') {
+            throw new RuntimeException(
+                'GSC FILE-верифікація не пройшла, а DNS TXT неможливий: немає Cloudflare zone на офері.',
+            );
+        }
+
+        $cfSettings = $this->cloudflareSettingsForOffer($offer);
+        if ($cfSettings === null) {
+            throw new RuntimeException(
+                'GSC FILE-верифікація не пройшла, а DNS TXT неможливий: немає Cloudflare token на офері.',
+            );
+        }
+
+        $accessToken = $this->oauth->accessTokenForAccount($account);
+        $tokenResponse = Http::timeout(20)
+            ->withToken($accessToken)
+            ->acceptJson()
+            ->post('https://www.googleapis.com/siteVerification/v1/token', [
+                'verificationMethod' => 'DNS_TXT',
+                'site' => [
+                    'type' => 'INET_DOMAIN',
+                    'identifier' => $domain,
+                ],
+            ]);
+
+        if (! $tokenResponse->successful()) {
+            $this->throwIfRateLimited($tokenResponse->status(), (string) $tokenResponse->body(), 'siteVerification.token');
+
+            throw new RuntimeException(
+                'Site Verification DNS token failed (HTTP '.$tokenResponse->status().'): '.$this->shortError((string) $tokenResponse->body()),
+            );
+        }
+
+        $txt = trim((string) $tokenResponse->json('token'));
+        if ($txt === '' || ! str_starts_with($txt, 'google-site-verification=')) {
+            throw new RuntimeException('Site Verification DNS token is empty.');
+        }
+
+        $this->cloudflare->ensureTxtRecord($cfSettings, $zoneId, $domain, $txt);
+        $this->waitForPublicTxt($domain, $txt);
+
+        $response = Http::timeout(30)
+            ->withToken($accessToken)
+            ->acceptJson()
+            ->post('https://www.googleapis.com/siteVerification/v1/webResource?verificationMethod=DNS_TXT', [
+                'site' => [
+                    'type' => 'INET_DOMAIN',
+                    'identifier' => $domain,
+                ],
+            ]);
+
+        if ($response->successful()) {
+            return true;
+        }
+
+        $body = (string) $response->body();
+        if ($response->status() === 400 && (
+            str_contains($body, 'already verified')
+            || str_contains($body, 'alreadyVerified')
+            || str_contains($body, 'Site is already verified')
+        )) {
+            return true;
+        }
+
+        if (in_array($response->status(), [409, 403], true) && str_contains(strtolower($body), 'already')) {
+            return true;
+        }
+
+        Log::warning('GSC DNS TXT verification failed', [
+            'domain' => $domain,
+            'status' => $response->status(),
+            'body' => $body,
+        ]);
+
+        $this->throwIfRateLimited($response->status(), $body, 'siteVerification.dns');
+
+        throw new RuntimeException('Site Verification DNS_TXT failed (HTTP '.$response->status().'): '.$this->shortError($body));
+    }
+
+    private function waitForPublicTxt(string $domain, string $expected): void
+    {
+        $needle = strtolower(trim($expected, " \t\n\r\""));
+        for ($i = 0; $i < 8; $i++) {
+            foreach ($this->publicDns->txtRecords($domain) as $row) {
+                if (str_contains($row, $needle)) {
+                    return;
+                }
+            }
+
+            usleep(1_500_000);
+        }
+    }
+
+    private function cloudflareSettingsForOffer(Offer $offer): ?UserSetting
+    {
+        $offer->loadMissing('user.settings');
+        $base = $offer->user?->settings;
+        if (! $base instanceof UserSetting) {
+            return null;
+        }
+
+        $token = CloudflareClient::normalizeApiToken(
+            filled($offer->cloudflare_api_token) ? (string) $offer->cloudflare_api_token : (string) $base->cloudflare_api_token,
+        );
+        if ($token === '') {
+            return null;
+        }
+
+        $clone = $base->replicate();
+        $clone->cloudflare_api_token = $token;
+
+        return $clone;
+    }
+
     private function addSite(string $accessToken, string $siteUrl): bool
     {
         $encoded = rawurlencode($siteUrl);
@@ -836,6 +975,14 @@ class GoogleSearchConsoleClient
         if ($status === 429 || str_contains(strtolower($body), 'quota exceeded')) {
             throw new RuntimeException('Search Console '.$action.' rate-limited (HTTP 429)');
         }
+    }
+
+    public static function isMissingVerificationTokenError(string $message): bool
+    {
+        $m = strtolower($message);
+
+        return str_contains($m, 'necessary verification token could not be found')
+            || str_contains($m, 'verification token could not be found on your site');
     }
 
     public static function isAccountFullError(string $message): bool

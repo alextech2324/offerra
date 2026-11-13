@@ -42,6 +42,34 @@ class PublicDnsLookup
     /**
      * @return list<string>
      */
+    public function txtRecords(string $domain): array
+    {
+        $domain = strtolower(rtrim(trim($domain), '.'));
+        if ($domain === '') {
+            return [];
+        }
+
+        $out = [];
+        foreach (self::ENDPOINTS as $url) {
+            $fetch = $this->fetch($url, $domain, 'TXT');
+            if ($fetch === null) {
+                continue;
+            }
+
+            foreach ($fetch['records'] as $row) {
+                $clean = strtolower(trim((string) $row, " \t\n\r\""));
+                if ($clean !== '') {
+                    $out[] = $clean;
+                }
+            }
+        }
+
+        return array_values(array_unique($out));
+    }
+
+    /**
+     * @return list<string>
+     */
     public function aRecords(string $domain): array
     {
         $resolved = $this->resolve($domain);
