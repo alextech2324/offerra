@@ -6,6 +6,7 @@ use App\Models\GoogleAccount;
 use App\Models\Offer;
 use App\Models\UserSetting;
 use App\Support\PublicDnsLookup;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -550,9 +551,7 @@ class GoogleSearchConsoleClient
         $filename = ltrim($filename, '/');
         $url = 'https://'.$domain.'/'.$filename;
         try {
-            $response = Http::timeout(12)
-                ->withOptions(['verify' => true, 'allow_redirects' => true])
-                ->get($url);
+            $response = $this->httpsGetPinned($domain, $url, timeout: 12);
         } catch (\Throwable $e) {
             throw new RuntimeException('Cannot fetch verification file: '.$e->getMessage());
         }
@@ -614,14 +613,42 @@ class GoogleSearchConsoleClient
     private function httpsResponds(string $host): bool
     {
         try {
-            $response = Http::timeout(10)
-                ->withOptions(['verify' => true, 'allow_redirects' => true])
-                ->get('https://'.$host.'/');
+            $response = $this->httpsGetPinned($host, 'https://'.$host.'/', timeout: 10);
 
             return $response->status() >= 200 && $response->status() < 400;
         } catch (\Throwable) {
             return false;
         }
+    }
+
+    /**
+     * Pin to public DoH A records. Panel systemd-resolved often still has
+     * registrar parking (185.53.179.x) after CF orange-cloud is live, and
+     * that IP times out on :443 — GSC submit then fails while the lander works.
+     */
+    private function httpsGetPinned(string $host, string $url, int $timeout): Response
+    {
+        $host = strtolower(rtrim(trim($host), '.'));
+        $ips = $this->lookupARecords($host);
+        $resolve = [];
+        foreach ($ips as $ip) {
+            $resolve[] = $host.':443:'.$ip;
+            $resolve[] = $host.':80:'.$ip;
+        }
+
+        $options = [
+            'verify' => true,
+            'allow_redirects' => true,
+            'http_errors' => false,
+        ];
+        if ($resolve !== [] && defined('CURLOPT_RESOLVE')) {
+            $options['curl'] = [CURLOPT_RESOLVE => $resolve];
+        }
+
+        return Http::timeout($timeout)
+            ->connectTimeout(5)
+            ->withOptions($options)
+            ->get($url);
     }
 
     private function verifySiteFile(string $accessToken, string $siteUrl): bool
