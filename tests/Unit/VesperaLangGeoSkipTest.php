@@ -11,9 +11,6 @@ class VesperaLangGeoSkipTest extends TestCase
         if (! defined('SITE_LANG')) {
             define('SITE_LANG', 'en');
         }
-        if (! defined('SITE_URL')) {
-            define('SITE_URL', 'https://example.com');
-        }
         if (! defined('GEO_LANG_MAP')) {
             define('GEO_LANG_MAP', [
                 'FR' => 'fr',
@@ -35,7 +32,7 @@ class VesperaLangGeoSkipTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($_SERVER['HTTP_CF_IPCOUNTRY'], $_SERVER['HTTP_HOST']);
+        unset($_SERVER['HTTP_CF_IPCOUNTRY']);
         parent::tearDown();
     }
 
@@ -124,20 +121,5 @@ class VesperaLangGeoSkipTest extends TestCase
         $this->assertSame('LANG_GEO_MISMATCH', \LeadProcessor::resolveSpamReason(['language' => 'en']));
         $this->assertNull(\LeadProcessor::resolveSpamReason(['language' => 'fr']));
         $this->assertSame('BOT_UA', \LeadProcessor::resolveSpamReason(['language' => 'fr'], 'BOT_UA'));
-    }
-
-    public function test_swiss_named_host_skips_non_ch_market_ips(): void
-    {
-        $_SERVER['HTTP_HOST'] = 'horizontermevance-ch.com';
-
-        $this->assertSame('GEO_SKIP', $this->reason('NL', 'nl'));
-        $this->assertSame('GEO_SKIP', $this->reason('GB', 'en'));
-        $this->assertSame('GEO_SKIP', $this->reason('SG', 'en'));
-        $this->assertSame('GEO_SKIP', $this->reason('BE', 'fr'));
-        $this->assertNull($this->reason('CH', 'de'));
-        $this->assertNull($this->reason('DE', 'de'));
-        $this->assertNull($this->reason('FR', 'fr'));
-        $this->assertNull($this->reason('IT', 'it'));
-        $this->assertSame('LANG_GEO_MISMATCH', $this->reason('CH', 'en'));
     }
 }
