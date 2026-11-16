@@ -183,6 +183,12 @@ final class LeadProcessor
             return 'GEO_SKIP';
         }
 
+        // Swiss-named landers (-ch.) are not ML in practice — NL/US/GB bots
+        // POST a matching language and skip the GEO_LANG_MAP check.
+        if (self::hostLooksSwiss() && ! in_array($ip, ['CH', 'DE', 'FR', 'IT', 'AT', 'LI'], true)) {
+            return 'GEO_SKIP';
+        }
+
         $submitted = strtolower(trim((string) ($lead['language'] ?? '')));
         if ($submitted === '') {
             $submitted = strtolower(defined('SITE_LANG') ? (string) SITE_LANG : 'en');
@@ -206,6 +212,16 @@ final class LeadProcessor
     private static function geoSkipCountries(): array
     {
         return ['US'];
+    }
+
+    private static function hostLooksSwiss(): bool
+    {
+        $host = strtolower(trim((string) ($_SERVER['HTTP_HOST'] ?? '')));
+        if ($host === '' && defined('SITE_URL')) {
+            $host = strtolower((string) (parse_url((string) SITE_URL, PHP_URL_HOST) ?: ''));
+        }
+
+        return str_contains($host, '-ch.');
     }
 
     /**
