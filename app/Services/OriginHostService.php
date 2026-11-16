@@ -284,6 +284,16 @@ SH;
         return null;
     }
 
+    public function hostHasOfferIndex(string $host, string $domain): bool
+    {
+        $creds = $this->sshCredsForHost($host);
+        if ($creds === null) {
+            return false;
+        }
+
+        return $this->remoteHasOfferIndex($creds, $domain);
+    }
+
     /**
      * @param  array{host: string, port: int, user: string, pass: string}  $creds
      */

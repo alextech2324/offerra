@@ -9,9 +9,11 @@ use App\Models\Offer;
 use App\Models\OriginServer;
 use App\Models\User;
 use App\Models\UserSetting;
+use App\Services\CloudflareClient;
 use App\Services\OriginHostService;
 use App\Services\OriginPool;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Queue;
 use Mockery;
 use Tests\TestCase;
@@ -22,7 +24,7 @@ class OfferMoveServerTest extends TestCase
 
     public function test_bulk_move_retargets_and_queues_deploy_dns_and_purge(): void
     {
-        Queue::fake();
+        Bus::fake();
 
         $user = User::factory()->create();
         $this->origin('84.200.193.136', 'ultahost');
@@ -43,9 +45,11 @@ class OfferMoveServerTest extends TestCase
         $this->assertSame('84.200.89.234', $offer->infra_meta['deploy_host'] ?? null);
         $this->assertSame('84.200.193.136', $offer->infra_meta['migrated_from'] ?? null);
 
-        Queue::assertPushed(DeployOfferJob::class, fn (DeployOfferJob $job) => $job->offerId === $offer->id);
-        Queue::assertPushed(RebindOfferDnsJob::class, fn (RebindOfferDnsJob $job) => $job->offerId === $offer->id && $job->ip === '84.200.89.234');
-        Queue::assertPushed(PurgeOfferFromOriginJob::class, fn (PurgeOfferFromOriginJob $job) => $job->offerId === $offer->id && $job->host === '84.200.193.136');
+        Bus::assertChained([
+            DeployOfferJob::class,
+            RebindOfferDnsJob::class,
+            PurgeOfferFromOriginJob::class,
+        ]);
     }
 
     public function test_bulk_move_skips_offer_already_on_target(): void
@@ -144,7 +148,7 @@ class OfferMoveServerTest extends TestCase
         $origin->shouldNotReceive('deleteWebRoot');
 
         (new PurgeOfferFromOriginJob($offer->id, '10.3.0.1'))
-            ->handle(app(OriginPool::class), $origin);
+            ->handle(app(OriginPool::class), $origin, Mockery::mock(CloudflareClient::class));
     }
 
     public function test_purge_job_deletes_old_host_after_move(): void
@@ -154,8 +158,18 @@ class OfferMoveServerTest extends TestCase
         $old = $this->origin('10.4.0.1');
         $this->origin('10.4.0.2');
         $offer = $this->offer($user, 'moved.tech', '10.4.0.2');
+        $offer->forceFill([
+            'infra_meta' => [
+                'deploy_host' => '10.4.0.2',
+                'cloudflare_zone_id' => 'zone-moved',
+            ],
+        ])->save();
 
         $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('hostHasOfferIndex')
+            ->once()
+            ->with('10.4.0.2', 'moved.tech')
+            ->andReturn(true);
         $origin->shouldReceive('deleteWebRoot')
             ->once()
             ->withArgs(function ($settings, $domain) use ($old) {
@@ -163,8 +177,62 @@ class OfferMoveServerTest extends TestCase
                     && (string) $settings->deploy_host === $old->host;
             });
 
+        $cloudflare = Mockery::mock(CloudflareClient::class);
+        $cloudflare->shouldReceive('listARecords')->andReturn([
+            ['content' => '10.4.0.2'],
+        ]);
+
         (new PurgeOfferFromOriginJob($offer->id, $old->host))
-            ->handle(app(OriginPool::class), $origin);
+            ->handle(app(OriginPool::class), $origin, $cloudflare);
+    }
+
+    public function test_purge_job_skips_delete_when_new_origin_has_no_files(): void
+    {
+        $user = User::factory()->create();
+        UserSetting::query()->create(['user_id' => $user->id]);
+        $this->origin('10.5.0.1');
+        $this->origin('10.5.0.2');
+        $offer = $this->offer($user, 'empty-target.tech', '10.5.0.2');
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('hostHasOfferIndex')
+            ->once()
+            ->with('10.5.0.2', 'empty-target.tech')
+            ->andReturn(false);
+        $origin->shouldNotReceive('deleteWebRoot');
+
+        (new PurgeOfferFromOriginJob($offer->id, '10.5.0.1'))
+            ->handle(app(OriginPool::class), $origin, Mockery::mock(CloudflareClient::class));
+    }
+
+    public function test_purge_job_skips_delete_while_cloudflare_still_on_old_host(): void
+    {
+        $user = User::factory()->create();
+        UserSetting::query()->create([
+            'user_id' => $user->id,
+            'cloudflare_api_token' => 'tok',
+        ]);
+        $old = $this->origin('10.6.0.1');
+        $this->origin('10.6.0.2');
+        $offer = $this->offer($user, 'dns-lag.tech', '10.6.0.2');
+        $offer->forceFill([
+            'infra_meta' => [
+                'deploy_host' => '10.6.0.2',
+                'cloudflare_zone_id' => 'zone1',
+            ],
+        ])->save();
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('hostHasOfferIndex')->andReturn(true);
+        $origin->shouldNotReceive('deleteWebRoot');
+
+        $cloudflare = Mockery::mock(CloudflareClient::class);
+        $cloudflare->shouldReceive('listARecords')->andReturn([
+            ['content' => $old->host],
+        ]);
+
+        (new PurgeOfferFromOriginJob($offer->id, $old->host))
+            ->handle(app(OriginPool::class), $origin, $cloudflare);
     }
 
     private function origin(

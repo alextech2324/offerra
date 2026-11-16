@@ -8,6 +8,7 @@ use App\Jobs\RebindOfferDnsJob;
 use App\Models\Offer;
 use App\Models\OriginServer;
 use App\Support\OriginRebalancePlanner;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
@@ -17,14 +18,8 @@ use InvalidArgumentException;
  */
 class OriginEvacuationService
 {
-    /** Seconds between queued Cloudflare rebinds (API rate limits). */
-    private const REBIND_DELAY_SEC = 3;
-
-    /** Head start so files land before DNS follows. */
-    private const REBIND_BASE_DELAY = 90;
-
-    /** Wait for DNS TTL before deleting the old origin copy. */
-    private const PURGE_BASE_DELAY = 1800;
+    /** Wait after DNS rebind before deleting the old origin copy (CF orange TTL). */
+    private const PURGE_AFTER_REBIND_SECONDS = 1800;
 
     public function __construct(
         private readonly OriginPool $pool,
@@ -366,30 +361,25 @@ class OriginEvacuationService
 
         $queued = 0;
         foreach ($offerIds as $offerId) {
-            DeployOfferJob::dispatch($offerId)->onQueue('deploy');
-            $queued++;
-        }
-
-        $index = 0;
-        foreach ($offerIds as $offerId) {
             $host = $moves[$offerId]['to'] ?? null;
             if ($host === null) {
                 continue;
             }
 
-            RebindOfferDnsJob::dispatch($offerId, $host)
-                ->delay(now()->addSeconds(self::REBIND_BASE_DELAY + ($index * self::REBIND_DELAY_SEC)))
-                ->onQueue('deploy');
+            $chain = [
+                new DeployOfferJob($offerId),
+                new RebindOfferDnsJob($offerId, $host),
+            ];
 
             $from = $this->sync->normalizeHost((string) ($moves[$offerId]['from'] ?? ''));
             $to = $this->sync->normalizeHost((string) $host);
             if ($from !== '' && $from !== $to) {
-                PurgeOfferFromOriginJob::dispatch($offerId, $from)
-                    ->delay(now()->addSeconds(self::PURGE_BASE_DELAY + ($index * self::REBIND_DELAY_SEC)))
-                    ->onQueue('deploy');
+                $chain[] = (new PurgeOfferFromOriginJob($offerId, $from))
+                    ->delay(now()->addSeconds(self::PURGE_AFTER_REBIND_SECONDS));
             }
 
-            $index++;
+            Bus::chain($chain)->onQueue('deploy')->dispatch();
+            $queued++;
         }
 
         return $queued;
