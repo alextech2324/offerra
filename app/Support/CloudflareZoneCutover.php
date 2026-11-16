@@ -52,4 +52,25 @@ final class CloudflareZoneCutover
             default => 'primary',
         };
     }
+
+    /**
+     * First throw waits on registry publication. The hold hint is only useful
+     * after a Cloudflare account switch, when Dynadot already has the new NS
+     * but the old zone is gone and the registry still serves NXDOMAIN.
+     */
+    public static function isAccountSwitch(array $meta): bool
+    {
+        return isset($meta['cloudflare_old_pool_id'])
+            || isset($meta['cloudflare_old_zone_delete'])
+            || filled($meta['cloudflare_old_zone_id'] ?? null);
+    }
+
+    public static function nxdomainWaitError(array $meta): ?string
+    {
+        if (! self::isAccountSwitch($meta)) {
+            return null;
+        }
+
+        return 'Реєстр не публікує домен (NXDOMAIN). NS у Dynadot уже Cloudflare — часто server hold, API його не знімає.';
+    }
 }

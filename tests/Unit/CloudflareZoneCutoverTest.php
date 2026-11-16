@@ -45,4 +45,28 @@ class CloudflareZoneCutoverTest extends TestCase
         $this->assertSame('backup', CloudflareZoneCutover::slotFromMeta(['cloudflare_slot' => 'backup']));
         $this->assertSame('primary', CloudflareZoneCutover::slotFromMeta([]));
     }
+
+    public function test_first_throw_nxdomain_is_not_blamed_on_server_hold(): void
+    {
+        $this->assertFalse(CloudflareZoneCutover::isAccountSwitch([
+            'nameservers' => ['gordon.ns.cloudflare.com', 'robin.ns.cloudflare.com'],
+            'dynadot_ns' => 'done',
+            'dns' => 'pending',
+        ]));
+        $this->assertNull(CloudflareZoneCutover::nxdomainWaitError([
+            'dynadot_ns' => 'done',
+            'dns' => 'pending',
+        ]));
+    }
+
+    public function test_cf_switch_nxdomain_keeps_the_hold_hint(): void
+    {
+        $meta = [
+            'cloudflare_old_pool_id' => 2,
+            'cloudflare_old_zone_delete' => 'deleted',
+            'dns' => 'pending',
+        ];
+        $this->assertTrue(CloudflareZoneCutover::isAccountSwitch($meta));
+        $this->assertStringContainsString('server hold', (string) CloudflareZoneCutover::nxdomainWaitError($meta));
+    }
 }

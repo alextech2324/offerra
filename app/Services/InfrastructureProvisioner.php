@@ -239,7 +239,12 @@ class InfrastructureProvisioner
 
         unset($meta['dns_via']);
         if ($this->publicDns->nameservers($domain) === [] && $this->publicDns->aRecords($domain) === []) {
-            $meta['dns_error'] = 'Реєстр не публікує домен (NXDOMAIN). NS у Dynadot уже Cloudflare — часто server hold, API його не знімає.';
+            $hold = CloudflareZoneCutover::nxdomainWaitError($meta);
+            if ($hold !== null) {
+                $meta['dns_error'] = $hold;
+            } else {
+                unset($meta['dns_error']);
+            }
         } else {
             unset($meta['dns_error']);
         }
