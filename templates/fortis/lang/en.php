@@ -421,4 +421,16 @@ return [
         'text' => 'This address is not on the {brand} desk.',
         'cta' => 'Back to home',
     ],
+    'photos' => [
+        'desk' => '{brand} investing desk with brass lamp and blotter',
+        'scan' => 'Market screens on the {brand} walnut desk',
+        'ledger' => 'Open ledger and fountain pen on the {brand} desk',
+        'commute' => 'Checking the {brand} desk on a phone while commuting',
+        'signup' => 'Filling the {brand} registration form at the desk',
+        'vault' => 'Brass deposit box used after a {brand} funding step',
+        'session' => 'Advisory session at the {brand} table',
+        'skyline' => 'Dusk city view from the {brand} office',
+        'atelier' => '{brand} boardroom with walnut table and navy chairs',
+        'street' => 'Street outside the {brand} office at golden hour',
+    ],
 ];

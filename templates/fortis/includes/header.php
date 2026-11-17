@@ -21,6 +21,14 @@ $homeUrl = lang_path($lang, 'home');
   <link rel="alternate" hreflang="x-default" href="<?= e(abs_lang_url(DEFAULT_LANG, $page)) ?>">
   <link rel="icon" href="<?= e(public_url('assets/icons/mark.svg')) ?>" type="image/svg+xml">
   <meta name="theme-color" content="#1a2744">
+  <meta property="og:title" content="<?= e($meta['title']) ?>">
+  <meta property="og:description" content="<?= e($meta['description']) ?>">
+  <meta property="og:image" content="<?= e(hero_image_abs()) ?>">
+  <meta property="og:image:alt" content="<?= e(fortis_photo_alt($langData, 'desk')) ?>">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="900">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="<?= e(hero_image_abs()) ?>">
   <link rel="stylesheet" href="<?= e(public_url('assets/css/fortis.css')) ?>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.3/build/css/intlTelInput.css">
 </head>

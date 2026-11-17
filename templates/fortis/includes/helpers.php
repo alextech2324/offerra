@@ -319,22 +319,74 @@ function site_slug(): string
     return strtolower(preg_replace('/[^a-z0-9]/i', '', SITE_NAME) ?: 'offer');
 }
 
-function hero_image_rel(): string
+function fortis_photo_keys(): array
 {
+    return ['desk', 'scan', 'ledger', 'commute', 'signup', 'vault', 'session', 'skyline', 'atelier', 'street'];
+}
+
+function fortis_photo_rel(string $key): string
+{
+    $key = preg_replace('/[^a-z0-9]/', '', strtolower($key)) ?: 'desk';
     $slug = site_slug();
     $root = dirname(__DIR__);
     foreach ([
-        'assets/img/'.$slug.'-neural-core.jpg',
-        'static/img/'.$slug.'-neural-core.jpg',
-        'assets/img/ai-head.jpg',
-        'static/img/ai-head.jpg',
+        'assets/img/'.$slug.'-'.$key.'.jpg',
+        'assets/img/ft-'.$key.'.jpg',
     ] as $rel) {
-        if (is_file($root.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $rel))) {
+        $full = $root.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $rel);
+        if (is_file($full)) {
             return $rel;
         }
     }
 
-    return 'assets/img/'.$slug.'-neural-core.jpg';
+    return 'assets/img/ft-'.$key.'.jpg';
+}
+
+function fortis_photo_abs(string $key): string
+{
+    return rtrim(base_url(), '/').'/'.ltrim(fortis_photo_rel($key), '/');
+}
+
+function fortis_photo_size(string $key): array
+{
+    return in_array($key, ['desk', 'skyline'], true) ? [1600, 900] : [1200, 900];
+}
+
+function fortis_photo_alt(array $langData, string $key): string
+{
+    $alt = $langData['photos'][$key] ?? '';
+
+    return is_string($alt) && $alt !== '' ? $alt : (defined('SITE_NAME') ? (string) SITE_NAME : 'Fortis');
+}
+
+function fortis_figure(array $langData, string $key, string $class = '', bool $priority = false): void
+{
+    [$width, $height] = fortis_photo_size($key);
+    $className = trim('ft-shot '.$class);
+    $loading = $priority ? ' fetchpriority="high"' : ' loading="lazy"';
+
+    echo '<figure class="'.e($className).'">';
+    echo '<img src="'.e(public_url(fortis_photo_rel($key))).'" alt="'.e(fortis_photo_alt($langData, $key)).'" width="'.$width.'" height="'.$height.'" decoding="async"'.$loading.'>';
+    echo '</figure>';
+}
+
+function fortis_page_photos(string $page): array
+{
+    return match ($page) {
+        'home' => ['desk', 'scan', 'ledger', 'commute', 'signup', 'vault', 'session', 'skyline'],
+        'about' => ['atelier', 'street'],
+        'product' => ['scan', 'ledger', 'commute'],
+        'offer' => ['signup', 'vault', 'session'],
+        'sign-up' => ['signup'],
+        'contact' => ['street'],
+        'faq' => ['atelier'],
+        default => [],
+    };
+}
+
+function hero_image_rel(): string
+{
+    return fortis_photo_rel('desk');
 }
 
 function hero_image_url(): string
@@ -344,7 +396,7 @@ function hero_image_url(): string
 
 function hero_image_abs(): string
 {
-    return rtrim(base_url(), '/').'/'.ltrim(hero_image_rel(), '/');
+    return fortis_photo_abs('desk');
 }
 
 function site_domain(): string

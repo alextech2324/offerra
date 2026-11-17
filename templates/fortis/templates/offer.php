@@ -11,8 +11,12 @@ $o = $langData['offer'];
 <section class="ft-band">
   <div class="ft-wrap">
     <ol class="ft-path">
-      <?php foreach ($o['items'] as $item): ?>
+      <?php
+        $offerPhotos = ['signup', 'vault', 'session'];
+        foreach ($o['items'] as $i => $item):
+      ?>
       <li>
+        <?php fortis_figure($langData, $offerPhotos[$i] ?? 'desk'); ?>
         <h3><?= e($item['title']) ?></h3>
         <p><?= e($item['text']) ?></p>
       </li>

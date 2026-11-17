@@ -21,8 +21,9 @@ if ($path === '/robots.txt') {
 if ($path === '/sitemap.xml') {
     header('Content-Type: application/xml; charset=UTF-8');
     $pages = sitemap_page_keys();
+    $langPack = load_lang(DEFAULT_LANG);
     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-    echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+    echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
     foreach (SUPPORTED_LANGS as $lang) {
         foreach ($pages as $pageKey) {
             $loc = abs_lang_url($lang, $pageKey);
@@ -31,6 +32,12 @@ if ($path === '/sitemap.xml') {
             echo '    <loc>' . htmlspecialchars($loc, ENT_XML1) . "</loc>\n";
             echo "    <changefreq>weekly</changefreq>\n";
             echo '    <priority>' . $priority . "</priority>\n";
+            foreach (fortis_page_photos($pageKey) as $photoKey) {
+                echo "    <image:image>\n";
+                echo '      <image:loc>' . htmlspecialchars(fortis_photo_abs($photoKey), ENT_XML1) . "</image:loc>\n";
+                echo '      <image:title>' . htmlspecialchars(fortis_photo_alt($langPack, $photoKey), ENT_XML1) . "</image:title>\n";
+                echo "    </image:image>\n";
+            }
             echo "  </url>\n";
         }
     }

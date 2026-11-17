@@ -192,6 +192,26 @@ p { margin: 0 0 1rem; }
   gap: 2rem;
 }
 
+.ft-open__shot { margin-top: 2rem; }
+
+.ft-shot {
+  margin: 0 0 1rem;
+}
+.ft-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #d8cfc0;
+}
+.ft-shot--wide img { aspect-ratio: 16 / 9; }
+.ft-shot--flush {
+  margin: -1.15rem -1.15rem 1rem;
+}
+.ft-path .ft-shot { margin: 0.15rem 0 0.7rem; }
+.ft-pagehead .ft-shot { margin-top: 1.25rem; max-width: 48rem; }
+
 .ft-open__title { max-width: 18ch; }
 
 .ft-open__lead { font-size: 1.08rem; color: var(--ft-ink-soft); }

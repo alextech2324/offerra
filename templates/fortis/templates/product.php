@@ -10,8 +10,12 @@ $p = $langData['product'];
 </section>
 <section class="ft-band">
   <div class="ft-wrap ft-plates">
-    <?php foreach ($p['items'] as $item): ?>
+    <?php
+      $productPhotos = ['scan', 'ledger', 'commute'];
+      foreach ($p['items'] as $i => $item):
+    ?>
     <article class="ft-plate">
+      <?php fortis_figure($langData, $productPhotos[$i] ?? 'desk', 'ft-shot--flush'); ?>
       <p class="ft-kicker"><?= e($item['tag']) ?></p>
       <h2><?= e($item['title']) ?></h2>
       <p><?= e($item['text']) ?></p>

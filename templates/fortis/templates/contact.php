@@ -15,19 +15,22 @@ $c = $langData['contact'];
       $wrapId = 'lead-form-wrap';
       require __DIR__ . '/../includes/lead-form.php';
     ?>
-    <div class="ft-channels">
-      <?php foreach ($c['channels'] as $ch):
-        $href = $ch['href'];
-        if ($href === 'faq') {
-            $href = lang_path($lang, 'faq');
-        }
-      ?>
-      <article class="ft-plate">
-        <h3><?= e($ch['title']) ?></h3>
-        <p><?= e($ch['text']) ?></p>
-        <a href="<?= e($href) ?>"<?= str_starts_with($href, 'http') ? ' target="_blank" rel="noopener"' : '' ?>><?= e($ch['link']) ?></a>
-      </article>
-      <?php endforeach; ?>
+    <div>
+      <?php fortis_figure($langData, 'street'); ?>
+      <div class="ft-channels">
+        <?php foreach ($c['channels'] as $ch):
+          $href = $ch['href'];
+          if ($href === 'faq') {
+              $href = lang_path($lang, 'faq');
+          }
+        ?>
+        <article class="ft-plate">
+          <h3><?= e($ch['title']) ?></h3>
+          <p><?= e($ch['text']) ?></p>
+          <a href="<?= e($href) ?>"<?= str_starts_with($href, 'http') ? ' target="_blank" rel="noopener"' : '' ?>><?= e($ch['link']) ?></a>
+        </article>
+        <?php endforeach; ?>
+      </div>
     </div>
   </div>
 </section>

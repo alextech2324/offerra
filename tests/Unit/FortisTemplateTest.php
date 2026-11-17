@@ -56,6 +56,11 @@ class FortisTemplateTest extends TestCase
         $this->assertSame('Join now', $lang['nav']['cta']);
         $this->assertArrayHasKey('privacy', $lang['legal']);
         $this->assertArrayHasKey('terms', $lang['legal']);
+        $this->assertArrayHasKey('photos', $lang);
+        foreach (['desk', 'scan', 'ledger', 'commute', 'signup', 'vault', 'session', 'skyline', 'atelier', 'street'] as $photo) {
+            $this->assertArrayHasKey($photo, $lang['photos']);
+            $this->assertFileExists(base_path('templates/fortis/assets/img/ft-'.$photo.'.jpg'));
+        }
     }
 
     public function test_fortis_preview_uses_template_root(): void

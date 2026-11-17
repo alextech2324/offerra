@@ -454,6 +454,9 @@ class OfferGenerator
                 $paths[] = 'templates/contact.php';
                 $paths[] = 'templates/sign-up.php';
                 $paths[] = 'templates/404.php';
+                foreach (['desk', 'scan', 'ledger', 'commute', 'signup', 'vault', 'session', 'skyline', 'atelier', 'street'] as $photo) {
+                    $paths[] = 'assets/img/ft-'.$photo.'.jpg';
+                }
             }
 
             $langDir = base_path('templates'.DIRECTORY_SEPARATOR.$template.DIRECTORY_SEPARATOR.'lang');
@@ -788,18 +791,30 @@ PHP;
         ];
 
         foreach ($candidates as $imgDir) {
+            $copied = false;
             $source = $imgDir.DIRECTORY_SEPARATOR.'ai-head.jpg';
-            if (! File::isFile($source)) {
-                continue;
+            if (File::isFile($source)) {
+                File::copy($source, $imgDir.DIRECTORY_SEPARATOR.$slug.'-neural-core.jpg');
+                $webp = $imgDir.DIRECTORY_SEPARATOR.'ai-head.webp';
+                if (File::isFile($webp)) {
+                    File::copy($webp, $imgDir.DIRECTORY_SEPARATOR.$slug.'-neural-core.webp');
+                }
+                $copied = true;
             }
 
-            File::copy($source, $imgDir.DIRECTORY_SEPARATOR.$slug.'-neural-core.jpg');
-            $webp = $imgDir.DIRECTORY_SEPARATOR.'ai-head.webp';
-            if (File::isFile($webp)) {
-                File::copy($webp, $imgDir.DIRECTORY_SEPARATOR.$slug.'-neural-core.webp');
+            if (File::isDirectory($imgDir)) {
+                foreach (File::files($imgDir) as $file) {
+                    if (preg_match('/^ft-([a-z0-9]+)\.jpg$/', $file->getFilename(), $match) !== 1) {
+                        continue;
+                    }
+                    File::copy($file->getPathname(), $imgDir.DIRECTORY_SEPARATOR.$slug.'-'.$match[1].'.jpg');
+                    $copied = true;
+                }
             }
 
-            return;
+            if ($copied) {
+                return;
+            }
         }
     }
 

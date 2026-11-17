@@ -9,6 +9,9 @@ $a = $langData['about'];
   </div>
 </section>
 <section class="ft-band">
+  <div class="ft-wrap">
+    <?php fortis_figure($langData, 'atelier', 'ft-shot--wide'); ?>
+  </div>
   <div class="ft-wrap ft-split">
     <div>
       <h2><?= e($a['story_title']) ?></h2>
@@ -43,6 +46,9 @@ $a = $langData['about'];
   </div>
 </section>
 <section class="ft-band">
+  <div class="ft-wrap">
+    <?php fortis_figure($langData, 'street', 'ft-shot--wide'); ?>
+  </div>
   <div class="ft-wrap ft-center">
     <h2><?= e($a['cta_title']) ?></h2>
     <p class="ft-lede"><?= e($a['cta_text']) ?></p>

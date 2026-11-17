@@ -17,6 +17,7 @@ $howto = $langData['howto'];
       require __DIR__ . '/../includes/lead-form.php';
     ?>
     <div>
+      <?php fortis_figure($langData, 'signup'); ?>
       <h2><?= e($s['steps_title']) ?></h2>
       <ol class="ft-path">
         <?php foreach ($howto['steps'] as $step): ?>

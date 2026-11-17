@@ -33,6 +33,9 @@ $market = geo_country_name();
       require __DIR__ . '/../includes/lead-form.php';
     ?>
   </div>
+  <div class="ft-wrap ft-open__shot">
+    <?php fortis_figure($langData, 'desk', 'ft-shot--wide', true); ?>
+  </div>
 </section>
 
 <section class="ft-yield" id="yield" aria-label="<?= e($yield['title']) ?>"
@@ -90,8 +93,12 @@ $market = geo_country_name();
     <p class="ft-kicker"><?= e($plates['kicker']) ?></p>
     <h2><?= e(str_replace('{market}', $market, $plates['title'])) ?></h2>
     <div class="ft-plates">
-      <?php foreach ($plates['items'] as $i => $item): ?>
+      <?php
+        $platePhotos = ['scan', 'ledger', 'commute'];
+        foreach ($plates['items'] as $i => $item):
+      ?>
       <article class="ft-plate">
+        <?php fortis_figure($langData, $platePhotos[$i] ?? 'desk', 'ft-shot--flush'); ?>
         <span class="ft-plate__num"><?= e(str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT)) ?></span>
         <h3><?= e($item['title']) ?></h3>
         <p><?= e($item['text']) ?></p>
@@ -106,8 +113,12 @@ $market = geo_country_name();
     <p class="ft-kicker"><?= e($howto['eyebrow']) ?></p>
     <h2><?= e($howto['title']) ?></h2>
     <ol class="ft-path">
-      <?php foreach ($howto['steps'] as $step): ?>
+      <?php
+        $stepPhotos = ['signup', 'vault', 'session'];
+        foreach ($howto['steps'] as $i => $step):
+      ?>
       <li>
+        <?php fortis_figure($langData, $stepPhotos[$i] ?? 'desk'); ?>
         <h3><?= e($step['title']) ?></h3>
         <p><?= e($step['text']) ?></p>
       </li>
@@ -148,6 +159,7 @@ $market = geo_country_name();
   <div class="ft-wrap">
     <p class="ft-kicker"><?= e($seo['eyebrow']) ?></p>
     <h2><?= e($seo['title']) ?></h2>
+    <?php fortis_figure($langData, 'skyline', 'ft-shot--wide'); ?>
     <p><?= e($seo['p1']) ?></p>
     <p><?= e($seo['p2']) ?></p>
     <p><?= e($seo['p3']) ?></p>

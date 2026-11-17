@@ -7,6 +7,7 @@ $notes = $faq['page_notes'] ?? [];
   <div class="ft-wrap">
     <h1><?= e($faq['title']) ?></h1>
     <p class="ft-lede"><?= e($faq['subtitle']) ?></p>
+    <?php fortis_figure($langData, 'atelier', 'ft-shot--wide'); ?>
   </div>
 </section>
 <section class="ft-band">
