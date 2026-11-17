@@ -71,7 +71,7 @@ class TemplatePreviewController extends Controller
                 $realFile = $shared;
             } else {
                 $frontController = $basePath.DIRECTORY_SEPARATOR.'index.php';
-                if ($template === 'vespera' && is_file($frontController)) {
+                if (\App\Services\TemplateCatalog::isDictionaryMl($template) && is_file($frontController)) {
                     return $this->servePhp($template, $frontController, $path);
                 }
 

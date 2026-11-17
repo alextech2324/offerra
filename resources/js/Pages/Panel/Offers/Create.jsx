@@ -40,8 +40,12 @@ function isOverflowHubTemplate(templateId) {
     return templateId === 'multilang';
 }
 
+function isPinnedDictionaryMl(templateId) {
+    return templateId === 'vespera' || templateId === 'fortis';
+}
+
 function isMlOfferTemplate(templateId) {
-    return templateId === 'multilang' || templateId === 'vespera';
+    return templateId === 'multilang' || isPinnedDictionaryMl(templateId);
 }
 
 /** Vespera can sit in any GEO pack; generator pins ML / en. */
@@ -403,9 +407,9 @@ export default function OffersCreate({
     const isMarketMultilang = isBulkMode
         ? bulkAllMultilang
         : isOverflowHubTemplate(data.template);
-    const packHasVespera = isBulkMode
-        ? bulkItems.some((item) => item.template === 'vespera')
-        : data.template === 'vespera';
+    const packHasPinnedMl = isBulkMode
+        ? bulkItems.some((item) => isPinnedDictionaryMl(item.template))
+        : isPinnedDictionaryMl(data.template);
 
     const availableLanguages = useMemo(() => {
         if (isMarketMultilang) {
@@ -2092,7 +2096,7 @@ export default function OffersCreate({
                                         <li key={item.domain} className="offer-bulk-map__row">
                                             <span className="offer-bulk-map__domain">
                                                 {item.domain}
-                                                {item.template === 'vespera' ? ' · ML/en' : ''}
+                                                {isPinnedDictionaryMl(item.template) ? ' · ML/en' : ''}
                                             </span>
                                             <select
                                                 className="offer-bulk-map__select"
@@ -2126,9 +2130,9 @@ export default function OffersCreate({
                                         </li>
                                     ))}
                                 </ul>
-                                {packHasVespera && (
+                                {packHasPinnedMl && (
                                     <p className="field-hint">
-                                        Домени з Vespera збережуться як ML / en і з усіма phone GEO. Інші візьмуть {data.geo || 'GEO'} / {data.lang || 'мову'}.
+                                        Домени з Vespera / Fortis збережуться як ML / en і з усіма phone GEO. Інші візьмуть {data.geo || 'GEO'} / {data.lang || 'мову'}.
                                     </p>
                                 )}
                             </div>
@@ -2149,12 +2153,12 @@ export default function OffersCreate({
                                         «вже є» — шаблон уже стоїть на воронці «{data.brand.trim()}». Можна обрати інший.
                                     </p>
                                 )}
-                                {data.template === 'vespera' && (
+                                {isPinnedDictionaryMl(data.template) && (
                                     <p className="field-hint">
-                                        Vespera збережеться як ML / en і з усіма phone GEO. Мін. деп і валюта з форми лишаються.
+                                        {selectedTemplate?.name || data.template} збережеться як ML / en і з усіма phone GEO. Мін. деп і валюта з форми лишаються.
                                     </p>
                                 )}
-                                {selectedTemplate && data.lang && data.template !== 'vespera' && (
+                                {selectedTemplate && data.lang && !isPinnedDictionaryMl(data.template) && (
                                     <p className="field-hint">
                                         Обрано: {selectedTemplate.name}. Мови шаблону:{' '}
                                         {selectedTemplate.languages.map((item) => item.code).join(', ') || '—'}
@@ -2282,8 +2286,8 @@ export default function OffersCreate({
                                 <span>
                                     {isMarketMultilang
                                         ? `Multi (${MULTILANG_GEO}) / en + ${Math.max(0, availableLanguages.length - 1)} мов`
-                                        : packHasVespera
-                                            ? `${data.geo} / ${data.lang} · vespera → ML/en`
+                                        : packHasPinnedMl
+                                            ? `${data.geo} / ${data.lang} · ${data.template} → ML/en`
                                             : `${data.geo} / ${data.lang}`}
                                 </span>
                             </div>

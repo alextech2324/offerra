@@ -58,7 +58,7 @@ class OfferConfigBuilder
         $geoClickUrl = $this->quote($this->geoClicks->clickUrl($settings));
         $clickIdUrl = $this->quote($this->clickIds->registerUrl($settings));
         $offerDomainRaw = $this->quote(strtolower(trim((string) $offer['domain'])));
-        $vesperaExtras = $this->vesperaDefines($offer, $siteUrl);
+        $vesperaExtras = $this->dictionaryMlDefines($offer, $siteUrl);
 
         return <<<PHP
 <?php
@@ -242,19 +242,21 @@ PHP;
     }
 
     /**
-     * Dictionary-i18n extras for Vespera. Other templates get an empty string.
+     * Dictionary-i18n extras for Vespera/Fortis. Other templates get an empty string.
      *
      * @param  array<string, mixed>  $offer
      */
-    private function vesperaDefines(array $offer, string $siteUrl): string
+    private function dictionaryMlDefines(array $offer, string $siteUrl): string
     {
-        if (($offer['template'] ?? '') !== 'vespera') {
+        $template = (string) ($offer['template'] ?? '');
+        if (! \App\Services\TemplateCatalog::isDictionaryMl($template)) {
             return '';
         }
 
-        $supported = $this->vesperaSupportedLangs();
+        $supported = $this->dictionarySupportedLangs($template);
         $map = $this->vesperaGeoLangMap($supported);
         $email = $this->quote('support@'.strtolower(trim((string) $offer['domain'])));
+        $tpl = $this->quote($template);
 
         return <<<PHP
 
@@ -263,7 +265,7 @@ define('SITE_EMAIL', {$email});
 define('DEFAULT_LANG', 'en');
 define('SUPPORTED_LANGS', {$this->phpArray($supported)});
 define('GEO_LANG_MAP', {$this->phpArray($map)});
-define('OFFER_TEMPLATE', 'vespera');
+define('OFFER_TEMPLATE', {$tpl});
 
 PHP;
     }
@@ -271,9 +273,9 @@ PHP;
     /**
      * @return list<string>
      */
-    private function vesperaSupportedLangs(): array
+    private function dictionarySupportedLangs(string $template): array
     {
-        $dir = base_path('templates'.DIRECTORY_SEPARATOR.'vespera'.DIRECTORY_SEPARATOR.'lang');
+        $dir = base_path('templates'.DIRECTORY_SEPARATOR.$template.DIRECTORY_SEPARATOR.'lang');
         $codes = [];
 
         if (is_dir($dir)) {

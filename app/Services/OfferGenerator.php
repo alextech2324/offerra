@@ -81,7 +81,7 @@ class OfferGenerator
                 $this->pruneMultilangDuplicates($targetPath);
             }
 
-            if ($template === 'vespera') {
+            if (TemplateCatalog::isDictionaryMl($template)) {
                 $this->syncVesperaLangFrontControllers($targetPath);
                 $this->syncVesperaBrandAssets($targetPath, (string) $input['brand']);
             }
@@ -417,7 +417,8 @@ class OfferGenerator
             ];
         }
 
-        if ($template === 'vespera') {
+        if (TemplateCatalog::isDictionaryMl($template)) {
+            $css = $template === 'vespera' ? 'assets/css/global.css' : 'assets/css/'.$template.'.css';
             $paths = [
                 'index.php',
                 'templates/home.php',
@@ -434,8 +435,7 @@ class OfferGenerator
                 'includes/footer.php',
                 'includes/lead-form.php',
                 'includes/routes.php',
-                'assets/css/global.css',
-                'assets/img/ai-head.jpg',
+                $css,
                 'integration/validation.js',
                 'integration/visitor-geo.php',
                 'integration/send.php',
@@ -443,8 +443,20 @@ class OfferGenerator
                 'integration/FormToken.php',
                 'integration/LeadProcessor.php',
             ];
+            if ($template === 'vespera') {
+                $paths[] = 'assets/img/ai-head.jpg';
+            } else {
+                $paths[] = 'assets/js/'.$template.'.js';
+                $paths[] = 'assets/icons/mark.svg';
+                $paths[] = 'templates/product.php';
+                $paths[] = 'templates/offer.php';
+                $paths[] = 'templates/faq.php';
+                $paths[] = 'templates/contact.php';
+                $paths[] = 'templates/sign-up.php';
+                $paths[] = 'templates/404.php';
+            }
 
-            $langDir = base_path('templates'.DIRECTORY_SEPARATOR.'vespera'.DIRECTORY_SEPARATOR.'lang');
+            $langDir = base_path('templates'.DIRECTORY_SEPARATOR.$template.DIRECTORY_SEPARATOR.'lang');
             if (is_dir($langDir)) {
                 foreach (scandir($langDir) ?: [] as $file) {
                     if (! preg_match('/^([a-z]{2})\.php$/', $file, $matches)) {
@@ -506,7 +518,7 @@ class OfferGenerator
             $this->pruneMultilangDuplicates($targetPath);
         }
 
-        if ($offer->template === 'vespera') {
+        if (TemplateCatalog::isDictionaryMl($offer->template)) {
             $this->syncVesperaLangFrontControllers($targetPath);
             $this->syncVesperaBrandAssets($targetPath, (string) $offer->brand);
         }
@@ -556,7 +568,7 @@ class OfferGenerator
         );
 
         $this->migrateLegacyAssets($targetPath, $offer->template);
-        if ($offer->template === 'vespera') {
+        if (TemplateCatalog::isDictionaryMl($offer->template)) {
             $this->syncVesperaBrandAssets($targetPath, (string) $offer->brand);
         }
 
@@ -602,7 +614,7 @@ class OfferGenerator
         $this->syncSharedIncludeFiles($targetPath, $offer->template);
         $this->syncSharedIntegrationFiles($targetPath, $offer->template);
         $this->syncSharedStaticFiles($targetPath, $offer->template, $offer->lang);
-        if ($offer->template === 'vespera') {
+        if (TemplateCatalog::isDictionaryMl($offer->template)) {
             $this->syncVesperaLangFrontControllers($targetPath);
             $this->syncVesperaBrandAssets($targetPath, (string) $offer->brand);
         }
@@ -1063,7 +1075,7 @@ PHP;
     /** Старі оффери з папкою assets/ — один раз перед деплоєм. Vespera keeps assets/. */
     public function migrateLegacyAssets(string $targetPath, ?string $template = null): void
     {
-        if ($template === 'vespera') {
+        if (TemplateCatalog::isDictionaryMl($template)) {
             return;
         }
 

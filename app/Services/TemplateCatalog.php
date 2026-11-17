@@ -185,13 +185,28 @@ class TemplateCatalog
         };
     }
 
+    /**
+     * Dictionary-i18n ML landers (Vespera, Fortis): one tree, lang/*.php packs.
+     *
+     * @return list<string>
+     */
+    public static function dictionaryMlIds(): array
+    {
+        return ['vespera', 'fortis'];
+    }
+
+    public static function isDictionaryMl(string $templateId): bool
+    {
+        return in_array($templateId, self::dictionaryMlIds(), true);
+    }
+
     /** Copy the template root (dictionary i18n or overflow hub), not one langs/{code}/ folder. */
     public static function copiesWholeTree(string $templateId): bool
     {
-        return in_array($templateId, ['multilang', 'vespera'], true);
+        return $templateId === 'multilang' || self::isDictionaryMl($templateId);
     }
 
-    /** Old overflow hub only — Vespera is a separate ML offer. */
+    /** Old overflow hub only — Vespera/Fortis are separate ML offers. */
     public static function isOverflowHub(string $templateId): bool
     {
         return $templateId === 'multilang';
@@ -199,16 +214,16 @@ class TemplateCatalog
 
     public static function usesMlGeo(string $templateId): bool
     {
-        return in_array($templateId, ['multilang', 'vespera'], true);
+        return $templateId === 'multilang' || self::isDictionaryMl($templateId);
     }
 
     /**
-     * Vespera can sit in a single-GEO pack (min deposit + currency from the form),
-     * but the stored offer is always ML / en — not the market GEO/lang.
+     * Dictionary ML landers can sit in a single-GEO pack (min deposit + currency
+     * from the form), but the stored offer is always ML / en — not the market GEO/lang.
      */
     public static function pinVesperaMarket(array $input): array
     {
-        if (($input['template'] ?? '') !== 'vespera') {
+        if (! self::isDictionaryMl((string) ($input['template'] ?? ''))) {
             return $input;
         }
 
@@ -469,8 +484,14 @@ class TemplateCatalog
 
         $base = 'PHP-ленд · '.count($codes).' '.(count($codes) === 1 ? 'мова' : 'мови').': '.implode(', ', $labels);
 
-        return $templateId === 'default-pro'
-            ? $base.' · branded SEO copy (H1, FAQ, GEO)'
-            : $base;
+        if ($templateId === 'default-pro') {
+            return $base.' · branded SEO copy (H1, FAQ, GEO)';
+        }
+
+        if (self::isDictionaryMl($templateId)) {
+            return $base.' · ML / en, словники lang/*.php';
+        }
+
+        return $base;
     }
 }

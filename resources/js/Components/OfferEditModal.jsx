@@ -8,7 +8,7 @@ import { useEffect, useMemo } from 'react';
 const MULTILANG_GEO = 'ML';
 
 function isMlOfferTemplate(templateId) {
-    return templateId === 'multilang' || templateId === 'vespera';
+    return templateId === 'multilang' || templateId === 'vespera' || templateId === 'fortis';
 }
 
 function resolveMarket(geo, geoPresets, availableLanguages) {
