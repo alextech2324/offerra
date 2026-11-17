@@ -16,7 +16,7 @@ class InspectOfferGoogleIndexJob implements ShouldBeUnique, ShouldQueue
 
     public int $tries = 2;
 
-    public int $uniqueFor = 7200;
+    public int $uniqueFor = 259200;
 
     public function __construct(public int $offerId, public bool $force = false)
     {

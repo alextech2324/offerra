@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Offer;
 use App\Services\OfferGoogleIndexInspector;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class GoogleIndexClassifyTest extends TestCase
@@ -121,5 +122,21 @@ class GoogleIndexClassifyTest extends TestCase
     {
         $this->assertSame('la-piattaforma.org', OfferGoogleIndexInspector::hostFromUrl('https://www.la-piattaforma.org/page'));
         $this->assertSame('girtrust-si.cfd', OfferGoogleIndexInspector::hostFromUrl('girtrust-si.cfd'));
+    }
+
+    public function test_next_inspect_at_is_03_after_the_24h_wait(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-11-17 18:00:00', 'Europe/Kyiv'));
+        $at = app(OfferGoogleIndexInspector::class)->nextInspectAt();
+        $this->assertSame('2026-11-19 03:00:00', $at->timezone('Europe/Kyiv')->format('Y-m-d H:i:s'));
+        Carbon::setTestNow();
+    }
+
+    public function test_next_inspect_at_same_night_when_24h_lands_before_3am(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-11-17 02:00:00', 'Europe/Kyiv'));
+        $at = app(OfferGoogleIndexInspector::class)->nextInspectAt();
+        $this->assertSame('2026-11-18 03:00:00', $at->timezone('Europe/Kyiv')->format('Y-m-d H:i:s'));
+        Carbon::setTestNow();
     }
 }

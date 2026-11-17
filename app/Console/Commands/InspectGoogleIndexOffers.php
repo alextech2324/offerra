@@ -10,13 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 class InspectGoogleIndexOffers extends Command
 {
     protected $signature = 'offers:inspect-google-index
-        {--limit=400 : Max offers to queue this run}
+        {--limit=1500 : Max offers to queue this run}
         {--user=* : Restrict to user name or id (repeatable or comma-separated)}
         {--only= : Restrict to google_index_status (timeout)}
         {--force : Recheck even if a unique lock from a recent inspect is still held}
         {--dry-run : List due offers, do not inspect}';
 
-    protected $description = 'Inspect GSC index status for submitted offers (24h after submit, then daily until indexed / duplicate / 7d unseen)';
+    protected $description = 'Inspect GSC index status for submitted offers (scheduled 03:00 Kyiv; 24h after submit, then daily until indexed / duplicate / 7d unseen)';
 
     public function handle(OfferGoogleIndexInspector $inspector): int
     {

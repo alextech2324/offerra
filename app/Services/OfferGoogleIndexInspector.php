@@ -7,6 +7,7 @@ use App\Models\GoogleAccount;
 use App\Models\Offer;
 use App\Models\UserSetting;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -43,8 +44,24 @@ class OfferGoogleIndexInspector
             return;
         }
 
+        // Do not inspect during the day: first check lands at 03:00 Kyiv after the 24h wait.
         InspectOfferGoogleIndexJob::dispatch($offer->id)
-            ->delay(now()->addHours(self::FIRST_CHECK_HOURS));
+            ->delay($this->nextInspectAt());
+    }
+
+    /**
+     * Next 03:00 Europe/Kyiv that is still at least FIRST_CHECK_HOURS from now.
+     */
+    public function nextInspectAt(?Carbon $notBefore = null): Carbon
+    {
+        $tz = (string) config('app.timezone', 'Europe/Kyiv');
+        $ready = ($notBefore ?? now()->addHours(self::FIRST_CHECK_HOURS))->copy()->timezone($tz);
+        $run = $ready->copy()->setTime(3, 0, 0);
+        if ($run->lt($ready)) {
+            $run->addDay();
+        }
+
+        return $run;
     }
 
     /**
