@@ -160,7 +160,7 @@ return [
     'allies' => [
         'kicker' => 'Venues',
         'title' => 'Liquidity you can recognise',
-        'names' => ['Binance', 'Coinbase', 'Kraken', 'Bitstamp', 'Crypto.com'],
+        'names' => ['Binance', 'Coinbase', 'Kraken', 'Bitstamp'],
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
