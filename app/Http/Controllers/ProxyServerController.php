@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProxyServerRequest;
 use App\Http\Requests\UpdateProxyServerRequest;
+use App\Jobs\SyncOriginProxyRealIpJob;
 use App\Models\ProxyServer;
 use App\Services\EdgeProxyService;
 use Illuminate\Http\RedirectResponse;
@@ -37,6 +38,8 @@ class ProxyServerController extends Controller
             'is_active' => $request->boolean('is_active', true),
         ]);
 
+        SyncOriginProxyRealIpJob::dispatch();
+
         return redirect()
             ->route('proxy-servers.index')
             ->with('success', "Проксі {$host} додано.");
@@ -56,6 +59,7 @@ class ProxyServerController extends Controller
             $proxyServer->password = $data['password'];
         }
         $proxyServer->save();
+        SyncOriginProxyRealIpJob::dispatch();
 
         return redirect()
             ->route('proxy-servers.index')
@@ -66,6 +70,7 @@ class ProxyServerController extends Controller
     {
         $label = $proxyServer->displayLabel();
         $proxyServer->delete();
+        SyncOriginProxyRealIpJob::dispatch();
 
         return redirect()
             ->route('proxy-servers.index')

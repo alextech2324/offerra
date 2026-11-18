@@ -16,6 +16,8 @@ class SwitchOfferEdgeTest extends TestCase
 
     public function test_admin_can_add_proxy_and_user_cannot(): void
     {
+        Queue::fake();
+
         $admin = User::factory()->admin()->create();
         $user = User::factory()->create();
 
