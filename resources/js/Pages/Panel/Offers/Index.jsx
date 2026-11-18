@@ -479,6 +479,20 @@ function buildActiveFilterChips(filters, users) {
         });
     }
 
+    if (filters.edge === 'proxy') {
+        chips.push({
+            id: 'edge',
+            label: 'Проксі',
+            clear: { edge: '' },
+        });
+    } else if (filters.edge === 'cloudflare') {
+        chips.push({
+            id: 'edge',
+            label: 'Cloudflare',
+            clear: { edge: '' },
+        });
+    }
+
     if (filters.user) {
         const user = users.find((item) => String(item.id) === String(filters.user));
         chips.push({
@@ -1681,6 +1695,15 @@ export default function OffersIndex({
                             {panel}
                         </option>
                     ))}
+                </select>
+                <select
+                    aria-label="Проксі"
+                    value={filters.edge ?? ''}
+                    onChange={(e) => reloadOffers({ edge: e.target.value })}
+                >
+                    <option value="">CF / проксі</option>
+                    <option value="proxy">Проксі</option>
+                    <option value="cloudflare">Cloudflare</option>
                 </select>
                 {showUserColumn && users.length > 0 && (
                     <select

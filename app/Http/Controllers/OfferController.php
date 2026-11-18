@@ -190,6 +190,7 @@ class OfferController extends Controller
             'lang' => strtolower(request()->string('lang')->toString()),
             'template' => trim(request()->string('template')->toString()),
             'panel' => trim(request()->string('panel')->toString()),
+            'edge' => $this->normalizeEdgeFilter(request()->string('edge')->toString()),
             'indexing' => request()->string('indexing')->toString(),
             'google_index' => request()->string('google_index')->toString(),
             'availability' => request()->string('availability')->toString(),
@@ -219,6 +220,13 @@ class OfferController extends Controller
         );
 
         $query->whereRaw('LOWER('.$column.') LIKE ? ESCAPE ?', ['%'.$escaped.'%', '\\']);
+    }
+
+    private function normalizeEdgeFilter(string $edge): string
+    {
+        $edge = strtolower(trim($edge));
+
+        return in_array($edge, ['proxy', 'cloudflare'], true) ? $edge : '';
     }
 
     private function normalizeDomainFilter(string $domain): string
@@ -298,6 +306,15 @@ class OfferController extends Controller
             $query->where(function (Builder $builder) use ($panel) {
                 $builder->where('deploy_panel_name', $panel)
                     ->orWhere('infra_meta->deploy_host', $panel);
+            });
+        }
+
+        if (($filters['edge'] ?? '') === 'proxy') {
+            $query->where('infra_meta->edge', 'proxy');
+        } elseif (($filters['edge'] ?? '') === 'cloudflare') {
+            $query->where(function (Builder $builder): void {
+                $builder->whereNull('infra_meta->edge')
+                    ->orWhere('infra_meta->edge', '!=', 'proxy');
             });
         }
 

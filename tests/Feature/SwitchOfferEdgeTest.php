@@ -128,4 +128,49 @@ class SwitchOfferEdgeTest extends TestCase
 
         Queue::assertNothingPushed();
     }
+
+    public function test_offers_index_can_filter_by_proxy_edge(): void
+    {
+        $user = User::factory()->admin()->create();
+        $user->settings()->create([]);
+
+        Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'on-proxy.live',
+            'brand' => 'OnProxy',
+            'domain' => 'on-proxy.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'infra_meta' => [
+                'edge' => 'proxy',
+                'edge_ip' => '172.86.71.141',
+            ],
+        ]);
+        Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'on-cf.live',
+            'brand' => 'OnCf',
+            'domain' => 'on-cf.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'infra_meta' => [
+                'edge' => 'cloudflare',
+            ],
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('offers.index', ['edge' => 'proxy']))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Panel/Offers/Index')
+                ->where('filters.edge', 'proxy')
+                ->has('offers.data', 1)
+                ->where('offers.data.0.domain', 'on-proxy.live'));
+    }
 }

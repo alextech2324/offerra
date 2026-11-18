@@ -1,6 +1,6 @@
 import SecretInput from '@/Components/SecretInput';
 import PanelLayout from '@/Layouts/PanelLayout';
-import { router, useForm, usePage } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 function emptyCreate() {
@@ -198,7 +198,11 @@ export default function ProxyServersIndex({ servers = [] }) {
                                     )}
                                 </td>
                                 <td><code>{server.host}</code></td>
-                                <td className="col-num">{server.offers_count}</td>
+                                <td className="col-num">
+                                    <Link href={route('offers.index', { edge: 'proxy' })}>
+                                        {server.offers_count}
+                                    </Link>
+                                </td>
                                 <td>{statusBadge(server)}</td>
                                 <td>
                                     <div className="offer-actions">
