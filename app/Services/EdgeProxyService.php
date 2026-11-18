@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Offer;
 use App\Models\ProxyServer;
 use App\Support\OriginSsh;
+use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Support\Facades\Cache;
 use RuntimeException;
 
 class EdgeProxyService
@@ -43,9 +45,12 @@ class EdgeProxyService
         $meta['edge_proxy_id'] = $proxy->id;
         $meta['edge_ip'] = $proxy->host;
         $meta['dns'] = 'pending';
-        unset($meta['dns_error']);
+        unset($meta['dns_error'], $meta['edge_error']);
 
-        $offer->update(['infra_meta' => $meta]);
+        $offer->update([
+            'infra_meta' => $meta,
+            'infra_error' => null,
+        ]);
     }
 
     /**
@@ -78,10 +83,13 @@ class EdgeProxyService
             }
         }
 
-        unset($meta['edge_proxy_id'], $meta['edge_ip'], $meta['dns_error']);
+        unset($meta['edge_proxy_id'], $meta['edge_ip'], $meta['dns_error'], $meta['edge_error']);
         $meta['edge'] = 'cloudflare';
         $meta['dns'] = 'pending';
-        $offer->update(['infra_meta' => $meta]);
+        $offer->update([
+            'infra_meta' => $meta,
+            'infra_error' => null,
+        ]);
     }
 
     /**
@@ -147,6 +155,13 @@ class EdgeProxyService
 
     private function bindOnProxy(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): void
     {
+        $this->withProxyLock($proxy, function () use ($proxy, $domain, $originIp, $cfToken): void {
+            $this->bindOnProxyUnlocked($proxy, $domain, $originIp, $cfToken);
+        });
+    }
+
+    private function bindOnProxyUnlocked(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): void
+    {
         $this->assertProxy($proxy);
         $originIp = trim($originIp);
         if (filter_var($originIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
@@ -179,13 +194,14 @@ class EdgeProxyService
             $cmd .= ' '.escapeshellarg($remoteIni);
         }
 
+        $rm = 'rm -f '.escapeshellarg($remoteIni !== '' ? $remoteIni : '/tmp/offerra-acme-none.ini');
         $out = $this->ssh->exec(
             (string) $proxy->host,
             (int) ($proxy->port ?: 22),
             (string) $proxy->username,
             (string) $proxy->password,
-            $cmd.'; rm -f '.escapeshellarg($remoteIni !== '' ? $remoteIni : '/tmp/offerra-acme-none.ini'),
-            180,
+            $cmd.' 2>&1; ec=$?; '.$rm.'; exit $ec',
+            240,
         );
 
         if (! str_contains($out, 'BOUND ')) {
@@ -195,15 +211,41 @@ class EdgeProxyService
 
     private function unbindOnProxy(ProxyServer $proxy, string $domain): void
     {
-        $this->assertProxy($proxy);
-        $this->ssh->exec(
-            (string) $proxy->host,
-            (int) ($proxy->port ?: 22),
-            (string) $proxy->username,
-            (string) $proxy->password,
-            'offerra-edge unbind '.escapeshellarg($domain),
-            40,
-        );
+        $this->withProxyLock($proxy, function () use ($proxy, $domain): void {
+            $this->assertProxy($proxy);
+            $this->ssh->exec(
+                (string) $proxy->host,
+                (int) ($proxy->port ?: 22),
+                (string) $proxy->username,
+                (string) $proxy->password,
+                'offerra-edge unbind '.escapeshellarg($domain),
+                40,
+            );
+        });
+    }
+
+    /**
+     * Certbot and nginx -t cannot run two binds on the same box at once.
+     *
+     * @template T
+     * @param  callable(): T  $callback
+     * @return T
+     */
+    private function withProxyLock(ProxyServer $proxy, callable $callback): mixed
+    {
+        $lock = Cache::lock('edge-proxy-'.$proxy->id, 360);
+
+        try {
+            $lock->block(300);
+        } catch (LockTimeoutException) {
+            throw new RuntimeException('Проксі зараз зайнятий іншим доменом — повторіть.');
+        }
+
+        try {
+            return $callback();
+        } finally {
+            $lock->release();
+        }
     }
 
     private function assertProxy(ProxyServer $proxy): void

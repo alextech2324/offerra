@@ -240,6 +240,8 @@ case "$cmd" in
     cf_ini="${3:-}"
     valid_domain "$domain" || { echo "bad domain: $domain" >&2; exit 2; }
     valid_ip "$origin" || { echo "bad origin ip: $origin" >&2; exit 2; }
+    exec 9>/var/lock/offerra-edge.lock
+    flock -w 240 9
 
     have_cert=0
     if [ -n "$cf_ini" ]; then
@@ -265,6 +267,8 @@ case "$cmd" in
   unbind)
     domain="$(echo "${1:-}" | tr 'A-Z' 'a-z')"
     valid_domain "$domain" || { echo "bad domain: $domain" >&2; exit 2; }
+    exec 9>/var/lock/offerra-edge.lock
+    flock -w 60 9
     rm -f "$(site_path "$domain")" "/etc/nginx/sites-enabled/offerra-${domain}.conf"
     nginx -t
     systemctl reload nginx

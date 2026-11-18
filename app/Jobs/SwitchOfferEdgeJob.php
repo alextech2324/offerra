@@ -14,11 +14,11 @@ class SwitchOfferEdgeJob implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 240;
+    public int $timeout = 600;
 
-    public int $tries = 1;
+    public int $tries = 2;
 
-    public int $uniqueFor = 600;
+    public int $uniqueFor = 900;
 
     public function __construct(
         public int $offerId,
