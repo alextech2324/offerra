@@ -780,21 +780,14 @@ export default function OffersIndex({
     const clearAllFilters = () => {
         setBrandQuery('');
         setDomainQuery('');
-        reloadOffers({
-            brand: '',
-            domain: '',
-            geo: '',
-            lang: '',
-            template: '',
-            panel: '',
-            indexing: '',
-            google_index: '',
-            availability: '',
-            created: '',
-            created_from: '',
-            created_to: '',
-            user: '',
+        const cleared = {};
+        Object.keys(filters).forEach((key) => {
+            if (key === 'per_page') {
+                return;
+            }
+            cleared[key] = '';
         });
+        reloadOffers(cleared);
     };
 
     const clearFilter = (overrides) => {
