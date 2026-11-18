@@ -169,8 +169,7 @@ server {
     location / { return 301 https://${domain}\$request_uri; }
 }
 server {
-    listen 443 ssl;
-    http2 on;
+    listen 443 ssl http2;
     server_name www.${domain};
     ssl_certificate ${cert};
     ssl_certificate_key ${key};
@@ -180,8 +179,7 @@ server {
     return 301 https://${domain}\$request_uri;
 }
 server {
-    listen 443 ssl;
-    http2 on;
+    listen 443 ssl http2;
     server_name ${domain};
     ssl_certificate ${cert};
     ssl_certificate_key ${key};
