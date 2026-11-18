@@ -333,6 +333,12 @@ class OriginHealthProbe
     {
         return 'PROBE=\''.$probePath."'\n".<<<'SH'
 set +e
+if [ ! -e /etc/resolv.conf ] || ! grep -q '^nameserver' /etc/resolv.conf 2>/dev/null; then
+  chattr -i /etc/resolv.conf 2>/dev/null
+  rm -f /etc/resolv.conf
+  printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > /etc/resolv.conf
+  chattr +i /etc/resolv.conf 2>/dev/null
+fi
 LOAD=$(awk '{print $1" "$2" "$3}' /proc/loadavg 2>/dev/null)
 MEM_TOTAL=$(awk '/MemTotal:/ {print $2}' /proc/meminfo 2>/dev/null)
 MEM_AVAIL=$(awk '/MemAvailable:/ {print $2}' /proc/meminfo 2>/dev/null)
