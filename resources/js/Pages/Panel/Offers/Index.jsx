@@ -1923,7 +1923,7 @@ export default function OffersIndex({
                                     setEdgeSwitchOpen((open) => !open);
                                 }}
                             >
-                                Край
+                                Проксі
                             </button>
                             {edgeSwitchOpen && (
                                 <div className="offer-bulk-bar__rebind">
