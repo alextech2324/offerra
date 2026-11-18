@@ -172,15 +172,13 @@ async function main() {
   }
 
   step("restart queue workers");
-  await exec(conn, `supervisorctl restart offerra-deploy-worker:*`, {
-    timeoutMs: 180000,
-    allowFail: true,
-  });
   // Default workers must drain `gsc` before mass CRM/inspect jobs on `default`.
+  // DNS recheck and origin purge have their own queues so they cannot stall create.
   await exec(
     conn,
     `python3 - <<'PY'
 from pathlib import Path
+
 p = Path("/etc/supervisor/conf.d/offerra.conf")
 t = p.read_text()
 old = "--queue=default "
@@ -192,10 +190,67 @@ elif old in t:
     print("supervisor: default workers now listen gsc,default")
 else:
     print("supervisor: default queue line not found")
+
+dns = Path("/etc/supervisor/conf.d/offerra-dns.conf")
+if not dns.exists() or "--queue=dns" not in dns.read_text():
+    dns.write_text("""[program:offerra-dns-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/offerra/artisan queue:work database --queue=dns --sleep=1 --tries=1 --max-time=3600
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/var/www/offerra/storage/logs/dns-worker.log
+stopwaitsecs=3600
+""")
+    print("supervisor: wrote offerra-dns.conf")
+else:
+    print("supervisor: dns workers already configured")
+
+purge = Path("/etc/supervisor/conf.d/offerra-purge.conf")
+if not purge.exists() or "--queue=purge" not in purge.read_text():
+    purge.write_text("""[program:offerra-purge-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/offerra/artisan queue:work database --queue=purge --sleep=1 --tries=2 --max-time=3600
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/var/www/offerra/storage/logs/purge-worker.log
+stopwaitsecs=3600
+""")
+    print("supervisor: wrote offerra-purge.conf")
+else:
+    print("supervisor: purge workers already configured")
 PY
 supervisorctl reread
-supervisorctl update
-supervisorctl restart offerra-worker:*`,
+supervisorctl update`,
+    { timeoutMs: 180000, allowFail: true },
+  );
+  await exec(
+    conn,
+    [
+      "supervisorctl stop offerra-deploy-worker:* || true",
+      "cd /var/www/offerra && php <<'PHP'",
+      "<?php",
+      "require 'vendor/autoload.php';",
+      "$app = require 'bootstrap/app.php';",
+      "$app->make(Illuminate\\Contracts\\Console\\Kernel::class)->bootstrap();",
+      "$a = Illuminate\\Support\\Facades\\DB::table('jobs')->whereIn('queue', ['default', 'deploy'])->whereNull('reserved_at')->where('payload', 'like', '%RecheckInfrastructureDnsJob%')->update(['queue' => 'dns']);",
+      "$b = Illuminate\\Support\\Facades\\DB::table('jobs')->where('queue', 'deploy')->whereNull('reserved_at')->where('payload', 'like', '%PurgeOfferFromOriginJob%')->update(['queue' => 'purge']);",
+      'echo "moved recheck={$a} purge={$b}\\n";',
+      "PHP",
+      "supervisorctl restart offerra-deploy-worker:*",
+      "supervisorctl restart offerra-worker:*",
+      "supervisorctl start offerra-dns-worker:*",
+      "supervisorctl start offerra-purge-worker:*",
+    ].join("\n"),
     { timeoutMs: 180000, allowFail: true },
   );
   await exec(conn, `supervisorctl status`, { timeoutMs: 60000, allowFail: true });

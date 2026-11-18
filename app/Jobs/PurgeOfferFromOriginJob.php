@@ -29,7 +29,7 @@ class PurgeOfferFromOriginJob implements ShouldBeUnique, ShouldQueue
         public int $offerId,
         public string $host,
     ) {
-        $this->onQueue('deploy');
+        $this->onQueue('purge');
     }
 
     public function uniqueId(): string

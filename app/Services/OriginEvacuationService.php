@@ -371,14 +371,15 @@ class OriginEvacuationService
                 new RebindOfferDnsJob($offerId, $host),
             ];
 
+            Bus::chain($chain)->onQueue('deploy')->dispatch();
+
+            // Purge sits on its own queue so leftover origin deletes cannot block new offers.
             $from = $this->sync->normalizeHost((string) ($moves[$offerId]['from'] ?? ''));
             $to = $this->sync->normalizeHost((string) $host);
             if ($from !== '' && $from !== $to) {
-                $chain[] = (new PurgeOfferFromOriginJob($offerId, $from))
+                PurgeOfferFromOriginJob::dispatch($offerId, $from)
                     ->delay(now()->addSeconds(self::PURGE_AFTER_REBIND_SECONDS));
             }
-
-            Bus::chain($chain)->onQueue('deploy')->dispatch();
             $queued++;
         }
 

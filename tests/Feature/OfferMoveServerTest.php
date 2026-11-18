@@ -48,8 +48,10 @@ class OfferMoveServerTest extends TestCase
         Bus::assertChained([
             DeployOfferJob::class,
             RebindOfferDnsJob::class,
-            PurgeOfferFromOriginJob::class,
         ]);
+        Bus::assertDispatched(PurgeOfferFromOriginJob::class, function (PurgeOfferFromOriginJob $job) {
+            return $job->queue === 'purge' && $job->host === '84.200.193.136';
+        });
     }
 
     public function test_bulk_move_skips_offer_already_on_target(): void
