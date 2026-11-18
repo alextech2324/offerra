@@ -139,6 +139,19 @@ class CloudflareClient
         $this->purgeZoneDnsRecords($settings, $zoneId);
 
         $proxied = (bool) ($settings->cloudflare_default_proxied ?? true);
+        $this->setRootARecords($settings, $zoneId, $domain, $ip, $proxied);
+    }
+
+    /**
+     * Update apex/www A without wiping the rest of the zone (GSC TXT, etc.).
+     */
+    public function setRootARecords(
+        UserSetting $settings,
+        string $zoneId,
+        string $domain,
+        string $ip,
+        bool $proxied,
+    ): void {
         $this->ensureARecord($settings, $zoneId, $domain, '@', $ip, $proxied);
         $this->ensureARecord($settings, $zoneId, $domain, 'www', $ip, $proxied);
     }

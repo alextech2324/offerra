@@ -1,0 +1,253 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Offer;
+use App\Models\ProxyServer;
+use App\Support\OriginSsh;
+use RuntimeException;
+
+class EdgeProxyService
+{
+    public function __construct(
+        private readonly CloudflareClient $cloudflare,
+        private readonly OriginHostService $origin,
+        private readonly OriginSsh $ssh,
+    ) {}
+
+    /**
+     * Put the offer behind the proxy: LE cert, nginx vhost, grey-cloud A → proxy IP.
+     */
+    public function attach(Offer $offer, ProxyServer $proxy): void
+    {
+        $offer->loadMissing('user.settings');
+        $settings = $offer->user?->settings;
+        if ($settings === null) {
+            throw new RuntimeException('Немає налаштувань користувача.');
+        }
+
+        $domain = $this->normalizedDomain($offer);
+        $originIp = $this->origin->originIpForOffer($offer, $settings);
+        $zoneId = trim((string) (($offer->infra_meta['cloudflare_zone_id'] ?? '')));
+        $token = CloudflareClient::normalizeApiToken((string) ($offer->cloudflare_api_token ?: $settings->cloudflare_api_token));
+
+        if ($zoneId === '' || $token === '') {
+            throw new RuntimeException('Спочатку має бути Cloudflare-зона (A-запис міняємо в ній на сіру хмару).');
+        }
+
+        $this->bindOnProxy($proxy, $domain, $originIp, $token);
+        $this->cloudflare->setRootARecords($this->cfSettings($settings, $token), $zoneId, $domain, $proxy->host, false);
+
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        $meta['edge'] = 'proxy';
+        $meta['edge_proxy_id'] = $proxy->id;
+        $meta['edge_ip'] = $proxy->host;
+        $meta['dns'] = 'pending';
+        unset($meta['dns_error']);
+
+        $offer->update(['infra_meta' => $meta]);
+    }
+
+    /**
+     * Restore orange-cloud Cloudflare in front of the origin.
+     */
+    public function detach(Offer $offer): void
+    {
+        $offer->loadMissing('user.settings');
+        $settings = $offer->user?->settings;
+        if ($settings === null) {
+            throw new RuntimeException('Немає налаштувань користувача.');
+        }
+
+        $domain = $this->normalizedDomain($offer);
+        $originIp = $this->origin->originIpForOffer($offer, $settings);
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        $zoneId = trim((string) ($meta['cloudflare_zone_id'] ?? ''));
+        $token = CloudflareClient::normalizeApiToken((string) ($offer->cloudflare_api_token ?: $settings->cloudflare_api_token));
+        $proxy = $this->proxyFromMeta($meta);
+
+        if ($zoneId !== '' && $token !== '') {
+            $this->cloudflare->setRootARecords($this->cfSettings($settings, $token), $zoneId, $domain, $originIp, true);
+        }
+
+        if ($proxy !== null) {
+            try {
+                $this->unbindOnProxy($proxy, $domain);
+            } catch (\Throwable $e) {
+                // DNS already back on CF; leftover nginx site is harmless.
+            }
+        }
+
+        unset($meta['edge_proxy_id'], $meta['edge_ip'], $meta['dns_error']);
+        $meta['edge'] = 'cloudflare';
+        $meta['dns'] = 'pending';
+        $offer->update(['infra_meta' => $meta]);
+    }
+
+    /**
+     * Origin moved while the offer stays on the proxy: update upstream only.
+     */
+    public function retargetOrigin(Offer $offer, string $originIp): void
+    {
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        $proxy = $this->proxyFromMeta($meta);
+        if ($proxy === null) {
+            return;
+        }
+
+        $this->bindOnProxy($proxy, $this->normalizedDomain($offer), $originIp, null);
+        $meta['deploy_host'] = $originIp;
+        $offer->update(['infra_meta' => $meta]);
+    }
+
+    /**
+     * @return array{ok: bool, message: string}
+     */
+    public function checkHealth(ProxyServer $proxy): array
+    {
+        if (! $proxy->hasSshCredentials()) {
+            return ['ok' => false, 'message' => 'Немає SSH-креденшалів'];
+        }
+
+        try {
+            $out = $this->ssh->exec(
+                (string) $proxy->host,
+                (int) ($proxy->port ?: 22),
+                (string) $proxy->username,
+                (string) $proxy->password,
+                'offerra-edge health',
+                25,
+            );
+            $ok = str_contains($out, 'RESULT: OK') && str_contains($out, 'nginx=active');
+
+            return [
+                'ok' => $ok,
+                'message' => $ok ? 'nginx active' : trim(preg_replace('/\s+/', ' ', $out) ?? $out),
+            ];
+        } catch (\Throwable $e) {
+            return ['ok' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function dropSite(Offer $offer): void
+    {
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        if (($meta['edge'] ?? '') !== 'proxy') {
+            return;
+        }
+        $proxy = $this->proxyFromMeta($meta);
+        if ($proxy === null) {
+            return;
+        }
+        try {
+            $this->unbindOnProxy($proxy, $this->normalizedDomain($offer));
+        } catch (\Throwable) {
+        }
+    }
+
+    private function bindOnProxy(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): void
+    {
+        $this->assertProxy($proxy);
+        $originIp = trim($originIp);
+        if (filter_var($originIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
+            throw new RuntimeException('Невалідний origin IP для проксі.');
+        }
+
+        $remoteIni = '';
+        $cmd = 'offerra-edge bind '.escapeshellarg($domain).' '.escapeshellarg($originIp);
+
+        if (filled($cfToken)) {
+            $local = tempnam(sys_get_temp_dir(), 'offerra-cfini-');
+            if ($local === false) {
+                throw new RuntimeException('Не вдалося створити тимчасовий файл для Cloudflare token.');
+            }
+            file_put_contents($local, "dns_cloudflare_api_token = {$cfToken}\n");
+            $remoteIni = '/tmp/offerra-acme-'.$domain.'.ini';
+            try {
+                $this->ssh->upload(
+                    (string) $proxy->host,
+                    (int) ($proxy->port ?: 22),
+                    (string) $proxy->username,
+                    (string) $proxy->password,
+                    $local,
+                    $remoteIni,
+                    30,
+                );
+            } finally {
+                @unlink($local);
+            }
+            $cmd .= ' '.escapeshellarg($remoteIni);
+        }
+
+        $out = $this->ssh->exec(
+            (string) $proxy->host,
+            (int) ($proxy->port ?: 22),
+            (string) $proxy->username,
+            (string) $proxy->password,
+            $cmd.'; rm -f '.escapeshellarg($remoteIni !== '' ? $remoteIni : '/tmp/offerra-acme-none.ini'),
+            180,
+        );
+
+        if (! str_contains($out, 'BOUND ')) {
+            throw new RuntimeException('Проксі не підтвердив bind: '.trim($out));
+        }
+    }
+
+    private function unbindOnProxy(ProxyServer $proxy, string $domain): void
+    {
+        $this->assertProxy($proxy);
+        $this->ssh->exec(
+            (string) $proxy->host,
+            (int) ($proxy->port ?: 22),
+            (string) $proxy->username,
+            (string) $proxy->password,
+            'offerra-edge unbind '.escapeshellarg($domain),
+            40,
+        );
+    }
+
+    private function assertProxy(ProxyServer $proxy): void
+    {
+        if (! $proxy->is_active) {
+            throw new RuntimeException('Проксі вимкнений.');
+        }
+        if (! $proxy->hasSshCredentials()) {
+            throw new RuntimeException('У проксі немає SSH-креденшалів.');
+        }
+    }
+
+    private function proxyFromMeta(array $meta): ?ProxyServer
+    {
+        $id = (int) ($meta['edge_proxy_id'] ?? 0);
+        if ($id > 0) {
+            $row = ProxyServer::query()->find($id);
+            if ($row) {
+                return $row;
+            }
+        }
+        $ip = trim((string) ($meta['edge_ip'] ?? ''));
+        if ($ip === '') {
+            return null;
+        }
+
+        return ProxyServer::query()->where('host', $ip)->first();
+    }
+
+    private function cfSettings(\App\Models\UserSetting $settings, string $token): \App\Models\UserSetting
+    {
+        $probe = $settings->replicate();
+        $probe->cloudflare_api_token = $token;
+
+        return $probe;
+    }
+
+    private function normalizedDomain(Offer $offer): string
+    {
+        $domain = strtolower(trim((string) $offer->domain));
+        if ($domain === '' || ! preg_match('/^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/', $domain)) {
+            throw new RuntimeException('Невалідний домен для проксі.');
+        }
+
+        return $domain;
+    }
+}

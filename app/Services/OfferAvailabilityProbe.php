@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Offer;
+use App\Models\ProxyServer;
 use App\Support\InfrastructureDnsReadiness;
 use App\Support\PublicDnsLookup;
 use Illuminate\Http\Client\Pool;
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class OfferAvailabilityProbe
 {
+    /** @var list<string>|null */
+    private ?array $proxyHosts = null;
+
     private const TIMEOUT_SECONDS = 8;
 
     private const FAIL_STREAK_TO_DOWN = 2;
@@ -77,9 +81,7 @@ class OfferAvailabilityProbe
             return ['ok' => false, 'error' => 'Empty domain'];
         }
 
-        $aRecords = InfrastructureDnsReadiness::preferCloudflareProxyIps(
-            $this->publicDns->aRecords($domain),
-        );
+        $aRecords = $this->preferredEdgeIps($this->publicDns->aRecords($domain));
         if ($aRecords === []) {
             $ns = $this->publicDns->nameservers($domain);
             if ($ns === []) {
@@ -111,9 +113,7 @@ class OfferAvailabilityProbe
         $ipsByHost = [];
 
         foreach ($hosts as $host) {
-            $aRecords = InfrastructureDnsReadiness::preferCloudflareProxyIps(
-                $this->publicDns->aRecords($host),
-            );
+            $aRecords = $this->preferredEdgeIps($this->publicDns->aRecords($host));
             if ($aRecords === []) {
                 $ns = $this->publicDns->nameservers($host);
                 $out[$host] = [
@@ -382,6 +382,18 @@ class OfferAvailabilityProbe
             'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language' => 'en-US,en;q=0.9',
         ];
+    }
+
+    /**
+     * @param  list<string>  $ips
+     * @return list<string>
+     */
+    private function preferredEdgeIps(array $ips): array
+    {
+        $this->proxyHosts ??= ProxyServer::activeHosts();
+        $ours = array_values(array_intersect($ips, $this->proxyHosts));
+
+        return $ours !== [] ? $ours : InfrastructureDnsReadiness::preferCloudflareProxyIps($ips);
     }
 
     private function normalizeDomain(string $domain): string

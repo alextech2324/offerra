@@ -85,6 +85,13 @@ class OfferTeardownService
         // the hoster still got the complaint.
         $steps['origin'] = $this->removeOriginFiles($offer, $ownerSettings, $domain, $errors);
 
+        try {
+            app(EdgeProxyService::class)->dropSite($offer);
+            $steps['edge_proxy'] = 'unbound';
+        } catch (\Throwable $e) {
+            $steps['edge_proxy'] = 'error: '.$e->getMessage();
+        }
+
         $cloudflareOk = false;
         $cloudflareHardErrors = [];
 

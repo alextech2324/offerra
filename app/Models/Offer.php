@@ -223,6 +223,8 @@ class Offer extends Model
             'deploy_panel' => $this->deploy_panel_name,
             'cloudflare_account' => $this->cloudflare_account_name,
             'cloudflare_slot' => $this->cloudflareSlotForPanel(),
+            'edge' => $this->edgeForPanel(),
+            'edge_label' => $this->edgeLabelForPanel(),
             ...$this->ownerCloudflarePanelFields(),
             'dynadot_account' => $this->dynadot_account_name,
             'deployed_at' => $this->deployed_at?->timezone('Europe/Kyiv')->format('Y-m-d H:i'),
@@ -308,5 +310,23 @@ class Offer extends Model
         $slot = (string) (is_array($this->infra_meta) ? ($this->infra_meta['cloudflare_slot'] ?? '') : '');
 
         return in_array($slot, ['backup', 'spare'], true) ? $slot : 'primary';
+    }
+
+    private function edgeForPanel(): string
+    {
+        $edge = (string) (is_array($this->infra_meta) ? ($this->infra_meta['edge'] ?? '') : '');
+
+        return $edge === 'proxy' ? 'proxy' : 'cloudflare';
+    }
+
+    private function edgeLabelForPanel(): string
+    {
+        if ($this->edgeForPanel() !== 'proxy') {
+            return $this->cloudflare_account_name ?: 'Cloudflare';
+        }
+
+        $ip = trim((string) (is_array($this->infra_meta) ? ($this->infra_meta['edge_ip'] ?? '') : ''));
+
+        return $ip !== '' ? 'Проксі '.$ip : 'Проксі';
     }
 }

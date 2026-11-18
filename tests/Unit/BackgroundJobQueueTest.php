@@ -10,6 +10,7 @@ use App\Jobs\PushOfferConfigJob;
 use App\Jobs\RecheckInfrastructureDnsJob;
 use App\Jobs\ScanDownOffersJob;
 use App\Jobs\SubmitOfferToGscJob;
+use App\Jobs\SwitchOfferEdgeJob;
 use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,6 +34,7 @@ class BackgroundJobQueueTest extends TestCase
         $this->assertSame('deploy', (new DeployOfferJob(1))->queue);
         $this->assertSame('dns', (new RecheckInfrastructureDnsJob(1))->queue);
         $this->assertSame('purge', (new PurgeOfferFromOriginJob(1, '10.0.0.1'))->queue);
+        $this->assertSame('deploy', (new SwitchOfferEdgeJob(1, 'proxy:1'))->queue);
     }
 
     public function test_refresh_config_queue_push_stays_off_deploy(): void

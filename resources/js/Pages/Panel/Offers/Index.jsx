@@ -610,6 +610,7 @@ export default function OffersIndex({
     hasCloudflarePrimary = false,
     cloudflarePrimaryName = 'Основний CF',
     spareCloudflareAccounts = [],
+    proxyServers = [],
     originServers = [],
     downCount = 0,
 }) {
@@ -631,6 +632,7 @@ export default function OffersIndex({
     const [bulkIp, setBulkIp] = useState('');
     const [rebindOpen, setRebindOpen] = useState(false);
     const [cfSwitchOpen, setCfSwitchOpen] = useState(false);
+    const [edgeSwitchOpen, setEdgeSwitchOpen] = useState(false);
     const [serverSwitchOpen, setServerSwitchOpen] = useState(false);
     const [scanningDown, setScanningDown] = useState(false);
     const selectAllRef = useRef(null);
@@ -953,7 +955,9 @@ export default function OffersIndex({
     const allPageSelected = selectableIds.length > 0 && selectedOnPageCount === selectableIds.length;
     const originTargets = Array.isArray(originServers) ? originServers : [];
     const spareAccounts = Array.isArray(spareCloudflareAccounts) ? spareCloudflareAccounts : [];
+    const proxyList = Array.isArray(proxyServers) ? proxyServers : [];
     const canSwitchCloudflarePool = auth?.user?.role === 'admin';
+    const canSwitchEdge = canSwitchCloudflarePool && proxyList.length > 0;
 
     const selectedRowsOnPage = useMemo(
         () => rows.filter((offer) => selectedIds.includes(offer.id)),
@@ -1121,6 +1125,27 @@ export default function OffersIndex({
             }
         }
 
+        if (action === 'switch_edge') {
+            const rawTarget = String(extra.edge_target || '');
+            const proxyMatch = rawTarget.match(/^proxy:(\d+)$/);
+            const proxy = proxyMatch
+                ? proxyList.find((item) => String(item.id) === proxyMatch[1])
+                : null;
+            if (rawTarget !== 'cloudflare' && !proxy) {
+                window.alert('Оберіть Cloudflare або проксі з пулу.');
+                return;
+            }
+            const label = proxy ? `${proxy.display_label} (${proxy.host})` : 'Cloudflare';
+            if (!window.confirm(
+                `Перекинути ${selectedCount} оффер(ів) на ${label}?\n` +
+                (proxy
+                    ? 'DNS A стане сірим на цей проксі, HTTPS (Let’s Encrypt) на проксі, origin лишається HTTP.'
+                    : 'Поверне помаранчеву хмару Cloudflare на origin.'),
+            )) {
+                return;
+            }
+        }
+
         if (action === 'move_server') {
             const host = String(extra.target_host || '').trim();
             if (!host) {
@@ -1145,6 +1170,7 @@ export default function OffersIndex({
             action,
             ...(action === 'rebind_dns' ? { ip: bulkIp.trim() } : {}),
             ...(action === 'switch_cloudflare' ? { cloudflare_target: extra.cloudflare_target } : {}),
+            ...(action === 'switch_edge' ? { edge_target: extra.edge_target } : {}),
             ...(action === 'move_server' ? { target_host: extra.target_host } : {}),
         }, {
             preserveScroll: true,
@@ -1152,6 +1178,7 @@ export default function OffersIndex({
                 setSelectedIds([]);
                 setRebindOpen(false);
                 setCfSwitchOpen(false);
+                setEdgeSwitchOpen(false);
                 setServerSwitchOpen(false);
             },
             onFinish: () => setBulkBusy(false),
@@ -1797,6 +1824,7 @@ export default function OffersIndex({
                         disabled={bulkBusy}
                         onClick={() => {
                             setCfSwitchOpen(false);
+                            setEdgeSwitchOpen(false);
                             setServerSwitchOpen(false);
                             setRebindOpen((open) => !open);
                         }}
@@ -1840,6 +1868,7 @@ export default function OffersIndex({
                         disabled={bulkBusy}
                         onClick={() => {
                             setRebindOpen(false);
+                            setEdgeSwitchOpen(false);
                             setServerSwitchOpen(false);
                             setCfSwitchOpen((open) => !open);
                         }}
@@ -1881,6 +1910,47 @@ export default function OffersIndex({
                     )}
                         </>
                     )}
+                    {canSwitchEdge && (
+                        <>
+                            <button
+                                type="button"
+                                className="btn btn-ghost btn-sm"
+                                disabled={bulkBusy}
+                                onClick={() => {
+                                    setRebindOpen(false);
+                                    setCfSwitchOpen(false);
+                                    setServerSwitchOpen(false);
+                                    setEdgeSwitchOpen((open) => !open);
+                                }}
+                            >
+                                Край
+                            </button>
+                            {edgeSwitchOpen && (
+                                <div className="offer-bulk-bar__rebind">
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary btn-sm"
+                                        disabled={bulkBusy}
+                                        onClick={() => runBulkAction('switch_edge', { edge_target: 'cloudflare' })}
+                                    >
+                                        → Cloudflare
+                                    </button>
+                                    {proxyList.map((server) => (
+                                        <button
+                                            key={server.id}
+                                            type="button"
+                                            className="btn btn-primary btn-sm"
+                                            disabled={bulkBusy}
+                                            title={`${server.host} · ${server.offers_count} оферів`}
+                                            onClick={() => runBulkAction('switch_edge', { edge_target: `proxy:${server.id}` })}
+                                        >
+                                            → {server.display_label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
                     {originTargets.length > 0 && (
                         <>
                             <button
@@ -1890,6 +1960,7 @@ export default function OffersIndex({
                                 onClick={() => {
                                     setRebindOpen(false);
                                     setCfSwitchOpen(false);
+                                    setEdgeSwitchOpen(false);
                                     setServerSwitchOpen((open) => !open);
                                 }}
                             >
@@ -2056,10 +2127,16 @@ export default function OffersIndex({
                                     {colVisible('panel') && <td>{offer.deploy_panel ?? '—'}</td>}
                                     {colVisible('cloudflare') && (
                                         <td>
-                                            {offer.cloudflare_account ?? '—'}
-                                            {offer.cloudflare_slot === 'backup' || offer.cloudflare_slot === 'spare' ? (
-                                                <span className="muted" style={{ marginLeft: '0.35rem' }}>· запасний</span>
-                                            ) : null}
+                                            {offer.edge === 'proxy' ? (
+                                                <span title={offer.edge_label}>{offer.edge_label ?? 'Проксі'}</span>
+                                            ) : (
+                                                <>
+                                                    {offer.cloudflare_account ?? '—'}
+                                                    {offer.cloudflare_slot === 'backup' || offer.cloudflare_slot === 'spare' ? (
+                                                        <span className="muted" style={{ marginLeft: '0.35rem' }}>· запасний</span>
+                                                    ) : null}
+                                                </>
+                                            )}
                                         </td>
                                     )}
                                     {colVisible('dynadot') && <td>{offer.dynadot_account ?? '—'}</td>}

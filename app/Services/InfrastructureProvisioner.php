@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\ProvisionInfrastructureJob;
 use App\Models\CloudflareAccount;
 use App\Models\Offer;
+use App\Models\ProxyServer;
 use App\Models\User;
 use App\Models\UserSetting;
 use App\Support\CloudflareZoneCutover;
@@ -491,7 +492,10 @@ class InfrastructureProvisioner
                 continue;
             }
 
-            if ($ip === $serverIp || InfrastructureDnsReadiness::isCloudflareProxyIp($ip)) {
+            if ($ip === $serverIp
+                || InfrastructureDnsReadiness::isCloudflareProxyIp($ip)
+                || ProxyServer::isKnownHost($ip)
+            ) {
                 return true;
             }
         }
@@ -552,6 +556,18 @@ class InfrastructureProvisioner
         }
 
         $offer->loadMissing('user.settings');
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        if (($meta['edge'] ?? '') === 'proxy') {
+            app(EdgeProxyService::class)->retargetOrigin($offer, $ip);
+            $meta = is_array($offer->fresh()?->infra_meta) ? $offer->fresh()->infra_meta : $meta;
+            $meta['deploy_host'] = $ip;
+            $offer->update([
+                'infra_meta' => $meta,
+                'deploy_panel_name' => $ip,
+            ]);
+
+            return;
+        }
         $candidates = $this->cloudflareSettingsCandidates($offer);
 
         if ($candidates === []) {
