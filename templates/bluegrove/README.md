@@ -4,6 +4,6 @@ PHP lander in the same dictionary-ML shape as Vespera and Fortis: one tree, `lan
 
 English AI investing site in navy and green. Home has a market tape, hero form, three steps, a sample signal, registration, and FAQ. Inner pages: platform, pricing, team, contact, privacy, terms.
 
-Stock copy uses `{brand}` / `{min_deposit}` / `{currency_symbol}`. Generated offers rewrite `includes/config.php`. The registration form does not take a card.
+Stock copy uses `{brand}` for the funnel name. Minimum deposit is described by region, not a fixed amount. Generated offers rewrite `includes/config.php`. The registration form does not take a card.
 
 Preview: `/preview/bluegrove/`.

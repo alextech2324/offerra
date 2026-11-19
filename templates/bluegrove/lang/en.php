@@ -5,7 +5,7 @@ return [
     'meta' => [
         'home' => [
             'title' => '{brand} | AI investing platform',
-            'description' => 'A clear AI investing platform — plain-language markets, guided decisions, and a fast account opening from {currency_symbol}{min_deposit}.',
+            'description' => 'A clear AI investing platform — plain-language markets, guided decisions, and a fast account request. The minimum deposit depends on your region.',
         ],
         'about' => [
             'title' => 'About | {brand}',
@@ -17,7 +17,7 @@ return [
         ],
         'offer' => [
             'title' => 'Pricing | {brand}',
-            'description' => 'Start from {currency_symbol}{min_deposit}. Charts, tools, and AI notes unlock after funding.',
+            'description' => 'The minimum deposit depends on your region. A personal manager explains the amount and how charts, tools, and AI notes unlock after funding.',
         ],
         'team' => [
             'title' => 'Team | {brand}',
@@ -25,7 +25,7 @@ return [
         ],
         'sign-up' => [
             'title' => 'Open account | {brand}',
-            'description' => 'Request a {brand} account. Minimum deposit {currency_symbol}{min_deposit}. The form does not take a card.',
+            'description' => 'Request a {brand} account. The minimum deposit depends on your region. The form does not take a card.',
         ],
         'contact' => [
             'title' => 'Contact | {brand}',
@@ -120,7 +120,9 @@ return [
         'title' => 'Three steps. Then you are in the market.',
         'lead' => 'No terminal jargon — a clear path from sign-up to your first position.',
         'watchlist' => 'Watchlist',
-        'fund' => 'Fund from',
+        'fund' => 'Minimum',
+        'fund_amount' => 'By region',
+        'fund_chip' => 'Manager explains',
         'steps' => [
             [
                 'title' => 'Open your account',
@@ -128,7 +130,7 @@ return [
             ],
             [
                 'title' => 'Deposit securely',
-                'text' => 'Deposit from {currency_symbol}{min_deposit} with trusted payment methods.',
+                'text' => 'The minimum depends on the region you are in. A personal manager walks you through the amount and the method.',
             ],
             [
                 'title' => 'Trade with AI help',
@@ -177,7 +179,7 @@ return [
             ['name' => 'Sofia L.', 'place' => 'Lisbon', 'quote' => 'The steps were clear. I knew what the form would ask before I filled it in.'],
             ['name' => 'Owen P.', 'place' => 'Dublin', 'quote' => 'I started with no experience. The three steps made sense before I sent any details.'],
             ['name' => 'Hanna S.', 'place' => 'Warsaw', 'quote' => 'The chart and the note sit next to each other. I do not have to decode a terminal.'],
-            ['name' => 'Luis M.', 'place' => 'Madrid', 'quote' => 'The form was short. I could see the start amount before I finished it.'],
+            ['name' => 'Luis M.', 'place' => 'Madrid', 'quote' => 'The form was short. A manager later explained the start amount for my country.'],
             ['name' => 'Priya N.', 'place' => 'Toronto', 'quote' => 'Buy, hold, or watch. I can explain that to someone else in one sentence.'],
             ['name' => 'Jonas E.', 'place' => 'Berlin', 'quote' => 'Support answered the question and stopped. No push, no extra pitch.'],
             ['name' => 'Camille B.', 'place' => 'Lyon', 'quote' => 'It stays calm. I can leave the screen and come back without feeling lost.'],
@@ -197,7 +199,7 @@ return [
         'page_lead' => 'Start, the note, money, and safety. If your question is not here, write to {email}.',
         'items' => [
             ['q' => 'Do I need trading experience?', 'a' => 'No. {brand} is built for first-time investors — AI notes in plain language.'],
-            ['q' => 'What is the minimum deposit?', 'a' => 'You can start from {currency_symbol}{min_deposit}. Fees are shown before you confirm.'],
+            ['q' => 'What is the minimum deposit?', 'a' => 'It depends on the region you are in. After you send the form, a personal manager explains the amount, the method, and the next step. Nothing is charged on this website.'],
             ['q' => 'Is support available?', 'a' => 'Yes. The team reads mail 24 hours a day for deposits and account setup.'],
         ],
         'groups' => [
@@ -205,7 +207,7 @@ return [
                 'id' => 'start',
                 'title' => 'Getting started',
                 'items' => [
-                    ['q' => 'How do I start?', 'a' => 'Leave your name, email, and phone on the Open account form. That form stores the request. It does not open a funded account by itself and it does not take a deposit. Funding, from {currency_symbol}{min_deposit}, happens later, inside the account, after the details are checked.'],
+                    ['q' => 'How do I start?', 'a' => 'Leave your name, email, and phone on the Open account form. That form stores the request. It does not open a funded account by itself and it does not take a deposit. Funding happens later, inside the account. The minimum depends on your region; a personal manager confirms it with you.'],
                     ['q' => 'Do I need trading experience?', 'a' => 'No. The note is one word — buy, hold, or watch — with a short sentence under it. You can read the three steps on the home page before you send anything.'],
                     ['q' => 'What do I send in the form?', 'a' => 'First name, last name, email, and a phone number with a country code. No card number, no password, and no photo of an identity document on this website.'],
                     ['q' => 'What happens after I submit?', 'a' => 'The request is saved. You see a confirmation on the page. This is not a promise that an account is already open, and nobody is dispatched to call you.'],
@@ -224,7 +226,7 @@ return [
                 'id' => 'money',
                 'title' => 'Deposits and fees',
                 'items' => [
-                    ['q' => 'What is the minimum deposit?', 'a' => 'You can start from {currency_symbol}{min_deposit}. The amount is shown before you fund the account.'],
+                    ['q' => 'What is the minimum deposit?', 'a' => 'The minimum deposit depends on the region you are in. A personal manager explains the exact amount, the currency, and the payment methods before you fund anything. This website does not show a single figure because it is not the same for every country.'],
                     ['q' => 'Are there hidden fees?', 'a' => 'Fees are shown before you confirm a deposit, a withdrawal, or an order. If a fee applies, it is on that screen, not in a footnote after the fact.'],
                     ['q' => 'Which payment methods can the account use?', 'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay, and bank transfer. The registration form does not charge a card. The method and any fee are shown before you confirm a deposit inside the account.'],
                     ['q' => 'How do withdrawals work?', 'a' => 'A withdrawal is requested inside the account and checked against the terms. The timing depends on the payment method and is shown before you confirm. This website cannot start a withdrawal.'],
@@ -252,7 +254,7 @@ return [
         'facts' => [
             ['title' => 'What it is', 'text' => 'A screen for crypto and FX with one short note: buy, hold, or watch.'],
             ['title' => 'What you do', 'text' => 'You read the note, look at the chart, and confirm the order yourself.'],
-            ['title' => 'What this site is', 'text' => 'A place to read how it works and to leave a request. Funding starts from {currency_symbol}{min_deposit} inside the account.'],
+            ['title' => 'What this site is', 'text' => 'A place to read how it works and to leave a request. The minimum deposit depends on your region — a personal manager explains the details after the form.'],
             ['title' => 'What it is not', 'text' => 'Not a live price feed, not a promise of profit, and not a form that takes a card.'],
         ],
         'markets_title' => 'Markets on this screen',
@@ -271,23 +273,24 @@ return [
             ['title' => 'The reminder', 'text' => 'Before you change size, the screen repeats the risk. You can stop there.'],
             ['title' => 'The watchlist', 'text' => 'A short list of pairs, not a wall of tickers. BTC, ETH, SOL, XRP, and two FX pairs are the samples.'],
             ['title' => 'The confirm', 'text' => 'Nothing leaves your account until you press confirm. There is no hidden auto-trade switch on this site.'],
-            ['title' => 'The start', 'text' => 'Funding starts from {currency_symbol}{min_deposit}. The fee is shown on the confirm step, before the money moves.'],
+            ['title' => 'The start', 'text' => 'The minimum deposit depends on the region you are in. A personal manager confirms the amount and the method before any money moves.'],
         ],
     ],
     'offer' => [
         'eyebrow' => 'Pricing',
-        'title' => 'Start from {currency_symbol}{min_deposit}',
-        'lead' => 'A simple entry. Full access after funding — including AI notes and market tools.',
+        'title' => 'Funding that fits your region',
+        'lead' => 'The minimum deposit depends on the region you are in. A personal manager explains the amount, the method, and how access unlocks after you send the form.',
         'access' => 'Account access',
         'min_label' => 'Minimum deposit',
-        'unlock' => 'Charts, tools, and AI guidance unlock once the account is funded.',
+        'min_value' => 'Set for your region',
+        'unlock' => 'Charts, tools, and AI guidance unlock once the account is funded. Your manager confirms the details first.',
         'form_heading' => 'Create your account',
         'form_title' => 'Open in under 2 minutes',
     ],
     'signup' => [
         'eyebrow' => 'Get started',
         'title' => 'Open your investment account',
-        'lead' => 'Minimum deposit {currency_symbol}{min_deposit}. Market access after a short check.',
+        'lead' => 'The minimum deposit depends on your region. A personal manager will go through the amount and the rest after a short check.',
         'form_title' => 'Enter your details',
     ],
     'team' => [
@@ -331,7 +334,7 @@ return [
         'lead' => 'Email {email}. A typical reply takes a few hours. The desk does not call because a form was sent.',
         'topics' => [
             ['title' => 'The form', 'text' => 'What was saved, a duplicate email, or a wrong country code.'],
-            ['title' => 'Deposits', 'text' => 'Funding starts from {currency_symbol}{min_deposit}. Methods and fees are listed before you confirm.'],
+            ['title' => 'Deposits', 'text' => 'The minimum depends on your region. A personal manager explains methods and fees before you confirm.'],
             ['title' => 'The note', 'text' => 'What buy, hold, and watch mean, and why the prices on this site are samples.'],
             ['title' => 'The account', 'text' => 'Setup questions after a request is saved. This page cannot reset a password.'],
         ],

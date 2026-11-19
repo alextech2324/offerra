@@ -45,9 +45,9 @@ $join = $langData['join'];
             <p class="bg-kicker bg-kicker--light"><?= e($howto['watchlist'] ?? 'Watchlist') ?></p>
             <?php bg_quote_rows(4, true); ?>
           <?php elseif ($i === 1): ?>
-            <p class="bg-kicker bg-kicker--light"><?= e($howto['fund'] ?? 'Fund from') ?></p>
-            <p class="bg-step-art__big"><?= e(money_min()) ?></p>
-            <p class="bg-step-art__chip">BTC/USD · 67,420</p>
+            <p class="bg-kicker bg-kicker--light"><?= e($howto['fund'] ?? 'Minimum') ?></p>
+            <p class="bg-step-art__big"><?= e($howto['fund_amount'] ?? 'By region') ?></p>
+            <p class="bg-step-art__chip"><?= e($howto['fund_chip'] ?? 'Manager explains') ?></p>
           <?php else: ?>
             <div class="bg-step-art__row">
               <p class="bg-kicker bg-kicker--light">BTC/USD</p>

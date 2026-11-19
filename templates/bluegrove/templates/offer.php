@@ -16,7 +16,7 @@ $o = $langData['offer'];
         <div class="bg-price__copy">
           <p class="bg-kicker bg-kicker--light"><?= e($o['access']) ?></p>
           <p class="bg-muted"><?= e($o['min_label']) ?></p>
-          <p class="bg-price__amount"><?= e(money_min()) ?></p>
+          <p class="bg-price__amount"><?= e($o['min_value'] ?? 'Set for your region') ?></p>
           <p><?= e($o['unlock']) ?></p>
         </div>
       </div>

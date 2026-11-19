@@ -231,7 +231,7 @@ html.dark .is-up { color: var(--mint); }
   padding: 0.65rem 0.8rem;
   display: flex; flex-direction: column; justify-content: space-between;
 }
-.bg-step-art__big { font-size: 2rem; font-weight: 700; margin-top: 0.25rem; }
+.bg-step-art__big { font-size: 1.45rem; font-weight: 700; margin-top: 0.25rem; }
 .bg-step-art__chip { margin-top: auto; padding: 0.5rem 0.75rem; border-radius: 1rem; background: rgba(255,255,255,0.1); }
 .bg-step-art__row { display: flex; justify-content: space-between; align-items: center; }
 
@@ -256,7 +256,7 @@ html.dark .is-up { color: var(--mint); }
 .bg-price { overflow: hidden; margin-top: 1.1rem; }
 .bg-price__chart { padding: 1rem 1.1rem 0; }
 .bg-price__copy { padding: 1.05rem 1.15rem 1.2rem; }
-.bg-price__amount { font-size: 2rem; font-weight: 700; }
+.bg-price__amount { font-size: 1.45rem; font-weight: 700; line-height: 1.2; }
 
 .bg-levels { display: grid; gap: 0.5rem; margin-top: 1rem; }
 .bg-levels li {

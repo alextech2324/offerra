@@ -57,6 +57,11 @@ class BluegroveTemplateTest extends TestCase
             $this->assertArrayHasKey($key, $lang);
         }
         $this->assertSame('Open account', $lang['nav']['cta']);
+        $this->assertSame('{brand}', $lang['hero']['title']);
+        $packed = json_encode($lang);
+        $this->assertIsString($packed);
+        $this->assertStringNotContainsString('{min_deposit}', $packed);
+        $this->assertStringNotContainsString('{currency_symbol}', $packed);
         $this->assertArrayHasKey('privacy', $lang['legal']);
         $this->assertArrayHasKey('terms', $lang['legal']);
         foreach (['hero', 'desk', 'office', 'director'] as $photo) {
