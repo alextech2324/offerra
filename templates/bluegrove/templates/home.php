@@ -151,7 +151,7 @@ $join = $langData['join'];
 </section>
 
 <section id="join" class="bg-band">
-  <div class="bg-wrap bg-panel bg-panel--round bg-split">
+  <div class="bg-wrap bg-panel bg-panel--round bg-split bg-split--form">
     <div>
       <p class="bg-kicker bg-kicker--light"><?= e($join['eyebrow']) ?></p>
       <h2><?= e($join['title']) ?></h2>

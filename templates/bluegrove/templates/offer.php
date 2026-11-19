@@ -3,7 +3,7 @@ require __DIR__ . '/../includes/header.php';
 $o = $langData['offer'];
 ?>
 <section class="bg-band">
-  <div class="bg-wrap bg-split">
+  <div class="bg-wrap bg-split bg-split--form">
     <div>
       <p class="bg-kicker"><?= e($o['eyebrow']) ?></p>
       <h1><?= e($o['title']) ?></h1>
