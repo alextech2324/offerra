@@ -454,8 +454,26 @@ class OfferGenerator
                 $paths[] = 'templates/contact.php';
                 $paths[] = 'templates/sign-up.php';
                 $paths[] = 'templates/404.php';
-                foreach (['desk', 'scan', 'ledger', 'commute', 'signup', 'vault', 'session', 'skyline', 'atelier', 'street'] as $photo) {
-                    $paths[] = 'assets/img/ft-'.$photo.'.jpg';
+                if ($template === 'bluegrove') {
+                    $paths[] = 'templates/team.php';
+                    foreach ([
+                        'hero-crypto.jpg',
+                        'night-desk.jpg',
+                        'night-office.jpg',
+                        'team-director.jpg',
+                        'team-accounts.jpg',
+                        'team-support.jpg',
+                        'team-markets.jpg',
+                        'team-product.jpg',
+                        'team-notes.jpg',
+                        'team-clients.jpg',
+                    ] as $photo) {
+                        $paths[] = 'assets/img/'.$photo;
+                    }
+                } else {
+                    foreach (['desk', 'scan', 'ledger', 'commute', 'signup', 'vault', 'session', 'skyline', 'atelier', 'street'] as $photo) {
+                        $paths[] = 'assets/img/ft-'.$photo.'.jpg';
+                    }
                 }
             }
 
@@ -808,6 +826,27 @@ PHP;
                         continue;
                     }
                     File::copy($file->getPathname(), $imgDir.DIRECTORY_SEPARATOR.$slug.'-'.$match[1].'.jpg');
+                    $copied = true;
+                }
+
+                $bluegrove = [
+                    'hero-crypto.jpg' => 'hero',
+                    'night-desk.jpg' => 'desk',
+                    'night-office.jpg' => 'office',
+                    'team-director.jpg' => 'director',
+                    'team-accounts.jpg' => 'accounts',
+                    'team-support.jpg' => 'support',
+                    'team-markets.jpg' => 'markets',
+                    'team-product.jpg' => 'product',
+                    'team-notes.jpg' => 'notes',
+                    'team-clients.jpg' => 'clients',
+                ];
+                foreach ($bluegrove as $fileName => $key) {
+                    $source = $imgDir.DIRECTORY_SEPARATOR.$fileName;
+                    if (! File::isFile($source)) {
+                        continue;
+                    }
+                    File::copy($source, $imgDir.DIRECTORY_SEPARATOR.$slug.'-'.$key.'.jpg');
                     $copied = true;
                 }
             }

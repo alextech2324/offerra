@@ -186,13 +186,13 @@ class TemplateCatalog
     }
 
     /**
-     * Dictionary-i18n ML landers (Vespera, Fortis): one tree, lang/*.php packs.
+     * Dictionary-i18n ML landers (Vespera, Fortis, Bluegrove): one tree, lang/*.php packs.
      *
      * @return list<string>
      */
     public static function dictionaryMlIds(): array
     {
-        return ['vespera', 'fortis'];
+        return ['vespera', 'fortis', 'bluegrove'];
     }
 
     public static function isDictionaryMl(string $templateId): bool

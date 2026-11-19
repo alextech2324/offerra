@@ -41,7 +41,7 @@ function isOverflowHubTemplate(templateId) {
 }
 
 function isPinnedDictionaryMl(templateId) {
-    return templateId === 'vespera' || templateId === 'fortis';
+    return templateId === 'vespera' || templateId === 'fortis' || templateId === 'bluegrove';
 }
 
 function isMlOfferTemplate(templateId) {
@@ -1899,7 +1899,7 @@ export default function OffersCreate({
                         <p className="card-desc" style={{ marginBottom: '1rem' }}>
                             Спочатку GEO, мова й валюта — далі шаблони, які підтримують цю мову.
                             {' '}
-                            Vespera можна поставити на будь-який домен: він завжди збережеться як ML / en.
+                            Vespera, Fortis і Bluegrove можна поставити на будь-який домен: вони завжди збережуться як ML / en.
                             {isMarketMultilang ? (
                                 <> Multilang: у CRM країна з IP; мови через URL (<code>/fr/</code>, …).</>
                             ) : null}
@@ -2068,7 +2068,7 @@ export default function OffersCreate({
                     <div className="card" style={{ marginTop: '1rem' }}>
                         <h3>Шаблони</h3>
                         <p className="card-desc" style={{ marginBottom: '0.75rem' }}>
-                            Папки з <code>templates/</code>. Без обраної мови шаблон недоступний, крім Vespera (завжди ML / en).
+                            Папки з <code>templates/</code>. Без обраної мови шаблон недоступний, крім Vespera / Fortis / Bluegrove (завжди ML / en).
                         </p>
                         {data.brand.trim() && usedTemplateIds.length > 0 && (
                             <p className="field-hint" style={{ marginBottom: '0.85rem' }}>
@@ -2132,7 +2132,7 @@ export default function OffersCreate({
                                 </ul>
                                 {packHasPinnedMl && (
                                     <p className="field-hint">
-                                        Домени з Vespera / Fortis збережуться як ML / en і з усіма phone GEO. Інші візьмуть {data.geo || 'GEO'} / {data.lang || 'мову'}.
+                                        Домени з Vespera / Fortis / Bluegrove збережуться як ML / en і з усіма phone GEO. Інші візьмуть {data.geo || 'GEO'} / {data.lang || 'мову'}.
                                     </p>
                                 )}
                             </div>
