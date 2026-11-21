@@ -18,8 +18,9 @@ final class FormToken
     private const EXPIRED_MARK_TTL = 86400;
 
     /**
-     * Issue a signed one-time token. Bot UA / issue-rate still get a token,
-     * but marked drop=true so send.php can fake success without CRM.
+     * Issue a signed one-time token. Bot UA / issue-rate / missing same-origin
+     * Referer still get a token, but marked drop=true so send.php can fake
+     * success without CRM.
      */
     public static function issue(): string
     {
@@ -28,7 +29,9 @@ final class FormToken
 
         self::rememberChatGptHit();
 
-        $drop = self::looksLikeBotUa() || self::rateExceeded('issue', self::issueLimit());
+        $drop = self::looksLikeBotUa()
+            || self::rateExceeded('issue', self::issueLimit())
+            || ! self::requestLooksSameOrigin();
         self::hitRate('issue');
 
         $id = bin2hex(random_bytes(16));

@@ -17,8 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-// Always return a token. Soft blocks (bot UA / rate) mark drop server-side;
-// send.php then fakes thank-you success without CRM.
+// Always return a token. Soft blocks (bot UA / rate / missing same-origin
+// Referer) mark drop server-side; send.php then fakes thank-you without CRM.
 echo json_encode([
     'ok' => true,
     'token' => FormToken::issue(),
