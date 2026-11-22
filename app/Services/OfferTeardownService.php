@@ -8,6 +8,7 @@ use App\Models\Offer;
 use App\Models\OriginServer;
 use App\Models\User;
 use App\Models\UserSetting;
+use App\Support\OriginSsh;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -257,15 +258,41 @@ class OfferTeardownService
 
         $results = [];
         $anyDeleted = false;
+        $hardFailures = [];
         $bound = strtolower(trim($this->pool->boundHost($offer)));
 
         foreach ($byHost as $host => $settings) {
+            $server = $this->pool->serverForHost($host);
+            if ($server?->healthStatus() === 'down') {
+                $results[] = $host.':skipped';
+                Log::info('Offer teardown origin skipped (health down)', [
+                    'offer_id' => $offer->id,
+                    'domain' => $domain,
+                    'host' => $host,
+                ]);
+
+                continue;
+            }
+
             try {
                 $this->origin->deleteWebRoot($settings, $domain);
                 $results[] = $host.':deleted';
                 $anyDeleted = true;
             } catch (\Throwable $e) {
+                if (OriginSsh::isUnreachableError($e->getMessage())) {
+                    $results[] = $host.':skipped';
+                    Log::warning('Offer teardown origin skipped (unreachable)', [
+                        'offer_id' => $offer->id,
+                        'domain' => $domain,
+                        'host' => $host,
+                        'error' => $e->getMessage(),
+                    ]);
+
+                    continue;
+                }
+
                 $results[] = $host.':error:'.$e->getMessage();
+                $hardFailures[] = $host;
                 Log::warning('Offer teardown origin failed', [
                     'offer_id' => $offer->id,
                     'domain' => $domain,
@@ -275,21 +302,25 @@ class OfferTeardownService
             }
         }
 
-        if (! $anyDeleted) {
-            $msg = implode('; ', $results);
-            $errors[] = 'Origin: '.$msg;
+        $msg = implode('; ', $results);
 
-            return 'error: '.$msg;
+        if ($anyDeleted) {
+            if ($bound !== '' && in_array($bound, $hardFailures, true)) {
+                $errors[] = 'Origin: не знято з поточного хоста '.$bound.' ('.$msg.')';
+
+                return 'error: '.$msg;
+            }
+
+            return $msg;
         }
 
-        if ($bound !== '' && ! in_array($bound.':deleted', $results, true)) {
-            $msg = implode('; ', $results);
-            $errors[] = 'Origin: не знято з поточного хоста '.$bound.' ('.$msg.')';
-
-            return 'error: '.$msg;
+        if ($hardFailures === []) {
+            return $msg !== '' ? $msg : 'skipped_unreachable';
         }
 
-        return implode('; ', $results);
+        $errors[] = 'Origin: '.$msg;
+
+        return 'error: '.$msg;
     }
 
     /**
@@ -493,6 +524,13 @@ class OfferTeardownService
             if (DynadotClient::isUnmanageableDomainError($e->getMessage())) {
                 return [
                     'status' => 'skipped_disabled',
+                    'detail' => $e->getMessage(),
+                ];
+            }
+
+            if (DynadotClient::isUnauthorizedIpError($e->getMessage())) {
+                return [
+                    'status' => 'skipped_unauthorized_ip',
                     'detail' => $e->getMessage(),
                 ];
             }

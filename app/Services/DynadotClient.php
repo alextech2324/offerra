@@ -409,6 +409,24 @@ class DynadotClient
             || (str_contains($normalized, 'expired') && str_contains($normalized, 'domain'));
     }
 
+    /**
+     * Dynadot API key is IP-locked and this panel is not on the list.
+     * Archive should skip parking instead of staying in teardown_failed.
+     */
+    public static function isUnauthorizedIpError(?string $message): bool
+    {
+        if ($message === null || $message === '') {
+            return false;
+        }
+
+        $normalized = strtolower($message);
+
+        return str_contains($normalized, 'unauthorized ip')
+            || str_contains($normalized, 'unauthorised ip')
+            || str_contains($normalized, 'ip address is not authorized')
+            || str_contains($normalized, 'ip is not authorized');
+    }
+
     public static function isTransientTransportError(?string $message): bool
     {
         if ($message === null || $message === '') {

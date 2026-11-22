@@ -74,4 +74,11 @@ class DynadotClientTest extends TestCase
         $this->assertFalse(DynadotClient::isUnmanageableDomainError('insufficient account balance'));
         $this->assertFalse(DynadotClient::isUnmanageableDomainError('Domain initialization is still in progress'));
     }
+
+    public function test_unauthorized_panel_ip_is_detected(): void
+    {
+        $this->assertTrue(DynadotClient::isUnauthorizedIpError('unauthorized ip address: 38.180.121.50'));
+        $this->assertTrue(DynadotClient::isUnauthorizedIpError('IP address is not authorized'));
+        $this->assertFalse(DynadotClient::isUnauthorizedIpError('insufficient account balance'));
+    }
 }

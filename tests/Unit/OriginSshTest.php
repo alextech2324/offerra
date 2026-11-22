@@ -24,6 +24,19 @@ class OriginSshTest extends TestCase
         $this->assertStringNotContainsString('Перезавантаж', $message);
     }
 
+    public function test_unreachable_ssh_errors_are_detected(): void
+    {
+        $this->assertTrue(OriginSsh::isUnreachableError(
+            'SSH команда не вдалась: ssh: connect to host 144.172.64.248 port 22: No route to host',
+        ));
+        $this->assertTrue(OriginSsh::isUnreachableError(
+            'ssh: connect to host 172.86.84.78 port 22: Connection timed out',
+        ));
+        $this->assertTrue(OriginSsh::isUnreachableError('Connection refused'));
+        $this->assertFalse(OriginSsh::isUnreachableError(OriginSsh::HUNG_EXEC));
+        $this->assertFalse(OriginSsh::isUnreachableError('SSH: логін відхилено. Перевір користувача і пароль.'));
+    }
+
     public function test_deploy_job_retries_transient_ssh_failures(): void
     {
         $job = new DeployOfferJob(15);

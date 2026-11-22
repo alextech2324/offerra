@@ -18,6 +18,29 @@ class OriginSsh
 {
     public const HUNG_EXEC = 'SSH: логін пройшов, але сесія зависла (канал команди не відкрився). Перезавантаж VPS з панелі хостера.';
 
+    /**
+     * TCP never reached sshd — archive/teardown should skip this host.
+     */
+    public static function isUnreachableError(?string $message): bool
+    {
+        if ($message === null || $message === '') {
+            return false;
+        }
+
+        $normalized = strtolower($message);
+
+        return str_contains($normalized, 'no route to host')
+            || str_contains($normalized, 'network is unreachable')
+            || str_contains($normalized, 'network unreachable')
+            || str_contains($normalized, 'host is unreachable')
+            || str_contains($normalized, 'connection timed out')
+            || str_contains($normalized, 'connection refused')
+            || str_contains($normalized, 'connection reset')
+            || str_contains($normalized, 'unable to connect')
+            || str_contains($normalized, 'operation timed out')
+            || str_contains($normalized, 'no route to network');
+    }
+
     public function exec(
         string $host,
         int $port,
