@@ -55,7 +55,6 @@ class EdgeProxyService
             $offer->forceFill(['infra_meta' => $meta])->save();
         }
 
-        $this->bindOnProxy($proxy, $domain, $originIp, $token);
         $this->cloudflare->setRootARecords($cf, $zoneId, $domain, $proxy->host, false);
 
         if ($nameservers !== []) {
@@ -67,6 +66,17 @@ class EdgeProxyService
                 $meta['dynadot_ns'] = 'pending';
                 $meta['dynadot_ns_error'] = $e->getMessage();
             }
+        }
+
+        // DNS-01 needs the new CF nameservers to be public. Bind HTTP-only if
+        // Let's Encrypt cannot see the zone yet — Recheck / retry will get TLS.
+        try {
+            $this->bindOnProxy($proxy, $domain, $originIp, $token);
+            $meta['ssl'] = 'done';
+        } catch (\Throwable $e) {
+            $this->bindOnProxy($proxy, $domain, $originIp, null);
+            $meta['ssl'] = 'pending';
+            $meta['ssl_error'] = $e->getMessage();
         }
 
         $meta['edge'] = 'proxy';
