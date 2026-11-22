@@ -10,8 +10,7 @@ class CheckOfferAvailability extends Command
 {
     protected $signature = 'offers:check-availability
                             {--limit=4000 : Max deployed offers to check this run}
-                            {--stale-minutes=55 : Re-check ok/unchecked older than this}
-                            {--down-stale-minutes=10 : Re-check red dots older than this}
+                            {--stale-minutes=55 : Re-check deployed offers older than this}
                             {--only-down : Only re-check offers currently marked down}
                             {--force : Ignore last-check age and re-probe every match}';
 
@@ -23,43 +22,19 @@ class CheckOfferAvailability extends Command
 
         $limit = max(1, (int) $this->option('limit'));
         $staleMinutes = max(1, (int) $this->option('stale-minutes'));
-        $downStaleMinutes = max(1, (int) $this->option('down-stale-minutes'));
         $onlyDown = (bool) $this->option('only-down');
         $force = (bool) $this->option('force');
-        $okCutoff = now()->subMinutes($staleMinutes);
-        $downCutoff = now()->subMinutes($downStaleMinutes);
+        $staleCutoff = now()->subMinutes($staleMinutes);
 
         $offers = Offer::query()
             ->where('status', 'deployed')
             ->when($onlyDown, fn ($q) => $q->where('availability_status', 'down'))
-            ->when(! $force, function ($query) use ($onlyDown, $okCutoff, $downCutoff): void {
-                $query->where(function ($inner) use ($onlyDown, $okCutoff, $downCutoff): void {
-                    if ($onlyDown) {
-                        $inner->whereNull('availability_checked_at')
-                            ->orWhere('availability_checked_at', '<', $downCutoff);
-
-                        return;
-                    }
-
-                    // Red dots: recheck sooner so recovered sites turn green without manual click.
-                    $inner->where(function ($down) use ($downCutoff): void {
-                        $down->where('availability_status', 'down')
-                            ->where(function ($age) use ($downCutoff): void {
-                                $age->whereNull('availability_checked_at')
-                                    ->orWhere('availability_checked_at', '<', $downCutoff);
-                            });
-                    })->orWhere(function ($other) use ($okCutoff): void {
-                        $other->where(function ($status): void {
-                            $status->whereNull('availability_status')
-                                ->orWhere('availability_status', '!=', 'down');
-                        })->where(function ($age) use ($okCutoff): void {
-                            $age->whereNull('availability_checked_at')
-                                ->orWhere('availability_checked_at', '<', $okCutoff);
-                        });
-                    });
+            ->when(! $force, function ($query) use ($staleCutoff): void {
+                $query->where(function ($age) use ($staleCutoff): void {
+                    $age->whereNull('availability_checked_at')
+                        ->orWhere('availability_checked_at', '<', $staleCutoff);
                 });
             })
-            ->orderByRaw("CASE WHEN availability_status = 'down' THEN 0 ELSE 1 END")
             ->orderByRaw('availability_checked_at IS NULL DESC')
             ->orderBy('availability_checked_at')
             ->limit($limit)

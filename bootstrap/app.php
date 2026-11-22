@@ -40,10 +40,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('offers:heal-landers')->everyFifteenMinutes()->withoutOverlapping(20);
         $schedule->command('offers:queue-gsc-pending')->everyFiveMinutes()->withoutOverlapping(4);
         $schedule->command('offers:check-availability')->hourly()->withoutOverlapping(55);
-        // Recovered red dots should turn green without waiting a full hour / manual click.
-        $schedule->command('offers:check-availability --only-down --down-stale-minutes=10 --limit=2000')
-            ->everyTenMinutes()
-            ->withoutOverlapping(9);
 
         // GSC URL inspection at 03:00 Kyiv — 24h after sitemap submit, then daily until indexed / duplicate / 7d unseen.
         $schedule->command('offers:inspect-google-index')
