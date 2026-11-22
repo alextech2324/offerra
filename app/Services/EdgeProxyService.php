@@ -15,10 +15,12 @@ class EdgeProxyService
         private readonly CloudflareClient $cloudflare,
         private readonly OriginHostService $origin,
         private readonly OriginSsh $ssh,
+        private readonly DynadotClient $dynadot,
     ) {}
 
     /**
      * Put the offer behind the proxy: LE cert, nginx vhost, grey-cloud A → proxy IP.
+     * Creates the Cloudflare zone first when the offer was deployed without one.
      */
     public function attach(Offer $offer, ProxyServer $proxy): void
     {
@@ -30,17 +32,43 @@ class EdgeProxyService
 
         $domain = $this->normalizedDomain($offer);
         $originIp = $this->origin->originIpForOffer($offer, $settings);
-        $zoneId = trim((string) (($offer->infra_meta['cloudflare_zone_id'] ?? '')));
-        $token = CloudflareClient::normalizeApiToken((string) ($offer->cloudflare_api_token ?: $settings->cloudflare_api_token));
+        $cf = $this->cloudflareSettingsFor($offer, $settings);
+        $token = CloudflareClient::normalizeApiToken((string) $cf->cloudflare_api_token);
+        if ($token === '' || trim((string) $cf->cloudflare_account_id) === '') {
+            throw new RuntimeException('Немає Cloudflare token і Account ID, щоб створити зону під проксі.');
+        }
 
-        if ($zoneId === '' || $token === '') {
-            throw new RuntimeException('Спочатку має бути Cloudflare-зона (A-запис міняємо в ній на сіру хмару).');
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        $zoneId = trim((string) ($meta['cloudflare_zone_id'] ?? ''));
+        $nameservers = is_array($meta['nameservers'] ?? null) ? $meta['nameservers'] : [];
+
+        if ($zoneId === '') {
+            $zone = $this->cloudflare->ensureZone($cf, $domain);
+            $zoneId = trim((string) ($zone['zone_id'] ?? ''));
+            $nameservers = is_array($zone['nameservers'] ?? null) ? $zone['nameservers'] : [];
+            if ($zoneId === '') {
+                throw new RuntimeException('Cloudflare не повернув zone id для '.$domain);
+            }
+            $meta['cloudflare'] = 'done';
+            $meta['cloudflare_zone_id'] = $zoneId;
+            $meta['nameservers'] = $nameservers;
+            $offer->forceFill(['infra_meta' => $meta])->save();
         }
 
         $this->bindOnProxy($proxy, $domain, $originIp, $token);
-        $this->cloudflare->setRootARecords($this->cfSettings($settings, $token), $zoneId, $domain, $proxy->host, false);
+        $this->cloudflare->setRootARecords($cf, $zoneId, $domain, $proxy->host, false);
 
-        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        if ($nameservers !== []) {
+            try {
+                $this->dynadot->setNameservers($this->dynadotSettingsFor($offer, $settings), $domain, $nameservers);
+                $meta['dynadot_ns'] = 'done';
+                unset($meta['dynadot_ns_error']);
+            } catch (\Throwable $e) {
+                $meta['dynadot_ns'] = 'pending';
+                $meta['dynadot_ns_error'] = $e->getMessage();
+            }
+        }
+
         $meta['edge'] = 'proxy';
         $meta['edge_proxy_id'] = $proxy->id;
         $meta['edge_ip'] = $proxy->host;
@@ -281,6 +309,38 @@ class EdgeProxyService
         $probe->cloudflare_api_token = $token;
 
         return $probe;
+    }
+
+    private function cloudflareSettingsFor(Offer $offer, \App\Models\UserSetting $settings): \App\Models\UserSetting
+    {
+        $cf = $settings->replicate();
+        $token = CloudflareClient::normalizeApiToken((string) ($offer->cloudflare_api_token ?: $settings->cloudflare_api_token));
+        $accountId = trim((string) ($offer->cloudflare_account_id ?: $settings->cloudflare_account_id));
+        $accountName = trim((string) ($offer->cloudflare_account_name ?: $settings->cloudflare_account_name));
+        $cf->cloudflare_api_token = $token;
+        if ($accountId !== '') {
+            $cf->cloudflare_account_id = $accountId;
+        }
+        if ($accountName !== '') {
+            $cf->cloudflare_account_name = $accountName;
+        }
+
+        return $cf;
+    }
+
+    private function dynadotSettingsFor(Offer $offer, \App\Models\UserSetting $settings): \App\Models\UserSetting
+    {
+        if (! filled($offer->dynadot_api_key)) {
+            return $settings;
+        }
+
+        $merged = $settings->replicate();
+        $merged->dynadot_api_key = $offer->dynadot_api_key;
+        if (filled($offer->dynadot_contact_id)) {
+            $merged->dynadot_contact_id = $offer->dynadot_contact_id;
+        }
+
+        return $merged;
     }
 
     private function normalizedDomain(Offer $offer): string
