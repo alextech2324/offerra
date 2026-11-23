@@ -100,4 +100,49 @@ class RecheckPendingProxySslTest extends TestCase
             $edge,
         );
     }
+
+    public function test_recheck_retries_attach_when_proxy_was_requested_but_ssl_never_saved(): void
+    {
+        $user = User::factory()->create();
+        $user->settings()->create([]);
+        $proxy = ProxyServer::query()->create([
+            'host' => '172.86.71.141',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'is_active' => true,
+        ]);
+        $offer = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'timbrelibranca.pro',
+            'brand' => 'Timbre',
+            'domain' => 'timbrelibranca.pro',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'infra_meta' => [
+                'options' => [
+                    'edge' => 'proxy',
+                    'edge_proxy_id' => $proxy->id,
+                ],
+                'dns' => 'done',
+                'edge_error' => 'Let’s Encrypt не видав сертифікат: cert=0',
+            ],
+        ]);
+
+        $edge = Mockery::mock(EdgeProxyService::class);
+        $edge->shouldReceive('attach')->once()->withArgs(function (Offer $o, ProxyServer $p) use ($offer, $proxy) {
+            return $o->id === $offer->id && $p->id === $proxy->id;
+        });
+
+        (new RecheckInfrastructureDnsJob($offer->id))->handle(
+            app(InfrastructureProvisioner::class),
+            app(DeployService::class),
+            $edge,
+        );
+    }
 }

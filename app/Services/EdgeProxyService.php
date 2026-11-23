@@ -73,10 +73,15 @@ class EdgeProxyService
         try {
             $this->bindOnProxy($proxy, $domain, $originIp, $token);
             $meta['ssl'] = 'done';
+            unset($meta['ssl_error']);
         } catch (\Throwable $e) {
-            $this->bindOnProxy($proxy, $domain, $originIp, null);
             $meta['ssl'] = 'pending';
             $meta['ssl_error'] = $e->getMessage();
+            try {
+                $this->bindOnProxy($proxy, $domain, $originIp, null);
+            } catch (\Throwable $http) {
+                $meta['ssl_error'] = $e->getMessage().' | http-bind: '.$http->getMessage();
+            }
         }
 
         $meta['edge'] = 'proxy';
@@ -245,7 +250,9 @@ class EdgeProxyService
         if (! str_contains($out, 'BOUND ')) {
             throw new RuntimeException('Проксі не підтвердив bind: '.trim($out));
         }
-        if (preg_match('/cert=0\b/', $out)) {
+        // HTTP-only bind (no CF token) is supposed to print cert=0 so nginx
+        // still serves the lander while Recheck retries Let's Encrypt.
+        if (filled($cfToken) && preg_match('/cert=0\b/', $out)) {
             throw new RuntimeException('Let’s Encrypt не видав сертифікат: '.trim($out));
         }
     }

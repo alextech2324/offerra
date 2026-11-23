@@ -7,6 +7,7 @@ use App\Models\ProxyServer;
 use App\Services\DeployService;
 use App\Services\EdgeProxyService;
 use App\Services\InfrastructureProvisioner;
+use App\Support\InfrastructureOptions;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -79,11 +80,17 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
     private function retryPendingProxySsl(Offer $offer, EdgeProxyService $edge): void
     {
         $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
-        if (($meta['edge'] ?? '') !== 'proxy' || ($meta['ssl'] ?? '') === 'done') {
+        $options = InfrastructureOptions::forOffer($offer);
+        $wantsProxy = InfrastructureOptions::wantsProxy($options)
+            || ($meta['edge'] ?? '') === 'proxy';
+        if (! $wantsProxy) {
+            return;
+        }
+        if (($meta['edge'] ?? '') === 'proxy' && ($meta['ssl'] ?? '') === 'done') {
             return;
         }
 
-        $proxyId = (int) ($meta['edge_proxy_id'] ?? 0);
+        $proxyId = (int) ($meta['edge_proxy_id'] ?? $options['edge_proxy_id'] ?? 0);
         $proxy = $proxyId > 0 ? ProxyServer::query()->find($proxyId) : null;
         if ($proxy === null) {
             return;

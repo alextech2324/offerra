@@ -153,6 +153,22 @@ site_path() {
   echo "/etc/nginx/sites-available/offerra-$1.conf"
 }
 
+ensure_acme_webroot() {
+  mkdir -p /var/www/certbot/.well-known/acme-challenge
+}
+
+ensure_default_ssl() {
+  local file="/etc/nginx/sites-available/offerra-00-default-ssl.conf"
+  cat > "$file" <<'NGINX'
+server {
+    listen 443 ssl default_server;
+    server_name _;
+    ssl_reject_handshake on;
+}
+NGINX
+  ln -sfn "$file" /etc/nginx/sites-enabled/offerra-00-default-ssl.conf
+}
+
 write_vhost() {
   local domain="$1" origin="$2" have_cert="$3"
   local cert="/etc/letsencrypt/live/${domain}/fullchain.pem"
@@ -241,6 +257,8 @@ case "$cmd" in
     exec 9>/var/lock/offerra-edge.lock
     flock -w 240 9
 
+    ensure_acme_webroot
+    ensure_default_ssl
     have_cert=0
     if [ -f "/etc/letsencrypt/live/${domain}/fullchain.pem" ]; then
       have_cert=1
@@ -267,6 +285,13 @@ case "$cmd" in
           -d "$domain" -d "www.$domain"
         then
           have_cert=1
+        elif certbot certonly \
+          --webroot -w /var/www/certbot \
+          --non-interactive --agree-tos --register-unsafely-without-email \
+          --keep-until-expiring \
+          -d "$domain"
+        then
+          have_cert=1
         fi
       fi
       rm -f "$cf_ini"
@@ -288,6 +313,9 @@ case "$cmd" in
     echo "UNBOUND ${domain}"
     ;;
   health)
+    ensure_acme_webroot
+    ensure_default_ssl
+    nginx -t >/dev/null && systemctl reload nginx || true
     echo "nginx=$(systemctl is-active nginx)"
     echo "geoip_mmdb=$([ -f /usr/share/GeoIP/dbip-country-lite.mmdb ] && echo yes || echo no)"
     echo "certbot=$(command -v certbot >/dev/null && echo yes || echo no)"
