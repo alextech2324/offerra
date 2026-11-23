@@ -242,19 +242,34 @@ case "$cmd" in
     flock -w 240 9
 
     have_cert=0
-    if [ -n "$cf_ini" ]; then
+    if [ -f "/etc/letsencrypt/live/${domain}/fullchain.pem" ]; then
+      have_cert=1
+    fi
+    if [ -n "$cf_ini" ] && [ "$have_cert" != "1" ]; then
       chmod 600 "$cf_ini" 2>/dev/null || true
-      certbot certonly \
+      if certbot certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials "$cf_ini" \
         --dns-cloudflare-propagation-seconds 25 \
         --non-interactive --agree-tos --register-unsafely-without-email \
         --keep-until-expiring --expand \
         -d "$domain" -d "www.$domain"
+      then
+        have_cert=1
+      else
+        write_vhost "$domain" "$origin" 0
+        nginx -t
+        systemctl reload nginx
+        if certbot certonly \
+          --webroot -w /var/www/certbot \
+          --non-interactive --agree-tos --register-unsafely-without-email \
+          --keep-until-expiring --expand \
+          -d "$domain" -d "www.$domain"
+        then
+          have_cert=1
+        fi
+      fi
       rm -f "$cf_ini"
-      have_cert=1
-    elif [ -f "/etc/letsencrypt/live/${domain}/fullchain.pem" ]; then
-      have_cert=1
     fi
 
     write_vhost "$domain" "$origin" "$have_cert"

@@ -245,6 +245,9 @@ class EdgeProxyService
         if (! str_contains($out, 'BOUND ')) {
             throw new RuntimeException('Проксі не підтвердив bind: '.trim($out));
         }
+        if (preg_match('/cert=0\b/', $out)) {
+            throw new RuntimeException('Let’s Encrypt не видав сертифікат: '.trim($out));
+        }
     }
 
     private function unbindOnProxy(ProxyServer $proxy, string $domain): void

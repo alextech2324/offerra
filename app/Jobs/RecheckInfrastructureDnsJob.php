@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\Offer;
+use App\Models\ProxyServer;
 use App\Services\DeployService;
+use App\Services\EdgeProxyService;
 use App\Services\InfrastructureProvisioner;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,7 +16,7 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 180;
+    public int $timeout = 360;
 
     public int $tries = 1;
 
@@ -24,7 +26,7 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
      * Keep this just above $timeout: a killed worker holds the unique lock until
      * uniqueFor, and 15 minutes of silence looks like DNS is stuck.
      */
-    public int $uniqueFor = 200;
+    public int $uniqueFor = 400;
 
     public function __construct(public int $offerId)
     {
@@ -38,13 +40,15 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
         return (string) $this->offerId;
     }
 
-    public function handle(InfrastructureProvisioner $provisioner, DeployService $deploy): void
+    public function handle(InfrastructureProvisioner $provisioner, DeployService $deploy, EdgeProxyService $edge): void
     {
         $offer = Offer::query()->with('user.settings')->find($this->offerId);
 
         if (! $offer?->user || ! $offer->provision_infrastructure) {
             return;
         }
+
+        $this->retryPendingProxySsl($offer, $edge);
 
         if (in_array($offer->dnsStatus(), ['ready', 'skipped', 'na'], true)) {
             return;
@@ -65,6 +69,30 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
             $provisioner->enqueueProxyEdgeIfRequested($offer->fresh());
         } catch (\Throwable $e) {
             Log::error('Infrastructure DNS recheck failed', [
+                'offer' => $this->offerId,
+                'domain' => $offer->domain,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    private function retryPendingProxySsl(Offer $offer, EdgeProxyService $edge): void
+    {
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        if (($meta['edge'] ?? '') !== 'proxy' || ($meta['ssl'] ?? '') === 'done') {
+            return;
+        }
+
+        $proxyId = (int) ($meta['edge_proxy_id'] ?? 0);
+        $proxy = $proxyId > 0 ? ProxyServer::query()->find($proxyId) : null;
+        if ($proxy === null) {
+            return;
+        }
+
+        try {
+            $edge->attach($offer, $proxy);
+        } catch (\Throwable $e) {
+            Log::warning('Pending proxy SSL retry failed', [
                 'offer' => $this->offerId,
                 'domain' => $offer->domain,
                 'error' => $e->getMessage(),
