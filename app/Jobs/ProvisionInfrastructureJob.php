@@ -38,6 +38,8 @@ class ProvisionInfrastructureJob implements ShouldQueue
                 ]);
             }
 
+            $provisioner->enqueueProxyEdgeIfRequested($offer->fresh());
+
             if ($offer->dnsStatus() === 'pending') {
                 $nsPending = ($offer->infra_meta['dynadot_ns'] ?? '') === 'pending';
                 RecheckInfrastructureDnsJob::dispatch($offer->id)

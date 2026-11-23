@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\ProvisionInfrastructureJob;
+use App\Jobs\SwitchOfferEdgeJob;
 use App\Models\CloudflareAccount;
 use App\Models\Offer;
 use App\Models\ProxyServer;
@@ -61,6 +62,52 @@ class InfrastructureProvisioner
         ProvisionInfrastructureJob::dispatch($offer->id)->onQueue('deploy');
     }
 
+    /**
+     * After files land, put grey A on the proxy so the origin IP never appears
+     * in public DNS. Unique job — safe to dispatch more than once.
+     */
+    public function enqueueProxyEdgeIfRequested(Offer $offer): void
+    {
+        $options = InfrastructureOptions::forOffer($offer);
+        if (! InfrastructureOptions::wantsProxy($options)) {
+            return;
+        }
+
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        if (($meta['edge'] ?? '') === 'proxy') {
+            return;
+        }
+
+        $proxyId = (int) ($options['edge_proxy_id'] ?? 0);
+        if ($proxyId < 1) {
+            return;
+        }
+
+        SwitchOfferEdgeJob::dispatch($offer->id, 'proxy:'.$proxyId);
+    }
+
+    /**
+     * @param  array<string, mixed>  $options
+     * @param  array<string, mixed>  $meta
+     */
+    private function expectedPublicARecord(Offer $offer, UserSetting $settings, array $options, array $meta): string
+    {
+        if (InfrastructureOptions::wantsProxy($options)) {
+            $edgeIp = trim((string) ($meta['edge_ip'] ?? ''));
+            if (filter_var($edgeIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                return $edgeIp;
+            }
+
+            $proxy = ProxyServer::query()->find((int) ($options['edge_proxy_id'] ?? 0));
+            $host = trim((string) ($proxy?->host ?? ''));
+            if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                return $host;
+            }
+        }
+
+        return $this->origin->originIpForOffer($offer, $settings);
+    }
+
     public function provision(Offer $offer): void
     {
         $offer->loadMissing('user.settings');
@@ -109,7 +156,7 @@ class InfrastructureProvisioner
         try {
             $this->runSteps($settings, $domain, $options, $meta, $offer);
 
-            $serverIp = $this->origin->originIpForOffer($offer, $settings);
+            $serverIp = $this->expectedPublicARecord($offer, $settings, $options, $meta);
             $expectedNs = is_array($meta['nameservers'] ?? null) ? $meta['nameservers'] : [];
             $dnsVia = $this->publicReadiness($domain, $serverIp, $expectedNs);
 
@@ -192,7 +239,7 @@ class InfrastructureProvisioner
         $options = InfrastructureOptions::forOffer($offer);
         $meta = array_merge($offer->infra_meta ?? [], ['options' => $options]);
         $domain = strtolower(trim($offer->domain));
-        $serverIp = $this->origin->originIpForOffer($offer, $settings);
+        $serverIp = $this->expectedPublicARecord($offer, $settings, $options, $meta);
 
         // Спочатку лише перевірка DNS/HTTPS — без повторного проходження Cloudflare/Dynadot.
         // Інакше тимчасові таймаути API тримають статус «Очікується DNS», хоча сайт уже живий.
@@ -375,20 +422,23 @@ class InfrastructureProvisioner
         $edgeAlready = ($meta['cloudflare_edge'] ?? '') === 'done'
             || (($meta['ssl'] ?? '') === 'done' && ($meta['ssl_force'] ?? '') === 'done');
 
+        $proxyEdge = InfrastructureOptions::wantsProxy($options);
         $serverIp = $offer !== null
-            ? $this->origin->originIpForOffer($offer, $settings)
+            ? $this->expectedPublicARecord($offer, $settings, $options, $meta)
             : $this->originIpFromMetaOrSettings($settings, $meta);
 
         // Recheck runs every minute while registrar NS is pending. Rewriting the
         // zone (purge + A + edge) each time times out the default workers.
-        if (($options['cloudflare_dns'] ?? false) && $zoneId !== '' && ! $dnsAlready) {
+        // Proxy edge: never write the origin IP into public DNS — attach() sets
+        // grey A → proxy after files are on the origin.
+        if (($options['cloudflare_dns'] ?? false) && $zoneId !== '' && ! $dnsAlready && ! $proxyEdge) {
             $this->cloudflare->ensureRootARecord($settings, $zoneId, $domain, $serverIp);
             $meta['cloudflare_dns'] = 'done';
             $meta['cloudflare_www_dns'] = 'done';
             $meta['deploy_host'] = $serverIp;
         }
 
-        if (InfrastructureOptions::needsCloudflareEdge($options) && $zoneId !== '' && ! $edgeAlready) {
+        if (! $proxyEdge && InfrastructureOptions::needsCloudflareEdge($options) && $zoneId !== '' && ! $edgeAlready) {
             $this->applyCloudflareEdge($settings, $domain, $zoneId, $options, $meta);
         }
 

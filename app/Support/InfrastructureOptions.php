@@ -24,6 +24,10 @@ class InfrastructureOptions
         'cloudflare_www_redirect',
     ];
 
+    public const EDGE_CLOUDFLARE = 'cloudflare';
+
+    public const EDGE_PROXY = 'proxy';
+
     /**
      * @return array<string, bool>
      */
@@ -53,6 +57,21 @@ class InfrastructureOptions
             $options[$metaKey] = (bool) ($input[$inputKey] ?? false);
         }
 
+        $edgeRaw = trim((string) ($input['infra_edge'] ?? self::EDGE_CLOUDFLARE));
+        if (preg_match('/^proxy:(\d+)$/', $edgeRaw, $m) && (int) $m[1] > 0) {
+            $options['edge'] = self::EDGE_PROXY;
+            $options['edge_proxy_id'] = (int) $m[1];
+            $options['cloudflare_zone'] = true;
+            $options['cloudflare_dns'] = false;
+            $options['dynadot_ns'] = true;
+            $options['cloudflare_ssl'] = false;
+            $options['cloudflare_https'] = false;
+            $options['cloudflare_www_redirect'] = false;
+        } else {
+            $options['edge'] = self::EDGE_CLOUDFLARE;
+            $options['edge_proxy_id'] = 0;
+        }
+
         return $options;
     }
 
@@ -70,6 +89,10 @@ class InfrastructureOptions
                 $options[$key] = (bool) $stored[$key];
             }
         }
+
+        $edge = (string) ($stored['edge'] ?? self::EDGE_CLOUDFLARE);
+        $options['edge'] = $edge === self::EDGE_PROXY ? self::EDGE_PROXY : self::EDGE_CLOUDFLARE;
+        $options['edge_proxy_id'] = (int) ($stored['edge_proxy_id'] ?? 0);
 
         return $options;
     }
@@ -94,6 +117,10 @@ class InfrastructureOptions
      */
     public static function anyEnabled(array $options): bool
     {
+        if (self::wantsProxy($options)) {
+            return true;
+        }
+
         foreach (self::META_KEYS as $key) {
             if ($options[$key] ?? false) {
                 return true;
@@ -104,11 +131,21 @@ class InfrastructureOptions
     }
 
     /**
+     * @param  array<string, mixed>  $options
+     */
+    public static function wantsProxy(array $options): bool
+    {
+        return ($options['edge'] ?? '') === self::EDGE_PROXY
+            && (int) ($options['edge_proxy_id'] ?? 0) > 0;
+    }
+
+    /**
      * @param  array<string, bool>  $options
      */
     public static function needsCloudflareZone(array $options): bool
     {
-        return ($options['cloudflare_zone'] ?? false)
+        return self::wantsProxy($options)
+            || ($options['cloudflare_zone'] ?? false)
             || ($options['cloudflare_dns'] ?? false)
             || ($options['cloudflare_ssl'] ?? false)
             || ($options['cloudflare_https'] ?? false)
@@ -121,7 +158,9 @@ class InfrastructureOptions
      */
     public static function needsDnsWait(array $options): bool
     {
-        return ($options['cloudflare_zone'] ?? false) || ($options['dynadot_ns'] ?? false);
+        return self::wantsProxy($options)
+            || ($options['cloudflare_zone'] ?? false)
+            || ($options['dynadot_ns'] ?? false);
     }
 
     /**

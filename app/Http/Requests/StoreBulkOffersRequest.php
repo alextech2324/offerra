@@ -76,6 +76,7 @@ class StoreBulkOffersRequest extends FormRequest
             'infra_cloudflare_ssl' => ['boolean'],
             'infra_cloudflare_https' => ['boolean'],
             'infra_cloudflare_www_redirect' => ['boolean'],
+            'infra_edge' => ['nullable', 'string', 'max:32', 'regex:/^(cloudflare|proxy:[1-9]\d*)$/'],
             'items' => ['required', 'array', 'min:1', 'max:10'],
             'items.*.domain' => ['required', 'string', 'max:120', 'regex:/^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/i', 'distinct'],
             'items.*.template' => ['required', 'string', Rule::in($catalog->enabledIds())],

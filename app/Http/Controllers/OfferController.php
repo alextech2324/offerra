@@ -415,6 +415,9 @@ class OfferController extends Controller
             'initialLang' => request()->string('lang')->toString() ?: null,
             'initialFromSearch' => request()->boolean('from_search'),
             'canProvisionInfrastructure' => InfrastructureProvisioner::settingsReady($settings),
+            'proxyServers' => auth()->user()?->isAdmin()
+                ? ProxyServer::activeForSwitch()->map(fn (ProxyServer $server) => $server->toPanelArray())->values()
+                : [],
         ]);
     }
 
@@ -482,6 +485,7 @@ class OfferController extends Controller
                 'infra_cloudflare_ssl' => $request->boolean('infra_cloudflare_ssl'),
                 'infra_cloudflare_https' => $request->boolean('infra_cloudflare_https'),
                 'infra_cloudflare_www_redirect' => $request->boolean('infra_cloudflare_www_redirect'),
+                'infra_edge' => $request->string('infra_edge')->toString() ?: 'cloudflare',
             ]);
         } catch (\Throwable $e) {
             return redirect()
@@ -530,6 +534,7 @@ class OfferController extends Controller
             'infra_cloudflare_ssl' => $request->boolean('infra_cloudflare_ssl'),
             'infra_cloudflare_https' => $request->boolean('infra_cloudflare_https'),
             'infra_cloudflare_www_redirect' => $request->boolean('infra_cloudflare_www_redirect'),
+            'infra_edge' => $request->string('infra_edge')->toString() ?: 'cloudflare',
         ];
 
         /** @var list<array{domain: string, template: string}> $items */

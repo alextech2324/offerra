@@ -20,12 +20,31 @@ const INFRA_TASKS = [
 
 function defaultInfraOptions(enabled = false) {
     return {
+        infra_edge: 'cloudflare',
         infra_cloudflare_zone: enabled,
         infra_cloudflare_dns: enabled,
         infra_dynadot_ns: enabled,
         infra_cloudflare_ssl: enabled,
         infra_cloudflare_https: enabled,
         infra_cloudflare_www_redirect: enabled,
+    };
+}
+
+function proxyEdgeId(value) {
+    const match = String(value || '').match(/^proxy:(\d+)$/);
+
+    return match ? match[1] : '';
+}
+
+function proxyInfraOptions(proxyId) {
+    return {
+        infra_edge: `proxy:${proxyId}`,
+        infra_cloudflare_zone: true,
+        infra_cloudflare_dns: false,
+        infra_dynadot_ns: true,
+        infra_cloudflare_ssl: false,
+        infra_cloudflare_https: false,
+        infra_cloudflare_www_redirect: false,
     };
 }
 
@@ -304,6 +323,7 @@ export default function OffersCreate({
     hasDynadotApiKey = false,
     hasDynadotContactId = false,
     canProvisionInfrastructure = false,
+    proxyServers = [],
     domainSearchTlds = [],
     affiliateTag = 'BRO',
     geoPresets,
@@ -319,6 +339,8 @@ export default function OffersCreate({
 }) {
     const { errors, panel, auth } = usePage().props;
     const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
+    const proxyList = Array.isArray(proxyServers) ? proxyServers : [];
+    const canChooseProxyEdge = canProvisionInfrastructure && proxyList.length > 0;
     const geoMinDeposits = panel?.geo_min_deposits || {};
     const defaults = useMemo(
         () => buildDefaults(templates, initialFromSearch),
@@ -1288,9 +1310,28 @@ export default function OffersCreate({
     };
 
     const enableAllInfraOptions = () => {
+        setData((prev) => {
+            const proxyId = proxyEdgeId(prev.infra_edge);
+            if (proxyId) {
+                return { ...prev, ...proxyInfraOptions(proxyId) };
+            }
+
+            return {
+                ...prev,
+                ...defaultInfraOptions(true),
+            };
+        });
+    };
+
+    const selectInfraEdge = (mode, proxyId = '') => {
+        if (mode === 'proxy' && proxyId) {
+            setData((prev) => ({ ...prev, ...proxyInfraOptions(proxyId) }));
+            return;
+        }
+
         setData((prev) => ({
             ...prev,
-            ...defaultInfraOptions(true),
+            infra_edge: 'cloudflare',
         }));
     };
 
@@ -1457,6 +1498,7 @@ export default function OffersCreate({
                 infra_cloudflare_ssl: data.infra_cloudflare_ssl,
                 infra_cloudflare_https: data.infra_cloudflare_https,
                 infra_cloudflare_www_redirect: data.infra_cloudflare_www_redirect,
+                infra_edge: data.infra_edge || 'cloudflare',
                 items: bulkItems.map(({ domain, template }) => ({ domain, template })),
             }, {
                 preserveScroll: true,
@@ -2208,21 +2250,69 @@ export default function OffersCreate({
                         <div className="card" style={{ marginTop: '1rem' }}>
                             <h3>Інфраструктура домену</h3>
                             <p className="card-desc" style={{ marginBottom: '1rem' }}>
-                                Оберіть, що виконати автоматично після генерації. Кожен пункт — окремо.
+                                Оберіть край і що виконати автоматично після генерації.
                             </p>
-                            <div className="field" style={{ display: 'grid', gap: '0.65rem' }}>
-                                {INFRA_TASKS.map((task) => (
-                                    <label key={task.key} className="field-check" htmlFor={task.key}>
+                            {canChooseProxyEdge && (
+                                <div className="field" style={{ marginBottom: '1rem' }}>
+                                    <span className="field-label">Край</span>
+                                    <label className="field-check" htmlFor="infra-edge-cf">
                                         <input
-                                            id={task.key}
-                                            type="checkbox"
-                                            checked={Boolean(data[task.key])}
-                                            onChange={(e) => toggleInfraOption(task.key, e.target.checked)}
+                                            id="infra-edge-cf"
+                                            type="radio"
+                                            name="infra_edge"
+                                            checked={!proxyEdgeId(data.infra_edge)}
+                                            onChange={() => selectInfraEdge('cloudflare')}
                                         />
-                                        <span>{task.label}</span>
+                                        <span>Cloudflare — помаранчева хмара, SSL Flexible, A на origin</span>
                                     </label>
-                                ))}
-                            </div>
+                                    <label className="field-check" htmlFor="infra-edge-proxy">
+                                        <input
+                                            id="infra-edge-proxy"
+                                            type="radio"
+                                            name="infra_edge"
+                                            checked={Boolean(proxyEdgeId(data.infra_edge))}
+                                            onChange={() => selectInfraEdge('proxy', proxyEdgeId(data.infra_edge) || String(proxyList[0].id))}
+                                        />
+                                        <span>Проксі — сірий A на проксі, HTTPS (Let’s Encrypt), origin не в DNS</span>
+                                    </label>
+                                    {proxyEdgeId(data.infra_edge) && (
+                                        <label className="field" htmlFor="infra-edge-proxy-id" style={{ marginTop: '0.35rem' }}>
+                                            <span className="field-label">Проксі-сервер</span>
+                                            <select
+                                                id="infra-edge-proxy-id"
+                                                value={proxyEdgeId(data.infra_edge)}
+                                                onChange={(e) => selectInfraEdge('proxy', e.target.value)}
+                                            >
+                                                {proxyList.map((server) => (
+                                                    <option key={server.id} value={String(server.id)}>
+                                                        {server.display_label} ({server.host})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+                            {!proxyEdgeId(data.infra_edge) && (
+                                <div className="field" style={{ display: 'grid', gap: '0.65rem' }}>
+                                    {INFRA_TASKS.map((task) => (
+                                        <label key={task.key} className="field-check" htmlFor={task.key}>
+                                            <input
+                                                id={task.key}
+                                                type="checkbox"
+                                                checked={Boolean(data[task.key])}
+                                                onChange={(e) => toggleInfraOption(task.key, e.target.checked)}
+                                            />
+                                            <span>{task.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                            {proxyEdgeId(data.infra_edge) && (
+                                <p className="field-hint">
+                                    Зона Cloudflare і NS у Dynadot все одно створюються — A-запис буде сірим на проксі, не на origin.
+                                </p>
+                            )}
                             <div className="btn-row" style={{ marginTop: '0.75rem' }}>
                                 <button type="button" className="btn btn-ghost btn-sm" onClick={enableAllInfraOptions}>
                                     Увімкнути все
@@ -2307,9 +2397,20 @@ export default function OffersCreate({
                             <div className="summary-row">
                                 <span>Інфраструктура</span>
                                 <span>
-                                    {anyInfraEnabled(data)
-                                        ? INFRA_TASKS.filter((task) => data[task.key]).map((task) => task.label).join(' · ')
-                                        : '—'}
+                                    {(() => {
+                                        const proxyId = proxyEdgeId(data.infra_edge);
+                                        const proxy = proxyId
+                                            ? proxyList.find((item) => String(item.id) === String(proxyId))
+                                            : null;
+                                        if (proxy) {
+                                            return `Проксі · ${proxy.display_label} (${proxy.host})`;
+                                        }
+                                        if (anyInfraEnabled(data)) {
+                                            return INFRA_TASKS.filter((task) => data[task.key]).map((task) => task.label).join(' · ');
+                                        }
+
+                                        return '—';
+                                    })()}
                                 </span>
                             </div>
                         </dl>

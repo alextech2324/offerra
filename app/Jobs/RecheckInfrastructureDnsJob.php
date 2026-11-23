@@ -62,6 +62,7 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
                     'domain' => $offer->domain,
                 ]);
             }
+            $provisioner->enqueueProxyEdgeIfRequested($offer->fresh());
         } catch (\Throwable $e) {
             Log::error('Infrastructure DNS recheck failed', [
                 'offer' => $this->offerId,
