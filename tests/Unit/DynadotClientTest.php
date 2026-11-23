@@ -81,4 +81,11 @@ class DynadotClientTest extends TestCase
         $this->assertTrue(DynadotClient::isUnauthorizedIpError('IP address is not authorized'));
         $this->assertFalse(DynadotClient::isUnauthorizedIpError('insufficient account balance'));
     }
+
+    public function test_central_registry_busy_is_retryable_ns_error(): void
+    {
+        $this->assertTrue(DynadotClient::isRetryableNsError(
+            'Cannot set nameservers to these domains ( vrticemedravanza.biz : The connection to the central registry is busy. Please try again later).',
+        ));
+    }
 }

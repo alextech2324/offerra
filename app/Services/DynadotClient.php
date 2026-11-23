@@ -462,7 +462,8 @@ class DynadotClient
             || self::isTransientTransportError($message)
             || str_contains($normalized, 'зайнятий')
             || str_contains($normalized, 'system_busy')
-            || str_contains($normalized, 'currently processing');
+            || str_contains($normalized, 'currently processing')
+            || str_contains($normalized, 'central registry is busy');
     }
 
     public static function redactSecrets(string $message): string

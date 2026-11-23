@@ -272,6 +272,67 @@ class OfferTeardownOriginTest extends TestCase
         $this->assertSame('skipped_unauthorized_ip', $offer->teardown_meta['steps']['dynadot'] ?? null);
     }
 
+    public function test_archive_skips_dynadot_when_central_registry_is_busy(): void
+    {
+        $user = User::factory()->create();
+        $user->settings()->create(['dynadot_api_key' => 'dynadot-key']);
+        $this->origin('10.8.0.32');
+
+        $offer = $this->archivingOffer($user, 'vrticemedravanza.biz');
+
+        $dynadot = Mockery::mock(DynadotClient::class);
+        $dynadot->shouldReceive('parkNameservers')
+            ->once()
+            ->andThrow(new \RuntimeException(
+                'Cannot set nameservers to these domains ( vrticemedravanza.biz : The connection to the central registry is busy. Please try again later).',
+            ));
+        $this->app->instance(DynadotClient::class, $dynadot);
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('deleteWebRoot')->andReturnNull();
+        $this->app->instance(OriginHostService::class, $origin);
+        $this->app->forgetInstance(OfferTeardownService::class);
+
+        app(OfferTeardownService::class)->run($offer->fresh());
+
+        $offer->refresh();
+        $this->assertSame('archived', $offer->status);
+        $this->assertSame('skipped_registry_busy', $offer->teardown_meta['steps']['dynadot'] ?? null);
+    }
+
+    public function test_archive_does_not_ssh_to_deleted_origin_ips(): void
+    {
+        $user = User::factory()->create();
+        $user->settings()->create(['deploy_host' => '144.172.64.213']);
+        $alive = $this->origin('10.8.0.41');
+
+        $offer = $this->archivingOffer($user, 'ghost-host.click', [
+            'deploy_panel_name' => '144.172.64.213',
+            'infra_meta' => [
+                'deploy_host' => '144.172.64.213',
+                'migrated_from' => '81.180.92.59',
+            ],
+        ]);
+
+        $deleted = [];
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('deleteWebRoot')
+            ->once()
+            ->andReturnUsing(function (UserSetting $settings, string $domain) use (&$deleted): void {
+                $this->assertSame('ghost-host.click', $domain);
+                $deleted[] = (string) $settings->deploy_host;
+            });
+        $this->app->instance(OriginHostService::class, $origin);
+        $this->app->forgetInstance(OfferTeardownService::class);
+
+        app(OfferTeardownService::class)->run($offer->fresh());
+
+        $offer->refresh();
+        $this->assertSame('archived', $offer->status);
+        $this->assertSame([$alive->host], $deleted);
+        $this->assertArrayNotHasKey('deploy_host', $offer->infra_meta ?? []);
+    }
+
     /**
      * @param  array<string, mixed>  $overrides
      */

@@ -81,7 +81,6 @@ class OfferServiceProvider extends ServiceProvider
                 $app->make(GoogleSearchConsoleClient::class),
                 $app->make(OfferVerificationFileService::class),
                 $app->make(OriginHostService::class),
-                $app->make(DeployService::class),
                 $app->make(OriginPool::class),
                 $app->make(DynadotClient::class),
                 config('offerra.offers_path'),

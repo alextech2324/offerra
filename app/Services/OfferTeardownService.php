@@ -20,7 +20,6 @@ class OfferTeardownService
         private readonly GoogleSearchConsoleClient $gsc,
         private readonly OfferVerificationFileService $verificationFiles,
         private readonly OriginHostService $origin,
-        private readonly DeployService $deploy,
         private readonly OriginPool $pool,
         private readonly DynadotClient $dynadot,
         private readonly string $offersPath,
@@ -101,9 +100,14 @@ class OfferTeardownService
                 $outcome = $this->removeCloudflareZone($settings, $offer);
                 $steps['cloudflare_'.$label] = $outcome;
 
-                if (in_array($outcome, ['deleted', 'already_gone', 'skipped_not_found'], true)) {
+                if (in_array($outcome, ['deleted', 'already_gone'], true)) {
                     $cloudflareOk = true;
                     $this->forgetCloudflareZoneId($offer);
+                    break;
+                }
+
+                if ($outcome === 'skipped_not_found') {
+                    $cloudflareOk = true;
                 }
             } catch (\Throwable $e) {
                 if ($this->cloudflare->isUnauthorizedError($e)) {
@@ -340,32 +344,8 @@ class OfferTeardownService
             $byHost[$host] = $settings;
         };
 
-        if ($offer->user && $ownerSettings) {
-            try {
-                $resolved = $this->deploy->resolveDeploySettings($offer->user, $offer, allocate: false);
-                $push((string) $resolved->deploy_host, $resolved);
-            } catch (\Throwable $e) {
-                Log::warning('Offer teardown could not resolve offer origin SSH', [
-                    'offer_id' => $offer->id,
-                    'domain' => $offer->domain,
-                    'error' => $e->getMessage(),
-                ]);
-            }
-        }
-
-        if ($ownerSettings) {
-            $push((string) $ownerSettings->deploy_host, $ownerSettings);
-        }
-
-        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
-        $previous = strtolower(trim((string) ($meta['migrated_from'] ?? '')));
-        if ($previous !== '') {
-            $previousServer = $this->pool->serverForHost($previous);
-            if ($previousServer?->hasSshCredentials()) {
-                $push($previous, $this->pool->applyTo($base, $previousServer));
-            }
-        }
-
+        // Only pool rows with SSH. Ghost deploy_host / user-settings leftovers
+        // from deleted VPS black-hole TCP and kill the 300s archive worker.
         foreach (OriginServer::query()->orderBy('id')->get() as $server) {
             if (! $server->hasSshCredentials()) {
                 continue;
@@ -531,6 +511,13 @@ class OfferTeardownService
             if (DynadotClient::isUnauthorizedIpError($e->getMessage())) {
                 return [
                     'status' => 'skipped_unauthorized_ip',
+                    'detail' => $e->getMessage(),
+                ];
+            }
+
+            if (DynadotClient::isRetryableNsError($e->getMessage())) {
+                return [
+                    'status' => 'skipped_registry_busy',
                     'detail' => $e->getMessage(),
                 ];
             }

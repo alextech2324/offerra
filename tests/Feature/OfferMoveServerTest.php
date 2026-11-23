@@ -237,6 +237,21 @@ class OfferMoveServerTest extends TestCase
             ->handle(app(OriginPool::class), $origin, $cloudflare);
     }
 
+    public function test_purge_job_gives_up_when_old_host_left_the_pool(): void
+    {
+        $user = User::factory()->create();
+        UserSetting::query()->create(['user_id' => $user->id]);
+        $this->origin('10.7.0.2');
+        $offer = $this->offer($user, 'dead-origin.tech', '10.7.0.2');
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldNotReceive('hostHasOfferIndex');
+        $origin->shouldNotReceive('deleteWebRoot');
+
+        (new PurgeOfferFromOriginJob($offer->id, '81.180.92.59'))
+            ->handle(app(OriginPool::class), $origin, Mockery::mock(CloudflareClient::class));
+    }
+
     private function origin(
         string $host,
         string $hoster = '',

@@ -44,6 +44,16 @@ class PurgeOfferFromOriginJob implements ShouldBeUnique, ShouldQueue
             return;
         }
 
+        $server = $pool->serverForHost($host);
+        if (! $server?->hasSshCredentials() || $server->healthStatus() === 'down') {
+            Log::info('Origin purge skipped — host gone from pool', [
+                'offer' => $this->offerId,
+                'host' => $host,
+            ]);
+
+            return;
+        }
+
         $offer = Offer::query()->with('user.settings')->find($this->offerId);
         if (! $offer?->user?->settings) {
             return;
@@ -76,11 +86,6 @@ class PurgeOfferFromOriginJob implements ShouldBeUnique, ShouldQueue
             ]);
             $this->retryLater(300);
 
-            return;
-        }
-
-        $server = $pool->serverForHost($host);
-        if (! $server?->hasSshCredentials()) {
             return;
         }
 
