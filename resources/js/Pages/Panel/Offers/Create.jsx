@@ -2247,15 +2247,17 @@ export default function OffersCreate({
                     </div>
 
                     {canProvisionInfrastructure && (
-                        <div className="card" style={{ marginTop: '1rem' }}>
+                        <div className="card infra-edge" style={{ marginTop: '1rem' }}>
                             <h3>Інфраструктура домену</h3>
-                            <p className="card-desc" style={{ marginBottom: '1rem' }}>
-                                Оберіть край і що виконати автоматично після генерації.
+                            <p className="card-desc">
+                                Куди дивиться публічний DNS після генерації.
                             </p>
                             {canChooseProxyEdge && (
-                                <div className="field" style={{ marginBottom: '1rem' }}>
-                                    <span className="field-label">Край</span>
-                                    <label className="field-check" htmlFor="infra-edge-cf">
+                                <div className="infra-edge__choices">
+                                    <label
+                                        className={`infra-edge__card${!proxyEdgeId(data.infra_edge) ? ' is-on' : ''}`}
+                                        htmlFor="infra-edge-cf"
+                                    >
                                         <input
                                             id="infra-edge-cf"
                                             type="radio"
@@ -2263,9 +2265,14 @@ export default function OffersCreate({
                                             checked={!proxyEdgeId(data.infra_edge)}
                                             onChange={() => selectInfraEdge('cloudflare')}
                                         />
-                                        <span>Cloudflare — помаранчева хмара, SSL Flexible, A на origin</span>
+                                        <span className="infra-edge__kicker">Cloudflare</span>
+                                        <strong>Помаранчева хмара</strong>
+                                        <span className="infra-edge__meta">A на origin · SSL Flexible</span>
                                     </label>
-                                    <label className="field-check" htmlFor="infra-edge-proxy">
+                                    <label
+                                        className={`infra-edge__card${proxyEdgeId(data.infra_edge) ? ' is-on' : ''}`}
+                                        htmlFor="infra-edge-proxy"
+                                    >
                                         <input
                                             id="infra-edge-proxy"
                                             type="radio"
@@ -2273,61 +2280,67 @@ export default function OffersCreate({
                                             checked={Boolean(proxyEdgeId(data.infra_edge))}
                                             onChange={() => selectInfraEdge('proxy', proxyEdgeId(data.infra_edge) || String(proxyList[0].id))}
                                         />
-                                        <span>Проксі — сірий A на проксі, HTTPS (Let’s Encrypt), origin не в DNS</span>
-                                    </label>
-                                    {proxyEdgeId(data.infra_edge) && (
-                                        <label className="field" htmlFor="infra-edge-proxy-id" style={{ marginTop: '0.35rem' }}>
-                                            <span className="field-label">Проксі-сервер</span>
+                                        <span className="infra-edge__kicker">Проксі</span>
+                                        <strong>Сірий A, origin сховано</strong>
+                                        <span className="infra-edge__meta">Let’s Encrypt на проксі · origin не в DNS</span>
+                                        {proxyEdgeId(data.infra_edge) && (
                                             <select
                                                 id="infra-edge-proxy-id"
+                                                className="infra-edge__select"
                                                 value={proxyEdgeId(data.infra_edge)}
+                                                onClick={(e) => e.stopPropagation()}
                                                 onChange={(e) => selectInfraEdge('proxy', e.target.value)}
                                             >
                                                 {proxyList.map((server) => (
                                                     <option key={server.id} value={String(server.id)}>
-                                                        {server.display_label} ({server.host})
+                                                        {server.display_label} · {server.host}
                                                     </option>
                                                 ))}
                                             </select>
-                                        </label>
-                                    )}
+                                        )}
+                                    </label>
                                 </div>
                             )}
                             {!proxyEdgeId(data.infra_edge) && (
-                                <div className="field" style={{ display: 'grid', gap: '0.65rem' }}>
-                                    {INFRA_TASKS.map((task) => (
-                                        <label key={task.key} className="field-check" htmlFor={task.key}>
-                                            <input
-                                                id={task.key}
-                                                type="checkbox"
-                                                checked={Boolean(data[task.key])}
-                                                onChange={(e) => toggleInfraOption(task.key, e.target.checked)}
-                                            />
-                                            <span>{task.label}</span>
-                                        </label>
-                                    ))}
+                                <div className="infra-tasks">
+                                    <div className="infra-tasks__bar">
+                                        <span>Кроки Cloudflare</span>
+                                        <div className="infra-tasks__actions">
+                                            <button type="button" className="btn btn-ghost btn-sm" onClick={enableAllInfraOptions}>
+                                                Усе
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-ghost btn-sm"
+                                                onClick={() => setData((prev) => ({ ...prev, ...defaultInfraOptions(false) }))}
+                                            >
+                                                Нічого
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="infra-tasks__list">
+                                        {INFRA_TASKS.map((task) => (
+                                            <label key={task.key} className="infra-tasks__item" htmlFor={task.key}>
+                                                <input
+                                                    id={task.key}
+                                                    type="checkbox"
+                                                    checked={Boolean(data[task.key])}
+                                                    onChange={(e) => toggleInfraOption(task.key, e.target.checked)}
+                                                />
+                                                <span>{task.label.replace(/^Cloudflare — |^Dynadot — /, '')}</span>
+                                            </label>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                             {proxyEdgeId(data.infra_edge) && (
-                                <p className="field-hint">
-                                    Зона Cloudflare і NS у Dynadot все одно створюються — A-запис буде сірим на проксі, не на origin.
+                                <p className="field-hint" style={{ marginTop: '0.85rem' }}>
+                                    Зона Cloudflare і NS у Dynadot створюються самі. A буде сірим на проксі.
                                 </p>
                             )}
-                            <div className="btn-row" style={{ marginTop: '0.75rem' }}>
-                                <button type="button" className="btn btn-ghost btn-sm" onClick={enableAllInfraOptions}>
-                                    Увімкнути все
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-ghost btn-sm"
-                                    onClick={() => setData((prev) => ({ ...prev, ...defaultInfraOptions(false) }))}
-                                >
-                                    Вимкнути все
-                                </button>
-                            </div>
-                            <p className="field-hint" style={{ marginTop: '0.75rem' }}>
-                                DNS може оновлюватись 15 хв – 48 год, якщо увімкнено зону Cloudflare або NS у Dynadot.
-                                {domainPurchasedViaPanel ? ' Для щойно купленого домену рекомендовано увімкнути все.' : ''}
+                            <p className="field-hint" style={{ marginTop: '0.65rem' }}>
+                                DNS може оновлюватись 15 хв – 48 год.
+                                {domainPurchasedViaPanel ? ' Для щойно купленого домену краще увімкнути все.' : ''}
                             </p>
                         </div>
                     )}

@@ -588,7 +588,8 @@ a:hover { text-decoration: underline; }
 
 .field input:not([type="checkbox"]):not([type="radio"]),
 .field select,
-.field textarea {
+.field textarea,
+.infra-edge select {
   width: 100%;
   padding: 0.48rem 0.7rem;
   background: var(--bg);
@@ -600,7 +601,8 @@ a:hover { text-decoration: underline; }
   color-scheme: dark;
 }
 
-.field select option {
+.field select option,
+.infra-edge select option {
   background: var(--surface);
   color: var(--text);
 }
@@ -715,7 +717,8 @@ a:hover { text-decoration: underline; }
 }
 
 .field input:not([type="checkbox"]):not([type="radio"]):focus,
-.field select:focus {
+.field select:focus,
+.infra-edge select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow);
@@ -725,6 +728,136 @@ a:hover { text-decoration: underline; }
   font-size: 0.72rem;
   color: var(--muted);
   margin-top: 0.25rem;
+}
+
+.infra-edge .card-desc {
+  margin-bottom: 0.9rem;
+}
+
+.infra-edge__choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-bottom: 0.95rem;
+}
+
+.infra-edge__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  padding: 0.85rem 0.9rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.infra-edge__card:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+
+.infra-edge__card.is-on {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-2));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.infra-edge__card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.infra-edge__kicker {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.infra-edge__card.is-on .infra-edge__kicker {
+  color: var(--accent);
+}
+
+.infra-edge__card strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.infra-edge__meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.infra-edge__select {
+  margin-top: 0.55rem;
+  width: 100%;
+}
+
+.infra-tasks__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.55rem;
+}
+
+.infra-tasks__bar > span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.infra-tasks__actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.infra-tasks__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.65rem;
+}
+
+.infra-tasks__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  cursor: pointer;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.infra-tasks__item:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
+.infra-tasks__item input {
+  margin-top: 0.12rem;
+}
+
+@media (max-width: 720px) {
+  .infra-edge__choices,
+  .infra-tasks__list {
+    grid-template-columns: 1fr;
+  }
 }
 
 .field-hint--warn {
