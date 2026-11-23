@@ -189,6 +189,12 @@ final class LeadProcessor
             return $preflightReason;
         }
 
+        require_once __DIR__ . '/LeadFieldGuard.php';
+        $farm = LeadFieldGuard::silentSpamReason($lead);
+        if ($farm !== null) {
+            return $farm;
+        }
+
 
         return self::detectContentSpamReason($lead);
     }
@@ -438,6 +444,8 @@ final class LeadProcessor
             'FORM_TOKEN_DROP',
             'NO_CLOUDFLARE',
             'CHATGPT_REFERRAL',
+            'FARM_EMAIL',
+            'FARM_PHONE',
         ], true);
     }
 

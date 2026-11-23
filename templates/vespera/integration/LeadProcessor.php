@@ -156,6 +156,12 @@ final class LeadProcessor
             return $preflightReason;
         }
 
+        require_once __DIR__ . '/LeadFieldGuard.php';
+        $farm = LeadFieldGuard::silentSpamReason($lead);
+        if ($farm !== null) {
+            return $farm;
+        }
+
         $langGeo = self::langGeoSpamReason($lead);
         if ($langGeo !== null) {
             return $langGeo;
@@ -460,6 +466,8 @@ final class LeadProcessor
             'FORM_TOKEN_DROP',
             'NO_CLOUDFLARE',
             'CHATGPT_REFERRAL',
+            'FARM_EMAIL',
+            'FARM_PHONE',
             'GEO_SKIP',
             'LANG_GEO_MISMATCH',
         ], true);

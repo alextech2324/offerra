@@ -126,6 +126,65 @@ final class LeadFieldGuard
         return null;
     }
 
+
+    /**
+     * Browser-like farm payloads. LeadProcessor silent-drops these.
+     */
+    public static function silentSpamReason(array $lead): ?string
+    {
+        $first = strtolower(trim((string) ($lead['first_name'] ?? $lead['fname'] ?? '')));
+        $last = strtolower(trim((string) ($lead['last_name'] ?? $lead['lname'] ?? '')));
+        $email = strtolower(trim((string) ($lead['email'] ?? '')));
+        $phone = (string) ($lead['phone'] ?? $lead['fullphone'] ?? '');
+        $digits = preg_replace('/\D+/', '', $phone) ?? '';
+
+        if ($digits !== '' && preg_match('/^(?:44)?0?201555/', $digits) === 1) {
+            return 'FARM_PHONE';
+        }
+
+        $at = strrpos($email, '@');
+        if ($at === false) {
+            return null;
+        }
+
+        $local = substr($email, 0, $at);
+        $domain = substr($email, $at + 1);
+
+        if (in_array($domain, self::farmEmailDomains(), true)) {
+            return 'FARM_EMAIL';
+        }
+
+        $nameKey = preg_replace('/[^a-z]/', '', $first.$last) ?? '';
+        if ($nameKey !== '' && strlen($nameKey) >= 6
+            && preg_match('/^'.preg_quote($nameKey, '/').'[0-9]{3,6}$/', $local) === 1
+            && ! in_array($domain, self::commonMailDomains(), true)
+        ) {
+            return 'FARM_EMAIL';
+        }
+
+        return null;
+    }
+
+    /** @return list<string> */
+    private static function farmEmailDomains(): array
+    {
+        return [
+            'euploading.com',
+        ];
+    }
+
+    /** @return list<string> */
+    private static function commonMailDomains(): array
+    {
+        return [
+            'gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com',
+            'yahoo.com', 'yahoo.co.uk', 'icloud.com', 'me.com', 'proton.me', 'protonmail.com',
+            'gmx.com', 'gmx.net', 'yandex.ru', 'mail.ru', 'ukr.net', 'i.ua', 'meta.ua',
+            'wp.pl', 'o2.pl', 'seznam.cz', 'libero.it', 'virgilio.it', 'orange.fr',
+            'wanadoo.fr', 'free.fr', 'web.de', 't-online.de', 'qq.com', '163.com', '126.com',
+        ];
+    }
+
     private static function nameLooksCjk(string $name): bool
     {
         return preg_match('/[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}]/u', $name) === 1;

@@ -52,4 +52,44 @@ class LeadFieldGuardTest extends TestCase
             '+34612345678',
         ));
     }
+
+    public function test_euploading_farm_email_is_flagged(): void
+    {
+        $this->assertSame('FARM_EMAIL', \LeadFieldGuard::silentSpamReason([
+            'first_name' => 'William',
+            'last_name' => 'Marin',
+            'email' => 'williammarin5612@euploading.com',
+            'phone' => '+61412345678',
+        ]));
+    }
+
+    public function test_uk_201555_drama_phone_is_flagged(): void
+    {
+        $this->assertSame('FARM_PHONE', \LeadFieldGuard::silentSpamReason([
+            'first_name' => 'Carol',
+            'last_name' => 'Price',
+            'email' => 'carol.price@gmail.com',
+            'phone' => '+442015557469',
+        ]));
+    }
+
+    public function test_concatenated_name_digits_on_throwaway_domain_is_flagged(): void
+    {
+        $this->assertSame('FARM_EMAIL', \LeadFieldGuard::silentSpamReason([
+            'first_name' => 'Donnie',
+            'last_name' => 'George',
+            'email' => 'donniegeorge2532@temp-mail.xyz',
+            'phone' => '+61412345678',
+        ]));
+    }
+
+    public function test_real_gmail_lead_is_not_farm_spam(): void
+    {
+        $this->assertNull(\LeadFieldGuard::silentSpamReason([
+            'first_name' => 'Maria',
+            'last_name' => 'Garcia',
+            'email' => 'maria.garcia@gmail.com',
+            'phone' => '+34612345678',
+        ]));
+    }
 }
