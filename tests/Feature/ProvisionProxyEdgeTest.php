@@ -18,7 +18,7 @@ class ProvisionProxyEdgeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_create_wizard_lists_proxies_for_admin_only(): void
+    public function test_create_wizard_lists_proxies_for_every_user(): void
     {
         $admin = User::factory()->admin()->create();
         $admin->settings()->create([]);
@@ -33,20 +33,15 @@ class ProvisionProxyEdgeTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->actingAs($admin)
-            ->get(route('offers.create'))
-            ->assertOk()
-            ->assertInertia(fn ($page) => $page
-                ->component('Panel/Offers/Create')
-                ->has('proxyServers', 1)
-                ->where('proxyServers.0.host', '172.86.71.141'));
-
-        $this->actingAs($user)
-            ->get(route('offers.create'))
-            ->assertOk()
-            ->assertInertia(fn ($page) => $page
-                ->component('Panel/Offers/Create')
-                ->where('proxyServers', []));
+        foreach ([$admin, $user] as $actor) {
+            $this->actingAs($actor)
+                ->get(route('offers.create'))
+                ->assertOk()
+                ->assertInertia(fn ($page) => $page
+                    ->component('Panel/Offers/Create')
+                    ->has('proxyServers', 1)
+                    ->where('proxyServers.0.host', '172.86.71.141'));
+        }
     }
 
     public function test_provision_job_queues_proxy_edge_after_deploy(): void
