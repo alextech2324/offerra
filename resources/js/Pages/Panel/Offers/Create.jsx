@@ -2338,8 +2338,8 @@ export default function OffersCreate({
                     <div className="card infra-edge" style={{ marginTop: '1rem' }}>
                         <h3>Кло</h3>
                         <p className="card-desc">
-                            Якщо ні — офер як зараз. Якщо так — правило однакове для всіх:
-                            Googlebot і люди з GEO офера бачать ленд, решта — вайт.
+                            Якщо ні — офер як зараз. Якщо так — Googlebot і люди з GEO офера
+                            бачать ленд, решта — вайт. Працює однаково на Cloudflare і на проксі.
                         </p>
                         <CloakPick
                             enabled={data.cloak_enabled}
@@ -2352,7 +2352,7 @@ export default function OffersCreate({
                                 white_landing_id: next ? prev.white_landing_id : '',
                             }))}
                             onWhiteChange={(id) => update('white_landing_id', id)}
-                            hint="Живий гейт ще не на origin: зараз лише вибір вайту. Перша HTML-відповідь (не JS-редірект) зашиємо наступним кроком."
+                            hint="Гейт їде на origin разом із лендом. Край (Cloudflare чи проксі) для кло не важливий — задеплой після вибору вайту."
                         />
                     </div>
                 </section>

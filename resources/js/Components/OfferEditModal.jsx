@@ -444,7 +444,7 @@ export default function OfferEditModal({
                                 white_landing_id: next ? prev.white_landing_id : '',
                             }))}
                             onWhiteChange={(id) => setData('white_landing_id', id)}
-                            hint="Правило однакове для всіх оферів. Живий ленд не зміниться, поки гейт не зашиємо в деплой на origin."
+                            hint="Правило однакове для всіх оферів і не залежить від краю. Після збереження задеплой, щоб гейт з’явився на origin."
                         />
                     </div>
 

@@ -166,6 +166,7 @@ class OfferGenerator
             $this->prepareVerificationCopy($offer, $targetPath);
             $this->verificationFiles->syncToOfferFolder($offer);
             $this->ensureVerificationDirWritable($offer);
+            app(OfferCloakSync::class)->sync($offer, $targetPath);
         } catch (UniqueConstraintViolationException $e) {
             if (File::isDirectory($targetPath)) {
                 File::deleteDirectory($targetPath);
@@ -612,6 +613,7 @@ class OfferGenerator
         $this->prepareVerificationCopy($offer, $targetPath);
         $this->verificationFiles->syncToOfferFolder($offer);
         $this->ensureVerificationDirWritable($offer);
+        app(OfferCloakSync::class)->sync($offer, $targetPath);
         $this->ensureWorkerWritable($targetPath);
 
         return $targetPath;
@@ -660,6 +662,7 @@ class OfferGenerator
         $this->verificationFiles->syncToOfferFolder($offer);
         $this->ensureVerificationDirWritable($offer);
         $this->syncManifestFromOffer($offer, $targetPath);
+        app(OfferCloakSync::class)->sync($offer, $targetPath);
     }
 
     /**

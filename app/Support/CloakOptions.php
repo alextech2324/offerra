@@ -107,4 +107,29 @@ class CloakOptions
             'white_landing_id' => $whiteId,
         ];
     }
+
+    /**
+     * ISO countries that see the offer. Single-GEO uses Ринок.
+     * ML / unknown geo falls back to phone countries; empty list means
+     * any real CF-IPCountry (still not XX).
+     *
+     * @return list<string>
+     */
+    public static function countriesFor(Offer $offer): array
+    {
+        $geo = strtoupper(trim((string) $offer->geo));
+        if (preg_match('/^[A-Z]{2}$/', $geo) && $geo !== 'ML') {
+            return [$geo === 'UK' ? 'GB' : $geo];
+        }
+
+        $out = [];
+        foreach (MarketOptions::sanitizePhoneCodes($offer->phone_countries ?? []) as $code) {
+            $code = strtoupper($code);
+            if (preg_match('/^[A-Z]{2}$/', $code) && ! in_array($code, $out, true)) {
+                $out[] = $code;
+            }
+        }
+
+        return $out;
+    }
 }

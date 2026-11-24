@@ -167,4 +167,10 @@ return [
         ['code' => 'PH', 'name' => 'Філіппіни', 'lang' => 'en', 'phone' => 'ph'],
         ['code' => 'NZ', 'name' => 'Нова Зеландія', 'lang' => 'en', 'phone' => 'nz'],
     ],
+
+    // Origin cloak always-pass (availability / GSC probes from the panel).
+    'panel_ips' => array_values(array_filter(array_map(
+        static fn (string $ip) => trim($ip),
+        explode(',', (string) env('OFFERRA_PANEL_IPS', '38.180.121.50')),
+    ))),
 ];

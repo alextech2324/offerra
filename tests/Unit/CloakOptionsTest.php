@@ -105,5 +105,16 @@ class CloakOptionsTest extends TestCase
             'enabled' => true,
             'white_landing_id' => $white->id,
         ], CloakOptions::fromOffer($offer));
+        $this->assertSame(['IT'], CloakOptions::countriesFor($offer));
+    }
+
+    public function test_ml_geo_uses_phone_countries(): void
+    {
+        $offer = new Offer([
+            'geo' => 'ML',
+            'phone_countries' => 'it,es,gb',
+        ]);
+
+        $this->assertSame(['IT', 'ES', 'GB'], CloakOptions::countriesFor($offer));
     }
 }

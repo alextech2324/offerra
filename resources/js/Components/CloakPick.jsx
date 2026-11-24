@@ -32,7 +32,7 @@ export default function CloakPick({
                         onChange={() => onEnabledChange(true)}
                     />
                     <strong>Додати кло</strong>
-                    <span>Googlebot і своє GEO бачать офер; решта — вайт</span>
+                    <span>Googlebot і своє GEO бачать офер; решта — вайт. CF і проксі однаково</span>
                 </label>
             </div>
 
@@ -73,8 +73,8 @@ export default function CloakPick({
             {on ? (
                 <ul className="cloak-pick__rules">
                     <li><strong>Googlebot</strong> — IP з офіційного <code>googlebot.json</code>, не User-Agent</li>
-                    <li><strong>GEO офера</strong> — країна з кроку Ринок, через GeoIP на проксі</li>
-                    <li><strong>Решта</strong> — вайт, включно зі сканерами. Панель, sitemap і GSC-файл завжди проходять</li>
+                    <li><strong>GEO офера</strong> — <code>CF-IPCountry</code> з кроку Ринок. Cloudflare і проксі ставлять той самий заголовок</li>
+                    <li><strong>Решта</strong> — вайт. Панель, sitemap і GSC-файл завжди проходять. Край офера кло не чіпає</li>
                 </ul>
             ) : null}
 
