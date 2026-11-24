@@ -334,6 +334,8 @@ function buildDefaults(templates, fromSearch = false, proxyId = '', enableCloudf
         phone_countries: [],
         vitals_enabled: true,
         from_search_team: Boolean(fromSearch),
+        cloak_enabled: false,
+        white_landing_id: '',
         ...defaultInfraOptions(enableCloudflare, proxyId),
     };
 }
@@ -357,6 +359,7 @@ export default function OffersCreate({
     initialGeo = null,
     initialLang = null,
     initialFromSearch = false,
+    whiteLandings = [],
 }) {
     const { errors, panel, auth } = usePage().props;
     const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
@@ -1457,6 +1460,11 @@ export default function OffersCreate({
         if (!canProceedMarket) {
             return 'Перевірте GEO, мову та phone GEO (крок 2).';
         }
+        if (data.cloak_enabled && !data.white_landing_id) {
+            return whiteLandings.length === 0
+                ? 'Щоб увімкнути кло, спочатку завантаж вайт у вкладці Лендінги.'
+                : 'Увімкнене кло — обери вайт на кроці Інфра.';
+        }
 
         return null;
     }, [
@@ -1470,6 +1478,9 @@ export default function OffersCreate({
         templatesForLang.length,
         data.lang,
         data.template,
+        data.cloak_enabled,
+        data.white_landing_id,
+        whiteLandings.length,
         isMarketMultilang,
     ]);
 
@@ -1514,6 +1525,8 @@ export default function OffersCreate({
                 phone_countries: data.phone_countries,
                 vitals_enabled: data.vitals_enabled,
                 from_search_team: data.from_search_team,
+                cloak_enabled: Boolean(data.cloak_enabled),
+                white_landing_id: data.cloak_enabled ? (data.white_landing_id || null) : null,
                 infra_cloudflare_zone: data.infra_cloudflare_zone,
                 infra_cloudflare_dns: data.infra_cloudflare_dns,
                 infra_dynadot_ns: data.infra_dynadot_ns,
@@ -2320,6 +2333,82 @@ export default function OffersCreate({
                             </p>
                         </div>
                     )}
+
+                    <div className="card infra-edge" style={{ marginTop: '1rem' }}>
+                        <h3>Кло</h3>
+                        <p className="card-desc">
+                            Якщо ні — офер як зараз. Якщо так — боти й чужі GEO пізніше побачать вайт;
+                            фільтри зашиємо наступним кроком.
+                        </p>
+                        <div className="infra-edge__choices">
+                            <label className={`infra-edge__card${!data.cloak_enabled ? ' is-on' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="cloak_enabled"
+                                    checked={!data.cloak_enabled}
+                                    onChange={() => setData((prev) => ({
+                                        ...prev,
+                                        cloak_enabled: false,
+                                        white_landing_id: '',
+                                    }))}
+                                />
+                                <span className="infra-edge__kicker">Без кло</span>
+                                <strong>Ні, без змін</strong>
+                                <span className="infra-edge__meta">Ленд відкривається всім як зараз.</span>
+                            </label>
+                            <label className={`infra-edge__card${data.cloak_enabled ? ' is-on' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="cloak_enabled"
+                                    checked={Boolean(data.cloak_enabled)}
+                                    onChange={() => update('cloak_enabled', true)}
+                                />
+                                <span className="infra-edge__kicker">Кло</span>
+                                <strong>Так, додати кло</strong>
+                                <span className="infra-edge__meta">Обери вайт. Фільтри — пізніше.</span>
+                            </label>
+                        </div>
+                        {data.cloak_enabled && (
+                            <>
+                                {whiteLandings.length === 0 ? (
+                                    <p className="field-hint field-hint--warn" style={{ marginTop: 0 }}>
+                                        Немає вайтів.{' '}
+                                        <Link href={route('landings.index')}>Завантаж ZIP у Лендінгах</Link>
+                                        {' '}і повернись сюди.
+                                    </p>
+                                ) : (
+                                    <div className="cloak-white-grid">
+                                        {whiteLandings.map((landing) => {
+                                            const selected = String(data.white_landing_id) === String(landing.id);
+
+                                            return (
+                                                <label
+                                                    key={landing.id}
+                                                    className={`infra-edge__card${selected ? ' is-on' : ''}`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="white_landing_id"
+                                                        checked={selected}
+                                                        onChange={() => update('white_landing_id', landing.id)}
+                                                    />
+                                                    <span className="infra-edge__kicker">Вайт</span>
+                                                    <strong>{landing.name}</strong>
+                                                    <span className="infra-edge__meta">
+                                                        {landing.file_count} файл.{landing.file_count === 1 ? '' : 'ів'}
+                                                    </span>
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                                <p className="field-hint">
+                                    Фільтри (Googlebot по IP, GEO з кроку Ринок, сканери) додамо окремо.
+                                    Зараз кло лише запамʼятовує вайт на офері.
+                                </p>
+                            </>
+                        )}
+                    </div>
                 </section>
             )}
 
@@ -2393,6 +2482,14 @@ export default function OffersCreate({
                                             : '—')}
                                 </span>
                             </div>
+                            <div className="summary-row">
+                                <span>Кло</span>
+                                <span>
+                                    {data.cloak_enabled
+                                        ? `Так · ${whiteLandings.find((item) => String(item.id) === String(data.white_landing_id))?.name || 'вайт'}`
+                                        : 'Ні'}
+                                </span>
+                            </div>
                         </dl>
                     </div>
                 </section>
@@ -2411,6 +2508,7 @@ export default function OffersCreate({
                         disabled={
                             (step === 0 && !canProceedStep0)
                             || (step === 1 && !canProceedStep1)
+                            || (step === 2 && Boolean(data.cloak_enabled) && !data.white_landing_id)
                         }
                         onClick={() => {
                             if (step === 0) {

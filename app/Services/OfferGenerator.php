@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Offer;
 use App\Models\User;
-use App\Models\UserSetting;
+use App\Support\CloakOptions;
 use App\Support\InfrastructureOptions;
 use App\Support\MarketOptions;
 use App\Support\ValidationJsFormToken;
@@ -44,6 +44,8 @@ class OfferGenerator
         if (! in_array($template, $this->templateCatalog->enabledIds(), true)) {
             throw new InvalidArgumentException("Шаблон «{$template}» вимкнено.");
         }
+
+        $cloak = CloakOptions::resolveForUser($user, $input);
 
         $templateLangForSource = TemplateCatalog::copiesWholeTree($template) ? 'en' : (string) $input['lang'];
         $templatePath = $this->templateCatalog->resolveSourcePath($template, $templateLangForSource);
@@ -106,6 +108,8 @@ class OfferGenerator
                 'status' => 'generated',
                 'vitals_enabled' => ! empty($input['vitals_enabled']),
                 'from_search_team' => ! empty($input['from_search_team']),
+                'cloak_enabled' => $cloak['enabled'],
+                'white_landing_id' => $cloak['white_landing_id'],
                 'owner_id' => $user->id,
                 'created_at' => now()->toDateString(),
                 'folder' => $folder,
@@ -127,6 +131,7 @@ class OfferGenerator
             $infraMeta = $provisionInfrastructure
                 ? ['options' => $infraOptions]
                 : null;
+            $infraMeta = CloakOptions::mergeIntoInfraMeta($infraMeta, $cloak);
 
             $offer = Offer::create([
                 'user_id' => $user->id,
@@ -145,6 +150,8 @@ class OfferGenerator
                 'deploy_panel_name' => null,
                 'vitals_enabled' => ! empty($input['vitals_enabled']),
                 'from_search_team' => ! empty($input['from_search_team']),
+                'cloak_enabled' => $cloak['enabled'],
+                'white_landing_id' => $cloak['white_landing_id'],
                 'provision_infrastructure' => $provisionInfrastructure,
                 'infra_status' => $provisionInfrastructure ? 'pending' : null,
                 'infra_meta' => $infraMeta,
@@ -1031,6 +1038,7 @@ PHP;
                 if ($patched !== $existing) {
                     File::put($dest, $patched);
                 }
+
                 continue;
             }
 

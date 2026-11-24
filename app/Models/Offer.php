@@ -48,6 +48,8 @@ class Offer extends Model
         'verification_filename',
         'vitals_enabled',
         'from_search_team',
+        'cloak_enabled',
+        'white_landing_id',
         'provision_infrastructure',
         'infra_status',
         'infra_error',
@@ -72,6 +74,7 @@ class Offer extends Model
             'provision_infrastructure' => 'boolean',
             'vitals_enabled' => 'boolean',
             'from_search_team' => 'boolean',
+            'cloak_enabled' => 'boolean',
             'dynadot_sandbox' => 'boolean',
             'cloudflare_api_token' => 'encrypted',
             'dynadot_api_key' => 'encrypted',
@@ -83,6 +86,11 @@ class Offer extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function whiteLanding(): BelongsTo
+    {
+        return $this->belongsTo(WhiteLanding::class);
     }
 
     public function stats(): HasOne

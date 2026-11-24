@@ -15,6 +15,7 @@ use App\Models\CloudflareAccount;
 use App\Models\Offer;
 use App\Models\ProxyServer;
 use App\Models\User;
+use App\Models\WhiteLanding;
 use App\Services\DeployService;
 use App\Services\InfrastructureProvisioner;
 use App\Services\OfferAvailabilityProbe;
@@ -419,6 +420,12 @@ class OfferController extends Controller
             'proxyServers' => ProxyServer::activeForSwitch()
                 ->map(fn (ProxyServer $server) => $server->toPanelArray())
                 ->values(),
+            'whiteLandings' => WhiteLanding::query()
+                ->where('user_id', auth()->id())
+                ->orderByDesc('id')
+                ->get()
+                ->map->toPickerArray()
+                ->values(),
         ]);
     }
 
@@ -487,6 +494,8 @@ class OfferController extends Controller
                 'infra_cloudflare_https' => $request->boolean('infra_cloudflare_https'),
                 'infra_cloudflare_www_redirect' => $request->boolean('infra_cloudflare_www_redirect'),
                 'infra_edge' => $request->string('infra_edge')->toString() ?: 'cloudflare',
+                'cloak_enabled' => $request->boolean('cloak_enabled'),
+                'white_landing_id' => $request->integer('white_landing_id') ?: null,
             ]);
         } catch (\Throwable $e) {
             return redirect()
@@ -536,6 +545,8 @@ class OfferController extends Controller
             'infra_cloudflare_https' => $request->boolean('infra_cloudflare_https'),
             'infra_cloudflare_www_redirect' => $request->boolean('infra_cloudflare_www_redirect'),
             'infra_edge' => $request->string('infra_edge')->toString() ?: 'cloudflare',
+            'cloak_enabled' => $request->boolean('cloak_enabled'),
+            'white_landing_id' => $request->integer('white_landing_id') ?: null,
         ];
 
         /** @var list<array{domain: string, template: string}> $items */

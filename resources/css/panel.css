@@ -853,9 +853,35 @@ a:hover { text-decoration: underline; }
   margin-top: 0.12rem;
 }
 
+.cloak-white-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 0.65rem;
+}
+
+.landing-upload {
+  margin-top: 0;
+}
+
+.landing-upload__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) auto;
+  gap: 0.85rem;
+  align-items: end;
+}
+
+.landing-upload__row .btn {
+  margin-bottom: 0.1rem;
+}
+
 @media (max-width: 720px) {
   .infra-edge__choices,
   .infra-tasks__list {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-upload__row {
     grid-template-columns: 1fr;
   }
 }
@@ -3731,6 +3757,9 @@ td.col-num {
 }
 
 .template-library-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
   font-size: 0.8rem;
   color: var(--muted);
   margin-bottom: 0.35rem;

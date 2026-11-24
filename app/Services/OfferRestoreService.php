@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Offer;
 use App\Models\User;
+use App\Support\CloakOptions;
 use App\Support\InfrastructureOptions;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -62,7 +63,10 @@ class OfferRestoreService
         );
 
         // Fresh infra progress — archive deleted origin/CF zone; do not trust old "done" flags.
-        $meta = ['options' => $options];
+        $meta = CloakOptions::mergeIntoInfraMeta(
+            ['options' => $options],
+            CloakOptions::fromOffer($offer),
+        );
 
         $offer->update([
             'status' => 'generated',

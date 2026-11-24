@@ -18,6 +18,7 @@ return [
 
     'templates_path' => base_path(env('TEMPLATES_PATH', 'templates')),
     'offers_path' => base_path(env('OFFERS_PATH', 'offers')),
+    'white_landings_path' => storage_path('app/private/white-landings'),
     'crm_api_url' => env('OFFERRA_CRM_API_URL', 'https://yourleads.org/api/affiliates/v2/leads'),
 
     // Мови, для яких є/будуть переклади шаблонів

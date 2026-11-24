@@ -12,6 +12,7 @@ const navItems = [
     { href: '/offers/archive', icon: '📦', label: 'Архів доменів' },
     { href: '/offers/create?fresh=1', icon: '➕', label: 'Створити оффер' },
     { href: '/templates', icon: '🎨', label: 'Шаблони' },
+    { href: '/landings', icon: '⬜', label: 'Лендінги' },
     { href: '/settings', icon: '⚙️', label: 'Налаштування' },
 ];
 
@@ -48,6 +49,9 @@ export default function PanelLayout({ title, children, wide = false, fullWidth =
         }
         if (href === '/leads') {
             return path === '/leads' || path.startsWith('/leads');
+        }
+        if (href === '/landings') {
+            return path === '/landings' || path.startsWith('/landings');
         }
 
         return path === href || path.startsWith(`${href}/`);
