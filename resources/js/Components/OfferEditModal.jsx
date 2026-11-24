@@ -1,7 +1,8 @@
+import CloakPick from '@/Components/CloakPick';
 import PhoneGeoSelect, { normalizePhoneCountries, phoneOptionCode, uniquePhonePresets } from '@/Components/PhoneGeoSelect';
 import TemplatePicker, { usedTemplatesForBrand } from '@/Components/TemplatePicker';
 import { geoDepositMissingFromCatalog, lookupGeoDeposit } from '@/lib/geoDepositPrefs';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { useEffect, useMemo } from 'react';
 
 /** Псевдо-GEO для multilang: ім'я папки. У CRM країна = IP ліда. */
@@ -431,66 +432,20 @@ export default function OfferEditModal({
                     </div>
 
                     <div className="field">
-                        <span className="field-hint" style={{ display: 'block', marginBottom: '0.45rem' }}>Кло</span>
-                        <div className="infra-edge__choices">
-                            <label className={`infra-edge__card${!data.cloak_enabled ? ' is-on' : ''}`}>
-                                <input
-                                    type="radio"
-                                    name="edit_cloak_enabled"
-                                    checked={!data.cloak_enabled}
-                                    onChange={() => setData((prev) => ({
-                                        ...prev,
-                                        cloak_enabled: false,
-                                        white_landing_id: '',
-                                    }))}
-                                />
-                                <span className="infra-edge__kicker">Без кло</span>
-                                <strong>Ні</strong>
-                            </label>
-                            <label className={`infra-edge__card${data.cloak_enabled ? ' is-on' : ''}`}>
-                                <input
-                                    type="radio"
-                                    name="edit_cloak_enabled"
-                                    checked={Boolean(data.cloak_enabled)}
-                                    onChange={() => setData('cloak_enabled', true)}
-                                />
-                                <span className="infra-edge__kicker">Кло</span>
-                                <strong>Так, додати кло</strong>
-                            </label>
-                        </div>
-                        {data.cloak_enabled && (
-                            whiteLandings.length === 0 ? (
-                                <p className="field-hint field-hint--warn">
-                                    Немає вайтів.{' '}
-                                    <Link href={route('landings.index')}>Завантаж ZIP у Лендінгах</Link>.
-                                </p>
-                            ) : (
-                                <div className="cloak-white-grid" style={{ marginTop: '0.65rem' }}>
-                                    {whiteLandings.map((landing) => {
-                                        const selected = String(data.white_landing_id) === String(landing.id);
-
-                                        return (
-                                            <label
-                                                key={landing.id}
-                                                className={`infra-edge__card${selected ? ' is-on' : ''}`}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="edit_white_landing_id"
-                                                    checked={selected}
-                                                    onChange={() => setData('white_landing_id', landing.id)}
-                                                />
-                                                <span className="infra-edge__kicker">{landing.is_demo ? 'Тест' : 'Вайт'}</span>
-                                                <strong>{landing.name}</strong>
-                                            </label>
-                                        );
-                                    })}
-                                </div>
-                            )
-                        )}
-                        <p className="field-hint">
-                            Фільтри ще попереду — зараз лише вибір вайту. Живий ленд не зміниться, поки не зашиємо кло в деплой.
-                        </p>
+                        <span className="cloak-pick__whites-label" style={{ display: 'block', marginBottom: '0.45rem' }}>Кло</span>
+                        <CloakPick
+                            enabled={data.cloak_enabled}
+                            whiteId={data.white_landing_id}
+                            whites={whiteLandings}
+                            namePrefix={`edit-cloak-${offer.id}`}
+                            onEnabledChange={(next) => setData((prev) => ({
+                                ...prev,
+                                cloak_enabled: next,
+                                white_landing_id: next ? prev.white_landing_id : '',
+                            }))}
+                            onWhiteChange={(id) => setData('white_landing_id', id)}
+                            hint="Правило однакове для всіх оферів. Живий ленд не зміниться, поки гейт не зашиємо в деплой на origin."
+                        />
                     </div>
 
                     <div className="field">

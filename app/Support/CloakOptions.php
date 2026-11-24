@@ -10,6 +10,14 @@ use InvalidArgumentException;
 class CloakOptions
 {
     /**
+     * Same rule on every cloaked offer: Googlebot IPs and the offer GEO
+     * see the lander; everyone else gets the white. Not per-offer checkboxes.
+     *
+     * @var list<string>
+     */
+    public const DEFAULT_FILTERS = ['googlebot', 'geo'];
+
+    /**
      * @param  array<string, mixed>  $input
      * @return array{enabled: bool, white_landing_id: int|null}
      */
@@ -71,14 +79,10 @@ class CloakOptions
         }
 
         $infraMeta ??= [];
-        $previousFilters = is_array($infraMeta['cloak']['filters'] ?? null)
-            ? $infraMeta['cloak']['filters']
-            : [];
-
         $infraMeta['cloak'] = [
             'enabled' => true,
             'white_landing_id' => (int) $cloak['white_landing_id'],
-            'filters' => $previousFilters,
+            'filters' => self::DEFAULT_FILTERS,
         ];
 
         return $infraMeta;

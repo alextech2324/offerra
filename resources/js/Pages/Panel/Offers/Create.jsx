@@ -1,4 +1,5 @@
 import PanelLayout from '@/Layouts/PanelLayout';
+import CloakPick from '@/Components/CloakPick';
 import PhoneGeoSelect, { normalizePhoneCountries, uniquePhonePresets, phoneOptionCode } from '@/Components/PhoneGeoSelect';
 import TemplatePicker, { usedTemplateCountsForBrand, usedTemplatesForBrand } from '@/Components/TemplatePicker';
 import { clearWizardState, draftHasProgress, loadWizardState, peekWizardDraft, saveWizardState, stripFreshQueryParam } from '@/lib/offerWizardStorage';
@@ -2337,77 +2338,22 @@ export default function OffersCreate({
                     <div className="card infra-edge" style={{ marginTop: '1rem' }}>
                         <h3>Кло</h3>
                         <p className="card-desc">
-                            Якщо ні — офер як зараз. Якщо так — боти й чужі GEO пізніше побачать вайт;
-                            фільтри зашиємо наступним кроком.
+                            Якщо ні — офер як зараз. Якщо так — правило однакове для всіх:
+                            Googlebot і люди з GEO офера бачать ленд, решта — вайт.
                         </p>
-                        <div className="infra-edge__choices">
-                            <label className={`infra-edge__card${!data.cloak_enabled ? ' is-on' : ''}`}>
-                                <input
-                                    type="radio"
-                                    name="cloak_enabled"
-                                    checked={!data.cloak_enabled}
-                                    onChange={() => setData((prev) => ({
-                                        ...prev,
-                                        cloak_enabled: false,
-                                        white_landing_id: '',
-                                    }))}
-                                />
-                                <span className="infra-edge__kicker">Без кло</span>
-                                <strong>Ні, без змін</strong>
-                                <span className="infra-edge__meta">Ленд відкривається всім як зараз.</span>
-                            </label>
-                            <label className={`infra-edge__card${data.cloak_enabled ? ' is-on' : ''}`}>
-                                <input
-                                    type="radio"
-                                    name="cloak_enabled"
-                                    checked={Boolean(data.cloak_enabled)}
-                                    onChange={() => update('cloak_enabled', true)}
-                                />
-                                <span className="infra-edge__kicker">Кло</span>
-                                <strong>Так, додати кло</strong>
-                                <span className="infra-edge__meta">Обери вайт. Фільтри — пізніше.</span>
-                            </label>
-                        </div>
-                        {data.cloak_enabled && (
-                            <>
-                                {whiteLandings.length === 0 ? (
-                                    <p className="field-hint field-hint--warn" style={{ marginTop: 0 }}>
-                                        Немає вайтів.{' '}
-                                        <Link href={route('landings.index')}>Завантаж ZIP у Лендінгах</Link>
-                                        {' '}і повернись сюди.
-                                    </p>
-                                ) : (
-                                    <div className="cloak-white-grid">
-                                        {whiteLandings.map((landing) => {
-                                            const selected = String(data.white_landing_id) === String(landing.id);
-
-                                            return (
-                                                <label
-                                                    key={landing.id}
-                                                    className={`infra-edge__card${selected ? ' is-on' : ''}`}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="white_landing_id"
-                                                        checked={selected}
-                                                        onChange={() => update('white_landing_id', landing.id)}
-                                                    />
-                                                    <span className="infra-edge__kicker">Вайт</span>
-                                                    <strong>{landing.name}</strong>
-                                                    <span className="infra-edge__meta">
-                                                        {landing.file_count} файл.{landing.file_count === 1 ? '' : 'ів'}
-                                                    </span>
-                                                </label>
-                                            );
-                                        })}
-                                    </div>
-                                )}
-                                <p className="field-hint">
-                                    Фільтри (Googlebot по IP, GEO з кроку Ринок, сканери) додамо окремо.
-                                    Зараз кло лише запамʼятовує вайт на офері.
-                                </p>
-                            </>
-                        )}
+                        <CloakPick
+                            enabled={data.cloak_enabled}
+                            whiteId={data.white_landing_id}
+                            whites={whiteLandings}
+                            namePrefix="create-cloak"
+                            onEnabledChange={(next) => setData((prev) => ({
+                                ...prev,
+                                cloak_enabled: next,
+                                white_landing_id: next ? prev.white_landing_id : '',
+                            }))}
+                            onWhiteChange={(id) => update('white_landing_id', id)}
+                            hint="Живий гейт ще не на origin: зараз лише вибір вайту. Перша HTML-відповідь (не JS-редірект) зашиємо наступним кроком."
+                        />
                     </div>
                 </section>
             )}

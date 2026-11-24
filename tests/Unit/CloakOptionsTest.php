@@ -33,7 +33,7 @@ class CloakOptionsTest extends TestCase
         $this->assertNull($cloak['white_landing_id']);
     }
 
-    public function test_merge_keeps_filter_stub_empty_for_later(): void
+    public function test_merge_writes_shared_googlebot_and_geo_filters(): void
     {
         $meta = CloakOptions::mergeIntoInfraMeta(['options' => ['edge' => 'proxy']], [
             'enabled' => true,
@@ -44,7 +44,7 @@ class CloakOptionsTest extends TestCase
         $this->assertSame([
             'enabled' => true,
             'white_landing_id' => 7,
-            'filters' => [],
+            'filters' => ['googlebot', 'geo'],
         ], $meta['cloak']);
     }
 
