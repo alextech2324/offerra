@@ -13,6 +13,7 @@ use App\Support\CloudflareZoneCutover;
 use App\Support\InfrastructureDnsReadiness;
 use App\Support\InfrastructureOptions;
 use App\Support\PublicDnsLookup;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class InfrastructureProvisioner
@@ -78,6 +79,10 @@ class InfrastructureProvisioner
             return;
         }
 
+        if ($this->switchEdgeJobQueued((int) $offer->id)) {
+            return;
+        }
+
         try {
             $proxy = app(ProxyPool::class)->assign($offer);
         } catch (\Throwable) {
@@ -85,6 +90,14 @@ class InfrastructureProvisioner
         }
 
         SwitchOfferEdgeJob::dispatch($offer->id, 'proxy:'.$proxy->id);
+    }
+
+    private function switchEdgeJobQueued(int $offerId): bool
+    {
+        return DB::table('jobs')
+            ->where('payload', 'like', '%SwitchOfferEdgeJob%')
+            ->where('payload', 'like', '%offerId";i:'.$offerId.';%')
+            ->exists();
     }
 
     /**

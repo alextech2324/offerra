@@ -41,6 +41,7 @@ class BackgroundJobQueueTest extends TestCase
         $this->assertSame('dns', $job->queue);
         $this->assertSame(600, $job->timeout);
         $this->assertSame(2, $job->tries);
+        $this->assertSame(86400, $job->uniqueFor);
     }
 
     public function test_refresh_config_queue_push_stays_off_deploy(): void
@@ -187,6 +188,78 @@ class BackgroundJobQueueTest extends TestCase
         $this->artisan('offers:recheck-infra-dns')->assertSuccessful();
 
         Queue::assertPushedOn('dns', RecheckInfrastructureDnsJob::class);
+    }
+
+    public function test_dns_recheck_skips_offers_already_waiting_on_edge_switch(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $offer = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'waiting-switch.test',
+            'brand' => 'WaitingSwitch',
+            'domain' => 'waiting-switch.test',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'availability_status' => 'unchecked',
+            'infra_meta' => [
+                'dns' => 'pending',
+                'dynadot_ns' => 'done',
+            ],
+        ]);
+
+        $now = time();
+        DB::table('jobs')->insert([
+            'queue' => 'dns',
+            'payload' => 'App\\Jobs\\SwitchOfferEdgeJob s:7:"offerId";i:'.$offer->id.';',
+            'attempts' => 0,
+            'reserved_at' => null,
+            'available_at' => $now,
+            'created_at' => $now,
+        ]);
+
+        $this->artisan('offers:recheck-infra-dns')->assertSuccessful();
+
+        Queue::assertNotPushed(RecheckInfrastructureDnsJob::class);
+    }
+
+    public function test_dns_recheck_prunes_duplicate_switch_jobs(): void
+    {
+        $user = User::factory()->create();
+        $offer = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'dup-switch.test',
+            'brand' => 'DupSwitch',
+            'domain' => 'dup-switch.test',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'infra_meta' => ['dns' => 'done'],
+        ]);
+
+        $now = time();
+        $payload = 'App\\Jobs\\SwitchOfferEdgeJob s:7:"offerId";i:'.$offer->id.';';
+        DB::table('jobs')->insert([
+            ['queue' => 'dns', 'payload' => $payload, 'attempts' => 0, 'reserved_at' => null, 'available_at' => $now, 'created_at' => $now],
+            ['queue' => 'dns', 'payload' => $payload, 'attempts' => 0, 'reserved_at' => null, 'available_at' => $now, 'created_at' => $now],
+            ['queue' => 'dns', 'payload' => $payload, 'attempts' => 0, 'reserved_at' => null, 'available_at' => $now, 'created_at' => $now],
+        ]);
+
+        $this->artisan('offers:recheck-infra-dns')
+            ->expectsOutputToContain('pruned duplicate switch jobs: 2')
+            ->assertSuccessful();
+
+        $this->assertSame(1, DB::table('jobs')->where('payload', 'like', '%SwitchOfferEdgeJob%')->count());
     }
 
     public function test_pending_gsc_command_moves_jobs_and_queues_live_offers(): void

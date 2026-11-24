@@ -18,7 +18,7 @@ class SwitchOfferEdgeJob implements ShouldBeUnique, ShouldQueue
 
     public int $tries = 2;
 
-    public int $uniqueFor = 900;
+    public int $uniqueFor = 86400;
 
     public function __construct(
         public int $offerId,

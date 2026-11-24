@@ -192,8 +192,7 @@ else:
     print("supervisor: default queue line not found")
 
 dns = Path("/etc/supervisor/conf.d/offerra-dns.conf")
-if not dns.exists() or "--queue=dns" not in dns.read_text():
-    dns.write_text("""[program:offerra-dns-worker]
+dns_body = """[program:offerra-dns-worker]
 process_name=%(program_name)s_%(process_num)02d
 command=php /var/www/offerra/artisan queue:work database --queue=dns --sleep=1 --tries=1 --max-time=3600
 autostart=true
@@ -201,11 +200,13 @@ autorestart=true
 stopasgroup=true
 killasgroup=true
 user=www-data
-numprocs=2
+numprocs=6
 redirect_stderr=true
 stdout_logfile=/var/www/offerra/storage/logs/dns-worker.log
 stopwaitsecs=3600
-""")
+"""
+if not dns.exists() or "--queue=dns" not in dns.read_text() or "numprocs=6" not in dns.read_text():
+    dns.write_text(dns_body)
     print("supervisor: wrote offerra-dns.conf")
 else:
     print("supervisor: dns workers already configured")
