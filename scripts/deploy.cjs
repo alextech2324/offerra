@@ -238,7 +238,7 @@ if ! supervisorctl status offerra-dns-worker:* 2>/dev/null | grep -q offerra-dns
   supervisorctl reread
   supervisorctl add offerra-dns-worker
   supervisorctl start offerra-dns-worker:* || true
-fi`
+fi`,
     { timeoutMs: 180000, allowFail: true },
   );
   await exec(
