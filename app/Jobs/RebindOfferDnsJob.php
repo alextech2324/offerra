@@ -24,7 +24,7 @@ class RebindOfferDnsJob implements ShouldBeUnique, ShouldQueue
         public int $offerId,
         public string $ip,
     ) {
-        $this->onQueue('deploy');
+        $this->onQueue('dns');
     }
 
     public function uniqueId(): string

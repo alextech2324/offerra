@@ -117,11 +117,14 @@ class RecheckInfrastructureDns extends Command
         $moved = DB::table('jobs')
             ->whereIn('queue', ['default', 'deploy'])
             ->whereNull('reserved_at')
-            ->where('payload', 'like', '%RecheckInfrastructureDnsJob%')
+            ->where(function ($q): void {
+                $q->where('payload', 'like', '%RecheckInfrastructureDnsJob%')
+                    ->orWhere('payload', 'like', '%RebindOfferDnsJob%');
+            })
             ->update(['queue' => 'dns']);
 
         if ($moved > 0) {
-            $this->info("moved DNS rechecks to dns queue: {$moved}");
+            $this->info("moved DNS jobs to dns queue: {$moved}");
         }
     }
 

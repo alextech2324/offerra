@@ -7,6 +7,7 @@ use App\Jobs\InspectOfferGoogleIndexJob;
 use App\Jobs\ProbeOfferAvailabilityJob;
 use App\Jobs\PurgeOfferFromOriginJob;
 use App\Jobs\PushOfferConfigJob;
+use App\Jobs\RebindOfferDnsJob;
 use App\Jobs\RecheckInfrastructureDnsJob;
 use App\Jobs\ScanDownOffersJob;
 use App\Jobs\SubmitOfferToGscJob;
@@ -34,6 +35,7 @@ class BackgroundJobQueueTest extends TestCase
         $this->assertSame('gsc', (new ScanDownOffersJob)->queue);
         $this->assertSame('deploy', (new DeployOfferJob(1))->queue);
         $this->assertSame('dns', (new RecheckInfrastructureDnsJob(1))->queue);
+        $this->assertSame('dns', (new RebindOfferDnsJob(1, '10.0.0.1'))->queue);
         $this->assertSame('purge', (new PurgeOfferFromOriginJob(1, '10.0.0.1'))->queue);
         $job = new SwitchOfferEdgeJob(1, 'proxy:1');
         $this->assertSame('deploy', $job->queue);
@@ -92,6 +94,14 @@ class BackgroundJobQueueTest extends TestCase
             ],
             [
                 'queue' => 'deploy',
+                'payload' => 'App\\Jobs\\RebindOfferDnsJob leftover-rebind',
+                'attempts' => 0,
+                'reserved_at' => null,
+                'available_at' => $now,
+                'created_at' => $now,
+            ],
+            [
+                'queue' => 'deploy',
                 'payload' => 'App\\Jobs\\RecheckInfrastructureDnsJob running',
                 'attempts' => 1,
                 'reserved_at' => $now,
@@ -101,10 +111,10 @@ class BackgroundJobQueueTest extends TestCase
         ]);
 
         $this->artisan('offers:recheck-infra-dns')
-            ->expectsOutputToContain('moved DNS rechecks to dns queue: 2')
+            ->expectsOutputToContain('moved DNS jobs to dns queue: 3')
             ->assertSuccessful();
 
-        $this->assertSame(2, DB::table('jobs')->where('queue', 'dns')->whereNull('reserved_at')->count());
+        $this->assertSame(3, DB::table('jobs')->where('queue', 'dns')->whereNull('reserved_at')->count());
         $this->assertSame(1, DB::table('jobs')->where('queue', 'deploy')->whereNotNull('reserved_at')->count());
     }
 

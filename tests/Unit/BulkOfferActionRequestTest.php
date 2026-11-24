@@ -120,6 +120,6 @@ class BulkOfferActionRequestTest extends TestCase
         $job = new RebindOfferDnsJob(12, '91.224.92.135');
 
         $this->assertSame('12:91.224.92.135', $job->uniqueId());
-        $this->assertSame('deploy', $job->queue);
+        $this->assertSame('dns', $job->queue);
     }
 }
