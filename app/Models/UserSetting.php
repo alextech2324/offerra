@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Services\CloudflareClient;
 use App\Support\DeployDriver;
-use App\Support\InfrastructureOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -40,7 +39,6 @@ class UserSetting extends Model
         'cloudflare_api_token',
         'cloudflare_account_id',
         'cloudflare_default_proxied',
-        'preferred_edge',
         'cloudflare_account_name',
         'cloudflare_backup_api_token',
         'cloudflare_backup_account_id',
@@ -75,20 +73,6 @@ class UserSetting extends Model
     public function hasGoogleOAuth(): bool
     {
         return filled($this->google_oauth_refresh_token);
-    }
-
-    public function preferredEdge(): string
-    {
-        $edge = strtolower(trim((string) ($this->preferred_edge ?? '')));
-
-        return $edge === InfrastructureOptions::EDGE_CLOUDFLARE
-            ? InfrastructureOptions::EDGE_CLOUDFLARE
-            : InfrastructureOptions::EDGE_PROXY;
-    }
-
-    public function prefersProxyEdge(): bool
-    {
-        return $this->preferredEdge() === InfrastructureOptions::EDGE_PROXY;
     }
 
     public function user(): BelongsTo
@@ -199,7 +183,6 @@ class UserSetting extends Model
             'has_cloudflare_api_token' => filled($this->cloudflare_api_token),
             'cloudflare_account_id' => $this->cloudflare_account_id ?? '',
             'cloudflare_default_proxied' => (bool) ($this->cloudflare_default_proxied ?? true),
-            'preferred_edge' => $this->preferredEdge(),
             'cloudflare_account_name' => $this->cloudflare_account_name ?? '',
             'has_cloudflare_backup_api_token' => filled($this->cloudflare_backup_api_token),
             'cloudflare_backup_account_id' => $this->cloudflare_backup_account_id ?? '',

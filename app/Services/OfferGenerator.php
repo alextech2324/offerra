@@ -120,11 +120,7 @@ class OfferGenerator
                 json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n",
             );
 
-            $infraOptions = InfrastructureOptions::fromSettingsAndInput(
-                $settings,
-                $input,
-                app(ProxyPool::class)->hasCapacity(),
-            );
+            $infraOptions = InfrastructureOptions::fromSettingsAndInput($settings, $input);
             $provisionInfrastructure = InfrastructureOptions::anyEnabled($infraOptions);
             $providerSnapshot = $settings->providerSnapshotForOffer();
 
@@ -157,11 +153,6 @@ class OfferGenerator
                 'infra_meta' => $infraMeta,
                 ...$providerSnapshot,
             ]);
-
-            if ($provisionInfrastructure && InfrastructureOptions::wantsProxy($infraOptions)) {
-                app(ProxyPool::class)->assign($offer);
-                $offer->refresh();
-            }
 
             $this->prepareVerificationCopy($offer, $targetPath);
             $this->verificationFiles->syncToOfferFolder($offer);

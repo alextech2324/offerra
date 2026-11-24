@@ -20,7 +20,7 @@ class BulkOfferActionRequest extends FormRequest
         return [
             'ids' => ['required', 'array', 'min:1', 'max:200'],
             'ids.*' => ['integer', 'distinct'],
-            'action' => ['required', 'string', Rule::in(['redeploy', 'rebind_dns', 'switch_cloudflare', 'switch_edge', 'move_server', 'submit_gsc', 'check_availability'])],
+            'action' => ['required', 'string', Rule::in(['redeploy', 'rebind_dns', 'switch_cloudflare', 'move_server', 'submit_gsc', 'check_availability'])],
             'ip' => ['required_if:action,rebind_dns', 'nullable', 'ip:4'],
             'cloudflare_target' => [
                 'required_if:action,switch_cloudflare',
@@ -28,13 +28,6 @@ class BulkOfferActionRequest extends FormRequest
                 'string',
                 'max:40',
                 'regex:/^(primary|backup|spare:\d+)$/',
-            ],
-            'edge_target' => [
-                'required_if:action,switch_edge',
-                'nullable',
-                'string',
-                'max:40',
-                'regex:/^(cloudflare|proxy:\d+)$/',
             ],
             'target_host' => ['required_if:action,move_server', 'nullable', 'string', 'max:255'],
         ];
@@ -52,8 +45,6 @@ class BulkOfferActionRequest extends FormRequest
             'cloudflare_target.required_if' => 'Оберіть Cloudflare-акаунт: основний або запасний з пулу.',
             'cloudflare_target.regex' => 'Оберіть основний CF власника або запасний з пулу адміна.',
             'target_host.required_if' => 'Оберіть origin-сервер.',
-            'edge_target.required_if' => 'Оберіть Cloudflare або проксі.',
-            'edge_target.regex' => 'Оберіть Cloudflare або проксі з пулу.',
         ];
     }
 }

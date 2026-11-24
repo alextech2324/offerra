@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Offer;
-use App\Models\ProxyServer;
 use App\Support\InfrastructureDnsReadiness;
 use App\Support\PublicDnsLookup;
 use Illuminate\Http\Client\Pool;
@@ -13,9 +12,6 @@ use Illuminate\Support\Facades\Log;
 
 class OfferAvailabilityProbe
 {
-    /** @var list<string>|null */
-    private ?array $proxyHosts = null;
-
     private const TIMEOUT_SECONDS = 8;
 
     private const FAIL_STREAK_TO_DOWN = 2;
@@ -95,7 +91,7 @@ class OfferAvailabilityProbe
             return ['ok' => false, 'error' => 'Empty domain'];
         }
 
-        $aRecords = $this->preferredEdgeIps($this->mergeProbeIps($extraIps, $this->publicDns->aRecords($domain)));
+        $aRecords = InfrastructureDnsReadiness::preferCloudflareProxyIps($this->mergeProbeIps($extraIps, $this->publicDns->aRecords($domain)));
         if ($aRecords === []) {
             $ns = $this->publicDns->nameservers($domain);
             if ($ns === []) {
@@ -129,7 +125,7 @@ class OfferAvailabilityProbe
 
         foreach ($hosts as $host) {
             $extra = $extraIpsByHost[$host] ?? [];
-            $aRecords = $this->preferredEdgeIps($this->mergeProbeIps($extra, $this->publicDns->aRecords($host)));
+            $aRecords = InfrastructureDnsReadiness::preferCloudflareProxyIps($this->mergeProbeIps($extra, $this->publicDns->aRecords($host)));
             if ($aRecords === []) {
                 $ns = $this->publicDns->nameservers($host);
                 $out[$host] = [
@@ -435,20 +431,6 @@ class OfferAvailabilityProbe
      * @param  list<string>  $ips
      * @return list<string>
      */
-    private function preferredEdgeIps(array $ips): array
-    {
-        if ($this->proxyHosts === null) {
-            try {
-                $this->proxyHosts = ProxyServer::activeHosts();
-            } catch (\Throwable) {
-                $this->proxyHosts = [];
-            }
-        }
-        $ours = array_values(array_intersect($ips, $this->proxyHosts));
-
-        return $ours !== [] ? $ours : InfrastructureDnsReadiness::preferCloudflareProxyIps($ips);
-    }
-
     private function normalizeDomain(string $domain): string
     {
         $domain = strtolower(trim($domain));

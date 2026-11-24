@@ -19,11 +19,7 @@ const INFRA_TASKS = [
     { key: 'infra_cloudflare_www_redirect', label: 'Cloudflare — www → домен (301)', requiresZone: true },
 ];
 
-function defaultInfraOptions(enabled = false, proxyId = '') {
-    if (proxyId) {
-        return proxyInfraOptions(proxyId);
-    }
-
+function defaultInfraOptions(enabled = false) {
     return {
         infra_edge: 'cloudflare',
         infra_cloudflare_zone: enabled,
@@ -35,42 +31,12 @@ function defaultInfraOptions(enabled = false, proxyId = '') {
     };
 }
 
-function proxyEdgeId(value) {
-    const raw = String(value || '');
-    if (raw === 'proxy' || raw === 'proxy:auto') {
-        return 'auto';
-    }
-    const match = raw.match(/^proxy:(\d+)$/);
-
-    return match ? match[1] : '';
-}
-
-function proxyInfraOptions(proxyId) {
-    return {
-        infra_edge: proxyId === 'auto' ? 'proxy:auto' : `proxy:${proxyId}`,
-        infra_cloudflare_zone: true,
-        infra_cloudflare_dns: false,
-        infra_dynadot_ns: true,
-        infra_cloudflare_ssl: false,
-        infra_cloudflare_https: false,
-        infra_cloudflare_www_redirect: false,
-    };
-}
-
 function anyInfraEnabled(data) {
     return INFRA_TASKS.some((task) => data[task.key]);
 }
 
-function lockWizardInfra(data, preferProxy, enableCloudflare = false) {
-    if (preferProxy) {
-        return { ...data, ...proxyInfraOptions('auto') };
-    }
-
-    if (proxyEdgeId(data.infra_edge)) {
-        return { ...data, ...defaultInfraOptions(enableCloudflare) };
-    }
-
-    return { ...data, infra_edge: 'cloudflare' };
+function lockWizardInfra(data, enableCloudflare = false) {
+    return { ...data, ...defaultInfraOptions(enableCloudflare || anyInfraEnabled(data)) };
 }
 
 /** Псевдо-GEO для multilang: ім'я папки. У CRM країна = IP ліда. */
@@ -320,7 +286,7 @@ function assignTemplatesRoundRobin(domains, templates, usedTemplateIds, fallback
     }));
 }
 
-function buildDefaults(templates, fromSearch = false, proxyId = '', enableCloudflare = false) {
+function buildDefaults(templates, fromSearch = false, enableCloudflare = false) {
     const defaultTemplate = templates[0]?.id ?? 'default';
 
     return {
@@ -337,7 +303,7 @@ function buildDefaults(templates, fromSearch = false, proxyId = '', enableCloudf
         from_search_team: Boolean(fromSearch),
         cloak_enabled: false,
         white_landing_id: '',
-        ...defaultInfraOptions(enableCloudflare, proxyId),
+        ...defaultInfraOptions(enableCloudflare),
     };
 }
 
@@ -346,8 +312,6 @@ export default function OffersCreate({
     hasDynadotApiKey = false,
     hasDynadotContactId = false,
     canProvisionInfrastructure = false,
-    preferredEdge = 'proxy',
-    proxyServers = [],
     domainSearchTlds = [],
     affiliateTag = 'BRO',
     geoPresets,
@@ -364,17 +328,14 @@ export default function OffersCreate({
 }) {
     const { errors, panel, auth } = usePage().props;
     const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
-    const proxyAvailable = Array.isArray(proxyServers) && proxyServers.length > 0;
-    const preferProxyEdge = canProvisionInfrastructure && proxyAvailable && preferredEdge !== 'cloudflare';
     const geoMinDeposits = panel?.geo_min_deposits || {};
     const defaults = useMemo(
         () => buildDefaults(
             templates,
             initialFromSearch,
-            preferProxyEdge ? 'auto' : '',
-            canProvisionInfrastructure && !preferProxyEdge,
+            canProvisionInfrastructure,
         ),
-        [templates, initialFromSearch, preferProxyEdge, canProvisionInfrastructure],
+        [templates, initialFromSearch, canProvisionInfrastructure],
     );
     const skipPersist = useRef(false);
     const freshHandled = useRef(false);
@@ -391,11 +352,10 @@ export default function OffersCreate({
             ...loaded,
             data: lockWizardInfra(
                 loaded.data,
-                preferProxyEdge,
-                canProvisionInfrastructure && !preferProxyEdge,
+                canProvisionInfrastructure,
             ),
         };
-    }, [fresh, defaults, preferProxyEdge, canProvisionInfrastructure]);
+    }, [fresh, defaults, canProvisionInfrastructure]);
     const [step, setStep] = useState(initial.step);
     const [domainSearching, setDomainSearching] = useState(false);
     const [domainPurchasing, setDomainPurchasing] = useState(null);
@@ -1349,16 +1309,10 @@ export default function OffersCreate({
     };
 
     const enableAllInfraOptions = () => {
-        setData((prev) => {
-            if (preferProxyEdge) {
-                return { ...prev, ...proxyInfraOptions('auto') };
-            }
-
-            return {
-                ...prev,
-                ...defaultInfraOptions(true),
-            };
-        });
+        setData((prev) => ({
+            ...prev,
+            ...defaultInfraOptions(true),
+        }));
     };
 
     useEffect(() => {
@@ -1534,7 +1488,7 @@ export default function OffersCreate({
                 infra_cloudflare_ssl: data.infra_cloudflare_ssl,
                 infra_cloudflare_https: data.infra_cloudflare_https,
                 infra_cloudflare_www_redirect: data.infra_cloudflare_www_redirect,
-                infra_edge: preferProxyEdge ? 'proxy:auto' : 'cloudflare',
+                infra_edge: 'cloudflare',
                 items: bulkItems.map(({ domain, template }) => ({ domain, template })),
             }, {
                 preserveScroll: true,
@@ -1557,7 +1511,7 @@ export default function OffersCreate({
                 domain: bulkItems[0].domain,
                 template: bulkItems[0].template || data.template,
                 download_zip: downloadZip,
-                infra_edge: preferProxyEdge ? 'proxy:auto' : 'cloudflare',
+                infra_edge: 'cloudflare',
             }, {
                 preserveScroll: true,
                 onSuccess,
@@ -1572,7 +1526,7 @@ export default function OffersCreate({
         router.post(route('offers.store'), {
             ...data,
             download_zip: downloadZip,
-            infra_edge: preferProxyEdge ? 'proxy:auto' : 'cloudflare',
+            infra_edge: 'cloudflare',
         }, {
             preserveScroll: true,
             onSuccess,
@@ -2290,14 +2244,9 @@ export default function OffersCreate({
                             <p className="card-desc">
                                 Береться з{' '}
                                 <Link href={route('settings.index')}>налаштувань</Link>
-                                : {preferProxyEdge ? 'проксі' : 'Cloudflare'}.
+                                : Cloudflare.
                             </p>
-                            {preferProxyEdge ? (
-                                <p className="field-hint" style={{ marginTop: 0 }}>
-                                    Зона Cloudflare і NS у Dynadot створюються самі. A буде сірим на проксі з пулу.
-                                </p>
-                            ) : (
-                                <div className="infra-tasks">
+                            <div className="infra-tasks">
                                     <div className="infra-tasks__bar">
                                         <span>Кроки Cloudflare</span>
                                         <div className="infra-tasks__actions">
@@ -2326,8 +2275,7 @@ export default function OffersCreate({
                                             </label>
                                         ))}
                                     </div>
-                                </div>
-                            )}
+                            </div>
                             <p className="field-hint" style={{ marginTop: '0.65rem' }}>
                                 DNS може оновлюватись 15 хв – 48 год.
                                 {domainPurchasedViaPanel ? ' Для щойно купленого домену краще увімкнути все.' : ''}
@@ -2339,7 +2287,7 @@ export default function OffersCreate({
                         <h3>Кло</h3>
                         <p className="card-desc">
                             Якщо ні — офер як зараз. Якщо так — Googlebot і люди з GEO офера
-                            бачать ленд, решта — вайт. Працює однаково на Cloudflare і на проксі.
+                            бачать ленд, решта — вайт.
                         </p>
                         <CloakPick
                             enabled={data.cloak_enabled}
@@ -2352,7 +2300,7 @@ export default function OffersCreate({
                                 white_landing_id: next ? prev.white_landing_id : '',
                             }))}
                             onWhiteChange={(id) => update('white_landing_id', id)}
-                            hint="Гейт їде на origin разом із лендом. Край (Cloudflare чи проксі) для кло не важливий — задеплой після вибору вайту."
+                            hint="Гейт їде на origin разом із лендом. Задеплой після вибору вайту."
                         />
                     </div>
                 </section>
@@ -2421,11 +2369,9 @@ export default function OffersCreate({
                             <div className="summary-row">
                                 <span>Інфраструктура</span>
                                 <span>
-                                    {preferProxyEdge
-                                        ? 'Проксі · пул (бренд, потім навантаження)'
-                                        : (anyInfraEnabled(data)
-                                            ? INFRA_TASKS.filter((task) => data[task.key]).map((task) => task.label).join(' · ')
-                                            : '—')}
+                                    {anyInfraEnabled(data)
+                                        ? INFRA_TASKS.filter((task) => data[task.key]).map((task) => task.label).join(' · ')
+                                        : '—'}
                                 </span>
                             </div>
                             <div className="summary-row">

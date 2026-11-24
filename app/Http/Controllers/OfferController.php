@@ -10,10 +10,8 @@ use App\Jobs\RebindOfferDnsJob;
 use App\Jobs\RecheckInfrastructureDnsJob;
 use App\Jobs\ScanDownOffersJob;
 use App\Jobs\SwitchOfferCloudflareJob;
-use App\Jobs\SwitchOfferEdgeJob;
 use App\Models\CloudflareAccount;
 use App\Models\Offer;
-use App\Models\ProxyServer;
 use App\Models\User;
 use App\Services\DeployService;
 use App\Services\InfrastructureProvisioner;
@@ -81,9 +79,6 @@ class OfferController extends Controller
             'cloudflarePrimaryName' => trim((string) ($settings?->cloudflare_account_name ?? '')) ?: 'Основний CF',
             'spareCloudflareAccounts' => $user->isAdmin()
                 ? CloudflareAccount::activeForSwitch()->all()
-                : [],
-            'proxyServers' => $user->isAdmin()
-                ? ProxyServer::activeForSwitch()->map(fn (ProxyServer $server) => $server->toPanelArray())->values()
                 : [],
             'originServers' => $evacuation->moveTargets(),
             'geoPresets' => config('offerra.geo_presets'),
@@ -197,7 +192,7 @@ class OfferController extends Controller
             'lang' => strtolower(request()->string('lang')->toString()),
             'template' => trim(request()->string('template')->toString()),
             'panel' => trim(request()->string('panel')->toString()),
-            'edge' => $this->normalizeEdgeFilter(request()->string('edge')->toString()),
+            'edge' => '',
             'indexing' => request()->string('indexing')->toString(),
             'google_index' => request()->string('google_index')->toString(),
             'availability' => request()->string('availability')->toString(),
@@ -227,13 +222,6 @@ class OfferController extends Controller
         );
 
         $query->whereRaw('LOWER('.$column.') LIKE ? ESCAPE ?', ['%'.$escaped.'%', '\\']);
-    }
-
-    private function normalizeEdgeFilter(string $edge): string
-    {
-        $edge = strtolower(trim($edge));
-
-        return in_array($edge, ['proxy', 'cloudflare'], true) ? $edge : '';
     }
 
     private function normalizeDomainFilter(string $domain): string
@@ -313,15 +301,6 @@ class OfferController extends Controller
             $query->where(function (Builder $builder) use ($panel) {
                 $builder->where('deploy_panel_name', $panel)
                     ->orWhere('infra_meta->deploy_host', $panel);
-            });
-        }
-
-        if (($filters['edge'] ?? '') === 'proxy') {
-            $query->where('infra_meta->edge', 'proxy');
-        } elseif (($filters['edge'] ?? '') === 'cloudflare') {
-            $query->where(function (Builder $builder): void {
-                $builder->whereNull('infra_meta->edge')
-                    ->orWhere('infra_meta->edge', '!=', 'proxy');
             });
         }
 
@@ -422,10 +401,6 @@ class OfferController extends Controller
             'initialLang' => request()->string('lang')->toString() ?: null,
             'initialFromSearch' => request()->boolean('from_search'),
             'canProvisionInfrastructure' => InfrastructureProvisioner::settingsReady($settings),
-            'preferredEdge' => $settings?->preferredEdge() ?? 'proxy',
-            'proxyServers' => ProxyServer::activeForSwitch()
-                ->map(fn (ProxyServer $server) => $server->toPanelArray())
-                ->values(),
             'whiteLandings' => $whites->pickerFor(auth()->user()),
         ]);
     }
@@ -676,7 +651,6 @@ class OfferController extends Controller
         $action = $request->string('action')->toString();
         $ip = trim((string) $request->input('ip', ''));
         $cloudflareTarget = $request->string('cloudflare_target')->toString();
-        $edgeTarget = $request->string('edge_target')->toString();
         $targetHost = trim((string) $request->input('target_host', ''));
 
         $query = Offer::query()
@@ -784,36 +758,6 @@ class OfferController extends Controller
                 continue;
             }
 
-            if ($action === 'switch_edge') {
-                try {
-                    if (! $authUser->isAdmin()) {
-                        $skipped++;
-                        $failed[] = $offer->domain.': проксі може перемикати лише адмін';
-
-                        continue;
-                    }
-                    if ($edgeTarget !== 'cloudflare' && ! preg_match('/^proxy:(\d+)$/', $edgeTarget, $m)) {
-                        $skipped++;
-                        $failed[] = $offer->domain.': невідомий край';
-
-                        continue;
-                    }
-                    if (isset($m[1]) && ! ProxyServer::query()->whereKey((int) $m[1])->where('is_active', true)->exists()) {
-                        $skipped++;
-                        $failed[] = $offer->domain.': проксі не знайдено';
-
-                        continue;
-                    }
-                    SwitchOfferEdgeJob::dispatch($offer->id, $edgeTarget);
-                    $queued++;
-                } catch (\Throwable $e) {
-                    $skipped++;
-                    $failed[] = $offer->domain.': '.$e->getMessage();
-                }
-
-                continue;
-            }
-
             if ($action === 'switch_cloudflare') {
                 try {
                     if (str_starts_with($cloudflareTarget, 'spare:') && ! $authUser->isAdmin()) {
@@ -880,9 +824,6 @@ class OfferController extends Controller
             $label = $cloudflareTarget === 'primary'
                 ? 'основний CF власника'
                 : 'запасний CF';
-            $parts[] = "Перехід на {$label} у черзі: {$queued}";
-        } elseif ($action === 'switch_edge') {
-            $label = $edgeTarget === 'cloudflare' ? 'Cloudflare' : 'проксі';
             $parts[] = "Перехід на {$label} у черзі: {$queued}";
         } else {
             $parts[] = "A-запис → {$ip} у черзі: {$queued}";

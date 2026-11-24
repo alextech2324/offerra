@@ -14,7 +14,6 @@ use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferStatsController;
 use App\Http\Controllers\OriginServerController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProxyServerController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TemplatePreviewController;
@@ -131,15 +130,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('origin-servers.rebalance');
         Route::post('/origin-servers/sync', [OriginServerController::class, 'sync'])->name('origin-servers.sync');
         Route::post('/origin-servers/check-all', [OriginServerController::class, 'checkAll'])->name('origin-servers.check-all');
-
-        Route::get('/proxy-servers', [ProxyServerController::class, 'index'])->name('proxy-servers.index');
-        Route::post('/proxy-servers', [ProxyServerController::class, 'store'])->name('proxy-servers.store');
-        Route::post('/proxy-servers/{proxyServer}/update', [ProxyServerController::class, 'update'])
-            ->name('proxy-servers.update');
-        Route::delete('/proxy-servers/{proxyServer}', [ProxyServerController::class, 'destroy'])
-            ->name('proxy-servers.destroy');
-        Route::post('/proxy-servers/{proxyServer}/check', [ProxyServerController::class, 'check'])
-            ->name('proxy-servers.check');
 
         Route::get('/min-deposits', [GeoMinDepositController::class, 'index'])->name('min-deposits.index');
         Route::post('/min-deposits', [GeoMinDepositController::class, 'store'])->name('min-deposits.store');

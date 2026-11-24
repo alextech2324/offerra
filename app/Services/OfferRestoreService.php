@@ -57,10 +57,7 @@ class OfferRestoreService
         // Rebuild while still archived so a failure keeps the offer in the archive list.
         $this->generator->rebuildLocalFolder($offer->fresh());
 
-        $proxyPool = app(ProxyPool::class);
-        $options = InfrastructureOptions::fromPreferredEdge(
-            InfrastructureOptions::lockedEdge($settings, $proxyPool->hasCapacity()),
-        );
+        $options = InfrastructureOptions::fromPreferredEdge();
 
         // Fresh infra progress — archive deleted origin/CF zone; do not trust old "done" flags.
         $meta = CloakOptions::mergeIntoInfraMeta(
@@ -95,10 +92,6 @@ class OfferRestoreService
             'google_index_coverage' => null,
             'google_index_canonical' => null,
         ]);
-
-        if (InfrastructureOptions::wantsProxy($options)) {
-            $proxyPool->assign($offer->fresh());
-        }
 
         $this->provisioner->enqueue($offer->fresh());
 

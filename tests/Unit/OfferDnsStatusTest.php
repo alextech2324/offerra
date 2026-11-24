@@ -132,36 +132,4 @@ class OfferDnsStatusTest extends TestCase
 
         $this->assertSame('skipped', $offer->dnsStatus());
     }
-
-    public function test_needs_proxy_ssl_retry_when_edge_is_proxy_and_ssl_pending(): void
-    {
-        $offer = new Offer([
-            'provision_infrastructure' => true,
-            'status' => 'deployed',
-            'infra_meta' => [
-                'edge' => 'proxy',
-                'edge_proxy_id' => 1,
-                'ssl' => 'pending',
-                'dns' => 'done',
-            ],
-        ]);
-
-        $this->assertTrue($offer->needsProxySslRetry());
-    }
-
-    public function test_needs_proxy_ssl_retry_is_false_when_ssl_is_done(): void
-    {
-        $offer = new Offer([
-            'provision_infrastructure' => true,
-            'status' => 'deployed',
-            'infra_meta' => [
-                'edge' => 'proxy',
-                'edge_proxy_id' => 1,
-                'ssl' => 'done',
-                'dns' => 'done',
-            ],
-        ]);
-
-        $this->assertFalse($offer->needsProxySslRetry());
-    }
 }

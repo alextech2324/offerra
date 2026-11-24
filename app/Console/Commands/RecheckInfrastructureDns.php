@@ -26,20 +26,16 @@ class RecheckInfrastructureDns extends Command
         $this->settlePubliclyReadyRegistrarNs($offers);
         $this->settleLiveDeployedOffers($offers);
         $this->promoteQueuedRechecksToDns();
-        $pruned = $this->pruneDuplicateSwitchJobs();
-        if ($pruned > 0) {
-            $this->info("pruned duplicate switch jobs: {$pruned}");
-        }
 
         $pendingOffers = $offers->filter(
-            fn ($offer) => $offer->dnsStatus() === 'pending' || $offer->needsProxySslRetry(),
+            fn ($offer) => $offer->dnsStatus() === 'pending',
         );
 
         if ($pendingOffers->isEmpty()) {
             return self::SUCCESS;
         }
 
-        $alreadyQueuedIds = $this->queuedRecheckOfferIds() + $this->queuedSwitchOfferIds();
+        $alreadyQueuedIds = $this->queuedRecheckOfferIds();
 
         $queued = 0;
         foreach ($pendingOffers as $offer) {
@@ -123,8 +119,7 @@ class RecheckInfrastructureDns extends Command
             ->whereNull('reserved_at')
             ->where(function ($q): void {
                 $q->where('payload', 'like', '%RecheckInfrastructureDnsJob%')
-                    ->orWhere('payload', 'like', '%RebindOfferDnsJob%')
-                    ->orWhere('payload', 'like', '%SwitchOfferEdgeJob%');
+                    ->orWhere('payload', 'like', '%RebindOfferDnsJob%');
             })
             ->update(['queue' => 'dns']);
 
@@ -134,54 +129,11 @@ class RecheckInfrastructureDns extends Command
     }
 
     /**
-     * Keep one SwitchOfferEdgeJob per offer. Recheck used to re-dispatch after
-     * the 15-minute unique lock expired, while the first job was still waiting.
-     */
-    private function pruneDuplicateSwitchJobs(): int
-    {
-        $keep = [];
-        $delete = [];
-
-        DB::table('jobs')
-            ->where('payload', 'like', '%SwitchOfferEdgeJob%')
-            ->whereNull('reserved_at')
-            ->orderBy('id')
-            ->select(['id', 'payload'])
-            ->chunkById(200, function ($rows) use (&$keep, &$delete): void {
-                foreach ($rows as $job) {
-                    $offerId = $this->extractOfferId((string) $job->payload);
-                    if (! $offerId) {
-                        continue;
-                    }
-                    if (isset($keep[$offerId])) {
-                        $delete[] = (int) $job->id;
-                    } else {
-                        $keep[$offerId] = true;
-                    }
-                }
-            });
-
-        if ($delete === []) {
-            return 0;
-        }
-
-        return DB::table('jobs')->whereIn('id', $delete)->whereNull('reserved_at')->delete();
-    }
-
-    /**
      * @return array<int, true>
      */
     private function queuedRecheckOfferIds(): array
     {
         return $this->queuedOfferIds('%RecheckInfrastructureDnsJob%');
-    }
-
-    /**
-     * @return array<int, true>
-     */
-    private function queuedSwitchOfferIds(): array
-    {
-        return $this->queuedOfferIds('%SwitchOfferEdgeJob%');
     }
 
     /**

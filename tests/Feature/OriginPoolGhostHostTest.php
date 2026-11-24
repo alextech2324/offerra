@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Offer;
 use App\Models\OriginServer;
-use App\Models\ProxyServer;
 use App\Models\User;
 use App\Services\InfrastructureProvisioner;
 use App\Services\OfferGenerator;
@@ -105,7 +104,6 @@ class OriginPoolGhostHostTest extends TestCase
             'cloudflare_api_token' => 'token',
             'cloudflare_account_id' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
             'dynadot_api_key' => 'dyn-key',
-            'preferred_edge' => 'proxy',
         ]);
         OriginServer::query()->create([
             'host' => '10.9.0.3',
@@ -115,13 +113,6 @@ class OriginPoolGhostHostTest extends TestCase
             'role' => OriginServer::ROLE_POOL,
             'is_active' => true,
             'health' => ['status' => 'ok'],
-        ]);
-        ProxyServer::query()->create([
-            'host' => '10.9.0.8',
-            'port' => 22,
-            'username' => 'root',
-            'password' => 'secret',
-            'is_active' => true,
         ]);
 
         $offer = Offer::query()->create([

@@ -19,7 +19,6 @@ function formFromSettings(settings, userId = null) {
         cloudflare_api_token: settings.cloudflare_api_token ?? '',
         cloudflare_account_id: settings.cloudflare_account_id ?? '',
         cloudflare_default_proxied: settings.cloudflare_default_proxied ?? true,
-        preferred_edge: settings.preferred_edge === 'cloudflare' ? 'cloudflare' : 'proxy',
         cloudflare_account_name: settings.cloudflare_account_name ?? '',
         test_domain: 'reserve-safegrove-ie.com',
     };
@@ -346,48 +345,6 @@ export default function SettingsIndex({ settings, settingsUser, users = [] }) {
                 </section>
 
                 <section className="card">
-                    <h3>Публічний край</h3>
-                    <p className="card-desc">
-                        Як виходять нові офери і рестор з архіву. Конкретне проксі пул обере сам (бренд, потім навантаження).
-                        На кроці інфри цей вибір уже не змінюється.
-                    </p>
-                    <div className="infra-edge">
-                        <div className="infra-edge__choices">
-                            <label
-                                className={`infra-edge__card${data.preferred_edge === 'proxy' ? ' is-on' : ''}`}
-                                htmlFor="preferred-edge-proxy"
-                            >
-                                <input
-                                    id="preferred-edge-proxy"
-                                    type="radio"
-                                    name="preferred_edge"
-                                    checked={data.preferred_edge === 'proxy'}
-                                    onChange={() => setData('preferred_edge', 'proxy')}
-                                />
-                                <span className="infra-edge__kicker">Проксі</span>
-                                <strong>Сірий A, origin сховано</strong>
-                                <span className="infra-edge__meta">Let’s Encrypt на проксі · Cloudflare лише для зони і NS</span>
-                            </label>
-                            <label
-                                className={`infra-edge__card${data.preferred_edge === 'cloudflare' ? ' is-on' : ''}`}
-                                htmlFor="preferred-edge-cf"
-                            >
-                                <input
-                                    id="preferred-edge-cf"
-                                    type="radio"
-                                    name="preferred_edge"
-                                    checked={data.preferred_edge === 'cloudflare'}
-                                    onChange={() => setData('preferred_edge', 'cloudflare')}
-                                />
-                                <span className="infra-edge__kicker">Cloudflare</span>
-                                <strong>Помаранчева хмара</strong>
-                                <span className="infra-edge__meta">A на origin · SSL Flexible</span>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="card">
                     <h3>Cloudflare (DNS)</h3>
                     <p className="card-desc">
                         API для DNS: зона, A-запис, NS у Dynadot при створенні оффера.
@@ -430,17 +387,15 @@ export default function SettingsIndex({ settings, settingsUser, users = [] }) {
                             onChange={(e) => setData('cloudflare_account_id', e.target.value)}
                         />
                     </div>
-                    {data.preferred_edge === 'cloudflare' && (
-                        <label className="field-check" htmlFor="cf-proxied">
-                            <input
-                                id="cf-proxied"
-                                type="checkbox"
-                                checked={data.cloudflare_default_proxied}
-                                onChange={(e) => setData('cloudflare_default_proxied', e.target.checked)}
-                            />
-                            <span>Proxied (помаранчева хмарка) за замовчуванням</span>
-                        </label>
-                    )}
+                    <label className="field-check" htmlFor="cf-proxied">
+                        <input
+                            id="cf-proxied"
+                            type="checkbox"
+                            checked={data.cloudflare_default_proxied}
+                            onChange={(e) => setData('cloudflare_default_proxied', e.target.checked)}
+                        />
+                        <span>Proxied (помаранчева хмарка) за замовчуванням</span>
+                    </label>
                     <div style={{ marginTop: '1rem' }}>
                         <button
                             type="button"

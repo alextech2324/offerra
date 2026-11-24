@@ -85,24 +85,15 @@ class BulkOfferActionRequestTest extends TestCase
         $this->assertFalse($validator->fails(), $validator->errors()->toJson());
     }
 
-    public function test_switch_edge_accepts_proxy_id(): void
+    public function test_switch_edge_is_rejected(): void
     {
         $validator = Validator::make(
             ['ids' => [8], 'action' => 'switch_edge', 'edge_target' => 'proxy:1'],
             (new BulkOfferActionRequest)->rules(),
         );
 
-        $this->assertFalse($validator->fails(), $validator->errors()->toJson());
-    }
-
-    public function test_switch_edge_accepts_cloudflare(): void
-    {
-        $validator = Validator::make(
-            ['ids' => [8], 'action' => 'switch_edge', 'edge_target' => 'cloudflare'],
-            (new BulkOfferActionRequest)->rules(),
-        );
-
-        $this->assertFalse($validator->fails(), $validator->errors()->toJson());
+        $this->assertTrue($validator->fails());
+        $this->assertArrayHasKey('action', $validator->errors()->toArray());
     }
 
     public function test_check_availability_accepts_ids(): void

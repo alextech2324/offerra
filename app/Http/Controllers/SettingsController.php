@@ -69,7 +69,6 @@ class SettingsController extends Controller
             'dynadot_account_name' => trim((string) ($data['dynadot_account_name'] ?? '')) ?: null,
             'cloudflare_account_id' => $data['cloudflare_account_id'] ?? $settings->cloudflare_account_id,
             'cloudflare_default_proxied' => $request->boolean('cloudflare_default_proxied'),
-            'preferred_edge' => ($data['preferred_edge'] ?? '') === 'cloudflare' ? 'cloudflare' : 'proxy',
             'cloudflare_account_name' => trim((string) ($data['cloudflare_account_name'] ?? '')) ?: null,
         ]);
 
