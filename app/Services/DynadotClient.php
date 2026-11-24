@@ -460,6 +460,7 @@ class DynadotClient
 
         return self::isNsNotReadyError($message)
             || self::isTransientTransportError($message)
+            || self::isUnauthorizedIpError($message)
             || str_contains($normalized, 'зайнятий')
             || str_contains($normalized, 'system_busy')
             || str_contains($normalized, 'currently processing')

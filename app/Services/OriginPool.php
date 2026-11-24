@@ -61,6 +61,10 @@ class OriginPool
 
         $rows = [];
         foreach (OriginServer::query()->where('is_active', true)->orderBy('id')->get() as $server) {
+            if ($server->healthStatus() === 'down') {
+                continue;
+            }
+
             $host = $this->sync->normalizeHost((string) $server->host);
             $offers = (int) ($counts[$host] ?? 0);
 
@@ -337,9 +341,9 @@ class OriginPool
     /**
      * Bound origin that can still receive this offer's files.
      *
-     * A deleted IP must not keep retrying SSH. Active rows without credentials
-     * still throw so a mis-typed password is visible; inactive orphans fall through
-     * to a new pool allocation.
+     * A deleted, inactive, or down IP must not keep retrying SSH. Restore and
+     * provision then allocate a live pool host. Active rows without credentials
+     * still throw so a mis-typed password is visible.
      */
     public function usableBoundServer(Offer $offer): ?OriginServer
     {
@@ -349,17 +353,17 @@ class OriginPool
         }
 
         $server = $this->serverForHost($host);
-        if ($server && $server->hasSshCredentials()) {
+        if ($server === null || ! $server->is_active || $server->healthStatus() === 'down') {
+            return null;
+        }
+
+        if ($server->hasSshCredentials()) {
             return $server;
         }
 
-        if ($server && $server->is_active) {
-            throw new RuntimeException(
-                "Немає SSH-доступу до сервера {$host} (колонка Server у офера). Додайте його в Origin Servers.",
-            );
-        }
-
-        return null;
+        throw new RuntimeException(
+            "Немає SSH-доступу до сервера {$host} (колонка Server у офера). Додайте його в Origin Servers.",
+        );
     }
 
     /**

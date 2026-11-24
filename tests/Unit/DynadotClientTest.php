@@ -80,6 +80,7 @@ class DynadotClientTest extends TestCase
         $this->assertTrue(DynadotClient::isUnauthorizedIpError('unauthorized ip address: 38.180.121.50'));
         $this->assertTrue(DynadotClient::isUnauthorizedIpError('IP address is not authorized'));
         $this->assertFalse(DynadotClient::isUnauthorizedIpError('insufficient account balance'));
+        $this->assertTrue(DynadotClient::isRetryableNsError('unauthorized ip address: 38.180.121.50'));
     }
 
     public function test_central_registry_busy_is_retryable_ns_error(): void

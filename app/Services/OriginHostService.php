@@ -147,7 +147,14 @@ SH;
             return $bound[0];
         }
 
-        return $this->originIp($settings);
+        $fallback = trim((string) $settings->deploy_host);
+        if ($fallback !== '' && $this->isLivePoolHost($fallback)) {
+            return $this->originIp($settings);
+        }
+
+        throw new RuntimeException(
+            'Немає живого origin-сервера в пулі для цього офера. Старий IP видалено — офер треба переприв’язати.',
+        );
     }
 
     /**
@@ -178,6 +185,9 @@ SH;
             } catch (RuntimeException) {
                 continue;
             }
+            if (! $this->isLivePoolHost($ip)) {
+                continue;
+            }
             if (! in_array($ip, $ips, true)) {
                 $ips[] = $ip;
             }
@@ -187,7 +197,7 @@ SH;
     }
 
     /**
-     * Scan Origin-сервери (+ Settings host) for lander files; skip IPs already checked.
+     * Scan live pool origins for lander files; skip IPs already checked.
      *
      * @param  list<string>  $alreadyChecked
      */
@@ -195,7 +205,7 @@ SH;
     {
         $hosts = [];
         foreach (OriginServer::query()->where('is_active', true)->orderBy('id')->get() as $server) {
-            if (! $server->hasSshCredentials()) {
+            if ($server->healthStatus() === 'down' || ! $server->hasSshCredentials()) {
                 continue;
             }
             $host = trim((string) $server->host);
@@ -257,7 +267,7 @@ SH;
             ->where('host', $host)
             ->first();
 
-        if ($server && $server->hasSshCredentials()) {
+        if ($server && $server->is_active && $server->hasSshCredentials() && $server->healthStatus() !== 'down') {
             return [
                 'host' => trim((string) $server->host),
                 'port' => (int) ($server->port ?: 22),
@@ -266,22 +276,22 @@ SH;
             ];
         }
 
-        $settings = UserSetting::query()
-            ->where('deploy_host', $host)
-            ->whereNotNull('deploy_password')
-            ->where('deploy_password', '!=', '')
-            ->first();
+        return null;
+    }
 
-        if ($settings && filled($settings->deploy_username) && filled($settings->deploy_password)) {
-            return [
-                'host' => $host,
-                'port' => (int) ($settings->deploy_port ?: 22),
-                'user' => trim((string) $settings->deploy_username),
-                'pass' => (string) $settings->deploy_password,
-            ];
+    public function isLivePoolHost(string $host): bool
+    {
+        $host = trim($host);
+        if ($host === '') {
+            return false;
         }
 
-        return null;
+        $server = OriginServer::query()->where('host', $host)->first();
+
+        return $server !== null
+            && $server->is_active
+            && $server->hasSshCredentials()
+            && $server->healthStatus() !== 'down';
     }
 
     public function hostHasOfferIndex(string $host, string $domain): bool

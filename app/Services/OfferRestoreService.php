@@ -50,6 +50,9 @@ class OfferRestoreService
             );
         }
 
+        // Drop the old origin pin before rebuild so restore cannot SSH a deleted IP.
+        app(OriginPool::class)->unbind($offer);
+
         // Rebuild while still archived so a failure keeps the offer in the archive list.
         $this->generator->rebuildLocalFolder($offer->fresh());
 
@@ -75,6 +78,9 @@ class OfferRestoreService
             'infra_status' => 'pending',
             'infra_error' => null,
             'infra_meta' => $meta,
+            'availability_status' => 'unchecked',
+            'availability_error' => null,
+            'availability_checked_at' => null,
             'submitted_for_indexing' => false,
             // Start a new 21-day brand shield immediately, same as adding a domain.
             // Inspect still waits: it requires submitted_for_indexing.
