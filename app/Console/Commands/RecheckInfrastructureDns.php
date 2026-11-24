@@ -209,7 +209,7 @@ class RecheckInfrastructureDns extends Command
 
     private function extractOfferId(string $payload): ?int
     {
-        if (preg_match('/offerId";i:(\d+)/', $payload, $m)) {
+        if (preg_match('/offerId\\\\?";i:(\d+)/', $payload, $m)) {
             return (int) $m[1];
         }
 

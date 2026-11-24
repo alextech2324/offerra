@@ -96,7 +96,10 @@ class InfrastructureProvisioner
     {
         return DB::table('jobs')
             ->where('payload', 'like', '%SwitchOfferEdgeJob%')
-            ->where('payload', 'like', '%offerId";i:'.$offerId.';%')
+            ->where(function ($q) use ($offerId): void {
+                $q->where('payload', 'like', '%offerId";i:'.$offerId.';%')
+                    ->orWhere('payload', 'like', '%offerId\\\\";i:'.$offerId.';%');
+            })
             ->exists();
     }
 

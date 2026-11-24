@@ -231,7 +231,14 @@ else:
     print("supervisor: purge workers already configured")
 PY
 supervisorctl reread
-supervisorctl update`,
+supervisorctl update
+if ! supervisorctl status offerra-dns-worker:* 2>/dev/null | grep -q offerra-dns-worker_05; then
+  supervisorctl stop offerra-dns-worker:* || true
+  supervisorctl remove offerra-dns-worker || true
+  supervisorctl reread
+  supervisorctl add offerra-dns-worker
+  supervisorctl start offerra-dns-worker:* || true
+fi`
     { timeoutMs: 180000, allowFail: true },
   );
   await exec(

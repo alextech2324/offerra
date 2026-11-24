@@ -217,7 +217,10 @@ class BackgroundJobQueueTest extends TestCase
         $now = time();
         DB::table('jobs')->insert([
             'queue' => 'dns',
-            'payload' => 'App\\Jobs\\SwitchOfferEdgeJob s:7:"offerId";i:'.$offer->id.';',
+            'payload' => json_encode([
+                'displayName' => 'App\\Jobs\\SwitchOfferEdgeJob',
+                'data' => ['command' => 's:7:"offerId";i:'.$offer->id.';'],
+            ]),
             'attempts' => 0,
             'reserved_at' => null,
             'available_at' => $now,
@@ -248,7 +251,10 @@ class BackgroundJobQueueTest extends TestCase
         ]);
 
         $now = time();
-        $payload = 'App\\Jobs\\SwitchOfferEdgeJob s:7:"offerId";i:'.$offer->id.';';
+        $payload = json_encode([
+            'displayName' => 'App\\Jobs\\SwitchOfferEdgeJob',
+            'data' => ['command' => 's:7:"offerId";i:'.$offer->id.';'],
+        ]);
         DB::table('jobs')->insert([
             ['queue' => 'dns', 'payload' => $payload, 'attempts' => 0, 'reserved_at' => null, 'available_at' => $now, 'created_at' => $now],
             ['queue' => 'dns', 'payload' => $payload, 'attempts' => 0, 'reserved_at' => null, 'available_at' => $now, 'created_at' => $now],
