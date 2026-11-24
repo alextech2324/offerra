@@ -78,12 +78,13 @@ class InfrastructureProvisioner
             return;
         }
 
-        $proxyId = (int) ($options['edge_proxy_id'] ?? 0);
-        if ($proxyId < 1) {
+        try {
+            $proxy = app(ProxyPool::class)->assign($offer);
+        } catch (\Throwable) {
             return;
         }
 
-        SwitchOfferEdgeJob::dispatch($offer->id, 'proxy:'.$proxyId);
+        SwitchOfferEdgeJob::dispatch($offer->id, 'proxy:'.$proxy->id);
     }
 
     /**
@@ -143,6 +144,21 @@ class InfrastructureProvisioner
             ]);
 
             return;
+        }
+
+        if (InfrastructureOptions::wantsProxy($options)) {
+            try {
+                app(ProxyPool::class)->assign($offer);
+                $offer->refresh();
+                $options = InfrastructureOptions::forOffer($offer);
+            } catch (\Throwable $e) {
+                $offer->update([
+                    'infra_status' => 'failed',
+                    'infra_error' => DynadotClient::redactSecrets($e->getMessage()),
+                ]);
+
+                return;
+            }
         }
 
         $domain = strtolower(trim($offer->domain));

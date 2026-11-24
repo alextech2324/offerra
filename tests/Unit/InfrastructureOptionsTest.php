@@ -70,6 +70,23 @@ class InfrastructureOptionsTest extends TestCase
         $this->assertSame(9, $options['edge_proxy_id']);
     }
 
+    public function test_proxy_auto_waits_for_pool_assignment(): void
+    {
+        foreach (['proxy', 'proxy:auto'] as $edge) {
+            $options = InfrastructureOptions::fromInput([
+                'infra_edge' => $edge,
+                'infra_cloudflare_dns' => true,
+                'infra_cloudflare_ssl' => true,
+            ]);
+
+            $this->assertTrue(InfrastructureOptions::wantsProxy($options), $edge);
+            $this->assertSame(0, $options['edge_proxy_id'], $edge);
+            $this->assertTrue($options['cloudflare_zone']);
+            $this->assertFalse($options['cloudflare_dns']);
+            $this->assertTrue($options['dynadot_ns']);
+        }
+    }
+
     public function test_needs_cloudflare_zone_when_dns_or_ssl_enabled(): void
     {
         $this->assertTrue(InfrastructureOptions::needsCloudflareZone([

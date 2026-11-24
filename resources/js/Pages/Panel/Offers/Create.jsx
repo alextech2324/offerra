@@ -35,14 +35,18 @@ function defaultInfraOptions(enabled = false, proxyId = '') {
 }
 
 function proxyEdgeId(value) {
-    const match = String(value || '').match(/^proxy:(\d+)$/);
+    const raw = String(value || '');
+    if (raw === 'proxy' || raw === 'proxy:auto') {
+        return 'auto';
+    }
+    const match = raw.match(/^proxy:(\d+)$/);
 
     return match ? match[1] : '';
 }
 
 function proxyInfraOptions(proxyId) {
     return {
-        infra_edge: `proxy:${proxyId}`,
+        infra_edge: proxyId === 'auto' ? 'proxy:auto' : `proxy:${proxyId}`,
         infra_cloudflare_zone: true,
         infra_cloudflare_dns: false,
         infra_dynadot_ns: true,
@@ -350,7 +354,7 @@ export default function OffersCreate({
         () => buildDefaults(
             templates,
             initialFromSearch,
-            canChooseProxyEdge ? String(proxyList[0].id) : '',
+            canChooseProxyEdge ? 'auto' : '',
         ),
         [templates, initialFromSearch, canChooseProxyEdge, proxyList],
     );
@@ -1506,7 +1510,7 @@ export default function OffersCreate({
                 infra_cloudflare_ssl: data.infra_cloudflare_ssl,
                 infra_cloudflare_https: data.infra_cloudflare_https,
                 infra_cloudflare_www_redirect: data.infra_cloudflare_www_redirect,
-                infra_edge: data.infra_edge || (canChooseProxyEdge ? `proxy:${proxyList[0].id}` : 'cloudflare'),
+                infra_edge: data.infra_edge || (canChooseProxyEdge ? 'proxy:auto' : 'cloudflare'),
                 items: bulkItems.map(({ domain, template }) => ({ domain, template })),
             }, {
                 preserveScroll: true,
@@ -2286,7 +2290,7 @@ export default function OffersCreate({
                                             type="radio"
                                             name="infra_edge"
                                             checked={Boolean(proxyEdgeId(data.infra_edge))}
-                                            onChange={() => selectInfraEdge('proxy', proxyEdgeId(data.infra_edge) || String(proxyList[0].id))}
+                                            onChange={() => selectInfraEdge('proxy', proxyEdgeId(data.infra_edge) || 'auto')}
                                         />
                                         <span className="infra-edge__kicker">Проксі</span>
                                         <strong>Сірий A, origin сховано</strong>
@@ -2299,6 +2303,7 @@ export default function OffersCreate({
                                                 onClick={(e) => e.stopPropagation()}
                                                 onChange={(e) => selectInfraEdge('proxy', e.target.value)}
                                             >
+                                                <option value="auto">Авто · бренд, потім навантаження</option>
                                                 {proxyList.map((server) => (
                                                     <option key={server.id} value={String(server.id)}>
                                                         {server.display_label} · {server.host}
@@ -2420,6 +2425,9 @@ export default function OffersCreate({
                                 <span>
                                     {(() => {
                                         const proxyId = proxyEdgeId(data.infra_edge);
+                                        if (proxyId === 'auto') {
+                                            return 'Проксі · авто (бренд, потім навантаження)';
+                                        }
                                         const proxy = proxyId
                                             ? proxyList.find((item) => String(item.id) === String(proxyId))
                                             : null;

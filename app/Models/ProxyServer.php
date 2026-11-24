@@ -85,10 +85,13 @@ class ProxyServer extends Model
     {
         return Offer::query()
             ->whereNotIn('status', ['archived', 'archiving', 'purging', 'teardown_failed'])
-            ->where('infra_meta->edge', 'proxy')
             ->where(function ($query): void {
                 $query->where('infra_meta->edge_proxy_id', $this->id)
-                    ->orWhere('infra_meta->edge_ip', $this->host);
+                    ->orWhere('infra_meta->options->edge_proxy_id', $this->id)
+                    ->orWhere(function ($inner): void {
+                        $inner->where('infra_meta->edge', 'proxy')
+                            ->where('infra_meta->edge_ip', $this->host);
+                    });
             })
             ->count();
     }

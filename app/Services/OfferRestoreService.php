@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Offer;
-use App\Models\ProxyServer;
 use App\Models\User;
 use App\Support\InfrastructureOptions;
 use Illuminate\Support\Facades\Log;
@@ -60,10 +59,10 @@ class OfferRestoreService
             $options = InfrastructureOptions::defaults();
         }
 
-        $proxy = ProxyServer::query()->where('is_active', true)->orderBy('id')->first();
-        if ($proxy !== null) {
+        $proxyPool = app(ProxyPool::class);
+        if ($proxyPool->hasCapacity()) {
             $options['edge'] = InfrastructureOptions::EDGE_PROXY;
-            $options['edge_proxy_id'] = $proxy->id;
+            $options['edge_proxy_id'] = 0;
             $options['cloudflare_zone'] = true;
             $options['cloudflare_dns'] = false;
             $options['dynadot_ns'] = true;
@@ -99,6 +98,10 @@ class OfferRestoreService
             'google_index_coverage' => null,
             'google_index_canonical' => null,
         ]);
+
+        if (InfrastructureOptions::wantsProxy($options)) {
+            $proxyPool->assign($offer->fresh());
+        }
 
         $this->provisioner->enqueue($offer->fresh());
 

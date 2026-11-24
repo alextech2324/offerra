@@ -147,6 +147,11 @@ class OfferGenerator
                 ...$providerSnapshot,
             ]);
 
+            if ($provisionInfrastructure && InfrastructureOptions::wantsProxy($infraOptions)) {
+                app(ProxyPool::class)->assign($offer);
+                $offer->refresh();
+            }
+
             $this->prepareVerificationCopy($offer, $targetPath);
             $this->verificationFiles->syncToOfferFolder($offer);
             $this->ensureVerificationDirWritable($offer);

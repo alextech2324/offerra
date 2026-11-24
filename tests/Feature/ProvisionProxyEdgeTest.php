@@ -159,7 +159,7 @@ class ProvisionProxyEdgeTest extends TestCase
 
         $this->artisan('offers:switch-all-to-proxy')
             ->expectsOutputToContain('queued: still-on-cf.live')
-            ->expectsOutputToContain("proxy={$proxy->host} queued=1 already_on_proxy=1")
+            ->expectsOutputToContain('spread=pool queued=1 already_on_proxy=1')
             ->assertSuccessful();
 
         Queue::assertPushedOn('dns', SwitchOfferEdgeJob::class);
@@ -167,5 +167,66 @@ class ProvisionProxyEdgeTest extends TestCase
             return $job->offerId === $onCf->id && $job->target === 'proxy:'.$proxy->id;
         });
         Queue::assertPushed(SwitchOfferEdgeJob::class, 1);
+    }
+
+    public function test_switch_all_spreads_remaining_offers_across_proxies(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $user->settings()->create([]);
+        $a = ProxyServer::query()->create([
+            'host' => '10.0.0.1',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'is_active' => true,
+        ]);
+        $b = ProxyServer::query()->create([
+            'host' => '10.0.0.2',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'is_active' => true,
+        ]);
+
+        $first = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'spread-a.live',
+            'brand' => 'Spread',
+            'domain' => 'spread-a.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'infra_meta' => ['edge' => 'cloudflare'],
+        ]);
+        $second = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'spread-b.live',
+            'brand' => 'Spread',
+            'domain' => 'spread-b.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'infra_meta' => ['edge' => 'cloudflare'],
+        ]);
+
+        $this->artisan('offers:switch-all-to-proxy')->assertSuccessful();
+
+        Queue::assertPushed(SwitchOfferEdgeJob::class, 2);
+        Queue::assertPushed(SwitchOfferEdgeJob::class, function (SwitchOfferEdgeJob $job) use ($first, $a) {
+            return $job->offerId === $first->id && $job->target === 'proxy:'.$a->id;
+        });
+        Queue::assertPushed(SwitchOfferEdgeJob::class, function (SwitchOfferEdgeJob $job) use ($second, $b) {
+            return $job->offerId === $second->id && $job->target === 'proxy:'.$b->id;
+        });
     }
 }
