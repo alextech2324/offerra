@@ -177,9 +177,17 @@ async function main() {
   await exec(
     conn,
     `python3 - <<'PY'
+import re
 from pathlib import Path
 
 p = Path("/etc/supervisor/conf.d/offerra.conf")
+t = p.read_text()
+t2 = re.sub(r"\\n\\[program:offerra-dns-worker\\][\\s\\S]*?(?=\\n\\[program:|\\Z)", "\\n", t, count=1)
+t2 = re.sub(r"\\n\\[program:offerra-purge-worker\\][\\s\\S]*?(?=\\n\\[program:|\\Z)", "\\n", t2, count=1)
+if t2 != t:
+    p.write_text(t2)
+    t = t2
+    print("supervisor: dropped duplicate dns/purge from offerra.conf")
 t = p.read_text()
 old = "--queue=default "
 new = "--queue=gsc,default "
@@ -236,7 +244,7 @@ if ! supervisorctl status offerra-dns-worker:* 2>/dev/null | grep -q offerra-dns
   supervisorctl stop offerra-dns-worker:* || true
   supervisorctl remove offerra-dns-worker || true
   supervisorctl reread
-  supervisorctl add offerra-dns-worker
+  supervisorctl update
   supervisorctl start offerra-dns-worker:* || true
 fi`,
     { timeoutMs: 180000, allowFail: true },
