@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Offer;
+use App\Models\ProxyServer;
 use App\Models\User;
 use App\Support\InfrastructureOptions;
 use Illuminate\Support\Facades\Log;
@@ -57,6 +58,18 @@ class OfferRestoreService
 
         if (! InfrastructureOptions::anyEnabled($options)) {
             $options = InfrastructureOptions::defaults();
+        }
+
+        $proxy = ProxyServer::query()->where('is_active', true)->orderBy('id')->first();
+        if ($proxy !== null) {
+            $options['edge'] = InfrastructureOptions::EDGE_PROXY;
+            $options['edge_proxy_id'] = $proxy->id;
+            $options['cloudflare_zone'] = true;
+            $options['cloudflare_dns'] = false;
+            $options['dynadot_ns'] = true;
+            $options['cloudflare_ssl'] = false;
+            $options['cloudflare_https'] = false;
+            $options['cloudflare_www_redirect'] = false;
         }
 
         // Fresh infra progress — archive deleted origin/CF zone; do not trust old "done" flags.

@@ -119,7 +119,8 @@ class RecheckInfrastructureDns extends Command
             ->whereNull('reserved_at')
             ->where(function ($q): void {
                 $q->where('payload', 'like', '%RecheckInfrastructureDnsJob%')
-                    ->orWhere('payload', 'like', '%RebindOfferDnsJob%');
+                    ->orWhere('payload', 'like', '%RebindOfferDnsJob%')
+                    ->orWhere('payload', 'like', '%SwitchOfferEdgeJob%');
             })
             ->update(['queue' => 'dns']);
 

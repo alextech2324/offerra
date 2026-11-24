@@ -104,9 +104,68 @@ class ProvisionProxyEdgeTest extends TestCase
 
         (new ProvisionInfrastructureJob($offer->id))->handle($provisioner, $deploy);
 
-        Queue::assertPushedOn('deploy', SwitchOfferEdgeJob::class);
+        Queue::assertPushedOn('dns', SwitchOfferEdgeJob::class);
         Queue::assertPushed(SwitchOfferEdgeJob::class, function (SwitchOfferEdgeJob $job) use ($offer, $proxy) {
             return $job->offerId === $offer->id && $job->target === 'proxy:'.$proxy->id;
         });
+    }
+
+    public function test_switch_all_to_proxy_queues_cloudflare_offers_and_skips_proxy(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $user->settings()->create([]);
+        $proxy = ProxyServer::query()->create([
+            'host' => '172.86.71.141',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'is_active' => true,
+        ]);
+        $onCf = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'still-on-cf.live',
+            'brand' => 'OnCf',
+            'domain' => 'still-on-cf.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'infra_meta' => [
+                'edge' => 'cloudflare',
+            ],
+        ]);
+        Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'already-proxy.live',
+            'brand' => 'OnProxy',
+            'domain' => 'already-proxy.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'infra_meta' => [
+                'edge' => 'proxy',
+                'edge_proxy_id' => $proxy->id,
+            ],
+        ]);
+
+        $this->artisan('offers:switch-all-to-proxy')
+            ->expectsOutputToContain('queued: still-on-cf.live')
+            ->expectsOutputToContain("proxy={$proxy->host} queued=1 already_on_proxy=1")
+            ->assertSuccessful();
+
+        Queue::assertPushedOn('dns', SwitchOfferEdgeJob::class);
+        Queue::assertPushed(SwitchOfferEdgeJob::class, function (SwitchOfferEdgeJob $job) use ($onCf, $proxy) {
+            return $job->offerId === $onCf->id && $job->target === 'proxy:'.$proxy->id;
+        });
+        Queue::assertPushed(SwitchOfferEdgeJob::class, 1);
     }
 }

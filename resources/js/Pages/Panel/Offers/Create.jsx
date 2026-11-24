@@ -18,7 +18,11 @@ const INFRA_TASKS = [
     { key: 'infra_cloudflare_www_redirect', label: 'Cloudflare — www → домен (301)', requiresZone: true },
 ];
 
-function defaultInfraOptions(enabled = false) {
+function defaultInfraOptions(enabled = false, proxyId = '') {
+    if (proxyId) {
+        return proxyInfraOptions(proxyId);
+    }
+
     return {
         infra_edge: 'cloudflare',
         infra_cloudflare_zone: enabled,
@@ -299,7 +303,7 @@ function assignTemplatesRoundRobin(domains, templates, usedTemplateIds, fallback
     }));
 }
 
-function buildDefaults(templates, fromSearch = false) {
+function buildDefaults(templates, fromSearch = false, proxyId = '') {
     const defaultTemplate = templates[0]?.id ?? 'default';
 
     return {
@@ -314,7 +318,7 @@ function buildDefaults(templates, fromSearch = false) {
         phone_countries: [],
         vitals_enabled: true,
         from_search_team: Boolean(fromSearch),
-        ...defaultInfraOptions(false),
+        ...defaultInfraOptions(false, proxyId),
     };
 }
 
@@ -343,8 +347,12 @@ export default function OffersCreate({
     const canChooseProxyEdge = canProvisionInfrastructure && proxyList.length > 0;
     const geoMinDeposits = panel?.geo_min_deposits || {};
     const defaults = useMemo(
-        () => buildDefaults(templates, initialFromSearch),
-        [templates, initialFromSearch],
+        () => buildDefaults(
+            templates,
+            initialFromSearch,
+            canChooseProxyEdge ? String(proxyList[0].id) : '',
+        ),
+        [templates, initialFromSearch, canChooseProxyEdge, proxyList],
     );
     const skipPersist = useRef(false);
     const freshHandled = useRef(false);
@@ -1498,7 +1506,7 @@ export default function OffersCreate({
                 infra_cloudflare_ssl: data.infra_cloudflare_ssl,
                 infra_cloudflare_https: data.infra_cloudflare_https,
                 infra_cloudflare_www_redirect: data.infra_cloudflare_www_redirect,
-                infra_edge: data.infra_edge || 'cloudflare',
+                infra_edge: data.infra_edge || (canChooseProxyEdge ? `proxy:${proxyList[0].id}` : 'cloudflare'),
                 items: bulkItems.map(({ domain, template }) => ({ domain, template })),
             }, {
                 preserveScroll: true,

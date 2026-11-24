@@ -95,7 +95,7 @@ class SwitchOfferEdgeTest extends TestCase
             ])
             ->assertRedirect();
 
-        Queue::assertPushedOn('deploy', SwitchOfferEdgeJob::class);
+        Queue::assertPushedOn('dns', SwitchOfferEdgeJob::class);
         Queue::assertPushed(SwitchOfferEdgeJob::class, function (SwitchOfferEdgeJob $job) use ($offer, $proxy) {
             return $job->offerId === $offer->id && $job->target === 'proxy:'.$proxy->id;
         });

@@ -38,7 +38,7 @@ class BackgroundJobQueueTest extends TestCase
         $this->assertSame('dns', (new RebindOfferDnsJob(1, '10.0.0.1'))->queue);
         $this->assertSame('purge', (new PurgeOfferFromOriginJob(1, '10.0.0.1'))->queue);
         $job = new SwitchOfferEdgeJob(1, 'proxy:1');
-        $this->assertSame('deploy', $job->queue);
+        $this->assertSame('dns', $job->queue);
         $this->assertSame(600, $job->timeout);
         $this->assertSame(2, $job->tries);
     }
