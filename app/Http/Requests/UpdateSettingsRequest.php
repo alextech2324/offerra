@@ -47,6 +47,7 @@ class UpdateSettingsRequest extends FormRequest
             'cloudflare_api_token' => ['nullable', 'string', 'max:255'],
             'cloudflare_account_id' => ['nullable', 'string', 'max:40'],
             'cloudflare_default_proxied' => ['boolean'],
+            'preferred_edge' => ['nullable', 'string', 'in:proxy,cloudflare'],
             'cloudflare_account_name' => ['nullable', 'string', 'max:80'],
             'cloudflare_backup_api_token' => ['nullable', 'string', 'max:255'],
             'cloudflare_backup_account_id' => ['nullable', 'string', 'max:40'],

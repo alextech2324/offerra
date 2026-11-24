@@ -71,6 +71,26 @@ class InfrastructureOptions
     }
 
     /**
+     * Default infra for a user's preferred edge (create/restore).
+     *
+     * @return array<string, mixed>
+     */
+    public static function fromPreferredEdge(string $edge): array
+    {
+        $options = self::defaults();
+        if ($edge === self::EDGE_PROXY) {
+            self::applyProxyEdge($options, 0);
+
+            return $options;
+        }
+
+        $options['edge'] = self::EDGE_CLOUDFLARE;
+        $options['edge_proxy_id'] = 0;
+
+        return $options;
+    }
+
+    /**
      * @param  array<string, mixed>  $options
      */
     private static function applyProxyEdge(array &$options, int $proxyId): void

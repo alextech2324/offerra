@@ -415,6 +415,7 @@ class OfferController extends Controller
             'initialLang' => request()->string('lang')->toString() ?: null,
             'initialFromSearch' => request()->boolean('from_search'),
             'canProvisionInfrastructure' => InfrastructureProvisioner::settingsReady($settings),
+            'preferredEdge' => $settings?->preferredEdge() ?? 'proxy',
             'proxyServers' => ProxyServer::activeForSwitch()
                 ->map(fn (ProxyServer $server) => $server->toPanelArray())
                 ->values(),

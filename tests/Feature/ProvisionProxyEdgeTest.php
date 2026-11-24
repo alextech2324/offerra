@@ -40,7 +40,8 @@ class ProvisionProxyEdgeTest extends TestCase
                 ->assertInertia(fn ($page) => $page
                     ->component('Panel/Offers/Create')
                     ->has('proxyServers', 1)
-                    ->where('proxyServers.0.host', '172.86.71.141'));
+                    ->where('proxyServers.0.host', '172.86.71.141')
+                    ->where('preferredEdge', 'proxy'));
         }
     }
 

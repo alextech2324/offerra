@@ -307,7 +307,7 @@ function assignTemplatesRoundRobin(domains, templates, usedTemplateIds, fallback
     }));
 }
 
-function buildDefaults(templates, fromSearch = false, proxyId = '') {
+function buildDefaults(templates, fromSearch = false, proxyId = '', enableCloudflare = false) {
     const defaultTemplate = templates[0]?.id ?? 'default';
 
     return {
@@ -322,7 +322,7 @@ function buildDefaults(templates, fromSearch = false, proxyId = '') {
         phone_countries: [],
         vitals_enabled: true,
         from_search_team: Boolean(fromSearch),
-        ...defaultInfraOptions(false, proxyId),
+        ...defaultInfraOptions(enableCloudflare, proxyId),
     };
 }
 
@@ -331,6 +331,7 @@ export default function OffersCreate({
     hasDynadotApiKey = false,
     hasDynadotContactId = false,
     canProvisionInfrastructure = false,
+    preferredEdge = 'proxy',
     proxyServers = [],
     domainSearchTlds = [],
     affiliateTag = 'BRO',
@@ -349,14 +350,16 @@ export default function OffersCreate({
     const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
     const proxyList = Array.isArray(proxyServers) ? proxyServers : [];
     const canChooseProxyEdge = canProvisionInfrastructure && proxyList.length > 0;
+    const preferProxyEdge = canChooseProxyEdge && preferredEdge !== 'cloudflare';
     const geoMinDeposits = panel?.geo_min_deposits || {};
     const defaults = useMemo(
         () => buildDefaults(
             templates,
             initialFromSearch,
-            canChooseProxyEdge ? 'auto' : '',
+            preferProxyEdge ? 'auto' : '',
+            canProvisionInfrastructure && !preferProxyEdge,
         ),
-        [templates, initialFromSearch, canChooseProxyEdge, proxyList],
+        [templates, initialFromSearch, preferProxyEdge, canProvisionInfrastructure],
     );
     const skipPersist = useRef(false);
     const freshHandled = useRef(false);
@@ -1510,7 +1513,7 @@ export default function OffersCreate({
                 infra_cloudflare_ssl: data.infra_cloudflare_ssl,
                 infra_cloudflare_https: data.infra_cloudflare_https,
                 infra_cloudflare_www_redirect: data.infra_cloudflare_www_redirect,
-                infra_edge: data.infra_edge || (canChooseProxyEdge ? 'proxy:auto' : 'cloudflare'),
+                infra_edge: data.infra_edge || (preferProxyEdge ? 'proxy:auto' : 'cloudflare'),
                 items: bulkItems.map(({ domain, template }) => ({ domain, template })),
             }, {
                 preserveScroll: true,
@@ -2263,6 +2266,7 @@ export default function OffersCreate({
                             <h3>Інфраструктура домену</h3>
                             <p className="card-desc">
                                 Куди дивиться публічний DNS після генерації.
+                                {' '}Дефолт береться з налаштувань; тут можна змінити лише цей офер.
                             </p>
                             {canChooseProxyEdge && (
                                 <div className="infra-edge__choices">

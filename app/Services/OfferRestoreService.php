@@ -53,23 +53,13 @@ class OfferRestoreService
         // Rebuild while still archived so a failure keeps the offer in the archive list.
         $this->generator->rebuildLocalFolder($offer->fresh());
 
-        $options = InfrastructureOptions::forOffer($offer);
-
-        if (! InfrastructureOptions::anyEnabled($options)) {
-            $options = InfrastructureOptions::defaults();
-        }
-
         $proxyPool = app(ProxyPool::class);
-        if ($proxyPool->hasCapacity()) {
-            $options['edge'] = InfrastructureOptions::EDGE_PROXY;
-            $options['edge_proxy_id'] = 0;
-            $options['cloudflare_zone'] = true;
-            $options['cloudflare_dns'] = false;
-            $options['dynadot_ns'] = true;
-            $options['cloudflare_ssl'] = false;
-            $options['cloudflare_https'] = false;
-            $options['cloudflare_www_redirect'] = false;
+        $preferred = $offer->user?->settings?->preferredEdge()
+            ?? InfrastructureOptions::EDGE_PROXY;
+        if ($preferred === InfrastructureOptions::EDGE_PROXY && ! $proxyPool->hasCapacity()) {
+            $preferred = InfrastructureOptions::EDGE_CLOUDFLARE;
         }
+        $options = InfrastructureOptions::fromPreferredEdge($preferred);
 
         // Fresh infra progress — archive deleted origin/CF zone; do not trust old "done" flags.
         $meta = ['options' => $options];

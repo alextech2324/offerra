@@ -87,6 +87,19 @@ class InfrastructureOptionsTest extends TestCase
         }
     }
 
+    public function test_preferred_edge_defaults(): void
+    {
+        $proxy = InfrastructureOptions::fromPreferredEdge('proxy');
+        $this->assertTrue(InfrastructureOptions::wantsProxy($proxy));
+        $this->assertSame(0, $proxy['edge_proxy_id']);
+        $this->assertFalse($proxy['cloudflare_dns']);
+
+        $cf = InfrastructureOptions::fromPreferredEdge('cloudflare');
+        $this->assertFalse(InfrastructureOptions::wantsProxy($cf));
+        $this->assertTrue($cf['cloudflare_dns']);
+        $this->assertTrue($cf['cloudflare_ssl']);
+    }
+
     public function test_needs_cloudflare_zone_when_dns_or_ssl_enabled(): void
     {
         $this->assertTrue(InfrastructureOptions::needsCloudflareZone([
