@@ -40,6 +40,20 @@ class WhiteLandingTest extends TestCase
         $this->get(route('landings.index'))->assertRedirect();
     }
 
+    public function test_index_seeds_demo_white(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('landings.index'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Panel/Landings/Index')
+                ->where('landings', fn ($rows) => collect($rows)->contains(
+                    fn ($row) => ($row['is_demo'] ?? false) && ($row['name'] ?? '') === WhiteLandingStore::DEMO_NAME,
+                )));
+    }
+
     public function test_user_can_upload_and_preview_white(): void
     {
         $user = User::factory()->create();
@@ -56,9 +70,8 @@ class WhiteLandingTest extends TestCase
             ->assertRedirect(route('landings.index'))
             ->assertSessionHas('success');
 
-        $landing = WhiteLanding::query()->first();
+        $landing = WhiteLanding::query()->where('name', 'News IE')->first();
         $this->assertNotNull($landing);
-        $this->assertSame('News IE', $landing->name);
         $this->assertSame($user->id, $landing->user_id);
 
         $this->actingAs($user)
@@ -66,8 +79,7 @@ class WhiteLandingTest extends TestCase
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('Panel/Landings/Index')
-                ->has('landings', 1)
-                ->where('landings.0.name', 'News IE'));
+                ->where('landings', fn ($rows) => collect($rows)->contains('name', 'News IE')));
 
         $preview = $this->actingAs($user)
             ->get('/landings/'.$landing->id.'/preview/index.html')
@@ -93,7 +105,28 @@ class WhiteLandingTest extends TestCase
             ->assertNotFound();
     }
 
-    public function test_upload_rejects_php(): void
+    public function test_upload_accepts_php_index(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post(route('landings.store'), [
+                'name' => 'Php White',
+                'zip' => $this->zipUpload([
+                    'index.php' => '<?php echo "ok";',
+                ]),
+            ])
+            ->assertRedirect(route('landings.index'))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('white_landings', [
+            'user_id' => $user->id,
+            'name' => 'Php White',
+            'entry_file' => 'index.php',
+        ]);
+    }
+
+    public function test_upload_rejects_shell_scripts(): void
     {
         $user = User::factory()->create();
 
@@ -103,13 +136,13 @@ class WhiteLandingTest extends TestCase
                 'name' => 'Bad',
                 'zip' => $this->zipUpload([
                     'index.html' => '<html>ok</html>',
-                    'x.php' => '<?php echo 1;',
+                    'run.sh' => '#!/bin/sh',
                 ]),
             ])
             ->assertRedirect(route('landings.index'))
             ->assertSessionHasErrors('zip');
 
-        $this->assertSame(0, WhiteLanding::query()->count());
+        $this->assertDatabaseMissing('white_landings', ['name' => 'Bad']);
     }
 
     public function test_user_can_delete_own_white(): void

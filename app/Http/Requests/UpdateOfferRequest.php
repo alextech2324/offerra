@@ -72,6 +72,15 @@ class UpdateOfferRequest extends FormRequest
             'vitals_enabled' => $this->boolean('vitals_enabled'),
             'auto_redeploy' => $this->boolean('auto_redeploy', true),
         ]);
+
+        if (! $this->boolean('cloak_enabled')) {
+            $this->merge([
+                'cloak_enabled' => false,
+                'white_landing_id' => null,
+            ]);
+        } elseif ($this->input('white_landing_id') === '' || $this->input('white_landing_id') === '0') {
+            $this->merge(['white_landing_id' => null]);
+        }
     }
 
     /**
@@ -99,6 +108,16 @@ class UpdateOfferRequest extends FormRequest
             'phone_countries.*' => ['string', 'size:2', 'alpha:ascii'],
             'vitals_enabled' => ['boolean'],
             'auto_redeploy' => ['boolean'],
+            'cloak_enabled' => ['boolean'],
+            'white_landing_id' => [
+                Rule::requiredIf(fn () => $this->boolean('cloak_enabled')),
+                'nullable',
+                'integer',
+                Rule::exists('white_landings', 'id')->where(
+                    'user_id',
+                    is_object($offer) ? $offer->user_id : $this->user()?->id,
+                ),
+            ],
         ];
     }
 
@@ -112,6 +131,8 @@ class UpdateOfferRequest extends FormRequest
             'lang.in' => 'Оберіть мову, доступну для обраного шаблону',
             'currency.in' => 'Оберіть валюту зі списку',
             'geo.size' => 'GEO — 2 літери, наприклад IE, IT, ZA',
+            'white_landing_id.required' => 'Якщо кло увімкнено — обери вайт зі вкладки Лендінги.',
+            'white_landing_id.exists' => 'Цього вайту немає в бібліотеці власника офера.',
         ];
     }
 }

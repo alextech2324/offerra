@@ -15,7 +15,6 @@ use App\Models\CloudflareAccount;
 use App\Models\Offer;
 use App\Models\ProxyServer;
 use App\Models\User;
-use App\Models\WhiteLanding;
 use App\Services\DeployService;
 use App\Services\InfrastructureProvisioner;
 use App\Services\OfferAvailabilityProbe;
@@ -28,6 +27,7 @@ use App\Services\OfferZipExporter;
 use App\Services\OriginEvacuationService;
 use App\Services\StaleDeadOfferService;
 use App\Services\TemplateCatalog;
+use App\Services\WhiteLandingStore;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +42,7 @@ class OfferController extends Controller
 {
     private const PER_PAGE_OPTIONS = [10, 30, 50, 100];
 
-    public function index(DeployService $deploy, OriginEvacuationService $evacuation): Response
+    public function index(DeployService $deploy, OriginEvacuationService $evacuation, WhiteLandingStore $whites): Response
     {
         $user = auth()->user();
         $settings = $user->settings;
@@ -89,6 +89,12 @@ class OfferController extends Controller
             'geoPresets' => config('offerra.geo_presets'),
             'currencies' => config('offerra.currencies'),
             'templates' => app(TemplateCatalog::class)->forPicker(),
+            'whiteLandings' => $whites->pickerFor($user),
+            'whiteLandingsByUser' => $user->canSeeAllOffers()
+                ? $whites->pickerByUserIds(
+                    $offers->getCollection()->pluck('user_id')->push($user->id),
+                )
+                : [],
             'brandTemplateUsage' => $this->brandTemplateUsage($user),
             'showUserColumn' => $user->canSeeAllOffers(),
             'canManageAllOffers' => $user->canManageAllOffers(),
@@ -247,7 +253,7 @@ class OfferController extends Controller
     private function offerScopeQuery(User $user, bool $archived = false): Builder
     {
         $query = Offer::query()
-            ->with('user.settings')
+            ->with(['user.settings', 'whiteLanding'])
             ->orderByDesc($archived ? 'archived_at' : 'created_at');
 
         if ($archived) {
@@ -392,7 +398,7 @@ class OfferController extends Controller
         ];
     }
 
-    public function create(TemplateCatalog $catalog): Response
+    public function create(TemplateCatalog $catalog, WhiteLandingStore $whites): Response
     {
         $settings = auth()->user()->settings;
         $ready = $settings
@@ -420,12 +426,7 @@ class OfferController extends Controller
             'proxyServers' => ProxyServer::activeForSwitch()
                 ->map(fn (ProxyServer $server) => $server->toPanelArray())
                 ->values(),
-            'whiteLandings' => WhiteLanding::query()
-                ->where('user_id', auth()->id())
-                ->orderByDesc('id')
-                ->get()
-                ->map->toPickerArray()
-                ->values(),
+            'whiteLandings' => $whites->pickerFor(auth()->user()),
         ]);
     }
 
@@ -954,6 +955,8 @@ class OfferController extends Controller
                 'phone' => $request->string('phone')->toString(),
                 'phone_countries' => $request->input('phone_countries', []),
                 'vitals_enabled' => $request->boolean('vitals_enabled'),
+                'cloak_enabled' => $request->boolean('cloak_enabled'),
+                'white_landing_id' => $request->integer('white_landing_id') ?: null,
             ]);
         } catch (\Throwable $e) {
             return redirect()

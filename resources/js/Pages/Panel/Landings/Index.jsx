@@ -53,7 +53,7 @@ function LandingCard({ landing, busy, onDelete }) {
             <div className="template-library-body">
                 <div className="template-library-top">
                     <h3>{landing.name}</h3>
-                    <span className="badge">Вайт</span>
+                    <span className="badge">{landing.is_demo ? 'Тест' : 'Вайт'}</span>
                 </div>
                 <p className="template-library-meta">
                     <span>{landing.file_count} файл.{landing.file_count === 1 ? '' : 'ів'}</span>
@@ -135,9 +135,10 @@ export default function LandingsIndex({ landings = [] }) {
             <header className="page-header">
                 <h2>Лендінги</h2>
                 <p>
-                    Бібліотека вайтів для кло. ZIP з <code>index.html</code> у корені
-                    (або в одній папці). PHP не приймаємо. На кроці Інфра вмикаєш кло
-                    і обираєш вайт; фільтри додамо окремо.
+                    Бібліотека вайтів для кло. ZIP з <code>index.html</code> або
+                    <code>index.php</code> у корені (чи в одній папці). PHP зберігаємо
+                    як файли — на панелі не виконуємо, щоб вайт не зміг запуститись
+                    тут. Кло можна обрати при створенні офера і в редагуванні існуючого.
                 </p>
             </header>
 

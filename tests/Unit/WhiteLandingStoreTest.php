@@ -69,21 +69,35 @@ class WhiteLandingStoreTest extends TestCase
         $this->assertFileExists($this->store->filesPath($landing).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'logo.png');
     }
 
-    public function test_rejects_php_payload(): void
+    public function test_accepts_php_index(): void
+    {
+        $user = User::factory()->create();
+        $zip = $this->zipUpload([
+            'index.php' => '<?php echo "White";',
+            'css/app.css' => 'body{color:#111}',
+        ]);
+
+        $landing = $this->store->store($user, $zip, 'Php White');
+
+        $this->assertSame('index.php', $landing->entry_file);
+        $this->assertFileExists($this->store->filesPath($landing).DIRECTORY_SEPARATOR.'index.php');
+    }
+
+    public function test_rejects_shell_scripts(): void
     {
         $user = User::factory()->create();
         $zip = $this->zipUpload([
             'index.html' => '<html>ok</html>',
-            'shell.php' => '<?php echo 1;',
+            'run.sh' => '#!/bin/sh',
         ]);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('HTML/CSS/JS');
+        $this->expectExceptionMessage('не підходить');
 
         $this->store->store($user, $zip, 'Bad');
     }
 
-    public function test_rejects_zip_without_index_html(): void
+    public function test_rejects_zip_without_index(): void
     {
         $user = User::factory()->create();
         $zip = $this->zipUpload([
@@ -91,9 +105,24 @@ class WhiteLandingStoreTest extends TestCase
         ]);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('index.html');
+        $this->expectExceptionMessage('index.html або index.php');
 
         $this->store->store($user, $zip, 'NoIndex');
+    }
+
+    public function test_ensure_demo_copies_test_white_once(): void
+    {
+        $user = User::factory()->create();
+        $first = $this->store->ensureDemo($user);
+        $second = $this->store->ensureDemo($user);
+
+        $this->assertTrue($first->is_demo);
+        $this->assertSame(WhiteLandingStore::DEMO_NAME, $first->name);
+        $this->assertSame($first->id, $second->id);
+        $this->assertFileExists($this->store->filesPath($first).DIRECTORY_SEPARATOR.'index.html');
+        $this->assertStringContainsString('Northshore Journal', File::get(
+            $this->store->filesPath($first).DIRECTORY_SEPARATOR.'index.html',
+        ));
     }
 
     public function test_cannot_delete_white_bound_to_live_offer(): void

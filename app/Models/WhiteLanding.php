@@ -15,6 +15,7 @@ class WhiteLanding extends Model
         'file_count',
         'size_bytes',
         'original_filename',
+        'is_demo',
     ];
 
     protected function casts(): array
@@ -22,6 +23,7 @@ class WhiteLanding extends Model
         return [
             'file_count' => 'integer',
             'size_bytes' => 'integer',
+            'is_demo' => 'boolean',
         ];
     }
 
@@ -54,6 +56,7 @@ class WhiteLanding extends Model
             'file_count' => $this->file_count,
             'size_bytes' => $this->size_bytes,
             'original_filename' => $this->original_filename,
+            'is_demo' => (bool) $this->is_demo,
             'preview_url' => $this->previewUrl(),
             'created_at' => $this->created_at?->timezone('Europe/Kyiv')->format('Y-m-d H:i'),
         ];
@@ -70,6 +73,7 @@ class WhiteLanding extends Model
             'id' => $this->id,
             'name' => $this->name,
             'file_count' => $this->file_count,
+            'is_demo' => (bool) $this->is_demo,
             'preview_url' => $this->previewUrl(),
         ];
     }

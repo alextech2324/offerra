@@ -1,7 +1,7 @@
 import PhoneGeoSelect, { normalizePhoneCountries, phoneOptionCode, uniquePhonePresets } from '@/Components/PhoneGeoSelect';
 import TemplatePicker, { usedTemplatesForBrand } from '@/Components/TemplatePicker';
 import { geoDepositMissingFromCatalog, lookupGeoDeposit } from '@/lib/geoDepositPrefs';
-import { useForm, usePage } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useMemo } from 'react';
 
 /** Псевдо-GEO для multilang: ім'я папки. У CRM країна = IP ліда. */
@@ -34,6 +34,7 @@ export default function OfferEditModal({
     currencies = [],
     templates = [],
     brandTemplateUsage = {},
+    whiteLandings = [],
     onClose,
 }) {
     const phoneCountries = normalizePhoneCountries(offer.phone_countries, offer.phone);
@@ -51,6 +52,8 @@ export default function OfferEditModal({
         phone: offer.phone || phoneCountries[0] || '',
         phone_countries: phoneCountries,
         vitals_enabled: Boolean(offer.vitals_enabled),
+        cloak_enabled: Boolean(offer.cloak_enabled),
+        white_landing_id: offer.white_landing_id || '',
         auto_redeploy: true,
     });
 
@@ -237,7 +240,9 @@ export default function OfferEditModal({
         || errors.currency
         || errors.phone
         || errors.phone_countries
-        || errors.vitals_enabled;
+        || errors.vitals_enabled
+        || errors.cloak_enabled
+        || errors.white_landing_id;
 
     return (
         <div className="modal-backdrop" onClick={() => !processing && onClose()}>
@@ -423,6 +428,69 @@ export default function OfferEditModal({
                                 CWV-collector (дзеркала / редірект з копій)
                             </span>
                         </label>
+                    </div>
+
+                    <div className="field">
+                        <span className="field-hint" style={{ display: 'block', marginBottom: '0.45rem' }}>Кло</span>
+                        <div className="infra-edge__choices">
+                            <label className={`infra-edge__card${!data.cloak_enabled ? ' is-on' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="edit_cloak_enabled"
+                                    checked={!data.cloak_enabled}
+                                    onChange={() => setData((prev) => ({
+                                        ...prev,
+                                        cloak_enabled: false,
+                                        white_landing_id: '',
+                                    }))}
+                                />
+                                <span className="infra-edge__kicker">Без кло</span>
+                                <strong>Ні</strong>
+                            </label>
+                            <label className={`infra-edge__card${data.cloak_enabled ? ' is-on' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="edit_cloak_enabled"
+                                    checked={Boolean(data.cloak_enabled)}
+                                    onChange={() => setData('cloak_enabled', true)}
+                                />
+                                <span className="infra-edge__kicker">Кло</span>
+                                <strong>Так, додати кло</strong>
+                            </label>
+                        </div>
+                        {data.cloak_enabled && (
+                            whiteLandings.length === 0 ? (
+                                <p className="field-hint field-hint--warn">
+                                    Немає вайтів.{' '}
+                                    <Link href={route('landings.index')}>Завантаж ZIP у Лендінгах</Link>.
+                                </p>
+                            ) : (
+                                <div className="cloak-white-grid" style={{ marginTop: '0.65rem' }}>
+                                    {whiteLandings.map((landing) => {
+                                        const selected = String(data.white_landing_id) === String(landing.id);
+
+                                        return (
+                                            <label
+                                                key={landing.id}
+                                                className={`infra-edge__card${selected ? ' is-on' : ''}`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="edit_white_landing_id"
+                                                    checked={selected}
+                                                    onChange={() => setData('white_landing_id', landing.id)}
+                                                />
+                                                <span className="infra-edge__kicker">{landing.is_demo ? 'Тест' : 'Вайт'}</span>
+                                                <strong>{landing.name}</strong>
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            )
+                        )}
+                        <p className="field-hint">
+                            Фільтри ще попереду — зараз лише вибір вайту. Живий ленд не зміниться, поки не зашиємо кло в деплой.
+                        </p>
                     </div>
 
                     <div className="field">

@@ -734,6 +734,19 @@ class OfferGenerator
             $updates['vitals_enabled'] = (bool) $input['vitals_enabled'];
         }
 
+        if (array_key_exists('cloak_enabled', $input) || array_key_exists('white_landing_id', $input)) {
+            $cloak = CloakOptions::resolveForUser($offer->user, [
+                'cloak_enabled' => $input['cloak_enabled'] ?? $offer->cloak_enabled,
+                'white_landing_id' => $input['white_landing_id'] ?? $offer->white_landing_id,
+            ]);
+            $updates['cloak_enabled'] = $cloak['enabled'];
+            $updates['white_landing_id'] = $cloak['white_landing_id'];
+            $updates['infra_meta'] = CloakOptions::mergeIntoInfraMeta(
+                is_array($offer->infra_meta) ? $offer->infra_meta : null,
+                $cloak,
+            );
+        }
+
         $offer->update($updates);
         $offer->refresh();
 

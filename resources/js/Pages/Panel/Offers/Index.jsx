@@ -18,6 +18,7 @@ const OFFER_TABLE_COLUMNS = [
     { id: 'cloudflare', label: 'Cloudflare' },
     { id: 'dynadot', label: 'Dynadot' },
     { id: 'cwv', label: 'CWV' },
+    { id: 'cloak', label: 'Кло' },
     { id: 'created', label: 'Created' },
     { id: 'deployed', label: 'Deployed' },
     { id: 'status', label: 'Status' },
@@ -617,6 +618,8 @@ export default function OffersIndex({
     currencies = [],
     templates = [],
     brandTemplateUsage = {},
+    whiteLandings = [],
+    whiteLandingsByUser = {},
     showUserColumn = false,
     canManageAllOffers = false,
     users = [],
@@ -2056,6 +2059,11 @@ export default function OffersIndex({
                                     CWV
                                 </th>
                             )}
+                            {colVisible('cloak') && (
+                                <th title="Кло: вайт для ботів / чужого GEO (фільтри ще попереду)">
+                                    Кло
+                                </th>
+                            )}
                             {colVisible('created') && <th>Created</th>}
                             {colVisible('deployed') && <th className="col-deployed">Deployed</th>}
                             {colVisible('status') && <th>Status</th>}
@@ -2171,6 +2179,19 @@ export default function OffersIndex({
                                                 </span>
                                             ) : (
                                                 <span className="cwv-mark cwv-mark--off" aria-label="CWV вимкнено">
+                                                    —
+                                                </span>
+                                            )}
+                                        </td>
+                                    )}
+                                    {colVisible('cloak') && (
+                                        <td title={offer.cloak_enabled ? (offer.white_landing_name || 'Кло увімкнено') : 'Без кло'}>
+                                            {offer.cloak_enabled ? (
+                                                <span className="cwv-mark cwv-mark--on" aria-label="Кло увімкнено">
+                                                    {offer.white_landing_name || 'Так'}
+                                                </span>
+                                            ) : (
+                                                <span className="cwv-mark cwv-mark--off" aria-label="Без кло">
                                                     —
                                                 </span>
                                             )}
@@ -2444,6 +2465,10 @@ export default function OffersIndex({
                     currencies={currencies}
                     templates={templates}
                     brandTemplateUsage={brandTemplateUsage}
+                    whiteLandings={
+                        whiteLandingsByUser[editingOffer.user_id]
+                        || whiteLandings
+                    }
                     onClose={() => setEditingOffer(null)}
                 />
             )}

@@ -14,17 +14,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class WhiteLandingController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request, WhiteLandingStore $whites): Response
     {
-        $landings = WhiteLanding::query()
-            ->where('user_id', $request->user()->id)
-            ->orderByDesc('id')
-            ->get()
-            ->map->toPanelArray()
-            ->values();
-
         return Inertia::render('Panel/Landings/Index', [
-            'landings' => $landings,
+            'landings' => $whites->libraryFor($request->user()),
         ]);
     }
 

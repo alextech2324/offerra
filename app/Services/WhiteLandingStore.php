@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\WhiteLanding;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -20,9 +21,12 @@ class WhiteLandingStore
 
     public const MAX_FILES = 400;
 
+    public const DEMO_NAME = 'Test white';
+
     /** @var list<string> */
     private const ALLOWED_EXTENSIONS = [
-        'html', 'htm', 'css', 'js', 'mjs', 'json', 'xml', 'txt', 'svg',
+        'html', 'htm', 'php', 'phtml',
+        'css', 'js', 'mjs', 'json', 'xml', 'txt', 'svg',
         'png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'bmp', 'avif',
         'woff', 'woff2', 'ttf', 'otf', 'eot',
         'mp4', 'webm', 'ogg', 'mp3',
@@ -31,9 +35,8 @@ class WhiteLandingStore
 
     /** @var list<string> */
     private const BLOCKED_EXTENSIONS = [
-        'php', 'phtml', 'phar', 'php3', 'php4', 'php5', 'php7', 'php8',
-        'cgi', 'exe', 'bat', 'cmd', 'sh', 'pl', 'py', 'rb', 'asp', 'aspx',
-        'jsp', 'htaccess', 'htpasswd',
+        'phar', 'cgi', 'exe', 'bat', 'cmd', 'sh', 'pl', 'py', 'rb',
+        'asp', 'aspx', 'jsp', 'htaccess', 'htpasswd',
     ];
 
     /** @var array<string, string> */
@@ -67,6 +70,8 @@ class WhiteLandingStore
         'pdf' => 'application/pdf',
         'map' => 'application/json',
         'webmanifest' => 'application/manifest+json',
+        'php' => 'text/plain; charset=UTF-8',
+        'phtml' => 'text/plain; charset=UTF-8',
     ];
 
     public function __construct(
@@ -108,6 +113,116 @@ class WhiteLandingStore
                 File::deleteDirectory($extracted['path']);
             }
         }
+    }
+
+    public function ensureDemo(User $user): WhiteLanding
+    {
+        $existing = WhiteLanding::query()
+            ->where('user_id', $user->id)
+            ->where('is_demo', true)
+            ->first();
+
+        if ($existing) {
+            $entry = $this->filesPath($existing).DIRECTORY_SEPARATOR.($existing->entry_file ?: 'index.html');
+            if (! is_file($entry)) {
+                $this->copyDemoFiles($existing);
+            }
+
+            return $existing;
+        }
+
+        return $this->storeFromDirectory(
+            $user,
+            resource_path('whites/demo'),
+            self::DEMO_NAME,
+            demo: true,
+        );
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function pickerFor(User $user)
+    {
+        $this->ensureDemo($user);
+
+        return WhiteLanding::query()
+            ->where('user_id', $user->id)
+            ->orderByDesc('id')
+            ->get()
+            ->map->toPickerArray()
+            ->values();
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function libraryFor(User $user)
+    {
+        $this->ensureDemo($user);
+
+        return WhiteLanding::query()
+            ->where('user_id', $user->id)
+            ->orderByDesc('id')
+            ->get()
+            ->map->toPanelArray()
+            ->values();
+    }
+
+    /**
+     * @return array<int, list<array<string, mixed>>>
+     */
+    public function pickerByUserIds(iterable $userIds): array
+    {
+        $ids = collect($userIds)->filter()->map(fn ($id) => (int) $id)->unique()->values();
+        $map = [];
+
+        foreach ($ids as $id) {
+            $user = User::query()->find($id);
+            if (! $user) {
+                continue;
+            }
+            $map[$id] = $this->pickerFor($user)->all();
+        }
+
+        return $map;
+    }
+
+    public function storeFromDirectory(User $user, string $source, string $name, bool $demo = false): WhiteLanding
+    {
+        if (! File::isDirectory($source)) {
+            throw new InvalidArgumentException('Немає файлів вайту на диску.');
+        }
+
+        $entry = $this->detectEntryFile($source);
+        if ($entry === null) {
+            throw new InvalidArgumentException('У корені вайту має бути index.html або index.php.');
+        }
+
+        $landing = WhiteLanding::query()->create([
+            'user_id' => $user->id,
+            'name' => $this->resolveName($name, null),
+            'entry_file' => $entry,
+            'file_count' => 0,
+            'size_bytes' => 0,
+            'original_filename' => $demo ? 'offerra-demo-white' : null,
+            'is_demo' => $demo,
+        ]);
+
+        try {
+            $this->copyDirectoryFiltered($source, $this->filesPath($landing));
+            $stats = $this->directoryStats($this->filesPath($landing));
+            $landing->update([
+                'file_count' => $stats['file_count'],
+                'size_bytes' => $stats['size_bytes'],
+                'entry_file' => $this->detectEntryFile($this->filesPath($landing)) ?? $entry,
+            ]);
+        } catch (\Throwable $e) {
+            $this->deleteQuietly($landing);
+            throw $e;
+        }
+
+        return $landing->fresh() ?? $landing;
     }
 
     public function delete(WhiteLanding $landing): void
@@ -215,7 +330,6 @@ class WhiteLandingStore
             $prefix = $this->singleRootPrefix($entries);
             $written = 0;
             $bytes = 0;
-            $entryFile = null;
 
             foreach ($entries as $entry) {
                 $relative = $prefix === ''
@@ -250,16 +364,12 @@ class WhiteLandingStore
 
                 $written++;
                 $bytes += (int) $entry['size'];
-
-                $base = strtolower(basename($relative));
-                if ($relative === $base && ($base === 'index.html' || $base === 'index.htm')) {
-                    $entryFile = $base;
-                }
             }
 
+            $entryFile = $this->detectEntryFile($tmp);
             if ($entryFile === null) {
                 throw new InvalidArgumentException(
-                    'У корені ZIP має бути index.html (PHP-файли не приймаємо).',
+                    'У корені ZIP має бути index.html або index.php.',
                 );
             }
 
@@ -318,7 +428,7 @@ class WhiteLandingStore
 
             if ($ext === '' || in_array($ext, self::BLOCKED_EXTENSIONS, true) || $base === '.htaccess' || $base === '.user.ini') {
                 throw new InvalidArgumentException(
-                    'Вайт має бути HTML/CSS/JS/картинки. PHP і скрипти сервера не приймаємо.',
+                    "Файл «{$base}» не підходить. PHP-ленд (index.php) можна, shell/exe/py — ні.",
                 );
             }
 
@@ -427,5 +537,95 @@ class WhiteLandingStore
         }
 
         return $label;
+    }
+
+    private function detectEntryFile(string $dir): ?string
+    {
+        foreach (['index.html', 'index.htm', 'index.php'] as $name) {
+            if (is_file($dir.DIRECTORY_SEPARATOR.$name)) {
+                return $name;
+            }
+        }
+
+        return null;
+    }
+
+    private function copyDemoFiles(WhiteLanding $landing): void
+    {
+        $this->copyDirectoryFiltered(resource_path('whites/demo'), $this->filesPath($landing));
+        $stats = $this->directoryStats($this->filesPath($landing));
+        $landing->update([
+            'file_count' => $stats['file_count'],
+            'size_bytes' => $stats['size_bytes'],
+            'entry_file' => $this->detectEntryFile($this->filesPath($landing)) ?? 'index.html',
+        ]);
+    }
+
+    private function copyDirectoryFiltered(string $source, string $dest): void
+    {
+        File::ensureDirectoryExists($dest, 0755);
+        $realSource = realpath($source);
+        if (! $realSource) {
+            throw new InvalidArgumentException('Немає файлів вайту на диску.');
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($realSource, \FilesystemIterator::SKIP_DOTS),
+        );
+
+        foreach ($iterator as $file) {
+            if (! $file->isFile()) {
+                continue;
+            }
+
+            $relative = str_replace('\\', '/', substr($file->getPathname(), strlen($realSource) + 1));
+            if ($relative === '' || $this->isUnsafeRelativePath($relative) || $this->shouldSkipZipName($relative)) {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($relative, PATHINFO_EXTENSION));
+            if (! in_array($ext, self::ALLOWED_EXTENSIONS, true)) {
+                continue;
+            }
+
+            $target = $dest.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $relative);
+            File::ensureDirectoryExists(dirname($target), 0755);
+            File::copy($file->getPathname(), $target);
+        }
+    }
+
+    /**
+     * @return array{file_count: int, size_bytes: int}
+     */
+    private function directoryStats(string $dir): array
+    {
+        $count = 0;
+        $bytes = 0;
+        if (! File::isDirectory($dir)) {
+            return ['file_count' => 0, 'size_bytes' => 0];
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
+        );
+
+        foreach ($iterator as $file) {
+            if (! $file->isFile()) {
+                continue;
+            }
+            $count++;
+            $bytes += (int) $file->getSize();
+        }
+
+        return ['file_count' => $count, 'size_bytes' => $bytes];
+    }
+
+    private function deleteQuietly(WhiteLanding $landing): void
+    {
+        $path = $this->filesPath($landing);
+        $landing->delete();
+        if (File::isDirectory($path)) {
+            File::deleteDirectory($path);
+        }
     }
 }

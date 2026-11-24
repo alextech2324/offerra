@@ -34,9 +34,7 @@ class OfferCloakCreateTest extends TestCase
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('Panel/Offers/Create')
-                ->has('whiteLandings', 1)
-                ->where('whiteLandings.0.id', $mine->id)
-                ->where('whiteLandings.0.name', 'News IE'));
+                ->where('whiteLandings', fn ($rows) => collect($rows)->contains('id', $mine->id)));
     }
 
     public function test_cloak_without_white_is_rejected(): void
@@ -151,6 +149,63 @@ class OfferCloakCreateTest extends TestCase
                 'domain' => 'no-cloak.test',
                 'cloak_enabled' => false,
             ]))
+            ->assertRedirect(route('offers.index'));
+    }
+
+    public function test_update_passes_cloak_choice_to_generator(): void
+    {
+        $user = User::factory()->create();
+        $user->settings()->create([
+            'crm_api_key' => 'k',
+            'tg_bot_token' => 't',
+        ]);
+        $white = WhiteLanding::query()->create([
+            'user_id' => $user->id,
+            'name' => 'News IE',
+            'entry_file' => 'index.html',
+        ]);
+        $offer = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'cloak-edit.test',
+            'brand' => 'Acme',
+            'domain' => 'cloak-edit.test',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'min_deposit' => '250',
+            'currency' => 'EUR',
+            'phone' => 'it',
+            'phone_countries' => 'IT',
+            'template' => 'default',
+            'status' => 'generated',
+        ]);
+
+        $generator = Mockery::mock(OfferGenerator::class);
+        $generator->shouldReceive('updateSettings')
+            ->once()
+            ->withArgs(function (Offer $passed, array $input) use ($offer, $white): bool {
+                return $passed->is($offer)
+                    && $input['cloak_enabled'] === true
+                    && (int) $input['white_landing_id'] === (int) $white->id;
+            })
+            ->andReturn($offer);
+        $this->app->instance(OfferGenerator::class, $generator);
+
+        $this->actingAs($user)
+            ->from(route('offers.index'))
+            ->patch(route('offers.update', $offer), [
+                'brand' => 'Acme',
+                'min_deposit' => '250',
+                'currency' => 'EUR',
+                'geo' => 'IT',
+                'lang' => 'it',
+                'phone' => 'it',
+                'phone_countries' => ['IT'],
+                'template' => 'default',
+                'vitals_enabled' => false,
+                'auto_redeploy' => false,
+                'cloak_enabled' => true,
+                'white_landing_id' => $white->id,
+            ])
             ->assertRedirect(route('offers.index'));
     }
 
