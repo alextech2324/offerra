@@ -411,12 +411,26 @@ class InfrastructureProvisioner
         if (InfrastructureOptions::needsCloudflareZone($options)) {
             if ($options['cloudflare_zone'] ?? false) {
                 if (! $zoneAlready) {
-                    $zone = $this->cloudflare->ensureZone($settings, $domain);
-                    $zoneId = $zone['zone_id'];
-                    $nameservers = $zone['nameservers'];
-                    $meta['cloudflare'] = 'done';
-                    $meta['cloudflare_zone_id'] = $zoneId;
-                    $meta['nameservers'] = $nameservers;
+                    try {
+                        $zone = $this->cloudflare->ensureZone($settings, $domain);
+                        $zoneId = $zone['zone_id'];
+                        $nameservers = $zone['nameservers'];
+                        $meta['cloudflare'] = 'done';
+                        $meta['cloudflare_zone_id'] = $zoneId;
+                        $meta['nameservers'] = $nameservers;
+                    } catch (\Throwable $e) {
+                        if (! InfrastructureOptions::wantsProxy($options)
+                            || ! CloudflareClient::isDomainBlockedOnAllAccounts($e->getMessage())) {
+                            throw $e;
+                        }
+
+                        // Proxy edge does not need a CF zone — Dynadot hosts A → proxy.
+                        $meta['cloudflare'] = 'blocked';
+                        $meta['dns_provider'] = 'dynadot';
+                        $meta['nameservers'] = DynadotClient::PARKING_NAMESERVERS;
+                        $zoneId = '';
+                        $nameservers = DynadotClient::PARKING_NAMESERVERS;
+                    }
                 } else {
                     $this->syncOwnedCloudflareZone($settings, $domain, $zoneId, $nameservers, $meta);
                 }

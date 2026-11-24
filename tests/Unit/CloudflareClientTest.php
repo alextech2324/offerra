@@ -229,6 +229,10 @@ class CloudflareClientTest extends TestCase
             ),
         );
         $this->assertSame('other', CloudflareClient::humanizeZoneCreateError('other'));
+        $this->assertTrue(CloudflareClient::isDomainBlockedOnAllAccounts(
+            'Cloudflare заблокував цей домен на всіх акаунтах. Зміна Cloudflare не створить зону — потрібен інший домен.',
+        ));
+        $this->assertFalse(CloudflareClient::isDomainBlockedOnAllAccounts('Цей Cloudflare-акаунт більше не створює нові зони.'));
     }
 
     public function test_delete_zone_treats_invalid_identifier_as_already_missing(): void

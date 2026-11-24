@@ -275,4 +275,163 @@ class SwitchOfferEdgeTest extends TestCase
         $this->assertSame($proxy->id, $offer->infra_meta['edge_proxy_id'] ?? null);
         $this->assertNull($offer->infra_error);
     }
+
+    public function test_attach_falls_back_to_dynadot_dns_when_cloudflare_blocks_the_domain(): void
+    {
+        $owner = User::factory()->create();
+        $owner->settings()->create([
+            'cloudflare_api_token' => 'owner-token',
+            'cloudflare_account_id' => 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+            'dynadot_api_key' => 'dyn-key',
+        ]);
+        $offer = Offer::query()->create([
+            'user_id' => $owner->id,
+            'folder' => 'fidata-capitovia.site',
+            'brand' => 'Fidata',
+            'domain' => 'fidata-capitovia.site',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'lumen',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'infra_status' => 'failed',
+            'infra_error' => 'Cloudflare заблокував цей домен на всіх акаунтах. Зміна Cloudflare не створить зону — потрібен інший домен.',
+            'infra_meta' => [
+                'deploy_host' => '10.0.0.8',
+                'edge' => 'cloudflare',
+            ],
+        ]);
+        $proxy = ProxyServer::query()->create([
+            'host' => '172.86.71.141',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'label' => 'Edge proxy',
+            'is_active' => true,
+        ]);
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('originIpForOffer')->once()->andReturn('10.0.0.8');
+
+        $ssh = Mockery::mock(OriginSsh::class);
+        $helperHash = hash('sha256', EdgeProxyService::helperScript());
+        $ssh->shouldReceive('upload')->never();
+        $ssh->shouldReceive('exec')->andReturnUsing(function () use ($helperHash) {
+            $cmd = func_get_arg(4);
+            if (is_string($cmd) && str_contains($cmd, 'sha256sum')) {
+                return $helperHash;
+            }
+
+            return 'BOUND fidata-capitovia.site -> 10.0.0.8 cert=0';
+        });
+
+        $cloudflare = Mockery::mock(CloudflareClient::class);
+        $cloudflare->shouldReceive('ensureZone')
+            ->once()
+            ->andThrow(new \RuntimeException(
+                'Cloudflare заблокував цей домен на всіх акаунтах. Зміна Cloudflare не створить зону — потрібен інший домен.',
+            ));
+        $cloudflare->shouldReceive('setRootARecords')->never();
+
+        $dynadot = Mockery::mock(DynadotClient::class);
+        $dynadot->shouldReceive('setNameservers')
+            ->once()
+            ->withArgs(function (UserSetting $settings, string $domain, array $ns) {
+                return $domain === 'fidata-capitovia.site'
+                    && $ns === DynadotClient::PARKING_NAMESERVERS;
+            });
+        $dynadot->shouldReceive('setHostedARecords')
+            ->once()
+            ->withArgs(function (UserSetting $settings, string $domain, string $ip) {
+                return $domain === 'fidata-capitovia.site' && $ip === '172.86.71.141';
+            });
+
+        $this->app->instance(OriginHostService::class, $origin);
+        $this->app->instance(OriginSsh::class, $ssh);
+        $this->app->instance(CloudflareClient::class, $cloudflare);
+        $this->app->instance(DynadotClient::class, $dynadot);
+        $this->app->forgetInstance(EdgeProxyService::class);
+
+        app(EdgeProxyService::class)->attach($offer->fresh(), $proxy);
+
+        $offer->refresh();
+        $this->assertSame('proxy', $offer->infra_meta['edge'] ?? null);
+        $this->assertSame('dynadot', $offer->infra_meta['dns_provider'] ?? null);
+        $this->assertSame('blocked', $offer->infra_meta['cloudflare'] ?? null);
+        $this->assertArrayNotHasKey('cloudflare_zone_id', $offer->infra_meta ?? []);
+        $this->assertSame($proxy->id, $offer->infra_meta['edge_proxy_id'] ?? null);
+        $this->assertNull($offer->infra_error);
+        $this->assertSame('ready', $offer->infra_status);
+    }
+
+    public function test_attach_skips_dynadot_set_ns_for_online_tld(): void
+    {
+        $owner = User::factory()->create();
+        $owner->settings()->create([
+            'cloudflare_api_token' => 'owner-token',
+            'cloudflare_account_id' => 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+            'dynadot_api_key' => 'dyn-key',
+        ]);
+        $offer = Offer::query()->create([
+            'user_id' => $owner->id,
+            'folder' => 'fidata-capitovia.online',
+            'brand' => 'Fidata',
+            'domain' => 'fidata-capitovia.online',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'lumen',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'infra_meta' => [
+                'deploy_host' => '10.0.0.8',
+                'dns_provider' => 'dynadot',
+                'cloudflare' => 'blocked',
+            ],
+        ]);
+        $proxy = ProxyServer::query()->create([
+            'host' => '172.86.71.141',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'is_active' => true,
+        ]);
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('originIpForOffer')->once()->andReturn('10.0.0.8');
+
+        $ssh = Mockery::mock(OriginSsh::class);
+        $helperHash = hash('sha256', EdgeProxyService::helperScript());
+        $ssh->shouldReceive('upload')->never();
+        $ssh->shouldReceive('exec')->andReturnUsing(function () use ($helperHash) {
+            $cmd = func_get_arg(4);
+            if (is_string($cmd) && str_contains($cmd, 'sha256sum')) {
+                return $helperHash;
+            }
+
+            return 'BOUND fidata-capitovia.online cert=0';
+        });
+
+        $cloudflare = Mockery::mock(CloudflareClient::class);
+        $cloudflare->shouldReceive('ensureZone')->never();
+
+        $dynadot = Mockery::mock(DynadotClient::class);
+        $dynadot->shouldReceive('setNameservers')->never();
+        $dynadot->shouldReceive('setHostedARecords')
+            ->once()
+            ->withArgs(function (UserSetting $settings, string $domain, string $ip) {
+                return $domain === 'fidata-capitovia.online' && $ip === '172.86.71.141';
+            });
+
+        $this->app->instance(OriginHostService::class, $origin);
+        $this->app->instance(OriginSsh::class, $ssh);
+        $this->app->instance(CloudflareClient::class, $cloudflare);
+        $this->app->instance(DynadotClient::class, $dynadot);
+        $this->app->forgetInstance(EdgeProxyService::class);
+
+        app(EdgeProxyService::class)->attach($offer->fresh(), $proxy);
+
+        $offer->refresh();
+        $this->assertSame('skipped_parking_tld', $offer->infra_meta['dynadot_ns'] ?? null);
+        $this->assertSame('proxy', $offer->infra_meta['edge'] ?? null);
+    }
 }

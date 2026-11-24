@@ -278,8 +278,10 @@ case "$cmd" in
     if [ -f "/etc/letsencrypt/live/${domain}/fullchain.pem" ]; then
       have_cert=1
     fi
-    if [ -n "$cf_ini" ] && [ "$have_cert" != "1" ]; then
-      chmod 600 "$cf_ini" 2>/dev/null || true
+    if [ "$have_cert" != "1" ]; then
+      if [ -n "$cf_ini" ]; then
+        chmod 600 "$cf_ini" 2>/dev/null || true
+      fi
       # Public NS/A are often still on the registrar when bind first runs.
       # Hitting Let's Encrypt then burns the 5-fail/hour quota; wait instead.
       if ! points_here "$domain"; then
@@ -291,7 +293,7 @@ case "$cmd" in
         else
           echo "SKIP_WWW ${domain} public_a=$(public_a "www.$domain")"
         fi
-        if certbot certonly \
+        if [ -n "$cf_ini" ] && certbot certonly \
           --dns-cloudflare \
           --dns-cloudflare-credentials "$cf_ini" \
           --dns-cloudflare-propagation-seconds 25 \
@@ -300,7 +302,8 @@ case "$cmd" in
           "${cert_names[@]}"
         then
           have_cert=1
-        else
+        fi
+        if [ "$have_cert" != "1" ]; then
           write_vhost "$domain" "$origin" 0
           nginx -t
           systemctl reload nginx

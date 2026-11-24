@@ -396,6 +396,33 @@ class DynadotPurchaseTest extends TestCase
         });
     }
 
+    public function test_set_hosted_a_records_writes_apex_and_www(): void
+    {
+        Http::fake([
+            'https://api.dynadot.com/api3.json*' => Http::response([
+                'SetDnsResponse' => [
+                    'ResponseCode' => 0,
+                    'Status' => 'success',
+                ],
+            ]),
+        ]);
+
+        app(DynadotClient::class)->setHostedARecords($this->makeSettings(), 'fidata-capitovia.site', '172.86.71.141');
+
+        Http::assertSent(function ($request) {
+            $query = [];
+            parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);
+
+            return ($query['command'] ?? null) === 'set_dns2'
+                && ($query['domain'] ?? null) === 'fidata-capitovia.site'
+                && ($query['main_record_type0'] ?? null) === 'a'
+                && ($query['main_record0'] ?? null) === '172.86.71.141'
+                && ($query['subdomain0'] ?? null) === 'www'
+                && ($query['sub_record_type0'] ?? null) === 'a'
+                && ($query['sub_record0'] ?? null) === '172.86.71.141';
+        });
+    }
+
     /**
      * @param  array<string, mixed>  $overrides
      */

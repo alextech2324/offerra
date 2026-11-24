@@ -313,6 +313,75 @@ class DynadotClient
     }
 
     /**
+     * Host apex+www A on Dynadot DNS (ns1/ns2.dynadot.com) so a CF-blocked
+     * domain can still sit on the edge proxy.
+     */
+    public function setHostedARecords(UserSetting $settings, string $domain, string $ipv4): void
+    {
+        $apiKey = $this->requireApiKey($settings);
+        $domain = DomainName::normalize($domain);
+        $ipv4 = trim($ipv4);
+
+        if ($domain === '' || filter_var($ipv4, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
+            throw new RuntimeException('Немає IPv4 для Dynadot DNS.');
+        }
+
+        $lock = Cache::lock('dynadot-account-'.md5($apiKey), 90);
+
+        try {
+            $lock->block(25);
+        } catch (LockTimeoutException) {
+            throw new RuntimeException('Dynadot зайнятий — спробуйте ще раз');
+        }
+
+        try {
+            $this->setHostedARecordsUnlocked($settings, $apiKey, $domain, $ipv4);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    private function setHostedARecordsUnlocked(
+        UserSetting $settings,
+        string $apiKey,
+        string $domain,
+        string $ipv4,
+    ): void {
+        $payload = $this->apiGet($settings, $apiKey, [
+            'command' => 'set_dns2',
+            'domain' => $domain,
+            'main_record_type0' => 'a',
+            'main_record0' => $ipv4,
+            'subdomain0' => 'www',
+            'sub_record_type0' => 'a',
+            'sub_record0' => $ipv4,
+            'ttl' => '300',
+        ]);
+
+        $apiError = $this->extractPayloadError($payload, (bool) $settings->dynadot_sandbox);
+        if ($apiError !== null) {
+            throw new RuntimeException($apiError);
+        }
+
+        $response = $payload['SetDnsResponse'] ?? $payload['setDnsResponse'] ?? null;
+        if (! is_array($response)) {
+            throw new RuntimeException('Неочікувана відповідь Dynadot (set_dns2)');
+        }
+
+        $responseCode = (string) ($response['ResponseCode'] ?? $response['SuccessCode'] ?? '');
+        $status = strtolower((string) ($response['Status'] ?? ''));
+
+        if ($responseCode === '0' || $status === 'success') {
+            return;
+        }
+
+        throw new RuntimeException($this->humanizeApiError(
+            (string) ($response['Error'] ?? 'Dynadot set_dns2 error'),
+            (bool) $settings->dynadot_sandbox,
+        ));
+    }
+
+    /**
      * @param  list<string>  $nameservers
      */
     private function setNameserversUnlocked(

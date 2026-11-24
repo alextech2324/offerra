@@ -699,12 +699,24 @@ class CloudflareClient
         return $payload;
     }
 
+    public static function isDomainBlockedOnAllAccounts(?string $message): bool
+    {
+        if ($message === null || $message === '') {
+            return false;
+        }
+
+        $m = strtolower($message);
+
+        return str_contains($m, 'web property cannot be added')
+            || str_contains($m, 'abusereply@cloudflare.com')
+            || str_contains($m, 'заблокував цей домен на всіх акаунтах');
+    }
+
     public static function humanizeZoneCreateError(string $message): string
     {
         $m = strtolower($message);
 
-        if (str_contains($m, 'web property cannot be added')
-            || str_contains($m, 'abusereply@cloudflare.com')) {
+        if (self::isDomainBlockedOnAllAccounts($message)) {
             return 'Cloudflare заблокував цей домен на всіх акаунтах. Зміна Cloudflare не створить зону — потрібен інший домен.';
         }
 

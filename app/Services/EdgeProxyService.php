@@ -20,8 +20,8 @@ class EdgeProxyService
     ) {}
 
     /**
-     * Put the offer behind the proxy: LE cert, nginx vhost, grey-cloud A → proxy IP.
-     * Creates the Cloudflare zone first when the offer was deployed without one.
+     * Put the offer behind the proxy: LE cert, nginx vhost, public A → proxy IP.
+     * Prefers a grey Cloudflare zone; if CF refuses the domain, Dynadot hosts DNS.
      */
     public function attach(Offer $offer, ProxyServer $proxy): void
     {
@@ -35,46 +35,68 @@ class EdgeProxyService
         $originIp = $this->origin->originIpForOffer($offer, $settings);
         $cf = $this->cloudflareSettingsFor($offer, $settings);
         $token = CloudflareClient::normalizeApiToken((string) $cf->cloudflare_api_token);
-        if ($token === '' || trim((string) $cf->cloudflare_account_id) === '') {
-            throw new RuntimeException('Немає Cloudflare token і Account ID, щоб створити зону під проксі.');
-        }
+        $dyn = $this->dynadotSettingsFor($offer, $settings);
 
         $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
         $zoneId = trim((string) ($meta['cloudflare_zone_id'] ?? ''));
         $nameservers = is_array($meta['nameservers'] ?? null) ? $meta['nameservers'] : [];
+        $useCloudflare = ($meta['dns_provider'] ?? '') !== 'dynadot'
+            && ($meta['cloudflare'] ?? '') !== 'blocked'
+            && $token !== ''
+            && trim((string) $cf->cloudflare_account_id) !== '';
 
-        if ($zoneId === '') {
-            $zone = $this->cloudflare->ensureZone($cf, $domain);
-            $zoneId = trim((string) ($zone['zone_id'] ?? ''));
-            $nameservers = is_array($zone['nameservers'] ?? null) ? $zone['nameservers'] : [];
-            if ($zoneId === '') {
-                throw new RuntimeException('Cloudflare не повернув zone id для '.$domain);
-            }
-            $meta['cloudflare'] = 'done';
-            $meta['cloudflare_zone_id'] = $zoneId;
-            $meta['nameservers'] = $nameservers;
-            $offer->forceFill(['infra_meta' => $meta])->save();
-        }
-
-        $this->cloudflare->setRootARecords($cf, $zoneId, $domain, $proxy->host, false);
-
-        if ($nameservers !== []) {
+        if ($useCloudflare && $zoneId === '') {
             try {
-                $this->dynadot->setNameservers($this->dynadotSettingsFor($offer, $settings), $domain, $nameservers);
-                $meta['dynadot_ns'] = 'done';
-                unset($meta['dynadot_ns_error']);
+                $zone = $this->cloudflare->ensureZone($cf, $domain);
+                $zoneId = trim((string) ($zone['zone_id'] ?? ''));
+                $nameservers = is_array($zone['nameservers'] ?? null) ? $zone['nameservers'] : [];
+                if ($zoneId === '') {
+                    throw new RuntimeException('Cloudflare не повернув zone id для '.$domain);
+                }
+                $meta['cloudflare'] = 'done';
+                $meta['cloudflare_zone_id'] = $zoneId;
+                $meta['nameservers'] = $nameservers;
+                unset($meta['dns_provider']);
+                $offer->forceFill(['infra_meta' => $meta])->save();
             } catch (\Throwable $e) {
-                $meta['dynadot_ns'] = 'pending';
-                $meta['dynadot_ns_error'] = $e->getMessage();
+                if (! CloudflareClient::isDomainBlockedOnAllAccounts($e->getMessage())) {
+                    throw $e;
+                }
+                $useCloudflare = false;
+                $zoneId = '';
+                $meta['cloudflare'] = 'blocked';
+                $meta['dns_provider'] = 'dynadot';
+                unset($meta['cloudflare_zone_id']);
             }
         }
 
-        // DNS-01 needs the new CF nameservers to be public. Bind HTTP-only if
-        // Let's Encrypt cannot see the zone yet — Recheck / retry will get TLS.
+        if ($useCloudflare && $zoneId !== '') {
+            $this->cloudflare->setRootARecords($cf, $zoneId, $domain, $proxy->host, false);
+
+            if ($nameservers !== []) {
+                try {
+                    $this->dynadot->setNameservers($dyn, $domain, $nameservers);
+                    $meta['dynadot_ns'] = 'done';
+                    unset($meta['dynadot_ns_error']);
+                } catch (\Throwable $e) {
+                    $meta['dynadot_ns'] = 'pending';
+                    $meta['dynadot_ns_error'] = $e->getMessage();
+                }
+            }
+        } else {
+            $this->publishViaDynadotDns($dyn, $domain, $proxy->host, $meta);
+        }
+
+        $cfIni = ($useCloudflare && $token !== '') ? $token : null;
         try {
-            $this->bindOnProxy($proxy, $domain, $originIp, $token);
-            $meta['ssl'] = 'done';
-            unset($meta['ssl_error'], $meta['ssl_retry_at']);
+            $hasCert = $this->bindOnProxy($proxy, $domain, $originIp, $cfIni);
+            if ($hasCert) {
+                $meta['ssl'] = 'done';
+                unset($meta['ssl_error'], $meta['ssl_retry_at']);
+            } else {
+                $meta['ssl'] = 'pending';
+                $meta['ssl_retry_at'] = time();
+            }
         } catch (\Throwable $e) {
             $meta['ssl'] = 'pending';
             $meta['ssl_error'] = $e->getMessage();
@@ -95,6 +117,7 @@ class EdgeProxyService
         $offer->update([
             'infra_meta' => $meta,
             'infra_error' => null,
+            'infra_status' => $offer->infra_status === 'failed' ? 'ready' : $offer->infra_status,
         ]);
     }
 
@@ -198,10 +221,44 @@ class EdgeProxyService
         }
     }
 
-    private function bindOnProxy(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): void
+    /**
+     * @param  array<string, mixed>  $meta
+     */
+    private function publishViaDynadotDns(UserSetting $settings, string $domain, string $proxyIp, array &$meta): void
     {
-        $this->withProxyLock($proxy, function () use ($proxy, $domain, $originIp, $cfToken): void {
-            $this->bindOnProxyUnlocked($proxy, $domain, $originIp, $cfToken);
+        $nameservers = DynadotClient::PARKING_NAMESERVERS;
+        $meta['dns_provider'] = 'dynadot';
+        $meta['nameservers'] = $nameservers;
+
+        // .online/.cfd can go serverHold on an empty Dynadot set_ns. If they
+        // already use ns1.dynadot.com from registration, set_dns2 is enough.
+        if (! DynadotClient::parkingDropsFromTld($domain)) {
+            try {
+                $this->dynadot->setNameservers($settings, $domain, $nameservers);
+                $meta['dynadot_ns'] = 'done';
+                unset($meta['dynadot_ns_error']);
+            } catch (\Throwable $e) {
+                $meta['dynadot_ns'] = 'pending';
+                $meta['dynadot_ns_error'] = $e->getMessage();
+            }
+        } else {
+            $meta['dynadot_ns'] = 'skipped_parking_tld';
+        }
+
+        try {
+            $this->dynadot->setHostedARecords($settings, $domain, $proxyIp);
+            $meta['dynadot_dns'] = 'done';
+            unset($meta['dynadot_dns_error']);
+        } catch (\Throwable $e) {
+            $meta['dynadot_dns'] = 'pending';
+            $meta['dynadot_dns_error'] = $e->getMessage();
+        }
+    }
+
+    private function bindOnProxy(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): bool
+    {
+        return $this->withProxyLock($proxy, function () use ($proxy, $domain, $originIp, $cfToken): bool {
+            return $this->bindOnProxyUnlocked($proxy, $domain, $originIp, $cfToken);
         });
     }
 
@@ -216,7 +273,7 @@ class EdgeProxyService
         return $m[1]."\n";
     }
 
-    private function bindOnProxyUnlocked(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): void
+    private function bindOnProxyUnlocked(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): bool
     {
         $this->assertProxy($proxy);
         $originIp = trim($originIp);
@@ -265,11 +322,8 @@ class EdgeProxyService
         if (! str_contains($out, 'BOUND ')) {
             throw new RuntimeException('Проксі не підтвердив bind: '.trim($out));
         }
-        // HTTP-only bind (no CF token) is supposed to print cert=0 so nginx
-        // still serves the lander while Recheck retries Let's Encrypt.
-        if (filled($cfToken) && preg_match('/cert=0\b/', $out)) {
-            throw new RuntimeException('Let’s Encrypt не видав сертифікат: '.trim($out));
-        }
+
+        return preg_match('/cert=1\b/', $out) === 1;
     }
 
     private function ensureHelperOnProxy(ProxyServer $proxy): void
