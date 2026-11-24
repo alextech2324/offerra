@@ -54,12 +54,9 @@ class OfferRestoreService
         $this->generator->rebuildLocalFolder($offer->fresh());
 
         $proxyPool = app(ProxyPool::class);
-        $preferred = $offer->user?->settings?->preferredEdge()
-            ?? InfrastructureOptions::EDGE_PROXY;
-        if ($preferred === InfrastructureOptions::EDGE_PROXY && ! $proxyPool->hasCapacity()) {
-            $preferred = InfrastructureOptions::EDGE_CLOUDFLARE;
-        }
-        $options = InfrastructureOptions::fromPreferredEdge($preferred);
+        $options = InfrastructureOptions::fromPreferredEdge(
+            InfrastructureOptions::lockedEdge($settings, $proxyPool->hasCapacity()),
+        );
 
         // Fresh infra progress — archive deleted origin/CF zone; do not trust old "done" flags.
         $meta = ['options' => $options];

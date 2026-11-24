@@ -116,7 +116,11 @@ class OfferGenerator
                 json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n",
             );
 
-            $infraOptions = InfrastructureOptions::fromInput($input);
+            $infraOptions = InfrastructureOptions::fromSettingsAndInput(
+                $settings,
+                $input,
+                app(ProxyPool::class)->hasCapacity(),
+            );
             $provisionInfrastructure = InfrastructureOptions::anyEnabled($infraOptions);
             $providerSnapshot = $settings->providerSnapshotForOffer();
 

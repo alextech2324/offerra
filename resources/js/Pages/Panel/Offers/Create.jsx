@@ -60,6 +60,18 @@ function anyInfraEnabled(data) {
     return INFRA_TASKS.some((task) => data[task.key]);
 }
 
+function lockWizardInfra(data, preferProxy, enableCloudflare = false) {
+    if (preferProxy) {
+        return { ...data, ...proxyInfraOptions('auto') };
+    }
+
+    if (proxyEdgeId(data.infra_edge)) {
+        return { ...data, ...defaultInfraOptions(enableCloudflare) };
+    }
+
+    return { ...data, infra_edge: 'cloudflare' };
+}
+
 /** Псевдо-GEO для multilang: ім'я папки. У CRM країна = IP ліда. */
 const MULTILANG_GEO = 'ML';
 
@@ -348,9 +360,8 @@ export default function OffersCreate({
 }) {
     const { errors, panel, auth } = usePage().props;
     const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
-    const proxyList = Array.isArray(proxyServers) ? proxyServers : [];
-    const canChooseProxyEdge = canProvisionInfrastructure && proxyList.length > 0;
-    const preferProxyEdge = canChooseProxyEdge && preferredEdge !== 'cloudflare';
+    const proxyAvailable = Array.isArray(proxyServers) && proxyServers.length > 0;
+    const preferProxyEdge = canProvisionInfrastructure && proxyAvailable && preferredEdge !== 'cloudflare';
     const geoMinDeposits = panel?.geo_min_deposits || {};
     const defaults = useMemo(
         () => buildDefaults(
@@ -367,11 +378,20 @@ export default function OffersCreate({
     const offerBulkPackRef = useRef(null);
     const lastPackHeightRef = useRef(0);
     const preservePackScrollRef = useRef(null);
-    const initial = useMemo(() => (
-        fresh
+    const initial = useMemo(() => {
+        const loaded = fresh
             ? { step: 0, data: defaults, bulkItems: [], domainPurchasedViaPanel: false }
-            : loadWizardState(defaults)
-    ), [fresh, defaults]);
+            : loadWizardState(defaults);
+
+        return {
+            ...loaded,
+            data: lockWizardInfra(
+                loaded.data,
+                preferProxyEdge,
+                canProvisionInfrastructure && !preferProxyEdge,
+            ),
+        };
+    }, [fresh, defaults, preferProxyEdge, canProvisionInfrastructure]);
     const [step, setStep] = useState(initial.step);
     const [domainSearching, setDomainSearching] = useState(false);
     const [domainPurchasing, setDomainPurchasing] = useState(null);
@@ -1326,9 +1346,8 @@ export default function OffersCreate({
 
     const enableAllInfraOptions = () => {
         setData((prev) => {
-            const proxyId = proxyEdgeId(prev.infra_edge);
-            if (proxyId) {
-                return { ...prev, ...proxyInfraOptions(proxyId) };
+            if (preferProxyEdge) {
+                return { ...prev, ...proxyInfraOptions('auto') };
             }
 
             return {
@@ -1336,18 +1355,6 @@ export default function OffersCreate({
                 ...defaultInfraOptions(true),
             };
         });
-    };
-
-    const selectInfraEdge = (mode, proxyId = '') => {
-        if (mode === 'proxy' && proxyId) {
-            setData((prev) => ({ ...prev, ...proxyInfraOptions(proxyId) }));
-            return;
-        }
-
-        setData((prev) => ({
-            ...prev,
-            infra_edge: 'cloudflare',
-        }));
     };
 
     useEffect(() => {
@@ -1513,7 +1520,7 @@ export default function OffersCreate({
                 infra_cloudflare_ssl: data.infra_cloudflare_ssl,
                 infra_cloudflare_https: data.infra_cloudflare_https,
                 infra_cloudflare_www_redirect: data.infra_cloudflare_www_redirect,
-                infra_edge: data.infra_edge || (preferProxyEdge ? 'proxy:auto' : 'cloudflare'),
+                infra_edge: preferProxyEdge ? 'proxy:auto' : 'cloudflare',
                 items: bulkItems.map(({ domain, template }) => ({ domain, template })),
             }, {
                 preserveScroll: true,
@@ -1536,6 +1543,7 @@ export default function OffersCreate({
                 domain: bulkItems[0].domain,
                 template: bulkItems[0].template || data.template,
                 download_zip: downloadZip,
+                infra_edge: preferProxyEdge ? 'proxy:auto' : 'cloudflare',
             }, {
                 preserveScroll: true,
                 onSuccess,
@@ -1550,6 +1558,7 @@ export default function OffersCreate({
         router.post(route('offers.store'), {
             ...data,
             download_zip: downloadZip,
+            infra_edge: preferProxyEdge ? 'proxy:auto' : 'cloudflare',
         }, {
             preserveScroll: true,
             onSuccess,
@@ -2265,60 +2274,15 @@ export default function OffersCreate({
                         <div className="card infra-edge" style={{ marginTop: '1rem' }}>
                             <h3>Інфраструктура домену</h3>
                             <p className="card-desc">
-                                Куди дивиться публічний DNS після генерації.
-                                {' '}Дефолт береться з налаштувань; тут можна змінити лише цей офер.
+                                Береться з{' '}
+                                <Link href={route('settings.index')}>налаштувань</Link>
+                                : {preferProxyEdge ? 'проксі' : 'Cloudflare'}.
                             </p>
-                            {canChooseProxyEdge && (
-                                <div className="infra-edge__choices">
-                                    <label
-                                        className={`infra-edge__card${!proxyEdgeId(data.infra_edge) ? ' is-on' : ''}`}
-                                        htmlFor="infra-edge-cf"
-                                    >
-                                        <input
-                                            id="infra-edge-cf"
-                                            type="radio"
-                                            name="infra_edge"
-                                            checked={!proxyEdgeId(data.infra_edge)}
-                                            onChange={() => selectInfraEdge('cloudflare')}
-                                        />
-                                        <span className="infra-edge__kicker">Cloudflare</span>
-                                        <strong>Помаранчева хмара</strong>
-                                        <span className="infra-edge__meta">A на origin · SSL Flexible</span>
-                                    </label>
-                                    <label
-                                        className={`infra-edge__card${proxyEdgeId(data.infra_edge) ? ' is-on' : ''}`}
-                                        htmlFor="infra-edge-proxy"
-                                    >
-                                        <input
-                                            id="infra-edge-proxy"
-                                            type="radio"
-                                            name="infra_edge"
-                                            checked={Boolean(proxyEdgeId(data.infra_edge))}
-                                            onChange={() => selectInfraEdge('proxy', proxyEdgeId(data.infra_edge) || 'auto')}
-                                        />
-                                        <span className="infra-edge__kicker">Проксі</span>
-                                        <strong>Сірий A, origin сховано</strong>
-                                        <span className="infra-edge__meta">Let’s Encrypt на проксі · origin не в DNS</span>
-                                        {proxyEdgeId(data.infra_edge) && (
-                                            <select
-                                                id="infra-edge-proxy-id"
-                                                className="infra-edge__select"
-                                                value={proxyEdgeId(data.infra_edge)}
-                                                onClick={(e) => e.stopPropagation()}
-                                                onChange={(e) => selectInfraEdge('proxy', e.target.value)}
-                                            >
-                                                <option value="auto">Авто · бренд, потім навантаження</option>
-                                                {proxyList.map((server) => (
-                                                    <option key={server.id} value={String(server.id)}>
-                                                        {server.display_label} · {server.host}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        )}
-                                    </label>
-                                </div>
-                            )}
-                            {!proxyEdgeId(data.infra_edge) && (
+                            {preferProxyEdge ? (
+                                <p className="field-hint" style={{ marginTop: 0 }}>
+                                    Зона Cloudflare і NS у Dynadot створюються самі. A буде сірим на проксі з пулу.
+                                </p>
+                            ) : (
                                 <div className="infra-tasks">
                                     <div className="infra-tasks__bar">
                                         <span>Кроки Cloudflare</span>
@@ -2349,11 +2313,6 @@ export default function OffersCreate({
                                         ))}
                                     </div>
                                 </div>
-                            )}
-                            {proxyEdgeId(data.infra_edge) && (
-                                <p className="field-hint" style={{ marginTop: '0.85rem' }}>
-                                    Зона Cloudflare і NS у Dynadot створюються самі. A буде сірим на проксі.
-                                </p>
                             )}
                             <p className="field-hint" style={{ marginTop: '0.65rem' }}>
                                 DNS може оновлюватись 15 хв – 48 год.
@@ -2427,23 +2386,11 @@ export default function OffersCreate({
                             <div className="summary-row">
                                 <span>Інфраструктура</span>
                                 <span>
-                                    {(() => {
-                                        const proxyId = proxyEdgeId(data.infra_edge);
-                                        if (proxyId === 'auto') {
-                                            return 'Проксі · авто (бренд, потім навантаження)';
-                                        }
-                                        const proxy = proxyId
-                                            ? proxyList.find((item) => String(item.id) === String(proxyId))
-                                            : null;
-                                        if (proxy) {
-                                            return `Проксі · ${proxy.display_label} (${proxy.host})`;
-                                        }
-                                        if (anyInfraEnabled(data)) {
-                                            return INFRA_TASKS.filter((task) => data[task.key]).map((task) => task.label).join(' · ');
-                                        }
-
-                                        return '—';
-                                    })()}
+                                    {preferProxyEdge
+                                        ? 'Проксі · пул (бренд, потім навантаження)'
+                                        : (anyInfraEnabled(data)
+                                            ? INFRA_TASKS.filter((task) => data[task.key]).map((task) => task.label).join(' · ')
+                                            : '—')}
                                 </span>
                             </div>
                         </dl>

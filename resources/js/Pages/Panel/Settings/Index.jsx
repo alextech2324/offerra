@@ -349,7 +349,7 @@ export default function SettingsIndex({ settings, settingsUser, users = [] }) {
                     <h3>Публічний край</h3>
                     <p className="card-desc">
                         Як виходять нові офери і рестор з архіву. Конкретне проксі пул обере сам (бренд, потім навантаження).
-                        На кроці інфри офера це ще можна змінити.
+                        На кроці інфри цей вибір уже не змінюється.
                     </p>
                     <div className="infra-edge">
                         <div className="infra-edge__choices">

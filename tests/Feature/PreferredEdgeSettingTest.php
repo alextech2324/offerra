@@ -109,4 +109,60 @@ class PreferredEdgeSettingTest extends TestCase
         ));
         $this->assertSame('cloudflare', $restored->infra_meta['options']['edge'] ?? null);
     }
+
+    public function test_restore_follows_owner_proxy_preference(): void
+    {
+        $user = User::factory()->create();
+        $user->settings()->create([
+            'cloudflare_api_token' => 'token',
+            'cloudflare_account_id' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+            'dynadot_api_key' => 'dyn-key',
+            'preferred_edge' => 'proxy',
+        ]);
+        OriginServer::query()->create([
+            'host' => '10.0.0.9',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'role' => OriginServer::ROLE_POOL,
+            'is_active' => true,
+            'health' => ['status' => 'ok'],
+        ]);
+        $proxy = ProxyServer::query()->create([
+            'host' => '10.0.0.8',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'is_active' => true,
+        ]);
+
+        $offer = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'restored-proxy.live',
+            'brand' => 'Restored',
+            'domain' => 'restored-proxy.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'archived',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'infra_meta' => [
+                'edge' => 'cloudflare',
+            ],
+        ]);
+
+        $generator = Mockery::mock(OfferGenerator::class);
+        $generator->shouldReceive('rebuildLocalFolder')->once();
+        $provisioner = Mockery::mock(InfrastructureProvisioner::class);
+        $provisioner->shouldReceive('enqueue')->once();
+
+        $restored = (new OfferRestoreService($generator, $provisioner))->restore($offer, $user);
+
+        $this->assertTrue(InfrastructureOptions::wantsProxy(
+            InfrastructureOptions::forOffer($restored),
+        ));
+        $this->assertSame($proxy->id, $restored->infra_meta['options']['edge_proxy_id'] ?? null);
+    }
 }

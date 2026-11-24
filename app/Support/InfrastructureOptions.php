@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Offer;
+use App\Models\UserSetting;
 
 class InfrastructureOptions
 {
@@ -68,6 +69,34 @@ class InfrastructureOptions
         }
 
         return $options;
+    }
+
+    public static function lockedEdge(?UserSetting $settings, bool $proxyAvailable): string
+    {
+        if ($settings?->prefersProxyEdge() && $proxyAvailable) {
+            return self::EDGE_PROXY;
+        }
+
+        return self::EDGE_CLOUDFLARE;
+    }
+
+    /**
+     * Create/restore: settings pick the edge. Cloudflare checkboxes still apply
+     * when the user prefers Cloudflare. A posted infra_edge cannot override it.
+     *
+     * @param  array<string, mixed>  $input
+     * @return array<string, mixed>
+     */
+    public static function fromSettingsAndInput(?UserSetting $settings, array $input, bool $proxyAvailable = true): array
+    {
+        $edge = self::lockedEdge($settings, $proxyAvailable);
+        if ($edge === self::EDGE_PROXY) {
+            return self::fromPreferredEdge(self::EDGE_PROXY);
+        }
+
+        $input['infra_edge'] = self::EDGE_CLOUDFLARE;
+
+        return self::fromInput($input);
     }
 
     /**

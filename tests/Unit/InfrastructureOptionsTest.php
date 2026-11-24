@@ -87,6 +87,33 @@ class InfrastructureOptionsTest extends TestCase
         }
     }
 
+    public function test_settings_lock_proxy_and_ignore_posted_cloudflare(): void
+    {
+        $settings = new \App\Models\UserSetting(['preferred_edge' => 'proxy']);
+        $options = InfrastructureOptions::fromSettingsAndInput($settings, [
+            'infra_edge' => 'cloudflare',
+            'infra_cloudflare_dns' => true,
+            'infra_cloudflare_ssl' => true,
+        ], true);
+
+        $this->assertTrue(InfrastructureOptions::wantsProxy($options));
+        $this->assertFalse($options['cloudflare_dns']);
+    }
+
+    public function test_settings_lock_cloudflare_and_ignore_posted_proxy(): void
+    {
+        $settings = new \App\Models\UserSetting(['preferred_edge' => 'cloudflare']);
+        $options = InfrastructureOptions::fromSettingsAndInput($settings, [
+            'infra_edge' => 'proxy:4',
+            'infra_cloudflare_dns' => true,
+            'infra_cloudflare_ssl' => false,
+        ], true);
+
+        $this->assertFalse(InfrastructureOptions::wantsProxy($options));
+        $this->assertTrue($options['cloudflare_dns']);
+        $this->assertFalse($options['cloudflare_ssl']);
+    }
+
     public function test_preferred_edge_defaults(): void
     {
         $proxy = InfrastructureOptions::fromPreferredEdge('proxy');
