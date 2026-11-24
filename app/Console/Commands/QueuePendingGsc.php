@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ProbeOfferAvailabilityJob;
 use App\Models\Offer;
 use App\Services\OfferGscSubmitter;
 use Illuminate\Console\Command;
@@ -48,7 +49,31 @@ class QueuePendingGsc extends Command
             $queued++;
         }
 
-        if ($queued === 0 && $moved === 0) {
+        $probed = 0;
+        $waiting = Offer::query()
+            ->with('user.settings')
+            ->where('provision_infrastructure', true)
+            ->where('status', 'deployed')
+            ->where('submitted_for_indexing', false)
+            ->where(function ($query): void {
+                $query->whereNull('availability_status')
+                    ->orWhere('availability_status', '!=', 'ok');
+            })
+            ->orderBy('id')
+            ->limit(400)
+            ->get();
+        foreach ($waiting as $offer) {
+            if (! $gsc->shouldProbeAfterDns($offer)) {
+                continue;
+            }
+            ProbeOfferAvailabilityJob::dispatch($offer->id);
+            $probed++;
+        }
+        if ($probed > 0) {
+            $this->info("reprobe waiting GSC: {$probed}");
+        }
+
+        if ($queued === 0 && $moved === 0 && $probed === 0) {
             $this->info('nothing to queue');
         }
 

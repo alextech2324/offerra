@@ -119,4 +119,31 @@ class OfferAvailabilityProbeTest extends TestCase
         $this->assertTrue($result['ok']);
         $this->assertNull($result['error']);
     }
+
+    public function test_bound_edge_ip_is_used_when_public_a_is_missing(): void
+    {
+        Http::fake(function ($request) {
+            $url = $request->url();
+            $type = (string) ($request->data()['type'] ?? '');
+            if (str_contains($url, 'dns-query') || str_contains($url, 'dns.google')) {
+                if ($type === 'A') {
+                    return Http::response(['Status' => 0, 'Answer' => []]);
+                }
+
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => 'gordon.ns.cloudflare.com.']],
+                ]);
+            }
+
+            return Http::response('<html>lander</html>', 200);
+        });
+
+        $result = app(OfferAvailabilityProbe::class)
+            ->probeDomain('moved-from-dead-proxy.pro', ['172.86.71.141']);
+
+        $this->assertTrue($result['ok']);
+        $this->assertNull($result['error']);
+        Http::assertSent(fn ($request) => str_starts_with($request->url(), 'https://moved-from-dead-proxy.pro'));
+    }
 }

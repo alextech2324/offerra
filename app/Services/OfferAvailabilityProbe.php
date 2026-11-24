@@ -33,7 +33,7 @@ class OfferAvailabilityProbe
      */
     public function checkAndUpdate(Offer $offer, bool $immediate = false): array
     {
-        $result = $this->probeDomain((string) $offer->domain);
+        $result = $this->probeDomain((string) $offer->domain, $this->extraIpsFor($offer));
 
         return $this->applyResult($offer, $result['ok'], $result['error'], $immediate);
     }
@@ -49,10 +49,20 @@ class OfferAvailabilityProbe
             return $counts;
         }
 
-        $results = $this->probeDomains(array_map(
-            static fn (Offer $offer) => (string) $offer->domain,
-            $offers,
-        ));
+        $domains = [];
+        $extraByHost = [];
+        foreach ($offers as $offer) {
+            $host = $this->normalizeDomain((string) $offer->domain);
+            if ($host === '') {
+                continue;
+            }
+            $domains[] = $host;
+            $ip = $offer->boundEdgeIpv4();
+            if ($ip !== null) {
+                $extraByHost[$host][] = $ip;
+            }
+        }
+        $results = $this->probeDomains($domains, $extraByHost);
 
         foreach ($offers as $offer) {
             $domain = strtolower(trim((string) $offer->domain));
@@ -74,14 +84,18 @@ class OfferAvailabilityProbe
     /**
      * @return array{ok: bool, error: ?string}
      */
-    public function probeDomain(string $domain): array
+    /**
+     * @param  list<string>  $extraIps
+     * @return array{ok: bool, error: ?string}
+     */
+    public function probeDomain(string $domain, array $extraIps = []): array
     {
         $domain = $this->normalizeDomain($domain);
         if ($domain === '') {
             return ['ok' => false, 'error' => 'Empty domain'];
         }
 
-        $aRecords = $this->preferredEdgeIps($this->publicDns->aRecords($domain));
+        $aRecords = $this->preferredEdgeIps($this->mergeProbeIps($extraIps, $this->publicDns->aRecords($domain)));
         if ($aRecords === []) {
             $ns = $this->publicDns->nameservers($domain);
             if ($ns === []) {
@@ -96,9 +110,10 @@ class OfferAvailabilityProbe
 
     /**
      * @param  list<string>  $domains
+     * @param  array<string, list<string>>  $extraIpsByHost
      * @return array<string, array{ok: bool, error: ?string}>
      */
-    public function probeDomains(array $domains): array
+    public function probeDomains(array $domains, array $extraIpsByHost = []): array
     {
         $normalized = [];
         foreach ($domains as $domain) {
@@ -113,7 +128,8 @@ class OfferAvailabilityProbe
         $ipsByHost = [];
 
         foreach ($hosts as $host) {
-            $aRecords = $this->preferredEdgeIps($this->publicDns->aRecords($host));
+            $extra = $extraIpsByHost[$host] ?? [];
+            $aRecords = $this->preferredEdgeIps($this->mergeProbeIps($extra, $this->publicDns->aRecords($host)));
             if ($aRecords === []) {
                 $ns = $this->publicDns->nameservers($host);
                 $out[$host] = [
@@ -385,12 +401,49 @@ class OfferAvailabilityProbe
     }
 
     /**
+     * Bound proxy IP first, then public A — a leftover A on a dead proxy
+     * must not hide a live edge after the offer moved.
+     *
+     * @param  list<string>  $extraIps
+     * @param  list<string>  $publicIps
+     * @return list<string>
+     */
+    private function mergeProbeIps(array $extraIps, array $publicIps): array
+    {
+        $ips = [];
+        foreach ([...$extraIps, ...$publicIps] as $ip) {
+            $ip = trim((string) $ip);
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && ! in_array($ip, $ips, true)) {
+                $ips[] = $ip;
+            }
+        }
+
+        return $ips;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function extraIpsFor(Offer $offer): array
+    {
+        $ip = $offer->boundEdgeIpv4();
+
+        return $ip !== null ? [$ip] : [];
+    }
+
+    /**
      * @param  list<string>  $ips
      * @return list<string>
      */
     private function preferredEdgeIps(array $ips): array
     {
-        $this->proxyHosts ??= ProxyServer::activeHosts();
+        if ($this->proxyHosts === null) {
+            try {
+                $this->proxyHosts = ProxyServer::activeHosts();
+            } catch (\Throwable) {
+                $this->proxyHosts = [];
+            }
+        }
         $ours = array_values(array_intersect($ips, $this->proxyHosts));
 
         return $ours !== [] ? $ours : InfrastructureDnsReadiness::preferCloudflareProxyIps($ips);

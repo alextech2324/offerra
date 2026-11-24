@@ -249,6 +249,13 @@ class OfferGscSubmitter
             return 'GSC ліміт запитів — повторюємо автоматично';
         }
 
+        if (str_contains($m, 'cannot fetch verification file')
+            || str_contains($m, 'https is not live')
+            || str_contains($m, 'failed to connect')
+            || str_contains($m, 'timeout was reached')) {
+            return 'Сайт ще не відкривається по HTTPS — GSC подамо, щойно ленд відповість';
+        }
+
         return 'GSC ще не готовий — повторюємо автоматично';
     }
 

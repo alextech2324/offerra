@@ -224,6 +224,13 @@ class Offer extends Model
         return $proxyId > 0;
     }
 
+    public function boundEdgeIpv4(): ?string
+    {
+        $ip = trim((string) (is_array($this->infra_meta) ? ($this->infra_meta['edge_ip'] ?? '') : ''));
+
+        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ?: null;
+    }
+
     /**
      * @return array<string, mixed>
      */

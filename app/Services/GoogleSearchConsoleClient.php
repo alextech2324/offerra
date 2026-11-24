@@ -48,8 +48,9 @@ class GoogleSearchConsoleClient
             throw new RuntimeException('Google account is not connected.');
         }
 
-        $this->assertVerificationFileLive($domain, $verificationFile);
-        $this->assertHttpsLive($domain);
+        $pinIps = array_values(array_filter([$offer->boundEdgeIpv4()]));
+        $this->assertVerificationFileLive($domain, $verificationFile, $pinIps);
+        $this->assertHttpsLive($domain, $pinIps);
 
         $owner = null;
         foreach ($accounts as $candidate) {
@@ -535,23 +536,29 @@ class GoogleSearchConsoleClient
             ->all();
     }
 
-    public function assertHttpsLive(string $domain): void
+    /**
+     * @param  list<string>  $extraIps
+     */
+    public function assertHttpsLive(string $domain, array $extraIps = []): void
     {
         $this->assertPublicDnsResolves($domain);
 
-        if (! $this->httpsResponds($domain) && ! $this->httpsResponds('www.'.$domain)) {
+        if (! $this->httpsResponds($domain, $extraIps) && ! $this->httpsResponds('www.'.$domain, $extraIps)) {
             throw new RuntimeException('HTTPS is not live yet for '.$domain);
         }
     }
 
-    public function assertVerificationFileLive(string $domain, string $filename): void
+    /**
+     * @param  list<string>  $extraIps
+     */
+    public function assertVerificationFileLive(string $domain, string $filename, array $extraIps = []): void
     {
         $this->assertPublicDnsResolves($domain);
 
         $filename = ltrim($filename, '/');
         $url = 'https://'.$domain.'/'.$filename;
         try {
-            $response = $this->httpsGetPinned($domain, $url, timeout: 12);
+            $response = $this->httpsGetPinned($domain, $url, timeout: 12, extraIps: $extraIps);
         } catch (\Throwable $e) {
             throw new RuntimeException('Cannot fetch verification file: '.$e->getMessage());
         }
@@ -610,10 +617,13 @@ class GoogleSearchConsoleClient
         return $this->publicDns->nameservers($domain);
     }
 
-    private function httpsResponds(string $host): bool
+    /**
+     * @param  list<string>  $extraIps
+     */
+    private function httpsResponds(string $host, array $extraIps = []): bool
     {
         try {
-            $response = $this->httpsGetPinned($host, 'https://'.$host.'/', timeout: 10);
+            $response = $this->httpsGetPinned($host, 'https://'.$host.'/', timeout: 10, extraIps: $extraIps);
 
             return $response->status() >= 200 && $response->status() < 400;
         } catch (\Throwable) {
@@ -622,14 +632,59 @@ class GoogleSearchConsoleClient
     }
 
     /**
-     * Pin to public DoH A records. Panel systemd-resolved often still has
-     * registrar parking (185.53.179.x) after CF orange-cloud is live, and
-     * that IP times out on :443 — GSC submit then fails while the lander works.
+     * Pin to the bound edge IP first, then public DoH A. A dead leftover A
+     * (old proxy) must not block GSC after the offer already moved.
+     *
+     * @param  list<string>  $extraIps
      */
-    private function httpsGetPinned(string $host, string $url, int $timeout): Response
+    private function httpsGetPinned(string $host, string $url, int $timeout, array $extraIps = []): Response
     {
         $host = strtolower(rtrim(trim($host), '.'));
-        $ips = $this->lookupARecords($host);
+        $ips = [];
+        foreach ($extraIps as $ip) {
+            $ip = trim((string) $ip);
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && ! in_array($ip, $ips, true)) {
+                $ips[] = $ip;
+            }
+        }
+        foreach ($this->lookupARecords($host) as $ip) {
+            if (! in_array($ip, $ips, true)) {
+                $ips[] = $ip;
+            }
+        }
+
+        if ($ips === []) {
+            return Http::timeout($timeout)
+                ->connectTimeout(8)
+                ->withOptions([
+                    'verify' => true,
+                    'allow_redirects' => true,
+                    'http_errors' => false,
+                ])
+                ->get($url);
+        }
+
+        $last = null;
+        foreach ($ips as $ip) {
+            try {
+                return Http::timeout($timeout)
+                    ->connectTimeout(8)
+                    ->withOptions($this->pinnedHttpOptions($host, [$ip]))
+                    ->get($url);
+            } catch (\Throwable $e) {
+                $last = $e;
+            }
+        }
+
+        throw $last ?? new RuntimeException('HTTPS connect failed for '.$host);
+    }
+
+    /**
+     * @param  list<string>  $ips
+     * @return array<string, mixed>
+     */
+    private function pinnedHttpOptions(string $host, array $ips): array
+    {
         $resolve = [];
         foreach ($ips as $ip) {
             $resolve[] = $host.':443:'.$ip;
@@ -645,10 +700,7 @@ class GoogleSearchConsoleClient
             $options['curl'] = [CURLOPT_RESOLVE => $resolve];
         }
 
-        return Http::timeout($timeout)
-            ->connectTimeout(5)
-            ->withOptions($options)
-            ->get($url);
+        return $options;
     }
 
     private function verifySiteFile(string $accessToken, string $siteUrl): bool

@@ -27,6 +27,20 @@ class OfferGscRetryableErrorTest extends TestCase
     public function test_https_not_live_is_retryable(): void
     {
         $this->assertTrue(OfferGscSubmitter::isRetryableError('HTTPS is not live yet for example.com'));
+        $this->assertSame(
+            'Сайт ще не відкривається по HTTPS — GSC подамо, щойно ленд відповість',
+            OfferGscSubmitter::retryableErrorLabel('HTTPS is not live yet for example.com'),
+        );
+    }
+
+    public function test_verification_timeout_label_is_honest(): void
+    {
+        $message = 'Cannot fetch verification file: cURL error 28: Failed to connect to quanteziento.com port 443 after 5001 ms: Timeout was reached';
+        $this->assertTrue(OfferGscSubmitter::isRetryableError($message));
+        $this->assertSame(
+            'Сайт ще не відкривається по HTTPS — GSC подамо, щойно ленд відповість',
+            OfferGscSubmitter::retryableErrorLabel($message),
+        );
     }
 
     public function test_verification_file_mismatch_is_retryable(): void

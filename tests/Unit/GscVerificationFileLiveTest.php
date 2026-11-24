@@ -56,4 +56,34 @@ class GscVerificationFileLiveTest extends TestCase
             $this->assertStringContainsString('Timeout was reached', $e->getMessage());
         }
     }
+
+    public function test_verification_file_tries_next_pin_ip_after_connect_timeout(): void
+    {
+        $gets = 0;
+        Http::fake(function ($request) use (&$gets) {
+            $url = $request->url();
+            if (str_contains($url, 'dns-query') || str_contains($url, 'dns.google')) {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => '172.86.81.159']],
+                ]);
+            }
+
+            $gets++;
+            if ($gets === 1) {
+                throw new RuntimeException('cURL error 28: Failed to connect to host port 443 after 5001 ms: Timeout was reached');
+            }
+
+            return Http::response('google-site-verification: googled436d39bff274925.html', 200);
+        });
+
+        app(GoogleSearchConsoleClient::class)
+            ->assertVerificationFileLive(
+                'clearexirum.biz',
+                'googled436d39bff274925.html',
+                ['172.86.71.141'],
+            );
+
+        $this->assertSame(2, $gets);
+    }
 }
