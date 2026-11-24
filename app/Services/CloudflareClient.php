@@ -245,7 +245,7 @@ class CloudflareClient
     /**
      * Edge SSL + HTTPS + www→apex via Cloudflare (без Let's Encrypt на origin).
      *
-     * @param  array{cloudflare_ssl?: bool, cloudflare_https?: bool, cloudflare_www_redirect?: bool}  $options
+     * @param  array{cloudflare_ssl?: bool, cloudflare_https?: bool, cloudflare_www_redirect?: bool, cloudflare_challenge?: bool}  $options
      */
     public function configureEdgeSecurity(UserSetting $settings, string $zoneId, string $domain, array $options = []): void
     {
@@ -256,6 +256,7 @@ class CloudflareClient
         $ssl = $options['cloudflare_ssl'] ?? true;
         $https = $options['cloudflare_https'] ?? true;
         $www = $options['cloudflare_www_redirect'] ?? true;
+        $challenge = $options['cloudflare_challenge'] ?? false;
 
         if ($ssl) {
             $this->setZoneSetting(
@@ -272,6 +273,10 @@ class CloudflareClient
 
         if ($www) {
             $this->ensureWwwRedirectRule($settings, $zoneId, $domain);
+        }
+
+        if ($challenge) {
+            $this->ensureManagedChallenge($settings, $zoneId);
         }
     }
 
@@ -388,6 +393,106 @@ class CloudflareClient
         }
 
         return 'flexible';
+    }
+
+    /**
+     * Same interstitial as Cloudflare “I'm Under Attack” / Managed Challenge.
+     * Custom WAF rule first (skip panel + GSC paths). Zone security_level is fallback
+     * when the token cannot write firewall custom rules.
+     */
+    private function ensureManagedChallenge(UserSetting $settings, string $zoneId): void
+    {
+        $description = 'Offerra: managed challenge';
+        $rule = [
+            'description' => $description,
+            'expression' => $this->managedChallengeExpression(),
+            'action' => 'managed_challenge',
+        ];
+
+        try {
+            $this->upsertFirewallCustomRule($settings, $zoneId, $description, $rule);
+        } catch (\Throwable) {
+            $this->setZoneSetting($settings, $zoneId, 'security_level', 'under_attack');
+        }
+    }
+
+    private function managedChallengeExpression(): string
+    {
+        $parts = [
+            'not http.request.uri.path matches "^/.well-known/"',
+            'http.request.uri.path ne "/robots.txt"',
+            'http.request.uri.path ne "/sitemap.xml"',
+            'not http.request.uri.path matches "^/google[0-9a-z]+\\.html$"',
+        ];
+
+        foreach ((array) config('offerra.panel_ips', []) as $ip) {
+            $ip = trim((string) $ip);
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $parts[] = 'ip.src ne '.$ip;
+            }
+        }
+
+        return '('.implode(' and ', $parts).')';
+    }
+
+    /**
+     * @param  array<string, mixed>  $rule
+     */
+    private function upsertFirewallCustomRule(
+        UserSetting $settings,
+        string $zoneId,
+        string $description,
+        array $rule,
+    ): void {
+        $existing = $this->request(
+            $settings,
+            'GET',
+            '/zones/'.$zoneId.'/rulesets/phases/http_request_firewall_custom/entrypoint',
+            [],
+            allowNotFound: true,
+        );
+
+        /** @var list<array<string, mixed>> $rules */
+        $rules = [];
+        if (($existing['success'] ?? false) && is_array($existing['result'] ?? null)) {
+            $rules = is_array($existing['result']['rules'] ?? null) ? $existing['result']['rules'] : [];
+            $rules = array_values(array_filter(
+                $rules,
+                static fn (array $item): bool => ($item['description'] ?? '') !== $description,
+            ));
+        }
+
+        $rules[] = $rule;
+        $this->putFirewallCustomRules($settings, $zoneId, $rules);
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $rules
+     */
+    private function putFirewallCustomRules(UserSetting $settings, string $zoneId, array $rules): void
+    {
+        $response = $this->request(
+            $settings,
+            'PUT',
+            '/zones/'.$zoneId.'/rulesets/phases/http_request_firewall_custom/entrypoint',
+            ['rules' => $rules],
+            allowNotFound: true,
+        );
+
+        if ($response['success'] ?? false) {
+            return;
+        }
+
+        $create = $this->request($settings, 'POST', '/zones/'.$zoneId.'/rulesets', [
+            'name' => 'Offerra WAF',
+            'kind' => 'zone',
+            'phase' => 'http_request_firewall_custom',
+            'rules' => $rules,
+        ]);
+
+        if (! ($create['success'] ?? false)) {
+            throw new RuntimeException('Cloudflare managed challenge: '.$this->extractError($create));
+        }
     }
 
     private function ensureWwwRedirectRule(UserSetting $settings, string $zoneId, string $domain): void

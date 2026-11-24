@@ -23,6 +23,7 @@ class InfrastructureOptionsTest extends TestCase
         $this->assertTrue($options['cloudflare_ssl']);
         $this->assertFalse($options['cloudflare_https']);
         $this->assertTrue($options['cloudflare_www_redirect']);
+        $this->assertFalse($options['cloudflare_challenge']);
         $this->assertSame('cloudflare', $options['edge']);
     }
 
@@ -73,6 +74,19 @@ class InfrastructureOptionsTest extends TestCase
         $this->assertSame('cloudflare', $options['edge']);
         $this->assertTrue($options['cloudflare_dns']);
         $this->assertTrue($options['cloudflare_ssl']);
+        $this->assertFalse($options['cloudflare_challenge']);
+    }
+
+    public function test_from_input_maps_challenge_checkbox(): void
+    {
+        $options = InfrastructureOptions::fromInput([
+            'infra_cloudflare_zone' => true,
+            'infra_cloudflare_challenge' => true,
+        ]);
+
+        $this->assertTrue($options['cloudflare_challenge']);
+        $this->assertTrue(InfrastructureOptions::needsCloudflareEdge($options));
+        $this->assertTrue(InfrastructureOptions::needsCloudflareZone($options));
     }
 
     public function test_needs_cloudflare_zone_when_dns_or_ssl_enabled(): void

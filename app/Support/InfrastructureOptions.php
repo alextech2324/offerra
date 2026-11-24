@@ -14,6 +14,7 @@ class InfrastructureOptions
         'infra_cloudflare_ssl',
         'infra_cloudflare_https',
         'infra_cloudflare_www_redirect',
+        'infra_cloudflare_challenge',
     ];
 
     public const META_KEYS = [
@@ -23,6 +24,7 @@ class InfrastructureOptions
         'cloudflare_ssl',
         'cloudflare_https',
         'cloudflare_www_redirect',
+        'cloudflare_challenge',
     ];
 
     public const EDGE_CLOUDFLARE = 'cloudflare';
@@ -34,6 +36,7 @@ class InfrastructureOptions
     {
         return [
             ...array_fill_keys(self::META_KEYS, true),
+            'cloudflare_challenge' => false,
             'edge' => self::EDGE_CLOUDFLARE,
         ];
     }
@@ -51,6 +54,7 @@ class InfrastructureOptions
             'infra_cloudflare_ssl' => 'cloudflare_ssl',
             'infra_cloudflare_https' => 'cloudflare_https',
             'infra_cloudflare_www_redirect' => 'cloudflare_www_redirect',
+            'infra_cloudflare_challenge' => 'cloudflare_challenge',
         ];
 
         $options = ['edge' => self::EDGE_CLOUDFLARE];
@@ -141,6 +145,7 @@ class InfrastructureOptions
             || ($options['cloudflare_ssl'] ?? false)
             || ($options['cloudflare_https'] ?? false)
             || ($options['cloudflare_www_redirect'] ?? false)
+            || ($options['cloudflare_challenge'] ?? false)
             || ($options['dynadot_ns'] ?? false);
     }
 
@@ -160,6 +165,7 @@ class InfrastructureOptions
     {
         return ($options['cloudflare_ssl'] ?? false)
             || ($options['cloudflare_https'] ?? false)
-            || ($options['cloudflare_www_redirect'] ?? false);
+            || ($options['cloudflare_www_redirect'] ?? false)
+            || ($options['cloudflare_challenge'] ?? false);
     }
 }

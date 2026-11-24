@@ -341,7 +341,7 @@ class OfferAvailabilityProbe
         }
 
         // Some origins reject HEAD — retry with GET.
-        if ($usedHead && in_array($status, [405, 501], true)) {
+        if ($usedHead && in_array($status, [403, 405, 501], true)) {
             return ['ok' => false, 'error' => 'HEAD not allowed', 'retry_get' => true];
         }
 
@@ -350,6 +350,10 @@ class OfferAvailabilityProbe
                 return ['ok' => false, 'error' => 'Parking / for-sale page'];
             }
 
+            return ['ok' => true, 'error' => null];
+        }
+
+        if ($this->looksLikeCloudflareChallenge($response)) {
             return ['ok' => true, 'error' => null];
         }
 
@@ -367,6 +371,24 @@ class OfferAvailabilityProbe
         }
 
         return ['ok' => false, 'error' => 'Unexpected HTTP '.$status];
+    }
+
+    private function looksLikeCloudflareChallenge(Response $response): bool
+    {
+        $mitigated = strtolower((string) $response->header('Cf-Mitigated'));
+        if ($mitigated === 'challenge') {
+            return true;
+        }
+
+        $body = strtolower((string) $response->body());
+        if ($body === '') {
+            return false;
+        }
+
+        return str_contains($body, 'cf-mitigated')
+            || str_contains($body, 'managed_challenge')
+            || str_contains($body, 'checking your browser')
+            || str_contains($body, 'выполнение проверки безопасности');
     }
 
     private function looksLikeParking(Response $response): bool

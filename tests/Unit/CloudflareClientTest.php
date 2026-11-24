@@ -56,6 +56,96 @@ class CloudflareClientTest extends TestCase
 
             return ($rules[0]['expression'] ?? '') === '(http.host eq "www.example.com")';
         });
+
+        Http::assertNotSent(fn ($request) => str_contains($request->url(), 'http_request_firewall_custom')
+            || str_contains($request->url(), 'settings/security_level'));
+    }
+
+    public function test_configure_edge_security_adds_managed_challenge_waf_rule(): void
+    {
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/ssl' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'ssl', 'value' => 'flexible'],
+            ]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/always_use_https' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'always_use_https', 'value' => 'on'],
+            ]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_dynamic_redirect/entrypoint' => Http::sequence()
+                ->push(['success' => true, 'result' => ['rules' => []]])
+                ->push(['success' => true, 'result' => ['rules' => []]]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_firewall_custom/entrypoint' => Http::sequence()
+                ->push(['success' => true, 'result' => ['rules' => []]])
+                ->push(['success' => true, 'result' => ['rules' => []]]),
+        ]);
+
+        $settings = new UserSetting([
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct',
+        ]);
+
+        (new CloudflareClient)->configureEdgeSecurity($settings, 'zone123', 'example.com', [
+            'cloudflare_ssl' => true,
+            'cloudflare_https' => true,
+            'cloudflare_www_redirect' => true,
+            'cloudflare_challenge' => true,
+        ]);
+
+        Http::assertSent(function ($request) {
+            if ($request->method() !== 'PUT' || ! str_contains($request->url(), 'http_request_firewall_custom/entrypoint')) {
+                return false;
+            }
+
+            $rule = $request->data()['rules'][0] ?? [];
+
+            return ($rule['action'] ?? '') === 'managed_challenge'
+                && ($rule['description'] ?? '') === 'Offerra: managed challenge'
+                && str_contains((string) ($rule['expression'] ?? ''), 'ip.src ne 38.180.121.50');
+        });
+    }
+
+    public function test_configure_edge_security_falls_back_to_under_attack_when_waf_forbidden(): void
+    {
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/ssl' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'ssl', 'value' => 'flexible'],
+            ]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/always_use_https' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'always_use_https', 'value' => 'on'],
+            ]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_dynamic_redirect/entrypoint' => Http::sequence()
+                ->push(['success' => true, 'result' => ['rules' => []]])
+                ->push(['success' => true, 'result' => ['rules' => []]]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_firewall_custom/entrypoint' => Http::response([
+                'success' => false,
+                'errors' => [['message' => 'Authentication error']],
+            ], 403),
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/security_level' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'security_level', 'value' => 'under_attack'],
+            ]),
+        ]);
+
+        $settings = new UserSetting([
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct',
+        ]);
+
+        (new CloudflareClient)->configureEdgeSecurity($settings, 'zone123', 'example.com', [
+            'cloudflare_ssl' => true,
+            'cloudflare_https' => true,
+            'cloudflare_www_redirect' => true,
+            'cloudflare_challenge' => true,
+        ]);
+
+        Http::assertSent(function ($request) {
+            return $request->method() === 'PATCH'
+                && str_ends_with($request->url(), '/settings/security_level')
+                && ($request->data()['value'] ?? '') === 'under_attack';
+        });
     }
 
     public function test_configure_edge_security_creates_www_redirect_when_entrypoint_missing(): void

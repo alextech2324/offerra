@@ -146,4 +146,23 @@ class OfferAvailabilityProbeTest extends TestCase
         $this->assertNull($result['error']);
         Http::assertSent(fn ($request) => str_starts_with($request->url(), 'https://moved-from-dead-proxy.pro'));
     }
+
+    public function test_cloudflare_managed_challenge_is_treated_as_live_edge(): void
+    {
+        Http::fake(function ($request) {
+            if (str_contains($request->url(), 'dns-query') || str_contains($request->url(), 'dns.google')) {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => '104.21.77.116']],
+                ]);
+            }
+
+            return Http::response('challenge', 403, ['Cf-Mitigated' => 'challenge']);
+        });
+
+        $result = app(OfferAvailabilityProbe::class)->probeDomain('challenged.example');
+
+        $this->assertTrue($result['ok']);
+        $this->assertNull($result['error']);
+    }
 }

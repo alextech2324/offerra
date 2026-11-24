@@ -17,6 +17,7 @@ const INFRA_TASKS = [
     { key: 'infra_cloudflare_ssl', label: 'Cloudflare — SSL (flexible)', requiresZone: true },
     { key: 'infra_cloudflare_https', label: 'Cloudflare — HTTP → HTTPS', requiresZone: true },
     { key: 'infra_cloudflare_www_redirect', label: 'Cloudflare — www → домен (301)', requiresZone: true },
+    { key: 'infra_cloudflare_challenge', label: 'Cloudflare — челендж ботів', requiresZone: true },
 ];
 
 function defaultInfraOptions(enabled = false) {
@@ -28,6 +29,7 @@ function defaultInfraOptions(enabled = false) {
         infra_cloudflare_ssl: enabled,
         infra_cloudflare_https: enabled,
         infra_cloudflare_www_redirect: enabled,
+        infra_cloudflare_challenge: false,
     };
 }
 
@@ -1488,6 +1490,7 @@ export default function OffersCreate({
                 infra_cloudflare_ssl: data.infra_cloudflare_ssl,
                 infra_cloudflare_https: data.infra_cloudflare_https,
                 infra_cloudflare_www_redirect: data.infra_cloudflare_www_redirect,
+                infra_cloudflare_challenge: Boolean(data.infra_cloudflare_challenge),
                 infra_edge: 'cloudflare',
                 items: bulkItems.map(({ domain, template }) => ({ domain, template })),
             }, {
@@ -2279,6 +2282,7 @@ export default function OffersCreate({
                             <p className="field-hint" style={{ marginTop: '0.65rem' }}>
                                 DNS може оновлюватись 15 хв – 48 год.
                                 {domainPurchasedViaPanel ? ' Для щойно купленого домену краще увімкнути все.' : ''}
+                                {' '}Челендж — чорна сторінка «перевірка безпеки» перед лендом; Googlebot CF пропускає.
                             </p>
                         </div>
                     )}

@@ -461,6 +461,10 @@ class InfrastructureProvisioner
             $meta['www_redirect'] = 'done';
         }
 
+        if ($options['cloudflare_challenge'] ?? false) {
+            $meta['cloudflare_challenge'] = 'done';
+        }
+
         $meta['ssl_hsts'] = 'skipped';
     }
 

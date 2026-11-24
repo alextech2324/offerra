@@ -85,6 +85,7 @@ class StoreBulkOffersRequest extends FormRequest
             'infra_cloudflare_ssl' => ['boolean'],
             'infra_cloudflare_https' => ['boolean'],
             'infra_cloudflare_www_redirect' => ['boolean'],
+            'infra_cloudflare_challenge' => ['boolean'],
             'infra_edge' => ['nullable', 'string', 'max:32', 'in:cloudflare'],
             'cloak_enabled' => ['boolean'],
             'white_landing_id' => [
