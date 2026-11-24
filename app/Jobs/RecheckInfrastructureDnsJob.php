@@ -79,22 +79,24 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
 
     private function retryPendingProxySsl(Offer $offer, EdgeProxyService $edge): void
     {
-        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
-        $options = InfrastructureOptions::forOffer($offer);
-        $wantsProxy = InfrastructureOptions::wantsProxy($options)
-            || ($meta['edge'] ?? '') === 'proxy';
-        if (! $wantsProxy) {
-            return;
-        }
-        if (($meta['edge'] ?? '') === 'proxy' && ($meta['ssl'] ?? '') === 'done') {
+        if (! $offer->needsProxySslRetry()) {
             return;
         }
 
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        if (! $this->proxySslRetryDue($meta)) {
+            return;
+        }
+
+        $options = InfrastructureOptions::forOffer($offer);
         $proxyId = (int) ($meta['edge_proxy_id'] ?? $options['edge_proxy_id'] ?? 0);
         $proxy = $proxyId > 0 ? ProxyServer::query()->find($proxyId) : null;
         if ($proxy === null) {
             return;
         }
+
+        $meta['ssl_retry_at'] = time();
+        $offer->forceFill(['infra_meta' => $meta])->save();
 
         try {
             $edge->attach($offer, $proxy);
@@ -105,5 +107,31 @@ class RecheckInfrastructureDnsJob implements ShouldBeUnique, ShouldQueue
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Let's Encrypt counts 5 failed auths per name per hour. Recheck every
+     * minute would burn that on a .pro whose NS are not public yet.
+     *
+     * @param  array<string, mixed>  $meta
+     */
+    private function proxySslRetryDue(array $meta): bool
+    {
+        $err = (string) ($meta['ssl_error'] ?? '');
+        if (preg_match('/retry after (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) UTC/', $err, $m) === 1) {
+            $until = strtotime($m[1].' UTC');
+            if ($until !== false && time() < ($until + 15)) {
+                return false;
+            }
+        }
+
+        $last = (int) ($meta['ssl_retry_at'] ?? 0);
+        if ($last < 1) {
+            return true;
+        }
+
+        $wait = str_contains($err, 'WAIT_DNS') ? 60 : 480;
+
+        return (time() - $last) >= $wait;
     }
 }

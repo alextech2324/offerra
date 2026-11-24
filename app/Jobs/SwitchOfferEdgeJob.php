@@ -60,7 +60,8 @@ class SwitchOfferEdgeJob implements ShouldBeUnique, ShouldQueue
             }
 
             $offer->refresh();
-            if (($offer->infra_meta['dns'] ?? '') === 'pending') {
+            $dnsPending = ($offer->infra_meta['dns'] ?? '') === 'pending';
+            if ($dnsPending || $offer->needsProxySslRetry()) {
                 RecheckInfrastructureDnsJob::dispatch($offer->id)->delay(now()->addSeconds(20));
             }
         } catch (\Throwable $e) {

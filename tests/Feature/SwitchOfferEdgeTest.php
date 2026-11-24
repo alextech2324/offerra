@@ -221,8 +221,16 @@ class SwitchOfferEdgeTest extends TestCase
         $origin->shouldReceive('originIpForOffer')->once()->andReturn('81.180.92.59');
 
         $ssh = Mockery::mock(OriginSsh::class);
+        $helperHash = hash('sha256', EdgeProxyService::helperScript());
         $ssh->shouldReceive('upload')->once();
-        $ssh->shouldReceive('exec')->once()->andReturn('BOUND vertexinviolex.com');
+        $ssh->shouldReceive('exec')->andReturnUsing(function () use ($helperHash) {
+            $cmd = func_get_arg(4);
+            if (is_string($cmd) && str_contains($cmd, 'sha256sum')) {
+                return $helperHash;
+            }
+
+            return 'BOUND vertexinviolex.com';
+        });
 
         $cloudflare = Mockery::mock(CloudflareClient::class);
         $cloudflare->shouldReceive('ensureZone')

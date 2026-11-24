@@ -12,6 +12,7 @@ use App\Jobs\ScanDownOffersJob;
 use App\Jobs\SubmitOfferToGscJob;
 use App\Jobs\SwitchOfferEdgeJob;
 use App\Models\Offer;
+use App\Models\ProxyServer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -128,6 +129,48 @@ class BackgroundJobQueueTest extends TestCase
             'infra_meta' => [
                 'dns' => 'pending',
                 'dynadot_ns' => 'done',
+            ],
+        ]);
+
+        $this->artisan('offers:recheck-infra-dns')->assertSuccessful();
+
+        Queue::assertPushedOn('dns', RecheckInfrastructureDnsJob::class);
+    }
+
+    public function test_dns_recheck_command_queues_pending_proxy_ssl_when_dns_is_ready(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $proxy = ProxyServer::query()->create([
+            'host' => '172.86.71.141',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'secret',
+            'is_active' => true,
+        ]);
+        Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'ssl-pending.pro',
+            'brand' => 'SslPending',
+            'domain' => 'ssl-pending.pro',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => 'deployed',
+            'from_search_team' => false,
+            'provision_infrastructure' => true,
+            'infra_status' => 'ready',
+            'availability_status' => 'down',
+            'infra_meta' => [
+                'dns' => 'done',
+                'edge' => 'proxy',
+                'edge_proxy_id' => $proxy->id,
+                'ssl' => 'pending',
+                'options' => [
+                    'edge' => 'proxy',
+                    'edge_proxy_id' => $proxy->id,
+                ],
             ],
         ]);
 

@@ -161,12 +161,27 @@ ensure_default_ssl() {
   local file="/etc/nginx/sites-available/offerra-00-default-ssl.conf"
   cat > "$file" <<'NGINX'
 server {
-    listen 443 ssl default_server;
+    listen 443 ssl http2 default_server;
     server_name _;
     ssl_reject_handshake on;
 }
 NGINX
   ln -sfn "$file" /etc/nginx/sites-enabled/offerra-00-default-ssl.conf
+}
+
+public_a() {
+  dig +short "$1" A 2>/dev/null | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | head -1
+}
+
+self_ipv4() {
+  hostname -I 2>/dev/null | tr ' ' '\n' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | head -1
+}
+
+points_here() {
+  local got self
+  self="$(self_ipv4)"
+  got="$(public_a "$1")"
+  [ -n "$self" ] && [ -n "$got" ] && [ "$got" = "$self" ]
 }
 
 write_vhost() {
@@ -265,33 +280,45 @@ case "$cmd" in
     fi
     if [ -n "$cf_ini" ] && [ "$have_cert" != "1" ]; then
       chmod 600 "$cf_ini" 2>/dev/null || true
-      if certbot certonly \
-        --dns-cloudflare \
-        --dns-cloudflare-credentials "$cf_ini" \
-        --dns-cloudflare-propagation-seconds 25 \
-        --non-interactive --agree-tos --register-unsafely-without-email \
-        --keep-until-expiring --expand \
-        -d "$domain" -d "www.$domain"
-      then
-        have_cert=1
+      # Public NS/A are often still on the registrar when bind first runs.
+      # Hitting Let's Encrypt then burns the 5-fail/hour quota; wait instead.
+      if ! points_here "$domain"; then
+        echo "WAIT_DNS ${domain} public_a=$(public_a "$domain") self=$(self_ipv4)"
       else
-        write_vhost "$domain" "$origin" 0
-        nginx -t
-        systemctl reload nginx
+        cert_names=(-d "$domain")
+        if points_here "www.$domain"; then
+          cert_names+=(-d "www.$domain")
+        else
+          echo "SKIP_WWW ${domain} public_a=$(public_a "www.$domain")"
+        fi
         if certbot certonly \
-          --webroot -w /var/www/certbot \
+          --dns-cloudflare \
+          --dns-cloudflare-credentials "$cf_ini" \
+          --dns-cloudflare-propagation-seconds 25 \
           --non-interactive --agree-tos --register-unsafely-without-email \
           --keep-until-expiring --expand \
-          -d "$domain" -d "www.$domain"
+          "${cert_names[@]}"
         then
           have_cert=1
-        elif certbot certonly \
-          --webroot -w /var/www/certbot \
-          --non-interactive --agree-tos --register-unsafely-without-email \
-          --keep-until-expiring \
-          -d "$domain"
-        then
-          have_cert=1
+        else
+          write_vhost "$domain" "$origin" 0
+          nginx -t
+          systemctl reload nginx
+          if certbot certonly \
+            --webroot -w /var/www/certbot \
+            --non-interactive --agree-tos --register-unsafely-without-email \
+            --keep-until-expiring --expand \
+            "${cert_names[@]}"
+          then
+            have_cert=1
+          elif [ ${#cert_names[@]} -gt 1 ] && certbot certonly \
+            --webroot -w /var/www/certbot \
+            --non-interactive --agree-tos --register-unsafely-without-email \
+            --keep-until-expiring \
+            -d "$domain"
+          then
+            have_cert=1
+          fi
         fi
       fi
       rm -f "$cf_ini"

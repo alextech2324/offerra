@@ -6,6 +6,7 @@ use App\Jobs\RecheckInfrastructureDnsJob;
 use App\Models\Offer;
 use App\Services\InfrastructureProvisioner;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class RecheckInfrastructureDns extends Command
@@ -26,7 +27,9 @@ class RecheckInfrastructureDns extends Command
         $this->settleLiveDeployedOffers($offers);
         $this->promoteQueuedRechecksToDns();
 
-        $pendingOffers = $offers->filter(fn ($offer) => $offer->dnsStatus() === 'pending');
+        $pendingOffers = $offers->filter(
+            fn ($offer) => $offer->dnsStatus() === 'pending' || $offer->needsProxySslRetry(),
+        );
 
         if ($pendingOffers->isEmpty()) {
             return self::SUCCESS;
@@ -57,7 +60,7 @@ class RecheckInfrastructureDns extends Command
      * Public NS already match the CF pair, but Dynadot never confirmed set_ns.
      * Stop the orange «Очікується DNS» and the every-minute retry.
      *
-     * @param  \Illuminate\Support\Collection<int, Offer>  $offers
+     * @param  Collection<int, Offer>  $offers
      */
     private function settlePubliclyReadyRegistrarNs($offers): void
     {
@@ -88,7 +91,7 @@ class RecheckInfrastructureDns extends Command
     /**
      * Deployed offers that already answer HTTPS but still show pending DNS.
      *
-     * @param  \Illuminate\Support\Collection<int, Offer>  $offers
+     * @param  Collection<int, Offer>  $offers
      */
     private function settleLiveDeployedOffers($offers): void
     {

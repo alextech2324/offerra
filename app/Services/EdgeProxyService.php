@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Offer;
 use App\Models\ProxyServer;
+use App\Models\UserSetting;
 use App\Support\OriginSsh;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
@@ -73,10 +74,11 @@ class EdgeProxyService
         try {
             $this->bindOnProxy($proxy, $domain, $originIp, $token);
             $meta['ssl'] = 'done';
-            unset($meta['ssl_error']);
+            unset($meta['ssl_error'], $meta['ssl_retry_at']);
         } catch (\Throwable $e) {
             $meta['ssl'] = 'pending';
             $meta['ssl_error'] = $e->getMessage();
+            $meta['ssl_retry_at'] = time();
             try {
                 $this->bindOnProxy($proxy, $domain, $originIp, null);
             } catch (\Throwable $http) {
@@ -203,6 +205,17 @@ class EdgeProxyService
         });
     }
 
+    public static function helperScript(): string
+    {
+        $boot = file_get_contents(base_path('server/bootstrap-edge-proxy.sh'));
+        if ($boot === false
+            || preg_match("/install -m 755 \\/dev\\/stdin \\/usr\\/local\\/bin\\/offerra-edge <<'EOF'\\n(.*)\\nEOF\\n\\nlog \"firewall\"/s", $boot, $m) !== 1) {
+            throw new RuntimeException('Немає offerra-edge у bootstrap-edge-proxy.sh.');
+        }
+
+        return $m[1]."\n";
+    }
+
     private function bindOnProxyUnlocked(ProxyServer $proxy, string $domain, string $originIp, ?string $cfToken): void
     {
         $this->assertProxy($proxy);
@@ -210,6 +223,8 @@ class EdgeProxyService
         if (filter_var($originIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
             throw new RuntimeException('Невалідний origin IP для проксі.');
         }
+
+        $this->ensureHelperOnProxy($proxy);
 
         $remoteIni = '';
         $cmd = 'offerra-edge bind '.escapeshellarg($domain).' '.escapeshellarg($originIp);
@@ -257,6 +272,50 @@ class EdgeProxyService
         }
     }
 
+    private function ensureHelperOnProxy(ProxyServer $proxy): void
+    {
+        $script = self::helperScript();
+        $hash = hash('sha256', $script);
+        $remote = trim($this->ssh->exec(
+            (string) $proxy->host,
+            (int) ($proxy->port ?: 22),
+            (string) $proxy->username,
+            (string) $proxy->password,
+            "sha256sum /usr/local/bin/offerra-edge 2>/dev/null | awk '{print \$1}'",
+            15,
+        ));
+        if ($remote === $hash) {
+            return;
+        }
+
+        $local = tempnam(sys_get_temp_dir(), 'offerra-edge-');
+        if ($local === false) {
+            throw new RuntimeException('Не вдалося записати offerra-edge.');
+        }
+        file_put_contents($local, $script);
+        try {
+            $this->ssh->upload(
+                (string) $proxy->host,
+                (int) ($proxy->port ?: 22),
+                (string) $proxy->username,
+                (string) $proxy->password,
+                $local,
+                '/usr/local/bin/offerra-edge',
+                30,
+            );
+        } finally {
+            @unlink($local);
+        }
+        $this->ssh->exec(
+            (string) $proxy->host,
+            (int) ($proxy->port ?: 22),
+            (string) $proxy->username,
+            (string) $proxy->password,
+            'chmod 755 /usr/local/bin/offerra-edge',
+            15,
+        );
+    }
+
     private function unbindOnProxy(ProxyServer $proxy, string $domain): void
     {
         $this->withProxyLock($proxy, function () use ($proxy, $domain): void {
@@ -276,6 +335,7 @@ class EdgeProxyService
      * Certbot and nginx -t cannot run two binds on the same box at once.
      *
      * @template T
+     *
      * @param  callable(): T  $callback
      * @return T
      */
@@ -323,7 +383,7 @@ class EdgeProxyService
         return ProxyServer::query()->where('host', $ip)->first();
     }
 
-    private function cfSettings(\App\Models\UserSetting $settings, string $token): \App\Models\UserSetting
+    private function cfSettings(UserSetting $settings, string $token): UserSetting
     {
         $probe = $settings->replicate();
         $probe->cloudflare_api_token = $token;
@@ -331,7 +391,7 @@ class EdgeProxyService
         return $probe;
     }
 
-    private function cloudflareSettingsFor(Offer $offer, \App\Models\UserSetting $settings): \App\Models\UserSetting
+    private function cloudflareSettingsFor(Offer $offer, UserSetting $settings): UserSetting
     {
         $cf = $settings->replicate();
         $token = CloudflareClient::normalizeApiToken((string) ($offer->cloudflare_api_token ?: $settings->cloudflare_api_token));
@@ -348,7 +408,7 @@ class EdgeProxyService
         return $cf;
     }
 
-    private function dynadotSettingsFor(Offer $offer, \App\Models\UserSetting $settings): \App\Models\UserSetting
+    private function dynadotSettingsFor(Offer $offer, UserSetting $settings): UserSetting
     {
         if (! filled($offer->dynadot_api_key)) {
             return $settings;

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Support\InfrastructureOptions;
 use App\Services\OfferGoogleIndexInspector;
 use App\Services\TemplateCatalog;
+use App\Support\InfrastructureOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -193,6 +193,35 @@ class Offer extends Model
         }
 
         return 'waiting';
+    }
+
+    /**
+     * Proxy TLS never finished (HTTP-only vhost). Recheck must keep trying
+     * even after public DNS already points at the edge.
+     */
+    public function needsProxySslRetry(): bool
+    {
+        if (! $this->provision_infrastructure) {
+            return false;
+        }
+        if (in_array($this->status, ['archived', 'archiving', 'purging', 'teardown_failed'], true)) {
+            return false;
+        }
+
+        $meta = is_array($this->infra_meta) ? $this->infra_meta : [];
+        $options = InfrastructureOptions::forOffer($this);
+        $wantsProxy = InfrastructureOptions::wantsProxy($options)
+            || ($meta['edge'] ?? '') === 'proxy';
+        if (! $wantsProxy) {
+            return false;
+        }
+        if (($meta['edge'] ?? '') === 'proxy' && ($meta['ssl'] ?? '') === 'done') {
+            return false;
+        }
+
+        $proxyId = (int) ($meta['edge_proxy_id'] ?? $options['edge_proxy_id'] ?? 0);
+
+        return $proxyId > 0;
     }
 
     /**
