@@ -17,7 +17,7 @@ class StaleDeadOfferService
     public const SNAPSHOT_PATH = 'stale-dead-snapshot.json';
 
     /** Last GSC submit of the brand, and last lead on any live sibling. */
-    public const DEAD_AFTER_DAYS = 21;
+    public const DEAD_AFTER_DAYS = 14;
 
     /** @var list<string> */
     private const INACTIVE_STATUSES = ['archived', 'archiving', 'purging', 'teardown_failed'];
@@ -36,7 +36,7 @@ class StaleDeadOfferService
      * whose newest lead on any live sibling is also older than N days (or never).
      *
      * Circulation = GSC submit (`indexed_at`) when present, otherwise `created_at`.
-     * Adding or restoring a domain therefore resets the 21-day shield for the
+     * Adding or restoring a domain therefore resets the 14-day shield for the
      * whole brand. Brands that never submitted to GSC are left alone.
      * Deposits and clicks do not protect; archived siblings do not.
      */

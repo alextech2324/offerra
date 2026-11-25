@@ -96,7 +96,15 @@ class StaleDeadOfferServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $offer = $this->makeOffer($user, 'Acme', 'acme.online', now()->subDays(40));
-        $this->setStats($offer, lastLeadAt: now()->subDays(22), leads: 3);
+        $this->setStats($offer, lastLeadAt: now()->subDays(15), leads: 3);
+
+        $this->assertCandidateIds([$offer->id]);
+    }
+
+    public function test_fourteen_day_old_gsc_is_a_candidate(): void
+    {
+        $user = User::factory()->create();
+        $offer = $this->makeOffer($user, 'Acme', 'acme.online', now()->subDays(15));
 
         $this->assertCandidateIds([$offer->id]);
     }

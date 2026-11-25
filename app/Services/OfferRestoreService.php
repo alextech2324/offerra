@@ -90,7 +90,7 @@ class OfferRestoreService
             'availability_error' => null,
             'availability_checked_at' => null,
             'submitted_for_indexing' => false,
-            // Start a new 21-day brand shield immediately, same as adding a domain.
+            // Start a new 14-day brand shield immediately, same as adding a domain.
             // Inspect still waits: it requires submitted_for_indexing.
             'indexed_at' => now(),
             'google_index_status' => null,

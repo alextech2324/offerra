@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 class ScanStaleDeadOffers extends Command
 {
     protected $signature = 'offers:scan-stale-dead
-        {--days=21 : Last brand GSC and last brand lead older than N days}';
+        {--days=14 : Last brand GSC and last brand lead older than N days}';
 
     protected $description = 'Daily 10:00 snapshot of stale-dead brands for the Archive banner (no archive)';
 

@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 class ArchiveStaleDeadOffers extends Command
 {
     protected $signature = 'offers:archive-stale-dead
-        {--days=21 : Last brand GSC and last brand lead older than N days}
+        {--days=14 : Last brand GSC and last brand lead older than N days}
         {--dry-run : Only list count / sample, do not enqueue}
         {--limit=0 : Max offers to enqueue (0 = all)}';
 
