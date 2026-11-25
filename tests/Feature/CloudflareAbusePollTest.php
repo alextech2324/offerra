@@ -73,9 +73,18 @@ class CloudflareAbusePollTest extends TestCase
             $mock->shouldReceive('send')
                 ->once()
                 ->withArgs(function ($settings, string $text) use ($offer) {
+                    $user = $offer->user;
+                    $created = $offer->created_at?->timezone('Europe/Kyiv')->format('d.m.Y H:i');
+
                     return str_contains($text, 'Cloudflare abuse')
                         && str_contains($text, $offer->domain)
-                        && str_contains($text, 'PHISH');
+                        && str_contains($text, 'PHISH')
+                        && str_contains($text, (string) $user?->name)
+                        && str_contains($text, (string) $user?->email)
+                        && str_contains($text, 'GEO: IT / it')
+                        && str_contains($text, 'Шаблон: default')
+                        && $created !== null
+                        && str_contains($text, 'Створено: '.$created);
                 })
                 ->andReturn(true);
         });

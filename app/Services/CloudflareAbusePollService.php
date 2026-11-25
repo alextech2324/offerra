@@ -247,15 +247,42 @@ class CloudflareAbusePollService
 
     private function telegramText(Offer $offer, CloudflareAbuseReport $row): string
     {
+        $offer->loadMissing('user');
         $domain = $offer->domain;
         $url = route('offers.index', ['domain' => $domain], true);
+        $user = $offer->user;
+        $userLine = null;
+        if ($user) {
+            $name = trim((string) $user->name);
+            $email = trim((string) $user->email);
+            $userLine = 'Юзер: '.($name !== '' ? $name : $email);
+            if ($name !== '' && $email !== '' && strcasecmp($name, $email) !== 0) {
+                $userLine .= ' ('.$email.')';
+            }
+        }
+
+        $templateId = trim((string) ($offer->template ?? ''));
+        $templateLine = null;
+        if ($templateId !== '') {
+            $label = app(TemplateCatalog::class)->label($templateId);
+            $templateLine = 'Шаблон: '.$label.($label !== $templateId ? ' ('.$templateId.')' : '');
+        }
+
+        $created = $offer->created_at?->timezone('Europe/Kyiv')->format('d.m.Y H:i');
+        $geo = strtoupper(trim((string) ($offer->geo ?? '')));
+        $lang = strtolower(trim((string) ($offer->lang ?? '')));
+        $geoLine = $geo !== '' ? 'GEO: '.$geo.($lang !== '' ? ' / '.$lang : '') : null;
 
         return implode("\n", array_filter([
             '⚠️ Cloudflare abuse',
             '',
             'Домен: '.$domain,
             'Тип: '.strtoupper((string) $row->type),
-            trim($offer->brand) !== '' ? 'Бренд: '.$offer->brand : null,
+            $userLine,
+            trim((string) $offer->brand) !== '' ? 'Бренд: '.$offer->brand : null,
+            $geoLine,
+            $templateLine,
+            $created !== null ? 'Створено: '.$created : null,
             '',
             'Заархівуйте офер у панелі, поки хостер не перевірив origin:',
             $url,
