@@ -6,6 +6,8 @@ use App\Models\Offer;
 use App\Services\CloudflareClient;
 use App\Services\OriginHostService;
 use App\Services\OriginPool;
+use App\Support\CloudflareZoneCutover;
+use App\Support\PublicDnsLookup;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -109,7 +111,21 @@ class PurgeOfferFromOriginJob implements ShouldBeUnique, ShouldQueue
         $zoneId = trim((string) ($meta['cloudflare_zone_id'] ?? ''));
         $domain = strtolower(trim((string) $offer->domain));
 
-        if (! $settings || $zoneId === '' || $domain === '') {
+        if (! $settings || $domain === '') {
+            return true;
+        }
+
+        $expectedNs = is_array($meta['nameservers'] ?? null) ? $meta['nameservers'] : [];
+        if ($expectedNs !== []) {
+            $publicNs = app(PublicDnsLookup::class)->nameservers($domain);
+            if (! CloudflareZoneCutover::registrarNsMatch($publicNs, $expectedNs)) {
+                // Stored zone is not live yet (CF account switch). Public
+                // traffic still hits the previous zone — do not delete files.
+                return true;
+            }
+        }
+
+        if ($zoneId === '') {
             return true;
         }
 

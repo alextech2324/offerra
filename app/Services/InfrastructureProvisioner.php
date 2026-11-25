@@ -217,6 +217,14 @@ class InfrastructureProvisioner
         }
 
         $expectedNs = is_array($meta['nameservers'] ?? null) ? $meta['nameservers'] : [];
+        $liveNs = $this->publicDns->nameservers($domain);
+        if ($expectedNs !== [] && ! CloudflareZoneCutover::registrarNsMatch($liveNs, $expectedNs)) {
+            try {
+                $this->syncLiveZoneOriginA($offer, $serverIp);
+            } catch (\Throwable) {
+                // Best-effort: origin move must not wait on the old zone token.
+            }
+        }
 
         if ($this->markDnsDoneIfReady($offer, $meta, $domain, $serverIp, $expectedNs)) {
             return;
@@ -569,39 +577,223 @@ class InfrastructureProvisioner
         }
 
         $offer->loadMissing('user.settings');
-        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
         $candidates = $this->cloudflareSettingsCandidates($offer);
 
         if ($candidates === []) {
             throw new \RuntimeException('Немає Cloudflare API token для '.$offer->domain);
         }
 
+        $domain = strtolower(trim((string) $offer->domain));
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        $publicNs = $this->publicDns->nameservers($domain);
+        $storedZoneId = trim((string) ($meta['cloudflare_zone_id'] ?? ''));
+        $expectedNs = is_array($meta['nameservers'] ?? null) ? $meta['nameservers'] : [];
+
+        $live = $this->findCloudflareZoneMatchingNs($candidates, $domain, $publicNs);
+        $stored = $this->findStoredCloudflareZone($candidates, $domain, $storedZoneId);
+
+        $updatedLive = false;
+        $updatedStored = false;
         $last = null;
 
-        foreach ($candidates as $label => $settings) {
+        if ($live !== null) {
             try {
-                $this->rebindARecordWith($offer, $settings, $ip, $label);
-
-                return;
+                $this->writeOriginARecords($live['settings'], $live['zone_id'], $domain, $ip);
+                $updatedLive = true;
             } catch (\Throwable $e) {
                 $last = $e;
-
-                if (
-                    $this->cloudflare->isUnauthorizedError($e)
-                    || $this->cloudflare->isZoneAbsentError($e)
-                ) {
-                    continue;
-                }
-
-                throw $e;
             }
         }
 
-        throw $last ?? new \RuntimeException('Немає Cloudflare API token для '.$offer->domain);
+        $storedIsLive = $stored !== null && $live !== null && $stored['zone_id'] === $live['zone_id'];
+        if ($stored !== null && ! $storedIsLive) {
+            try {
+                $this->writeOriginARecords($stored['settings'], $stored['zone_id'], $domain, $ip);
+                $updatedStored = true;
+            } catch (\Throwable $e) {
+                $last = $e;
+            }
+        } elseif ($stored !== null && $storedIsLive) {
+            $updatedStored = $updatedLive;
+        } elseif ($stored === null && $live === null) {
+            foreach ($candidates as $settings) {
+                try {
+                    $this->rebindARecordWith($offer, $settings, $ip, 'fallback');
+                    $updatedStored = true;
+                    if ($publicNs === [] || CloudflareZoneCutover::registrarNsMatch($publicNs, $expectedNs)) {
+                        $updatedLive = true;
+                    }
+
+                    return;
+                } catch (\Throwable $e) {
+                    $last = $e;
+                    if (
+                        $this->cloudflare->isUnauthorizedError($e)
+                        || $this->cloudflare->isZoneAbsentError($e)
+                    ) {
+                        continue;
+                    }
+
+                    throw $e;
+                }
+            }
+        }
+
+        $publicIsCloudflare = $this->publicNsAreCloudflare($publicNs);
+        if ($publicIsCloudflare && ! $updatedLive) {
+            throw $last ?? new \RuntimeException(
+                'Публічні NS вказують на іншу Cloudflare-зону — A на живій зоні не оновлено для '.$domain,
+            );
+        }
+
+        if (! $updatedLive && ! $updatedStored) {
+            throw $last ?? new \RuntimeException('Немає Cloudflare API token для '.$offer->domain);
+        }
+
+        $meta['deploy_host'] = $ip;
+        unset($meta['dns_error']);
+        if ($publicIsCloudflare && $expectedNs !== [] && ! CloudflareZoneCutover::registrarNsMatch($publicNs, $expectedNs)) {
+            $meta['dns'] = 'pending';
+        }
+
+        $offer->update([
+            'infra_meta' => $meta,
+            'deploy_panel_name' => $ip,
+        ]);
     }
 
     /**
-     * @param  'offer'|'owner'|'owner_backup'|'admin'|'admin_backup'  $label
+     * Keep the previous (still-public) CF zone A in sync while registrar NS
+     * still point at it after an account switch.
+     */
+    public function syncLiveZoneOriginA(Offer $offer, string $ip): bool
+    {
+        $ip = trim($ip);
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
+            return false;
+        }
+
+        $offer->loadMissing('user.settings');
+        $candidates = $this->cloudflareSettingsCandidates($offer);
+        if ($candidates === []) {
+            return false;
+        }
+
+        $domain = strtolower(trim((string) $offer->domain));
+        $publicNs = $this->publicDns->nameservers($domain);
+        $live = $this->findCloudflareZoneMatchingNs($candidates, $domain, $publicNs);
+        if ($live === null) {
+            return false;
+        }
+
+        foreach ($this->cloudflare->listARecords($live['settings'], $live['zone_id'], $domain) as $record) {
+            if (trim((string) ($record['content'] ?? '')) === $ip) {
+                return true;
+            }
+        }
+
+        $this->writeOriginARecords($live['settings'], $live['zone_id'], $domain, $ip);
+
+        return true;
+    }
+
+    /**
+     * @param  array<string, UserSetting>  $candidates
+     * @param  list<string>  $publicNs
+     * @return array{settings: UserSetting, zone_id: string, nameservers: list<string>}|null
+     */
+    private function findCloudflareZoneMatchingNs(array $candidates, string $domain, array $publicNs): ?array
+    {
+        if ($publicNs === []) {
+            return null;
+        }
+
+        foreach ($candidates as $settings) {
+            try {
+                $zone = $this->cloudflare->findZone($settings, $domain);
+            } catch (\Throwable) {
+                continue;
+            }
+            if ($zone === null) {
+                continue;
+            }
+            $zoneNs = is_array($zone['nameservers'] ?? null) ? $zone['nameservers'] : [];
+            if (CloudflareZoneCutover::registrarNsMatch($publicNs, $zoneNs)) {
+                return [
+                    'settings' => $settings,
+                    'zone_id' => (string) ($zone['zone_id'] ?? ''),
+                    'nameservers' => $zoneNs,
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array<string, UserSetting>  $candidates
+     * @return array{settings: UserSetting, zone_id: string, nameservers: list<string>}|null
+     */
+    private function findStoredCloudflareZone(array $candidates, string $domain, string $storedZoneId): ?array
+    {
+        foreach ($candidates as $settings) {
+            try {
+                $zone = $this->cloudflare->findZone($settings, $domain);
+            } catch (\Throwable) {
+                continue;
+            }
+            if ($zone === null) {
+                continue;
+            }
+            $zoneId = (string) ($zone['zone_id'] ?? '');
+            if ($storedZoneId !== '' && $zoneId !== $storedZoneId) {
+                continue;
+            }
+
+            return [
+                'settings' => $settings,
+                'zone_id' => $zoneId !== '' ? $zoneId : $storedZoneId,
+                'nameservers' => is_array($zone['nameservers'] ?? null) ? $zone['nameservers'] : [],
+            ];
+        }
+
+        if ($storedZoneId === '' || $candidates === []) {
+            return null;
+        }
+
+        $first = reset($candidates);
+
+        return $first instanceof UserSetting
+            ? ['settings' => $first, 'zone_id' => $storedZoneId, 'nameservers' => []]
+            : null;
+    }
+
+    private function writeOriginARecords(UserSetting $settings, string $zoneId, string $domain, string $ip): void
+    {
+        if ($zoneId === '') {
+            throw new \RuntimeException('Cloudflare-зону не знайдено.');
+        }
+
+        $settings->cloudflare_default_proxied = true;
+        $this->cloudflare->setRootARecords($settings, $zoneId, $domain, $ip, true);
+    }
+
+    /**
+     * @param  list<string>  $ns
+     */
+    private function publicNsAreCloudflare(array $ns): bool
+    {
+        foreach ($ns as $name) {
+            if (InfrastructureDnsReadiness::isCloudflareNameserver((string) $name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  'offer'|'owner'|'owner_backup'|'admin'|'admin_backup'|string  $label
      */
     private function rebindARecordWith(Offer $offer, UserSetting $settings, string $ip, string $label): void
     {
@@ -620,7 +812,7 @@ class InfrastructureProvisioner
                 $zoneId = (string) $zone['zone_id'];
             }
 
-            $this->cloudflare->ensureRootARecord($settings, $zoneId, $domain, $ip);
+            $this->writeOriginARecords($settings, $zoneId, $domain, $ip);
         } catch (\Throwable $e) {
             $zone = $this->cloudflare->findZone($settings, $domain);
 
@@ -629,25 +821,18 @@ class InfrastructureProvisioner
             }
 
             $zoneId = (string) $zone['zone_id'];
-            $this->cloudflare->ensureRootARecord($settings, $zoneId, $domain, $ip);
+            $this->writeOriginARecords($settings, $zoneId, $domain, $ip);
         }
 
         $meta['deploy_host'] = $ip;
-        $meta['cloudflare_zone_id'] = $zoneId;
-        unset($meta['dns_error']);
-
-        if (str_contains($label, 'backup')) {
-            $meta['cloudflare_slot'] = 'backup';
-        } elseif ($label === 'owner' || $label === 'admin') {
-            $meta['cloudflare_slot'] = 'primary';
+        if ($zoneId !== '') {
+            $meta['cloudflare_zone_id'] = $zoneId;
         }
+        unset($meta['dns_error']);
 
         $offer->update([
             'infra_meta' => $meta,
             'deploy_panel_name' => $ip,
-            'cloudflare_api_token' => $settings->cloudflare_api_token,
-            'cloudflare_account_id' => $settings->cloudflare_account_id,
-            'cloudflare_account_name' => $settings->cloudflare_account_name,
         ]);
     }
 

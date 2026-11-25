@@ -237,6 +237,43 @@ class OfferMoveServerTest extends TestCase
             ->handle(app(OriginPool::class), $origin, $cloudflare);
     }
 
+    public function test_purge_job_skips_delete_while_public_ns_still_on_previous_cf_account(): void
+    {
+        $user = User::factory()->create();
+        UserSetting::query()->create([
+            'user_id' => $user->id,
+            'cloudflare_api_token' => 'tok',
+        ]);
+        $old = $this->origin('10.8.0.1');
+        $this->origin('10.8.0.2');
+        $offer = $this->offer($user, 'cutover.tech', '10.8.0.2');
+        $offer->forceFill([
+            'infra_meta' => [
+                'deploy_host' => '10.8.0.2',
+                'cloudflare_zone_id' => 'zone-pending',
+                'nameservers' => ['alex.ns.cloudflare.com', 'nola.ns.cloudflare.com'],
+            ],
+        ])->save();
+
+        $dns = Mockery::mock(\App\Support\PublicDnsLookup::class);
+        $dns->shouldReceive('nameservers')
+            ->with('cutover.tech')
+            ->andReturn(['bradley.ns.cloudflare.com', 'delilah.ns.cloudflare.com']);
+        $this->app->instance(\App\Support\PublicDnsLookup::class, $dns);
+
+        $origin = Mockery::mock(OriginHostService::class);
+        $origin->shouldReceive('hostHasOfferIndex')->andReturn(true);
+        $origin->shouldNotReceive('deleteWebRoot');
+
+        $cloudflare = Mockery::mock(CloudflareClient::class);
+        $cloudflare->shouldReceive('listARecords')->andReturn([
+            ['content' => '10.8.0.2'],
+        ]);
+
+        (new PurgeOfferFromOriginJob($offer->id, $old->host))
+            ->handle(app(OriginPool::class), $origin, $cloudflare);
+    }
+
     public function test_purge_job_gives_up_when_old_host_left_the_pool(): void
     {
         $user = User::factory()->create();
