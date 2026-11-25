@@ -11,7 +11,7 @@ $seo = $langData['seo'];
 $calcMin = (int) (defined('MIN_DEPOSIT') ? MIN_DEPOSIT : 250);
 $calcMax = max(10000, $calcMin * 40);
 $symbol = currency_symbol();
-$market = geo_country_name();
+$market = geo_country_name(null, $lang);
 ?>
 <section class="ft-open">
   <div class="ft-wrap ft-open__grid">

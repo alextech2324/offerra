@@ -60,9 +60,18 @@ function currency_symbol(?string $code = null): string
     };
 }
 
-function geo_country_name(?string $iso = null): string
+function geo_country_name(?string $iso = null, ?string $lang = null): string
 {
     $iso = strtoupper($iso ?? (function_exists('geo_detect_country') ? geo_detect_country() : 'US'));
+    $lang = strtolower($lang ?? 'en');
+
+    if (class_exists(\Locale::class)) {
+        $name = \Locale::getDisplayRegion('_'.$iso, $lang);
+        if (is_string($name) && $name !== '' && strcasecmp($name, $iso) !== 0) {
+            return $name;
+        }
+    }
+
     $names = [
         'US' => 'the United States',
         'GB' => 'the United Kingdom',
