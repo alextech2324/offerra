@@ -208,7 +208,11 @@ class OfferAvailabilityProbe
             $error = null;
         } else {
             $streak++;
-            if ($immediate || $streak >= self::FAIL_STREAK_TO_DOWN || $previous === 'down') {
+            $hardFail = $error !== null && (
+                str_contains($error, 'phishing')
+                || str_contains($error, 'Parking')
+            );
+            if ($immediate || $hardFail || $streak >= self::FAIL_STREAK_TO_DOWN || $previous === 'down') {
                 $nextStatus = 'down';
             } elseif ($previous === 'ok') {
                 // Soft fail: keep green until second consecutive failure.
@@ -345,6 +349,12 @@ class OfferAvailabilityProbe
             return ['ok' => false, 'error' => 'HEAD not allowed', 'retry_get' => true];
         }
 
+        // Cloudflare phishing interstitial is HTTP 403 with Cf-Ray. That used
+        // to look like a live WAF/challenge edge and stay green.
+        if ($this->looksLikePhishingInterstitial($response)) {
+            return ['ok' => false, 'error' => 'Cloudflare phishing interstitial'];
+        }
+
         if ($status >= 200 && $status < 400) {
             if ($this->looksLikeParking($response)) {
                 return ['ok' => false, 'error' => 'Parking / for-sale page'];
@@ -399,6 +409,18 @@ class OfferAvailabilityProbe
             || str_contains($body, 'managed_challenge')
             || str_contains($body, 'checking your browser')
             || str_contains($body, 'выполнение проверки безопасности');
+    }
+
+    private function looksLikePhishingInterstitial(Response $response): bool
+    {
+        $body = strtolower((string) $response->body());
+        if ($body === '') {
+            return false;
+        }
+
+        return str_contains($body, 'suspected phishing')
+            || str_contains($body, 'reported for potential phishing')
+            || str_contains($body, 'deceptive site ahead');
     }
 
     private function looksLikeParking(Response $response): bool

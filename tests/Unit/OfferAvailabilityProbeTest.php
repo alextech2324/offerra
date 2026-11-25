@@ -166,6 +166,40 @@ class OfferAvailabilityProbeTest extends TestCase
         $this->assertNull($result['error']);
     }
 
+    public function test_cloudflare_phishing_interstitial_is_down_even_with_cf_ray(): void
+    {
+        $html = '<title>Suspected Phishing | Cloudflare</title>'
+            .'<h1>Warning</h1><h2>Suspected Phishing</h2>'
+            .'<p>This website has been reported for potential phishing.</p>'
+            .'<a>Ignore &amp; Proceed</a>';
+
+        Http::fake(function ($request) use ($html) {
+            if (str_contains($request->url(), 'dns-query') || str_contains($request->url(), 'dns.google')) {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => '104.21.50.179']],
+                ]);
+            }
+
+            if ($request->method() === 'HEAD') {
+                return Http::response('', 403, [
+                    'Server' => 'cloudflare',
+                    'Cf-Ray' => 'a60324efce2a815d-LHR',
+                ]);
+            }
+
+            return Http::response($html, 403, [
+                'Server' => 'cloudflare',
+                'Cf-Ray' => 'a60324f08a746647-AMS',
+            ]);
+        });
+
+        $result = app(OfferAvailabilityProbe::class)->probeDomain('verimdas-tr.com');
+
+        $this->assertFalse($result['ok']);
+        $this->assertSame('Cloudflare phishing interstitial', $result['error']);
+    }
+
     public function test_cloudflare_403_with_cf_ray_is_treated_as_live_edge(): void
     {
         Http::fake(function ($request) {
