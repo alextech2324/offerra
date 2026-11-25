@@ -463,6 +463,8 @@ class InfrastructureProvisioner
 
         if ($options['cloudflare_challenge'] ?? false) {
             $meta['cloudflare_challenge'] = 'done';
+        } else {
+            $meta['cloudflare_challenge'] = 'skipped';
         }
 
         $meta['ssl_hsts'] = 'skipped';

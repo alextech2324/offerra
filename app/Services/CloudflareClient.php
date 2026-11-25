@@ -277,7 +277,28 @@ class CloudflareClient
 
         if ($challenge) {
             $this->ensureManagedChallenge($settings, $zoneId);
+        } else {
+            $this->disableManagedChallenge($settings, $zoneId);
         }
+    }
+
+    /**
+     * Drop IUAM / our WAF challenge so Google can fetch verification HTML again.
+     */
+    public function disableManagedChallenge(UserSetting $settings, string $zoneId): void
+    {
+        $zoneId = trim($zoneId);
+        if ($zoneId === '') {
+            throw new RuntimeException('Cloudflare zone ID порожній.');
+        }
+
+        try {
+            $this->removeFirewallCustomRule($settings, $zoneId, 'Offerra: managed challenge');
+        } catch (\Throwable) {
+            // Most user tokens cannot edit custom WAF; IUAM is what actually challenges.
+        }
+
+        $this->setZoneSetting($settings, $zoneId, 'security_level', 'medium');
     }
 
     /**
@@ -464,6 +485,33 @@ class CloudflareClient
 
         $rules[] = $rule;
         $this->putFirewallCustomRules($settings, $zoneId, $rules);
+    }
+
+    private function removeFirewallCustomRule(UserSetting $settings, string $zoneId, string $description): void
+    {
+        $existing = $this->request(
+            $settings,
+            'GET',
+            '/zones/'.$zoneId.'/rulesets/phases/http_request_firewall_custom/entrypoint',
+            [],
+            allowNotFound: true,
+        );
+
+        if (! ($existing['success'] ?? false) || ! is_array($existing['result'] ?? null)) {
+            return;
+        }
+
+        $rules = is_array($existing['result']['rules'] ?? null) ? $existing['result']['rules'] : [];
+        $kept = array_values(array_filter(
+            $rules,
+            static fn (array $item): bool => ($item['description'] ?? '') !== $description,
+        ));
+
+        if (count($kept) === count($rules)) {
+            return;
+        }
+
+        $this->putFirewallCustomRules($settings, $zoneId, $kept);
     }
 
     /**

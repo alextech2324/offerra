@@ -23,6 +23,14 @@ class CloudflareClientTest extends TestCase
             'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_dynamic_redirect/entrypoint' => Http::sequence()
                 ->push(['success' => true, 'result' => ['rules' => []]])
                 ->push(['success' => true, 'result' => ['rules' => []]]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_firewall_custom/entrypoint' => Http::response([
+                'success' => true,
+                'result' => ['rules' => []],
+            ]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/security_level' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'security_level', 'value' => 'medium'],
+            ]),
         ]);
 
         $settings = new UserSetting([
@@ -57,8 +65,38 @@ class CloudflareClientTest extends TestCase
             return ($rules[0]['expression'] ?? '') === '(http.host eq "www.example.com")';
         });
 
-        Http::assertNotSent(fn ($request) => str_contains($request->url(), 'http_request_firewall_custom')
-            || str_contains($request->url(), 'settings/security_level'));
+        Http::assertSent(function ($request) {
+            return $request->method() === 'PATCH'
+                && str_ends_with($request->url(), '/settings/security_level')
+                && ($request->data()['value'] ?? '') === 'medium';
+        });
+    }
+
+    public function test_disable_managed_challenge_clears_under_attack_when_waf_forbidden(): void
+    {
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_firewall_custom/entrypoint' => Http::response([
+                'success' => false,
+                'errors' => [['message' => 'Authentication error']],
+            ], 403),
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/security_level' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'security_level', 'value' => 'medium'],
+            ]),
+        ]);
+
+        $settings = new UserSetting([
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct',
+        ]);
+
+        (new CloudflareClient)->disableManagedChallenge($settings, 'zone123');
+
+        Http::assertSent(function ($request) {
+            return $request->method() === 'PATCH'
+                && str_ends_with($request->url(), '/settings/security_level')
+                && ($request->data()['value'] ?? '') === 'medium';
+        });
     }
 
     public function test_configure_edge_security_adds_managed_challenge_waf_rule(): void
@@ -165,6 +203,14 @@ class CloudflareClientTest extends TestCase
             'https://api.cloudflare.com/client/v4/zones/zone123/rulesets' => Http::response([
                 'success' => true,
                 'result' => ['id' => 'ruleset-new'],
+            ]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/rulesets/phases/http_request_firewall_custom/entrypoint' => Http::response([
+                'success' => true,
+                'result' => ['rules' => []],
+            ]),
+            'https://api.cloudflare.com/client/v4/zones/zone123/settings/security_level' => Http::response([
+                'success' => true,
+                'result' => ['id' => 'security_level', 'value' => 'medium'],
             ]),
         ]);
 
