@@ -10,7 +10,7 @@ class CheckOfferAvailability extends Command
 {
     protected $signature = 'offers:check-availability
                             {--limit=4000 : Max deployed offers to check this run}
-                            {--stale-minutes=55 : Re-check deployed offers older than this}
+                            {--stale-minutes=14 : Re-check deployed offers older than this}
                             {--only-down : Only re-check offers currently marked down}
                             {--force : Ignore last-check age and re-probe every match}';
 

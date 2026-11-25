@@ -39,7 +39,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // prune them manually with `offers:heal-landers --prune-orphans`.
         $schedule->command('offers:heal-landers')->everyFifteenMinutes()->withoutOverlapping(20);
         $schedule->command('offers:queue-gsc-pending')->everyFiveMinutes()->withoutOverlapping(4);
-        $schedule->command('offers:check-availability')->hourly()->withoutOverlapping(55);
+        // HTTPS green/red dots. Full sweep of ~750 offers is a couple of minutes
+        // (DoH + HEAD); 15 min leaves headroom. Two consecutive fails to go red.
+        $schedule->command('offers:check-availability --stale-minutes=14')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping(14);
 
         // Incoming CF Trust and Safety reports. Isolated artisan — not deploy/gsc/dns/purge queues.
         $schedule->command('cloudflare:poll-abuse')
