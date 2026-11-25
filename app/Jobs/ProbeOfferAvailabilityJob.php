@@ -22,7 +22,7 @@ class ProbeOfferAvailabilityJob implements ShouldBeUnique, ShouldQueue
     /** Keep polling up to ~7 days (once per minute). */
     public int $tries = 10080;
 
-    public int $uniqueFor = 70;
+    public int $uniqueFor = 3600;
 
     private const RETRY_SECONDS = 60;
 

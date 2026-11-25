@@ -400,4 +400,53 @@ class CloudflareClientTest extends TestCase
                 && $request->header('Authorization')[0] === 'Bearer cf-token';
         });
     }
+
+    public function test_set_root_a_records_replaces_leftover_proxy_a(): void
+    {
+        Http::fake(function ($request) {
+            $url = $request->url();
+            if ($request->method() === 'GET' && str_contains($url, '/dns_records')) {
+                $name = (string) ($request->data()['name'] ?? '');
+                $idPrefix = str_starts_with($name, 'www.') ? 'www' : 'apex';
+
+                return Http::response([
+                    'success' => true,
+                    'result' => [
+                        [
+                            'id' => $idPrefix.'-keep',
+                            'type' => 'A',
+                            'content' => '192.142.46.50',
+                            'proxied' => true,
+                        ],
+                        [
+                            'id' => $idPrefix.'-proxy',
+                            'type' => 'A',
+                            'content' => '172.86.80.101',
+                            'proxied' => false,
+                        ],
+                    ],
+                ]);
+            }
+
+            if (in_array($request->method(), ['PUT', 'DELETE'], true) && str_contains($url, '/dns_records/')) {
+                return Http::response(['success' => true, 'result' => []]);
+            }
+
+            return Http::response(['success' => false], 500);
+        });
+
+        $settings = new UserSetting([
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct',
+        ]);
+
+        (new CloudflareClient)->setRootARecords($settings, 'zone123', 'kalyndraxa.org', '192.142.46.50', true);
+
+        Http::assertSent(fn ($request) => $request->method() === 'DELETE'
+            && str_ends_with($request->url(), '/dns_records/apex-proxy'));
+        Http::assertSent(fn ($request) => $request->method() === 'DELETE'
+            && str_ends_with($request->url(), '/dns_records/www-proxy'));
+        Http::assertNotSent(fn ($request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/dns_records'));
+    }
 }

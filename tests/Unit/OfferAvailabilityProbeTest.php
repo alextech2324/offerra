@@ -165,4 +165,26 @@ class OfferAvailabilityProbeTest extends TestCase
         $this->assertTrue($result['ok']);
         $this->assertNull($result['error']);
     }
+
+    public function test_cloudflare_403_with_cf_ray_is_treated_as_live_edge(): void
+    {
+        Http::fake(function ($request) {
+            if (str_contains($request->url(), 'dns-query') || str_contains($request->url(), 'dns.google')) {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => '104.21.50.179']],
+                ]);
+            }
+
+            return Http::response('', 403, [
+                'Server' => 'cloudflare',
+                'Cf-Ray' => '9a12b3c4d5e6f7g8-AMS',
+            ]);
+        });
+
+        $result = app(OfferAvailabilityProbe::class)->probeDomain('galdrevoq.live');
+
+        $this->assertTrue($result['ok']);
+        $this->assertNull($result['error']);
+    }
 }

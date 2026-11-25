@@ -167,7 +167,7 @@ class OfferAvailabilityProbe
             foreach ($chunk as $host) {
                 $response = $responses[$host] ?? null;
                 if ($response instanceof \Throwable) {
-                    $out[$host] = ['ok' => false, 'error' => $this->shortConnectError($response->getMessage())];
+                    $out[$host] = $this->httpProbe($host, $ipsByHost[$host]);
 
                     continue;
                 }
@@ -378,6 +378,16 @@ class OfferAvailabilityProbe
         $mitigated = strtolower((string) $response->header('Cf-Mitigated'));
         if ($mitigated === 'challenge') {
             return true;
+        }
+
+        $status = $response->status();
+        if (in_array($status, [401, 403], true)) {
+            if (trim((string) $response->header('Cf-Ray')) !== '') {
+                return true;
+            }
+            if (str_contains(strtolower((string) $response->header('Server')), 'cloudflare')) {
+                return true;
+            }
         }
 
         $body = strtolower((string) $response->body());

@@ -619,23 +619,39 @@ class CloudflareClient
     ): void {
         $name = $label === '@' ? $domain : 'www.'.$domain;
         $records = $this->listARecords($settings, $zoneId, $name);
+        $keepId = null;
 
         foreach ($records as $record) {
-            if (($record['type'] ?? '') === 'A') {
-                if (($record['content'] ?? '') === $ip && (bool) ($record['proxied'] ?? false) === $proxied) {
-                    return;
-                }
-
-                $this->request($settings, 'PUT', '/zones/'.$zoneId.'/dns_records/'.($record['id'] ?? ''), [
-                    'type' => 'A',
-                    'name' => $label,
-                    'content' => $ip,
-                    'proxied' => $proxied,
-                    'ttl' => 1,
-                ]);
-
-                return;
+            if (($record['type'] ?? '') !== 'A') {
+                continue;
             }
+
+            $id = trim((string) ($record['id'] ?? ''));
+            if ($id === '') {
+                continue;
+            }
+
+            $same = ($record['content'] ?? '') === $ip && (bool) ($record['proxied'] ?? false) === $proxied;
+
+            if ($keepId === null) {
+                if (! $same) {
+                    $this->request($settings, 'PUT', '/zones/'.$zoneId.'/dns_records/'.$id, [
+                        'type' => 'A',
+                        'name' => $label,
+                        'content' => $ip,
+                        'proxied' => $proxied,
+                        'ttl' => 1,
+                    ]);
+                }
+                $keepId = $id;
+                continue;
+            }
+
+            $this->request($settings, 'DELETE', '/zones/'.$zoneId.'/dns_records/'.$id);
+        }
+
+        if ($keepId !== null) {
+            return;
         }
 
         $this->request($settings, 'POST', '/zones/'.$zoneId.'/dns_records', [
