@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\GeoMinDeposit;
 use App\Models\Offer;
 use App\Models\User;
 use App\Support\CloakOptions;
 use App\Support\InfrastructureOptions;
+use App\Support\MarketOptions;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
@@ -16,7 +18,10 @@ class OfferRestoreService
         private readonly InfrastructureProvisioner $provisioner,
     ) {}
 
-    public function restore(Offer $offer, User $initiatedBy): Offer
+    /**
+     * @param  array{template?: string, geo?: string}  $overrides
+     */
+    public function restore(Offer $offer, User $initiatedBy, array $overrides = []): Offer
     {
         $offer->refresh();
         $offer->loadMissing('user.settings');
@@ -50,6 +55,8 @@ class OfferRestoreService
                 'Заповніть SSH, Cloudflare і Dynadot у налаштуваннях власника, щоб поновити оффер.',
             );
         }
+
+        $this->applyRestoreChoices($offer, $overrides);
 
         // Drop the old origin pin before rebuild so restore cannot SSH a deleted IP.
         app(OriginPool::class)->unbind($offer);
@@ -102,5 +109,94 @@ class OfferRestoreService
         ]);
 
         return $offer->fresh();
+    }
+
+    /**
+     * Apply optional template / GEO before rebuildLocalFolder, while still archived.
+     *
+     * @param  array{template?: string, geo?: string}  $overrides
+     */
+    private function applyRestoreChoices(Offer $offer, array $overrides): void
+    {
+        $hasTemplate = filled($overrides['template'] ?? null);
+        $hasGeo = filled($overrides['geo'] ?? null);
+
+        if (! $hasTemplate && ! $hasGeo) {
+            return;
+        }
+
+        $catalog = app(TemplateCatalog::class);
+        $template = $hasTemplate
+            ? trim((string) $overrides['template'])
+            : (string) $offer->template;
+        $allowed = $catalog->selectableIds((string) $offer->template);
+
+        if (! in_array($template, $allowed, true)) {
+            throw new RuntimeException('Цей шаблон вимкнено');
+        }
+
+        $geo = $hasGeo
+            ? MarketOptions::normalizeGeo((string) $overrides['geo'])
+            : MarketOptions::normalizeGeo((string) $offer->geo);
+
+        $pinned = TemplateCatalog::pinVesperaMarket([
+            'template' => $template,
+            'geo' => $geo,
+            'lang' => (string) $offer->lang,
+            'phone' => (string) $offer->phone,
+            'phone_countries' => $offer->phoneCountriesList(),
+        ]);
+
+        $template = (string) $pinned['template'];
+        $geo = (string) $pinned['geo'];
+        $lang = strtolower((string) $pinned['lang']);
+        $phone = strtolower((string) $pinned['phone']);
+        $phoneCountries = is_array($pinned['phone_countries'] ?? null)
+            ? $pinned['phone_countries']
+            : $offer->phoneCountriesList();
+        $minDeposit = (string) ($offer->min_deposit ?: '250');
+        $currency = strtoupper((string) ($offer->currency ?: 'EUR'));
+
+        if (! TemplateCatalog::usesMlGeo($template) && $hasGeo) {
+            $lang = MarketOptions::defaultLangForGeo($geo);
+            $codes = $catalog->languageCodesFor($template);
+            if ($codes !== [] && ! in_array($lang, $codes, true)) {
+                $lang = in_array('en', $codes, true) ? 'en' : $codes[0];
+            }
+
+            $geoPhone = MarketOptions::phoneForGeo($geo);
+            $phoneCountries = MarketOptions::sanitizePhoneCodes($phoneCountries);
+            if (! in_array($geoPhone, $phoneCountries, true)) {
+                $phoneCountries[] = $geoPhone;
+            }
+            $phone = $geoPhone;
+
+            $deposit = GeoMinDeposit::catalog()[$geo] ?? null;
+            if (is_array($deposit)) {
+                if (filled($deposit['min_deposit'] ?? null)) {
+                    $minDeposit = (string) $deposit['min_deposit'];
+                }
+                if (filled($deposit['currency'] ?? null)) {
+                    $currency = strtoupper((string) $deposit['currency']);
+                }
+            } else {
+                $preset = MarketOptions::geoPresetsByCode()[$geo] ?? null;
+                if (! empty($preset['currency'])) {
+                    $currency = strtoupper((string) $preset['currency']);
+                }
+            }
+        }
+
+        $normalized = MarketOptions::normalizePhoneFields($phone, $phoneCountries, $geo);
+
+        $offer->forceFill([
+            'template' => $template,
+            'geo' => $geo,
+            'lang' => $lang,
+            'phone' => $normalized['phone'],
+            'phone_countries' => implode(',', $normalized['phone_countries']),
+            'min_deposit' => $minDeposit,
+            'currency' => $currency,
+        ])->save();
     }
 }

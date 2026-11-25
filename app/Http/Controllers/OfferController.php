@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BulkOfferActionRequest;
+use App\Http\Requests\RestoreOfferRequest;
 use App\Http\Requests\StoreBulkOffersRequest;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
@@ -1099,6 +1100,9 @@ class OfferController extends Controller
             ],
             'staleDeadHint' => $user->canArchiveOffers() ? $staleDead->hintFor($user) : null,
             'canManageAllOffers' => $user->canManageAllOffers(),
+            'geoPresets' => config('offerra.geo_presets'),
+            'templates' => app(TemplateCatalog::class)->forPicker(),
+            'brandTemplateUsage' => $this->brandTemplateUsage($user),
         ]);
     }
 
@@ -1176,12 +1180,10 @@ class OfferController extends Controller
             ->with('success', "Повтор архівації: {$offer->domain}.");
     }
 
-    public function restore(Offer $offer, OfferRestoreService $restore): RedirectResponse
+    public function restore(RestoreOfferRequest $request, Offer $offer, OfferRestoreService $restore): RedirectResponse
     {
-        $this->authorizeOfferManagement($offer);
-
         try {
-            $restored = $restore->restore($offer->fresh(), auth()->user());
+            $restored = $restore->restore($offer->fresh(), $request->user(), $request->restoreChoices());
         } catch (\Throwable $e) {
             return redirect()
                 ->back()

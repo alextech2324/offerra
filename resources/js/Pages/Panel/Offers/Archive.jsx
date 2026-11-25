@@ -1,4 +1,5 @@
 import PanelLayout from '@/Layouts/PanelLayout';
+import OfferRestoreModal from '@/Components/OfferRestoreModal';
 import StaleDeadBanner from '@/Components/StaleDeadBanner';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -139,11 +140,14 @@ export default function Archive({
     dateFilters = {},
     staleDeadHint = null,
     canManageAllOffers = false,
+    geoPresets = [],
+    templates = [],
+    brandTemplateUsage = {},
 }) {
     const { auth, errors, flash } = usePage().props;
     const rows = offers?.data ?? [];
     const [retryingId, setRetryingId] = useState(null);
-    const [restoringId, setRestoringId] = useState(null);
+    const [restoringOffer, setRestoringOffer] = useState(null);
     const [copiedDomainId, setCopiedDomainId] = useState(null);
     const [brandQuery, setBrandQuery] = useState(filters.brand ?? '');
     const [domainQuery, setDomainQuery] = useState(filters.domain ?? '');
@@ -241,19 +245,7 @@ export default function Archive({
     };
 
     const restoreOffer = (offer) => {
-        if (!window.confirm(
-            `Поновити ${offer.domain} з архіву?\n\n`
-            + 'Буде заново зібрано лендінг із даних у БД, піднято Cloudflare/origin і запущено деплой. '
-            + 'Домен має лишатися в Dynadot.',
-        )) {
-            return;
-        }
-
-        setRestoringId(offer.id);
-        router.post(route('offers.restore', offer.id), {}, {
-            preserveScroll: true,
-            onFinish: () => setRestoringId(null),
-        });
+        setRestoringOffer(offer);
     };
 
     return (
@@ -455,6 +447,7 @@ export default function Archive({
                                 {showUserColumn && <th>Користувач</th>}
                                 <th>Домен</th>
                                 <th>Бренд</th>
+                                <th>Шаблон</th>
                                 <th>GEO</th>
                                 <th>Статус</th>
                                 <th>Архівовано</th>
@@ -505,6 +498,7 @@ export default function Archive({
                                             </div>
                                         </td>
                                         <td>{offer.brand}</td>
+                                        <td>{offer.template}</td>
                                         <td>{offer.geo}</td>
                                         <td>
                                             {statusBadge(offer.status)}
@@ -521,11 +515,11 @@ export default function Archive({
                                                     <button
                                                         type="button"
                                                         className="btn btn-ghost btn-sm"
-                                                        disabled={restoringId === offer.id}
+                                                        disabled={restoringOffer?.id === offer.id}
                                                         onClick={() => restoreOffer(offer)}
                                                         title="Поновити оффер з даних у БД"
                                                     >
-                                                        {restoringId === offer.id ? '…' : 'Поновити'}
+                                                        Поновити
                                                     </button>
                                                 )}
                                                 {auth?.user?.can_archive_offers && offer.status === 'teardown_failed' && (
@@ -545,7 +539,7 @@ export default function Archive({
                             })}
                             {rows.length === 0 && (
                                 <tr>
-                                    <td colSpan={showUserColumn ? 7 : 6} className="field-hint">
+                                    <td colSpan={showUserColumn ? 8 : 7} className="field-hint">
                                         {activeChips.length > 0 ? 'Нічого не знайдено за фільтрами' : 'Архів порожній'}
                                     </td>
                                 </tr>
@@ -578,6 +572,16 @@ export default function Archive({
                     </nav>
                 )}
             </div>
+
+            {restoringOffer && (
+                <OfferRestoreModal
+                    offer={restoringOffer}
+                    geoPresets={geoPresets}
+                    templates={templates}
+                    brandTemplateUsage={brandTemplateUsage}
+                    onClose={() => setRestoringOffer(null)}
+                />
+            )}
         </PanelLayout>
     );
 }
