@@ -36,6 +36,8 @@ class DynadotClientTest extends TestCase
         $this->assertNotContains('pestotracer.online', $domains);
         $this->assertNotContains('tech', $tlds);
         $this->assertNotContains('pestotracer.tech', $domains);
+        $this->assertNotContains('info', $tlds);
+        $this->assertNotContains('pestotracer.info', $domains);
     }
 
     public function test_sort_search_results_by_price_desc(): void
