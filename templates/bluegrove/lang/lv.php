@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Galvenā izpilddirektore (CEO)',
         ],
-        'rest_title' => 'Pārējie seši',
+        'rest_title' => 'Viena komanda',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

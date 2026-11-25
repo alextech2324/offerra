@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => '最高経営責任者（CEO）',
         ],
-        'rest_title' => 'ほかの6人',
+        'rest_title' => 'ひとつのチーム',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

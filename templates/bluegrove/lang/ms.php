@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Ketua eksekutif (CEO)',
         ],
-        'rest_title' => 'Enam yang lain',
+        'rest_title' => 'Satu pasukan',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

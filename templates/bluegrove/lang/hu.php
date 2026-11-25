@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Vezérigazgató (CEO)',
         ],
-        'rest_title' => 'A másik hat',
+        'rest_title' => 'Egy csapat',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

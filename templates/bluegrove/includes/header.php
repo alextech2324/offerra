@@ -42,6 +42,7 @@ $logoMark = public_url('assets/icons/mark.svg');
 <body class="bg-body" data-phone-country="<?= e($phoneCountry ?? 'us') ?>" data-lang="<?= e($lang) ?>" data-preview-base="<?= e(offer_preview_base() ?? '') ?>">
 <div class="bg-orbs" aria-hidden="true"><span class="bg-orb bg-orb--a"></span><span class="bg-orb bg-orb--b"></span></div>
 <a class="bg-skip" href="#main-content"><?= e($nav['skip'] ?? 'Skip to content') ?></a>
+<div class="bg-stick">
 <header class="bg-mast">
   <div class="bg-mast__bar">
     <a class="bg-brand" href="<?= e($homeUrl) ?>" aria-label="<?= e($nav['home_aria']) ?>">
@@ -99,5 +100,6 @@ $logoMark = public_url('assets/icons/mark.svg');
     </div>
     <?php endfor; ?>
   </div>
+</div>
 </div>
 <main id="main-content">

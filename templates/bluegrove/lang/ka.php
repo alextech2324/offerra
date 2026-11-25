@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'გენერალური დირექტორი (CEO)',
         ],
-        'rest_title' => 'დანარჩენი ექვსი',
+        'rest_title' => 'ერთი გუნდი',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

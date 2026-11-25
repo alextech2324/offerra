@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Verkställande direktör (CEO)',
         ],
-        'rest_title' => 'De andra sex',
+        'rest_title' => 'Ett team',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

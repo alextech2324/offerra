@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Glavna izvršna direktorica (CEO)',
         ],
-        'rest_title' => 'Preostalih šest',
+        'rest_title' => 'Ena ekipa',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

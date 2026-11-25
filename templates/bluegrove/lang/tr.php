@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Genel müdür (CEO)',
         ],
-        'rest_title' => 'Diğer altı kişi',
+        'rest_title' => 'Tek bir ekip',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

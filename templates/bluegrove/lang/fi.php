@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Toimitusjohtaja (CEO)',
         ],
-        'rest_title' => 'Kuusi muuta',
+        'rest_title' => 'Yksi tiimi',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Generální ředitel (CEO)',
         ],
-        'rest_title' => 'Zbylých šest',
+        'rest_title' => 'Jeden tým',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

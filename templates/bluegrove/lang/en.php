@@ -309,7 +309,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Chief executive (CEO)',
         ],
-        'rest_title' => 'The other six',
+        'rest_title' => 'One team',
         'desk' => [
             ['name' => 'Amira Haddad', 'role' => 'Finance director (CFO)', 'alt' => 'Portrait of Amira Haddad'],
             ['name' => 'Martin Hale', 'role' => 'Technical director (CTO)', 'alt' => 'Portrait of Martin Hale'],

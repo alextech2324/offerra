@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Director general (CEO)',
         ],
-        'rest_title' => 'Ceilalți șase',
+        'rest_title' => 'O singură echipă',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

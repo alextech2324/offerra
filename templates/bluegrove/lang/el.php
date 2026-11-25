@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Διευθύνων σύμβουλος (CEO)',
         ],
-        'rest_title' => 'Οι άλλοι έξι',
+        'rest_title' => 'Μία ομάδα',
         'desk' => [
             [
                 'name' => 'Amira Haddad',

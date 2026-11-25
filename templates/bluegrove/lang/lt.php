@@ -445,7 +445,7 @@ return [
             'name' => 'Helen Ward',
             'role' => 'Generalinė direktorė (CEO)',
         ],
-        'rest_title' => 'Kiti šeši',
+        'rest_title' => 'Viena komanda',
         'desk' => [
             [
                 'name' => 'Amira Haddad',
