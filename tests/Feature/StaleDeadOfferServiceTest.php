@@ -223,6 +223,7 @@ class StaleDeadOfferServiceTest extends TestCase
         $enqueued = $this->service->archiveAllFor($user);
 
         $this->assertSame(1, $enqueued);
+        $this->assertSame(Offer::ARCHIVE_REASON_STALE_DEAD, Offer::query()->where('brand', 'Acme')->value('archive_reason'));
         $this->assertSame(0, $this->service->hintFor($user)['count']);
         $this->assertNotNull($this->service->hintFor($user)['last_scan_at']);
 

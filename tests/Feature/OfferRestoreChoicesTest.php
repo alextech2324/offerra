@@ -28,6 +28,8 @@ class OfferRestoreChoicesTest extends TestCase
                 ->component('Panel/Offers/Archive')
                 ->where('offers.data.0.template_id', 'noctra')
                 ->where('offers.data.0.geo', 'IT')
+                ->where('offers.data.0.archive_reason', 'cf_abuse')
+                ->where('offers.data.0.archive_reason_label', 'CF abuse')
                 ->has('templates')
                 ->has('geoPresets'));
     }
@@ -54,6 +56,7 @@ class OfferRestoreChoicesTest extends TestCase
         $this->assertSame('PL', $restored->geo);
         $this->assertSame('pl', $restored->lang);
         $this->assertSame('generated', $restored->status);
+        $this->assertNull($restored->archive_reason);
     }
 
     public function test_restore_to_bluegrove_pins_ml_geo(): void
@@ -99,6 +102,7 @@ class OfferRestoreChoicesTest extends TestCase
         $this->assertSame('noctra', $offer->template);
         $this->assertSame('PL', $offer->geo);
         $this->assertSame('generated', $offer->status);
+        $this->assertNull($offer->archive_reason);
     }
 
     /**
@@ -141,6 +145,7 @@ class OfferRestoreChoicesTest extends TestCase
             'template' => $template,
             'status' => 'archived',
             'archived_at' => now(),
+            'archive_reason' => Offer::ARCHIVE_REASON_CF_ABUSE,
             'from_search_team' => false,
             'provision_infrastructure' => true,
         ]);

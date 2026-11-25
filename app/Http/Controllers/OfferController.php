@@ -191,6 +191,7 @@ class OfferController extends Controller
             'google_index' => request()->string('google_index')->toString(),
             'availability' => request()->string('availability')->toString(),
             'archive_status' => request()->string('archive_status')->toString(),
+            'archive_reason' => request()->string('archive_reason')->toString(),
             'created' => request()->string('created')->toString(),
             'created_from' => request()->string('created_from')->toString(),
             'created_to' => request()->string('created_to')->toString(),
@@ -328,6 +329,16 @@ class OfferController extends Controller
             $query->where('status', 'archived');
         } elseif (($filters['archive_status'] ?? '') === 'teardown_failed') {
             $query->where('status', 'teardown_failed');
+        }
+
+        $archiveReason = (string) ($filters['archive_reason'] ?? '');
+        if ($archiveReason === Offer::ARCHIVE_REASON_MANUAL) {
+            $query->where(function (Builder $builder): void {
+                $builder->where('archive_reason', Offer::ARCHIVE_REASON_MANUAL)
+                    ->orWhereNull('archive_reason');
+            });
+        } elseif (in_array($archiveReason, [Offer::ARCHIVE_REASON_STALE_DEAD, Offer::ARCHIVE_REASON_CF_ABUSE], true)) {
+            $query->where('archive_reason', $archiveReason);
         }
 
         match ($filters['created']) {

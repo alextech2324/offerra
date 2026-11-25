@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\ArchiveOfferJob;
+use App\Models\CloudflareAbuseReport;
 use App\Models\CloudflareAccount;
 use App\Models\Offer;
 use App\Models\OriginServer;
@@ -25,9 +26,9 @@ class OfferTeardownService
         private readonly string $offersPath,
     ) {}
 
-    public function enqueueArchive(Offer $offer, User $initiatedBy): void
+    public function enqueueArchive(Offer $offer, User $initiatedBy, string $reason = Offer::ARCHIVE_REASON_MANUAL): void
     {
-        $this->enqueueTeardown($offer, $initiatedBy, purge: false);
+        $this->enqueueTeardown($offer, $initiatedBy, purge: false, reason: $reason);
     }
 
     public function enqueuePurge(Offer $offer, User $initiatedBy): void
@@ -35,7 +36,7 @@ class OfferTeardownService
         $this->enqueueTeardown($offer, $initiatedBy, purge: true);
     }
 
-    private function enqueueTeardown(Offer $offer, User $initiatedBy, bool $purge): void
+    private function enqueueTeardown(Offer $offer, User $initiatedBy, bool $purge, string $reason = Offer::ARCHIVE_REASON_MANUAL): void
     {
         if (in_array($offer->status, ['archiving', 'purging', 'archived'], true)) {
             throw new RuntimeException($purge
@@ -49,10 +50,15 @@ class OfferTeardownService
                 : 'Зачекайте завершення деплою перед архівацією.');
         }
 
+        $archiveReason = $purge
+            ? $offer->archive_reason
+            : $this->resolveArchiveReason($offer, $reason);
+
         $offer->update([
             'status' => $purge ? 'purging' : 'archiving',
             'archived_at' => null,
             'archived_by' => $initiatedBy->id,
+            'archive_reason' => $archiveReason,
             'teardown_meta' => [
                 'started_at' => now()->toIso8601String(),
                 'steps' => [],
@@ -594,6 +600,29 @@ class OfferTeardownService
         unset($meta['cloudflare_zone_id']);
         $offer->infra_meta = $meta;
         $offer->save();
+    }
+
+    private function resolveArchiveReason(Offer $offer, string $reason): string
+    {
+        $existing = trim((string) ($offer->archive_reason ?? ''));
+        if ($existing !== '') {
+            return $existing;
+        }
+
+        $allowed = [
+            Offer::ARCHIVE_REASON_MANUAL,
+            Offer::ARCHIVE_REASON_STALE_DEAD,
+            Offer::ARCHIVE_REASON_CF_ABUSE,
+        ];
+        if (! in_array($reason, $allowed, true)) {
+            $reason = Offer::ARCHIVE_REASON_MANUAL;
+        }
+
+        if ($reason === Offer::ARCHIVE_REASON_MANUAL && CloudflareAbuseReport::openForOffer($offer)) {
+            return Offer::ARCHIVE_REASON_CF_ABUSE;
+        }
+
+        return $reason;
     }
 
 }

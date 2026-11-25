@@ -159,7 +159,7 @@ class StaleDeadOfferService
             }
 
             try {
-                $this->teardown->enqueueArchive($offer, $user);
+                $this->teardown->enqueueArchive($offer, $user, Offer::ARCHIVE_REASON_STALE_DEAD);
                 $enqueued++;
             } catch (\Throwable $e) {
                 $msg = $e->getMessage();

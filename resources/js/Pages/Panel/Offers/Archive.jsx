@@ -95,6 +95,13 @@ function buildActiveFilterChips(filters, users) {
     } else if (filters.archive_status === 'teardown_failed') {
         chips.push({ id: 'archive_status', label: 'Status: error', clear: { archive_status: '' } });
     }
+    if (filters.archive_reason === 'stale_dead') {
+        chips.push({ id: 'archive_reason', label: 'Чому: мертвий', clear: { archive_reason: '' } });
+    } else if (filters.archive_reason === 'cf_abuse') {
+        chips.push({ id: 'archive_reason', label: 'Чому: CF abuse', clear: { archive_reason: '' } });
+    } else if (filters.archive_reason === 'manual') {
+        chips.push({ id: 'archive_reason', label: 'Чому: вручну', clear: { archive_reason: '' } });
+    }
     if (filters.created) {
         let dateLabel = 'Archived: ';
         switch (filters.created) {
@@ -185,6 +192,7 @@ export default function Archive({
             panel: '',
             user: '',
             archive_status: '',
+            archive_reason: '',
             created: '',
             created_from: '',
             created_to: '',
@@ -386,6 +394,16 @@ export default function Archive({
                         <option value="teardown_failed">Помилка</option>
                     </select>
                     <select
+                        aria-label="Archive reason"
+                        value={filters.archive_reason ?? ''}
+                        onChange={(e) => reloadArchive({ archive_reason: e.target.value })}
+                    >
+                        <option value="">Чому</option>
+                        <option value="manual">Вручну</option>
+                        <option value="stale_dead">Мертвий</option>
+                        <option value="cf_abuse">CF abuse</option>
+                    </select>
+                    <select
                         aria-label="Archived date"
                         value={filters.created ?? ''}
                         onChange={(e) => reloadArchive({ created: e.target.value })}
@@ -450,6 +468,7 @@ export default function Archive({
                                 <th>Шаблон</th>
                                 <th>GEO</th>
                                 <th>Статус</th>
+                                <th>Чому</th>
                                 <th>Архівовано</th>
                                 <th>Дії</th>
                             </tr>
@@ -508,6 +527,7 @@ export default function Archive({
                                                 </p>
                                             )}
                                         </td>
+                                        <td>{offer.archive_reason_label ?? 'Вручну'}</td>
                                         <td>{formatArchivedAt(offer.archived_at)}</td>
                                         <td>
                                             <div className="offer-actions">

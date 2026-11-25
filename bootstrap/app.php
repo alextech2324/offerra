@@ -41,6 +41,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('offers:queue-gsc-pending')->everyFiveMinutes()->withoutOverlapping(4);
         $schedule->command('offers:check-availability')->hourly()->withoutOverlapping(55);
 
+        // Incoming CF Trust and Safety reports. Isolated artisan — not deploy/gsc/dns/purge queues.
+        $schedule->command('cloudflare:poll-abuse')
+            ->everyThreeMinutes()
+            ->withoutOverlapping(3);
+
         // GSC URL inspection at 03:00 Kyiv — 24h after sitemap submit, then daily until indexed / duplicate / 7d unseen.
         $schedule->command('offers:inspect-google-index')
             ->dailyAt('03:00')

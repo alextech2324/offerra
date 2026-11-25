@@ -73,7 +73,7 @@ class ArchiveStaleDeadOffers extends Command
             }
 
             try {
-                $teardown->enqueueArchive($offer, $admin);
+                $teardown->enqueueArchive($offer, $admin, Offer::ARCHIVE_REASON_STALE_DEAD);
                 $enqueued++;
                 if ($enqueued % 100 === 0) {
                     $this->line("enqueued={$enqueued}");

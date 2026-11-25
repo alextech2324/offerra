@@ -1,0 +1,299 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Jobs\ArchiveOfferJob;
+use App\Models\CloudflareAbuseReport;
+use App\Models\CloudflareAccount;
+use App\Models\Offer;
+use App\Models\User;
+use App\Models\UserSetting;
+use App\Services\CloudflareAbusePollService;
+use App\Services\CloudflareClient;
+use App\Services\TelegramNotifier;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
+use Tests\TestCase;
+
+class CloudflareAbusePollTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_list_abuse_reports_parses_nested_result(): void
+    {
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/accounts/acct1/abuse-reports*' => Http::response([
+                'success' => true,
+                'result' => [
+                    'reports' => [
+                        [
+                            'id' => 'rep-1',
+                            'domain' => 'example.com',
+                            'type' => 'PHISH',
+                            'status' => 'accepted',
+                        ],
+                    ],
+                ],
+            ]),
+        ]);
+
+        $result = (new CloudflareClient)->listAbuseReports('cf-token', 'acct1');
+
+        $this->assertTrue($result['ok']);
+        $this->assertFalse($result['forbidden']);
+        $this->assertSame('rep-1', $result['reports'][0]['id'] ?? null);
+    }
+
+    public function test_list_abuse_reports_marks_forbidden_on_403(): void
+    {
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/accounts/acct1/abuse-reports*' => Http::response([
+                'success' => false,
+                'errors' => [['message' => 'Authentication error']],
+            ], 403),
+        ]);
+
+        $result = (new CloudflareClient)->listAbuseReports('cf-token', 'acct1');
+
+        $this->assertFalse($result['ok']);
+        $this->assertTrue($result['forbidden']);
+        $this->assertSame([], $result['reports']);
+    }
+
+    public function test_new_phish_report_notifies_live_offer_owner_once(): void
+    {
+        [$offer] = $this->liveOfferWithTelegram('phish-me.live');
+
+        Http::fake($this->cfReportsFake('acct1', [
+            ['id' => 'rep-phish', 'domain' => 'phish-me.live', 'type' => 'PHISH', 'status' => 'accepted'],
+        ]));
+
+        $this->mock(TelegramNotifier::class, function ($mock) use ($offer): void {
+            $mock->shouldReceive('send')
+                ->once()
+                ->withArgs(function ($settings, string $text) use ($offer) {
+                    return str_contains($text, 'Cloudflare abuse')
+                        && str_contains($text, $offer->domain)
+                        && str_contains($text, 'PHISH');
+                })
+                ->andReturn(true);
+        });
+
+        $first = app(CloudflareAbusePollService::class)->poll();
+        $this->assertSame(1, $first['new']);
+        $this->assertSame(1, $first['notified']);
+
+        $second = app(CloudflareAbusePollService::class)->poll();
+        $this->assertSame(0, $second['new']);
+        $this->assertSame(0, $second['notified']);
+
+        $this->assertDatabaseHas('cloudflare_abuse_reports', [
+            'cf_report_id' => 'rep-phish',
+            'domain' => 'phish-me.live',
+            'offer_id' => $offer->id,
+        ]);
+        $this->assertNotNull(CloudflareAbuseReport::query()->where('cf_report_id', 'rep-phish')->value('notified_at'));
+    }
+
+    public function test_archived_offer_is_stored_without_telegram(): void
+    {
+        $user = User::factory()->create();
+        $this->settingsWithCf($user);
+        $this->makeOffer($user, 'already-gone.live', 'archived');
+
+        Http::fake($this->cfReportsFake('acct1', [
+            ['id' => 'rep-old', 'domain' => 'already-gone.live', 'type' => 'PHISH', 'status' => 'accepted'],
+        ]));
+
+        $this->mock(TelegramNotifier::class, function ($mock): void {
+            $mock->shouldReceive('send')->never();
+        });
+
+        $stats = app(CloudflareAbusePollService::class)->poll();
+
+        $this->assertSame(1, $stats['new']);
+        $this->assertSame(0, $stats['notified']);
+        $this->assertDatabaseHas('cloudflare_abuse_reports', [
+            'cf_report_id' => 'rep-old',
+            'domain' => 'already-gone.live',
+        ]);
+    }
+
+    public function test_dmca_is_stored_without_telegram(): void
+    {
+        $this->liveOfferWithTelegram('copyright.live');
+
+        Http::fake($this->cfReportsFake('acct1', [
+            ['id' => 'rep-dmca', 'domain' => 'copyright.live', 'type' => 'DMCA', 'status' => 'accepted'],
+        ]));
+
+        $this->mock(TelegramNotifier::class, function ($mock): void {
+            $mock->shouldReceive('send')->never();
+        });
+
+        $stats = app(CloudflareAbusePollService::class)->poll();
+
+        $this->assertSame(1, $stats['new']);
+        $this->assertSame(0, $stats['notified']);
+    }
+
+    public function test_duplicate_cloudflare_slots_make_one_http_request(): void
+    {
+        $first = User::factory()->create();
+        $this->settingsWithCf($first);
+        $second = User::factory()->create();
+        $this->settingsWithCf($second);
+
+        CloudflareAccount::query()->create([
+            'name' => 'Spare same',
+            'api_token' => 'cf-token',
+            'account_id' => 'acct1',
+            'is_active' => true,
+        ]);
+
+        Http::fake($this->cfReportsFake('acct1', []));
+
+        $this->mock(TelegramNotifier::class, function ($mock): void {
+            $mock->shouldReceive('send')->never();
+        });
+
+        $stats = app(CloudflareAbusePollService::class)->poll();
+
+        $this->assertSame(1, $stats['accounts']);
+        Http::assertSentCount(1);
+    }
+
+    public function test_forbidden_does_not_throw(): void
+    {
+        $user = User::factory()->create();
+        $this->settingsWithCf($user);
+
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/accounts/acct1/abuse-reports*' => Http::response([
+                'success' => false,
+            ], 403),
+        ]);
+
+        $this->mock(TelegramNotifier::class, function ($mock): void {
+            $mock->shouldReceive('send')->never();
+        });
+
+        $first = app(CloudflareAbusePollService::class)->poll();
+        $second = app(CloudflareAbusePollService::class)->poll();
+
+        $this->assertSame(1, $first['forbidden']);
+        $this->assertSame(1, $second['forbidden']);
+        $this->assertSame(0, $first['errors']);
+    }
+
+    public function test_manual_archive_after_report_marks_cf_abuse(): void
+    {
+        Queue::fake();
+
+        [$offer, $user] = $this->liveOfferWithTelegram('reported.live');
+        $admin = User::factory()->admin()->create();
+
+        CloudflareAbuseReport::query()->create([
+            'cloudflare_account_id' => 'acct1',
+            'cf_report_id' => 'rep-now',
+            'domain' => 'reported.live',
+            'type' => 'PHISH',
+            'offer_id' => $offer->id,
+            'user_id' => $user->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->from(route('offers.index'))
+            ->post(route('offers.archive', $offer))
+            ->assertRedirect();
+
+        $this->assertSame('archiving', $offer->fresh()->status);
+        $this->assertSame(Offer::ARCHIVE_REASON_CF_ABUSE, $offer->fresh()->archive_reason);
+        Queue::assertPushed(ArchiveOfferJob::class);
+    }
+
+    public function test_archive_page_filters_by_reason(): void
+    {
+        $user = User::factory()->create();
+        $this->makeOffer($user, 'dead-reason.live', 'archived', Offer::ARCHIVE_REASON_STALE_DEAD);
+        $this->makeOffer($user, 'abuse-reason.live', 'archived', Offer::ARCHIVE_REASON_CF_ABUSE);
+
+        $this->actingAs($user)
+            ->get(route('offers.archive.index', ['archive_reason' => 'cf_abuse']))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Panel/Offers/Archive')
+                ->where('offers.data.0.domain', 'abuse-reason.live')
+                ->where('offers.data.0.archive_reason', 'cf_abuse')
+                ->where('offers.total', 1));
+    }
+
+    public function test_artisan_poll_command_runs(): void
+    {
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/accounts/*/abuse-reports*' => Http::response([
+                'success' => true,
+                'result' => ['reports' => []],
+            ]),
+        ]);
+
+        $this->artisan('cloudflare:poll-abuse')
+            ->expectsOutputToContain('cf_abuse accounts=0')
+            ->assertSuccessful();
+    }
+
+    /**
+     * @return array{0: Offer, 1: User}
+     */
+    private function liveOfferWithTelegram(string $domain): array
+    {
+        $user = User::factory()->create();
+        $this->settingsWithCf($user, telegram: true);
+        $offer = $this->makeOffer($user, $domain, 'deployed');
+
+        return [$offer, $user];
+    }
+
+    private function settingsWithCf(User $user, bool $telegram = false): UserSetting
+    {
+        return UserSetting::query()->create([
+            'user_id' => $user->id,
+            'cloudflare_api_token' => 'cf-token',
+            'cloudflare_account_id' => 'acct1',
+            'tg_bot_token' => $telegram ? 'bot-token' : null,
+            'tg_chat_id' => $telegram ? '123' : null,
+        ]);
+    }
+
+    private function makeOffer(User $user, string $domain, string $status, ?string $reason = null): Offer
+    {
+        return Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => $domain,
+            'brand' => 'AbuseBrand',
+            'domain' => $domain,
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'default',
+            'status' => $status,
+            'archived_at' => $status === 'archived' ? now() : null,
+            'archive_reason' => $reason,
+            'from_search_team' => false,
+        ]);
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $reports
+     * @return array<string, mixed>
+     */
+    private function cfReportsFake(string $accountId, array $reports): array
+    {
+        return [
+            'https://api.cloudflare.com/client/v4/accounts/'.$accountId.'/abuse-reports*' => Http::response([
+                'success' => true,
+                'result' => ['reports' => $reports],
+            ]),
+        ];
+    }
+}

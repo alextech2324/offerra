@@ -802,6 +802,79 @@ class CloudflareClient
     }
 
     /**
+     * Incoming Trust and Safety reports against this CF account (not reports we submitted).
+     * Token needs Account → Trust and Safety → Read.
+     *
+     * @param  array<string, mixed>  $query
+     * @return array{ok: bool, forbidden: bool, status: int, reports: list<array<string, mixed>>, error?: string}
+     */
+    public function listAbuseReports(string $token, string $accountId, array $query = []): array
+    {
+        $token = self::normalizeApiToken($token);
+        $accountId = trim($accountId);
+
+        if ($token === '' || $accountId === '') {
+            return [
+                'ok' => false,
+                'forbidden' => false,
+                'status' => 0,
+                'reports' => [],
+                'error' => 'missing_credentials',
+            ];
+        }
+
+        $url = 'https://api.cloudflare.com/client/v4/accounts/'.$accountId.'/abuse-reports';
+
+        $response = Http::timeout(30)
+            ->withToken($token)
+            ->acceptJson()
+            ->get($url, $query);
+
+        $status = $response->status();
+
+        if ($status === 401 || $status === 403) {
+            return [
+                'ok' => false,
+                'forbidden' => true,
+                'status' => $status,
+                'reports' => [],
+                'error' => 'trust_and_safety_read_required',
+            ];
+        }
+
+        if ($response->failed()) {
+            $payload = $response->json();
+            $detail = is_array($payload) ? $this->extractError($payload) : '';
+
+            return [
+                'ok' => false,
+                'forbidden' => false,
+                'status' => $status,
+                'reports' => [],
+                'error' => $detail !== '' ? $detail : ('HTTP '.$status),
+            ];
+        }
+
+        /** @var array<string, mixed> $payload */
+        $payload = $response->json() ?? [];
+        $result = $payload['result'] ?? [];
+        $reports = [];
+
+        if (is_array($result) && isset($result['reports']) && is_array($result['reports'])) {
+            $reports = array_values($result['reports']);
+        } elseif (is_array($result) && array_is_list($result)) {
+            $reports = $result;
+        }
+
+        return [
+            'ok' => true,
+            'forbidden' => false,
+            'status' => $status,
+            'reports' => $reports,
+        ];
+    }
+
+    /**
      * @param  array<string, mixed>  $zone
      * @return array{zone_id: string, nameservers: list<string>, status: string}
      */

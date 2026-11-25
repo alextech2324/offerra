@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Offer extends Model
 {
+    public const ARCHIVE_REASON_MANUAL = 'manual';
+
+    public const ARCHIVE_REASON_STALE_DEAD = 'stale_dead';
+
+    public const ARCHIVE_REASON_CF_ABUSE = 'cf_abuse';
+
     protected $fillable = [
         'user_id',
         'folder',
@@ -37,6 +43,7 @@ class Offer extends Model
         'deploy_error',
         'archived_at',
         'archived_by',
+        'archive_reason',
         'teardown_meta',
         'submitted_for_indexing',
         'indexed_at',
@@ -237,6 +244,8 @@ class Offer extends Model
             'deployed_at' => $this->deployed_at?->timezone('Europe/Kyiv')->format('Y-m-d H:i'),
             'deploy_error' => $this->deploy_error,
             'archived_at' => $this->archived_at?->timezone('Europe/Kyiv')->format('Y-m-d H:i'),
+            'archive_reason' => $this->archive_reason ?: self::ARCHIVE_REASON_MANUAL,
+            'archive_reason_label' => $this->archiveReasonLabel(),
             'teardown_meta' => $this->teardown_meta ?? [],
             'submitted_for_indexing' => $this->submitted_for_indexing,
             'indexed_at' => $this->indexed_at?->timezone('Europe/Kyiv')->format('Y-m-d H:i'),
@@ -317,6 +326,15 @@ class Offer extends Model
         $slot = (string) (is_array($this->infra_meta) ? ($this->infra_meta['cloudflare_slot'] ?? '') : '');
 
         return in_array($slot, ['backup', 'spare'], true) ? $slot : 'primary';
+    }
+
+    public function archiveReasonLabel(): string
+    {
+        return match ($this->archive_reason) {
+            self::ARCHIVE_REASON_STALE_DEAD => 'Мертвий',
+            self::ARCHIVE_REASON_CF_ABUSE => 'CF abuse',
+            default => 'Вручну',
+        };
     }
 
 }

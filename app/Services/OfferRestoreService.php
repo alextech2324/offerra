@@ -72,6 +72,7 @@ class OfferRestoreService
             'status' => 'generated',
             'archived_at' => null,
             'archived_by' => null,
+            'archive_reason' => null,
             'teardown_meta' => null,
             'deploy_error' => null,
             'remote_path' => null,
