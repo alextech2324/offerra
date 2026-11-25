@@ -789,15 +789,33 @@ class GoogleSearchConsoleClient
     {
         $accessToken = $this->oauth->accessTokenForAccount($account);
 
+        if ($this->offerUsesCloudflareChallenge($offer)) {
+            return $this->verifySiteDnsTxt($account, $offer);
+        }
+
         try {
             return $this->verifySiteFile($accessToken, $siteUrl);
-        } catch (RuntimeException $e) {
+        } catch (\Throwable $e) {
             if (GoogleOAuthService::isDeadTokenError($e->getMessage())) {
                 throw $e;
             }
+
+            Log::info('GSC FILE verification failed, falling back to DNS TXT', [
+                'domain' => $offer->domain,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         return $this->verifySiteDnsTxt($account, $offer);
+    }
+
+    private function offerUsesCloudflareChallenge(Offer $offer): bool
+    {
+        $meta = is_array($offer->infra_meta) ? $offer->infra_meta : [];
+        $options = is_array($meta['options'] ?? null) ? $meta['options'] : [];
+
+        return ($meta['cloudflare_challenge'] ?? '') === 'done'
+            || ! empty($options['cloudflare_challenge']);
     }
 
     private function verifySiteDnsTxt(GoogleAccount $account, Offer $offer): bool
