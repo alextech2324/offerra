@@ -1,4 +1,3 @@
-import CloakPick from '@/Components/CloakPick';
 import PhoneGeoSelect, { normalizePhoneCountries, phoneOptionCode, uniquePhonePresets } from '@/Components/PhoneGeoSelect';
 import TemplatePicker, { usedTemplatesForBrand } from '@/Components/TemplatePicker';
 import { geoDepositMissingFromCatalog, lookupGeoDeposit } from '@/lib/geoDepositPrefs';
@@ -35,7 +34,6 @@ export default function OfferEditModal({
     currencies = [],
     templates = [],
     brandTemplateUsage = {},
-    whiteLandings = [],
     onClose,
 }) {
     const phoneCountries = normalizePhoneCountries(offer.phone_countries, offer.phone);
@@ -53,8 +51,6 @@ export default function OfferEditModal({
         phone: offer.phone || phoneCountries[0] || '',
         phone_countries: phoneCountries,
         vitals_enabled: Boolean(offer.vitals_enabled),
-        cloak_enabled: Boolean(offer.cloak_enabled),
-        white_landing_id: offer.white_landing_id || '',
         auto_redeploy: true,
     });
 
@@ -241,9 +237,7 @@ export default function OfferEditModal({
         || errors.currency
         || errors.phone
         || errors.phone_countries
-        || errors.vitals_enabled
-        || errors.cloak_enabled
-        || errors.white_landing_id;
+        || errors.vitals_enabled;
 
     return (
         <div className="modal-backdrop" onClick={() => !processing && onClose()}>
@@ -429,23 +423,6 @@ export default function OfferEditModal({
                                 CWV-collector (дзеркала / редірект з копій)
                             </span>
                         </label>
-                    </div>
-
-                    <div className="field">
-                        <span className="cloak-pick__whites-label" style={{ display: 'block', marginBottom: '0.45rem' }}>Кло</span>
-                        <CloakPick
-                            enabled={data.cloak_enabled}
-                            whiteId={data.white_landing_id}
-                            whites={whiteLandings}
-                            namePrefix={`edit-cloak-${offer.id}`}
-                            onEnabledChange={(next) => setData((prev) => ({
-                                ...prev,
-                                cloak_enabled: next,
-                                white_landing_id: next ? prev.white_landing_id : '',
-                            }))}
-                            onWhiteChange={(id) => setData('white_landing_id', id)}
-                            hint="Правило однакове для всіх оферів і не залежить від краю. Після збереження задеплой, щоб гейт з’явився на origin."
-                        />
                     </div>
 
                     <div className="field">

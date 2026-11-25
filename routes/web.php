@@ -18,7 +18,6 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TemplatePreviewController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WhiteLandingController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
@@ -60,12 +59,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/templates/{template}/availability', [TemplateController::class, 'updateAvailability'])
         ->where('template', '[A-Za-z0-9_-]+')
         ->name('templates.availability');
-    Route::get('/landings', [WhiteLandingController::class, 'index'])->name('landings.index');
-    Route::post('/landings', [WhiteLandingController::class, 'store'])->name('landings.store');
-    Route::delete('/landings/{landing}', [WhiteLandingController::class, 'destroy'])->name('landings.destroy');
-    Route::get('/landings/{landing}/preview/{path?}', [WhiteLandingController::class, 'preview'])
-        ->where('path', '.*')
-        ->name('landings.preview');
     Route::get('/preview/{template}/{path?}', [TemplatePreviewController::class, 'show'])
         ->where('path', '.*')
         ->name('templates.preview');

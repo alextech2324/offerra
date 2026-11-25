@@ -26,7 +26,6 @@ use App\Services\OfferZipExporter;
 use App\Services\OriginEvacuationService;
 use App\Services\StaleDeadOfferService;
 use App\Services\TemplateCatalog;
-use App\Services\WhiteLandingStore;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
@@ -41,7 +40,7 @@ class OfferController extends Controller
 {
     private const PER_PAGE_OPTIONS = [10, 30, 50, 100];
 
-    public function index(DeployService $deploy, OriginEvacuationService $evacuation, WhiteLandingStore $whites): Response
+    public function index(DeployService $deploy, OriginEvacuationService $evacuation): Response
     {
         $user = auth()->user();
         $settings = $user->settings;
@@ -85,12 +84,6 @@ class OfferController extends Controller
             'geoPresets' => config('offerra.geo_presets'),
             'currencies' => config('offerra.currencies'),
             'templates' => app(TemplateCatalog::class)->forPicker(),
-            'whiteLandings' => $whites->pickerFor($user),
-            'whiteLandingsByUser' => $user->canSeeAllOffers()
-                ? $whites->pickerByUserIds(
-                    $offers->getCollection()->pluck('user_id')->push($user->id),
-                )
-                : [],
             'brandTemplateUsage' => $this->brandTemplateUsage($user),
             'showUserColumn' => $user->canSeeAllOffers(),
             'canManageAllOffers' => $user->canManageAllOffers(),
@@ -242,7 +235,7 @@ class OfferController extends Controller
     private function offerScopeQuery(User $user, bool $archived = false): Builder
     {
         $query = Offer::query()
-            ->with(['user.settings', 'whiteLanding'])
+            ->with(['user.settings'])
             ->orderByDesc($archived ? 'archived_at' : 'created_at');
 
         if ($archived) {
@@ -378,7 +371,7 @@ class OfferController extends Controller
         ];
     }
 
-    public function create(TemplateCatalog $catalog, WhiteLandingStore $whites): Response
+    public function create(TemplateCatalog $catalog): Response
     {
         $settings = auth()->user()->settings;
         $ready = $settings
@@ -402,7 +395,6 @@ class OfferController extends Controller
             'initialLang' => request()->string('lang')->toString() ?: null,
             'initialFromSearch' => request()->boolean('from_search'),
             'canProvisionInfrastructure' => InfrastructureProvisioner::settingsReady($settings),
-            'whiteLandings' => $whites->pickerFor(auth()->user()),
         ]);
     }
 
@@ -472,8 +464,6 @@ class OfferController extends Controller
                 'infra_cloudflare_www_redirect' => $request->boolean('infra_cloudflare_www_redirect'),
                 'infra_cloudflare_challenge' => $request->boolean('infra_cloudflare_challenge'),
                 'infra_edge' => $request->string('infra_edge')->toString() ?: 'cloudflare',
-                'cloak_enabled' => $request->boolean('cloak_enabled'),
-                'white_landing_id' => $request->integer('white_landing_id') ?: null,
             ]);
         } catch (\Throwable $e) {
             return redirect()
@@ -524,8 +514,6 @@ class OfferController extends Controller
             'infra_cloudflare_www_redirect' => $request->boolean('infra_cloudflare_www_redirect'),
             'infra_cloudflare_challenge' => $request->boolean('infra_cloudflare_challenge'),
             'infra_edge' => $request->string('infra_edge')->toString() ?: 'cloudflare',
-            'cloak_enabled' => $request->boolean('cloak_enabled'),
-            'white_landing_id' => $request->integer('white_landing_id') ?: null,
         ];
 
         /** @var list<array{domain: string, template: string}> $items */
@@ -899,8 +887,6 @@ class OfferController extends Controller
                 'phone' => $request->string('phone')->toString(),
                 'phone_countries' => $request->input('phone_countries', []),
                 'vitals_enabled' => $request->boolean('vitals_enabled'),
-                'cloak_enabled' => $request->boolean('cloak_enabled'),
-                'white_landing_id' => $request->integer('white_landing_id') ?: null,
             ]);
         } catch (\Throwable $e) {
             return redirect()

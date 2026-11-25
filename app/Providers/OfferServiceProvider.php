@@ -17,7 +17,6 @@ use App\Services\OfferZipExporter;
 use App\Services\OriginHostService;
 use App\Services\OriginPool;
 use App\Services\TemplateCatalog;
-use App\Services\WhiteLandingStore;
 use Illuminate\Support\ServiceProvider;
 
 class OfferServiceProvider extends ServiceProvider
@@ -31,12 +30,6 @@ class OfferServiceProvider extends ServiceProvider
         $this->app->singleton(TemplateCatalog::class, function () {
             return new TemplateCatalog(
                 config('offerra.templates_path'),
-            );
-        });
-
-        $this->app->singleton(WhiteLandingStore::class, function () {
-            return new WhiteLandingStore(
-                config('offerra.white_landings_path'),
             );
         });
 

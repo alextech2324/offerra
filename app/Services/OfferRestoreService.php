@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\GeoMinDeposit;
 use App\Models\Offer;
 use App\Models\User;
-use App\Support\CloakOptions;
 use App\Support\InfrastructureOptions;
 use App\Support\MarketOptions;
 use Illuminate\Support\Facades\Log;
@@ -67,10 +66,7 @@ class OfferRestoreService
         $options = InfrastructureOptions::fromPreferredEdge();
 
         // Fresh infra progress — archive deleted origin/CF zone; do not trust old "done" flags.
-        $meta = CloakOptions::mergeIntoInfraMeta(
-            ['options' => $options],
-            CloakOptions::fromOffer($offer),
-        );
+        $meta = ['options' => $options];
 
         $offer->update([
             'status' => 'generated',

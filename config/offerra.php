@@ -18,7 +18,6 @@ return [
 
     'templates_path' => base_path(env('TEMPLATES_PATH', 'templates')),
     'offers_path' => base_path(env('OFFERS_PATH', 'offers')),
-    'white_landings_path' => storage_path('app/private/white-landings'),
     'crm_api_url' => env('OFFERRA_CRM_API_URL', 'https://yourleads.org/api/affiliates/v2/leads'),
 
     // Мови, для яких є/будуть переклади шаблонів
@@ -168,7 +167,7 @@ return [
         ['code' => 'NZ', 'name' => 'Нова Зеландія', 'lang' => 'en', 'phone' => 'nz'],
     ],
 
-    // Origin cloak always-pass (availability / GSC probes from the panel).
+    // IPs Cloudflare managed-challenge skips (panel availability / GSC probes).
     'panel_ips' => array_values(array_filter(array_map(
         static fn (string $ip) => trim($ip),
         explode(',', (string) env('OFFERRA_PANEL_IPS', '38.180.121.50')),

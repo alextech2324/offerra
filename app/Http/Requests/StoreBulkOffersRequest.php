@@ -49,15 +49,6 @@ class StoreBulkOffersRequest extends FormRequest
             'phone_countries' => $normalized['phone_countries'],
             'items' => $items,
         ]);
-
-        if (! $this->boolean('cloak_enabled')) {
-            $this->merge([
-                'cloak_enabled' => false,
-                'white_landing_id' => null,
-            ]);
-        } elseif ($this->input('white_landing_id') === '' || $this->input('white_landing_id') === '0') {
-            $this->merge(['white_landing_id' => null]);
-        }
     }
 
     /**
@@ -87,13 +78,6 @@ class StoreBulkOffersRequest extends FormRequest
             'infra_cloudflare_www_redirect' => ['boolean'],
             'infra_cloudflare_challenge' => ['boolean'],
             'infra_edge' => ['nullable', 'string', 'max:32', 'in:cloudflare'],
-            'cloak_enabled' => ['boolean'],
-            'white_landing_id' => [
-                Rule::requiredIf(fn () => $this->boolean('cloak_enabled')),
-                'nullable',
-                'integer',
-                Rule::exists('white_landings', 'id')->where('user_id', $this->user()?->id),
-            ],
             'items' => ['required', 'array', 'min:1', 'max:10'],
             'items.*.domain' => ['required', 'string', 'max:120', 'regex:/^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/i', 'distinct'],
             'items.*.template' => ['required', 'string', Rule::in($catalog->enabledIds())],
@@ -148,8 +132,6 @@ class StoreBulkOffersRequest extends FormRequest
             'items.*.domain.distinct' => 'Домени в пакеті мають бути унікальними.',
             'currency.in' => 'Оберіть валюту зі списку',
             'geo.size' => 'GEO — 2 літери, наприклад IE, IT, ZA',
-            'white_landing_id.required' => 'Якщо кло увімкнено — обери вайт зі вкладки Лендінги.',
-            'white_landing_id.exists' => 'Цього вайту немає у твоїй бібліотеці.',
         ];
     }
 }

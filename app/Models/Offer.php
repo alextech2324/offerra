@@ -48,8 +48,6 @@ class Offer extends Model
         'verification_filename',
         'vitals_enabled',
         'from_search_team',
-        'cloak_enabled',
-        'white_landing_id',
         'provision_infrastructure',
         'infra_status',
         'infra_error',
@@ -74,7 +72,6 @@ class Offer extends Model
             'provision_infrastructure' => 'boolean',
             'vitals_enabled' => 'boolean',
             'from_search_team' => 'boolean',
-            'cloak_enabled' => 'boolean',
             'dynadot_sandbox' => 'boolean',
             'cloudflare_api_token' => 'encrypted',
             'dynadot_api_key' => 'encrypted',
@@ -86,11 +83,6 @@ class Offer extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function whiteLanding(): BelongsTo
-    {
-        return $this->belongsTo(WhiteLanding::class);
     }
 
     public function stats(): HasOne
@@ -234,9 +226,6 @@ class Offer extends Model
             'template' => $templateLabel,
             'template_id' => $this->template,
             'vitals_enabled' => (bool) $this->vitals_enabled,
-            'cloak_enabled' => (bool) $this->cloak_enabled,
-            'white_landing_id' => $this->white_landing_id,
-            'white_landing_name' => $this->whiteLanding?->name,
             'status' => $this->status,
             'deploy_panel' => $this->deploy_panel_name,
             'cloudflare_account' => $this->cloudflare_account_name,

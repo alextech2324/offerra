@@ -1,5 +1,4 @@
 import PanelLayout from '@/Layouts/PanelLayout';
-import CloakPick from '@/Components/CloakPick';
 import PhoneGeoSelect, { normalizePhoneCountries, uniquePhonePresets, phoneOptionCode } from '@/Components/PhoneGeoSelect';
 import TemplatePicker, { usedTemplateCountsForBrand, usedTemplatesForBrand } from '@/Components/TemplatePicker';
 import { clearWizardState, draftHasProgress, loadWizardState, peekWizardDraft, saveWizardState, stripFreshQueryParam } from '@/lib/offerWizardStorage';
@@ -303,8 +302,6 @@ function buildDefaults(templates, fromSearch = false, enableCloudflare = false) 
         phone_countries: [],
         vitals_enabled: true,
         from_search_team: Boolean(fromSearch),
-        cloak_enabled: false,
-        white_landing_id: '',
         ...defaultInfraOptions(enableCloudflare),
     };
 }
@@ -326,7 +323,6 @@ export default function OffersCreate({
     initialGeo = null,
     initialLang = null,
     initialFromSearch = false,
-    whiteLandings = [],
 }) {
     const { errors, panel, auth } = usePage().props;
     const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
@@ -1417,11 +1413,6 @@ export default function OffersCreate({
         if (!canProceedMarket) {
             return 'Перевірте GEO, мову та phone GEO (крок 2).';
         }
-        if (data.cloak_enabled && !data.white_landing_id) {
-            return whiteLandings.length === 0
-                ? 'Щоб увімкнути кло, спочатку завантаж вайт у вкладці Лендінги.'
-                : 'Увімкнене кло — обери вайт на кроці Інфра.';
-        }
 
         return null;
     }, [
@@ -1435,9 +1426,6 @@ export default function OffersCreate({
         templatesForLang.length,
         data.lang,
         data.template,
-        data.cloak_enabled,
-        data.white_landing_id,
-        whiteLandings.length,
         isMarketMultilang,
     ]);
 
@@ -1482,8 +1470,6 @@ export default function OffersCreate({
                 phone_countries: data.phone_countries,
                 vitals_enabled: data.vitals_enabled,
                 from_search_team: data.from_search_team,
-                cloak_enabled: Boolean(data.cloak_enabled),
-                white_landing_id: data.cloak_enabled ? (data.white_landing_id || null) : null,
                 infra_cloudflare_zone: data.infra_cloudflare_zone,
                 infra_cloudflare_dns: data.infra_cloudflare_dns,
                 infra_dynadot_ns: data.infra_dynadot_ns,
@@ -2286,27 +2272,6 @@ export default function OffersCreate({
                             </p>
                         </div>
                     )}
-
-                    <div className="card infra-edge" style={{ marginTop: '1rem' }}>
-                        <h3>Кло</h3>
-                        <p className="card-desc">
-                            Якщо ні — офер як зараз. Якщо так — Googlebot і люди з GEO офера
-                            бачать ленд, решта — вайт.
-                        </p>
-                        <CloakPick
-                            enabled={data.cloak_enabled}
-                            whiteId={data.white_landing_id}
-                            whites={whiteLandings}
-                            namePrefix="create-cloak"
-                            onEnabledChange={(next) => setData((prev) => ({
-                                ...prev,
-                                cloak_enabled: next,
-                                white_landing_id: next ? prev.white_landing_id : '',
-                            }))}
-                            onWhiteChange={(id) => update('white_landing_id', id)}
-                            hint="Гейт їде на origin разом із лендом. Задеплой після вибору вайту."
-                        />
-                    </div>
                 </section>
             )}
 
@@ -2378,14 +2343,6 @@ export default function OffersCreate({
                                         : '—'}
                                 </span>
                             </div>
-                            <div className="summary-row">
-                                <span>Кло</span>
-                                <span>
-                                    {data.cloak_enabled
-                                        ? `Так · ${whiteLandings.find((item) => String(item.id) === String(data.white_landing_id))?.name || 'вайт'}`
-                                        : 'Ні'}
-                                </span>
-                            </div>
                         </dl>
                     </div>
                 </section>
@@ -2404,7 +2361,6 @@ export default function OffersCreate({
                         disabled={
                             (step === 0 && !canProceedStep0)
                             || (step === 1 && !canProceedStep1)
-                            || (step === 2 && Boolean(data.cloak_enabled) && !data.white_landing_id)
                         }
                         onClick={() => {
                             if (step === 0) {

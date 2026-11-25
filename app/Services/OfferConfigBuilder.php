@@ -62,14 +62,6 @@ class OfferConfigBuilder
 
         return <<<PHP
 <?php
-\$__offerra_cloak = dirname(__DIR__) . '/cloak.php';
-if (!is_file(\$__offerra_cloak)) {
-    \$__offerra_cloak = dirname(__DIR__, 2) . '/cloak.php';
-}
-if (is_file(\$__offerra_cloak)) {
-    require_once \$__offerra_cloak;
-}
-unset(\$__offerra_cloak);
 // ─── Сайт / бренд / SEO ───────────────────────────────────────────────────
 define('SITE_NAME', {$brand});
 define('SITE_URL', {$siteUrl});

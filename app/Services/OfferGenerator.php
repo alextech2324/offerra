@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Offer;
 use App\Models\User;
-use App\Support\CloakOptions;
 use App\Support\InfrastructureOptions;
 use App\Support\MarketOptions;
 use App\Support\ValidationJsFormToken;
@@ -45,8 +44,6 @@ class OfferGenerator
             throw new InvalidArgumentException("Шаблон «{$template}» вимкнено.");
         }
 
-        $cloak = CloakOptions::resolveForUser($user, $input);
-
         $templateLangForSource = TemplateCatalog::copiesWholeTree($template) ? 'en' : (string) $input['lang'];
         $templatePath = $this->templateCatalog->resolveSourcePath($template, $templateLangForSource);
 
@@ -75,6 +72,7 @@ class OfferGenerator
 
         try {
             File::copyDirectory($templatePath, $targetPath);
+            $this->stripCloakArtifacts($targetPath);
             $this->syncSharedIncludeFiles($targetPath, $template);
             $this->syncSharedIntegrationFiles($targetPath, $template);
             $this->syncSharedStaticFiles($targetPath, $template, strtolower($input['lang']));
@@ -108,8 +106,6 @@ class OfferGenerator
                 'status' => 'generated',
                 'vitals_enabled' => ! empty($input['vitals_enabled']),
                 'from_search_team' => ! empty($input['from_search_team']),
-                'cloak_enabled' => $cloak['enabled'],
-                'white_landing_id' => $cloak['white_landing_id'],
                 'owner_id' => $user->id,
                 'created_at' => now()->toDateString(),
                 'folder' => $folder,
@@ -127,7 +123,6 @@ class OfferGenerator
             $infraMeta = $provisionInfrastructure
                 ? ['options' => $infraOptions]
                 : null;
-            $infraMeta = CloakOptions::mergeIntoInfraMeta($infraMeta, $cloak);
 
             $offer = Offer::create([
                 'user_id' => $user->id,
@@ -146,8 +141,6 @@ class OfferGenerator
                 'deploy_panel_name' => null,
                 'vitals_enabled' => ! empty($input['vitals_enabled']),
                 'from_search_team' => ! empty($input['from_search_team']),
-                'cloak_enabled' => $cloak['enabled'],
-                'white_landing_id' => $cloak['white_landing_id'],
                 'provision_infrastructure' => $provisionInfrastructure,
                 'infra_status' => $provisionInfrastructure ? 'pending' : null,
                 'infra_meta' => $infraMeta,
@@ -157,7 +150,6 @@ class OfferGenerator
             $this->prepareVerificationCopy($offer, $targetPath);
             $this->verificationFiles->syncToOfferFolder($offer);
             $this->ensureVerificationDirWritable($offer);
-            app(OfferCloakSync::class)->sync($offer, $targetPath);
         } catch (UniqueConstraintViolationException $e) {
             if (File::isDirectory($targetPath)) {
                 File::deleteDirectory($targetPath);
@@ -505,6 +497,21 @@ class OfferGenerator
         ];
     }
 
+    private function stripCloakArtifacts(string $targetPath): void
+    {
+        foreach (['cloak.php', 'cloak.json', 'googlebot.json'] as $file) {
+            $path = $targetPath.DIRECTORY_SEPARATOR.$file;
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+        }
+
+        $white = $targetPath.DIRECTORY_SEPARATOR.'white';
+        if (File::isDirectory($white)) {
+            File::deleteDirectory($white);
+        }
+    }
+
     private function folderIsComplete(string $targetPath, ?string $template = null): bool
     {
         foreach ($this->requiredRelativePaths($template) as $relativePath) {
@@ -539,6 +546,7 @@ class OfferGenerator
         }
 
         File::copyDirectory($templatePath, $targetPath);
+        $this->stripCloakArtifacts($targetPath);
         $this->syncSharedIncludeFiles($targetPath, $offer->template);
         $this->syncSharedIntegrationFiles($targetPath, $offer->template);
         $this->syncSharedStaticFiles($targetPath, $offer->template, $offer->lang);
@@ -604,7 +612,6 @@ class OfferGenerator
         $this->prepareVerificationCopy($offer, $targetPath);
         $this->verificationFiles->syncToOfferFolder($offer);
         $this->ensureVerificationDirWritable($offer);
-        app(OfferCloakSync::class)->sync($offer, $targetPath);
         $this->ensureWorkerWritable($targetPath);
 
         return $targetPath;
@@ -653,7 +660,7 @@ class OfferGenerator
         $this->verificationFiles->syncToOfferFolder($offer);
         $this->ensureVerificationDirWritable($offer);
         $this->syncManifestFromOffer($offer, $targetPath);
-        app(OfferCloakSync::class)->sync($offer, $targetPath);
+        $this->stripCloakArtifacts($targetPath);
     }
 
     /**
@@ -728,19 +735,6 @@ class OfferGenerator
             $updates['vitals_enabled'] = (bool) $input['vitals_enabled'];
         }
 
-        if (array_key_exists('cloak_enabled', $input) || array_key_exists('white_landing_id', $input)) {
-            $cloak = CloakOptions::resolveForUser($offer->user, [
-                'cloak_enabled' => $input['cloak_enabled'] ?? $offer->cloak_enabled,
-                'white_landing_id' => $input['white_landing_id'] ?? $offer->white_landing_id,
-            ]);
-            $updates['cloak_enabled'] = $cloak['enabled'];
-            $updates['white_landing_id'] = $cloak['white_landing_id'];
-            $updates['infra_meta'] = CloakOptions::mergeIntoInfraMeta(
-                is_array($offer->infra_meta) ? $offer->infra_meta : null,
-                $cloak,
-            );
-        }
-
         $offer->update($updates);
         $offer->refresh();
 
@@ -780,6 +774,7 @@ class OfferGenerator
         $manifest['vitals_enabled'] = (bool) $offer->vitals_enabled;
         $manifest['from_search_team'] = (bool) $offer->from_search_team;
         $manifest['folder'] = $offer->folder;
+        unset($manifest['cloak_enabled'], $manifest['white_landing_id']);
 
         File::put(
             $manifestPath,

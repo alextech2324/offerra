@@ -55,11 +55,6 @@ class User extends Authenticatable
         return $this->hasMany(Offer::class);
     }
 
-    public function whiteLandings(): HasMany
-    {
-        return $this->hasMany(WhiteLanding::class);
-    }
-
     public function roleLabel(): string
     {
         return match ($this->role) {
