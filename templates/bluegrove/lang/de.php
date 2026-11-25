@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Plattform | {brand}',
-            'description' => 'Chart, Notiz, Bestätigung. Die KI schreibt den Hinweis. Den Button behältst du.',
+            'description' => 'Chart, Hinweis, Bestätigung. Die KI schreibt den Hinweis. Du drückst Bestätigen.',
         ],
         'offer' => [
             'title' => 'Preise | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Team | {brand}',
-            'description' => 'Wer deinen Brief bei {brand} liest. Sieben Aufgaben, ein Desk.',
+            'description' => 'Wer deine E-Mail bei {brand} liest. Sieben Rollen, ein Team.',
         ],
         'sign-up' => [
             'title' => 'Konto eröffnen | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Über uns',
-        'product' => 'Produkt',
+        'product' => 'Plattform',
         'faq' => 'FAQ',
         'team' => 'Team',
         'contact' => 'Kontakt',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Was {brand} unterscheidet? Eine klare Art, den Markt zu lesen. Der Bildschirm, mit einer KI-Notiz neben dem Chart, hilft dir bei der Entscheidung und hält das Risiko im Blick. Jeden Auftrag bestätigst du selbst.',
+        'lead' => 'Eine klare Art, den Markt zu lesen. Der KI-Hinweis sitzt neben dem Chart, damit du entscheiden und das Risiko im Blick behalten kannst. Jede Order bestätigst du selbst.',
         'form_title' => 'Konto anfragen',
         'first_name' => 'Vorname',
         'last_name' => 'Nachname',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Für Einsteiger gemacht',
-        'title' => 'Drei Schritte. Dann bist du im Markt.',
+        'title' => 'Drei Schritte vom Formular zur ersten Order.',
         'lead' => 'Kein Terminal-Jargon — ein klarer Weg von der Anmeldung bis zur ersten Position.',
         'watchlist' => 'Watchlist',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'KI am Kursband',
+        'eyebrow' => 'KI neben dem Chart',
         'title' => 'Ein Signal, das du auf einen Blick liest',
         'lead' => 'Das Marktgeräusch geht hinein. Eine kurze Notiz kommt heraus. Du entscheidest.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Start',
             ],
             [
-                'title' => '6 Monate Erfahrung',
-                'text' => 'Vertraut mit dem Kursband. Die Notiz bleibt ein Wort.',
+                'title' => 'Wenn der Chart vertraut ist',
+                'text' => 'Du kennst das Band. Der Hinweis bleibt kurz.',
                 'mark' => 'Ruhig',
             ],
             [
-                'title' => 'Über 1 Jahr Handel',
+                'title' => 'Wenn du häufiger handelst',
                 'text' => 'Du wählst die Größe. Vor der Bestätigung erscheint ein Hinweis.',
                 'mark' => 'Deine Wahl',
             ],
             [
-                'title' => 'Über 2 Jahre',
+                'title' => 'Wenn du mehr Paare nutzt',
                 'text' => 'Mehr Paare, dieselbe Regel. Nichts sendet einen Auftrag ohne dich.',
                 'mark' => 'Du entscheidest',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'eine kurze Notiz',
     ],
     'voices' => [
-        'eyebrow' => 'Vom Desk',
+        'eyebrow' => 'Vom Team',
         'title' => 'Die Leute mögen, wie klar es ist.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kyjiw',
-                'quote' => 'Vom ersten Bildschirm an klar. Die Notiz ist ein Wort, und den Button drücke ich selbst.',
+                'quote' => 'Klar vom ersten Bildschirm. Der Hinweis ist kurz, und Bestätigen drücke ich selbst.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Loslegen',
         'title' => 'Erstelle dein Konto bei {brand}',
-        'lead' => 'Eine Premium-Plattform, die einfach bleibt — KI-Begleitung vom ersten Tag an.',
-        'form_title' => 'In weniger als 2 Minuten eröffnen',
+        'lead' => 'Eine Plattform, die einfach bleibt — ein kurzer KI-Hinweis vom ersten Bildschirm.',
+        'form_title' => 'Anfrage in unter 2 Minuten senden',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Kurze Antworten',
         'more' => 'Zur vollständigen FAQ →',
         'page_title' => 'Antworten, bevor du etwas einzahlst',
-        'page_lead' => 'Start, die Notiz, Geld und Sicherheit. Wenn deine Frage hier fehlt, schreib an {email}.',
+        'page_lead' => 'Start, Hinweis, Geld und Sicherheit — die häufigen Fragen. Fehlt deine, schreib an {email}.',
         'items' => [
             [
                 'q' => 'Brauche ich Handelserfahrung?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Was passiert nach dem Absenden?',
-                        'a' => 'Die Anfrage wird gespeichert. Du siehst eine Bestätigung auf der Seite. Das ist kein Versprechen, dass ein Konto bereits offen ist, und niemand wird beauftragt, dich anzurufen.',
+                        'a' => 'Die Anfrage wird gespeichert. Du siehst eine Bestätigung auf der Seite. Das ist kein Versprechen, dass ein Konto schon offen ist, und wir rufen nicht an, nur weil du ein Formular abgeschickt hast.',
                     ],
                 ],
             ],
@@ -292,15 +292,15 @@ return [
                 'items' => [
                     [
                         'q' => 'Wie hilft die KI?',
-                        'a' => 'Sie macht aus dem Kursband einen kurzen Hinweis. Sie setzt keine Aufträge, ändert nicht deine Größe und bewegt kein Geld. Jeden Auftrag bestätigst du.',
+                        'a' => 'Sie macht aus dem Band einen kurzen Hinweis. Sie legt keine Orders, ändert deine Größe nicht und bewegt kein Geld. Jede Order bestätigst du.',
                     ],
                     [
                         'q' => 'Sind die Preise auf dieser Website live?',
-                        'a' => 'Nein. Kursband, Kerzen und Kurslisten nutzen feste Zahlen, damit das Layout klar ist. Es ist kein Feed, gegen den du handeln kannst.',
+                        'a' => 'Nein. Band, Kerzen und Kurslisten nutzen feste Zahlen, damit das Layout klar ist. Das ist kein Feed, gegen den du handeln kannst.',
                     ],
                     [
                         'q' => 'Welche Märkte werden gezeigt?',
-                        'a' => 'Die Beispiele sind BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD und GBP/USD. Das arbeitende Buch öffnet sich in einem finanzierten Konto.',
+                        'a' => 'Die Beispiele sind BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD und GBP/USD. Live-Kurse und die volle Paarliste öffnen sich in einem finanzierten Konto.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Welche Zahlungsmethoden kann das Konto nutzen?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay und Überweisung. Das Registrierungsformular belastet keine Karte. Methode und eine etwaige Gebühr werden angezeigt, bevor du eine Einzahlung im Konto bestätigst.',
+                        'a' => 'Die Methoden hängen von der Region ab. Dein persönlicher Manager nennt die, die du nutzen kannst, und eine eventuelle Gebühr, bevor du eine Einzahlung bestätigst. Das Anmeldeformular belastet keine Karte.',
                     ],
                     [
                         'q' => 'Wie funktionieren Auszahlungen?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Ist die Verbindung verschlüsselt?',
-                        'a' => 'Die Website wird über HTTPS ausgeliefert. Halte deine Zugangsdaten privat, sobald ein Konto besteht. {brand} braucht keine zusätzlichen Berechtigungen auf deinem Smartphone.',
+                        'a' => 'Die Seite läuft über HTTPS. Halte deine Anmeldedaten privat, sobald ein Konto existiert.',
                     ],
                     [
                         'q' => 'Kann ich Geld verlieren?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Über uns',
         'title' => 'Eine kurze Notiz. Dann entscheidest du.',
-        'lead' => '{brand} hält den Bildschirm absichtlich klein. Der Markt ist laut. Die Notiz ist ein Wort, in klarer Sprache, und sie sendet nie einen Auftrag ohne dich.',
+        'lead' => '{brand} hält den Bildschirm absichtlich klein. Der Markt ist laut. Der Hinweis ist ein kurzes Cue — kaufen, halten oder beobachten — in klarer Sprache, und er sendet nie eine Order ohne dich.',
         'cta' => 'Konto eröffnen',
-        'caption' => 'Ein Desk. Ein grüner Chart.',
+        'caption' => 'Ein Team. Ein grüner Chart.',
         'facts_title' => 'Vier Dinge, die du zuerst wissen solltest',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Märkte auf diesem Bildschirm',
-        'markets_lead' => 'Die Preise unten sind Beispiele, dieselben wie im Kursband oben. Sie sind kein Live-Feed. In einem finanzierten Konto öffnet sich das arbeitende Buch.',
+        'markets_lead' => 'Die Kurse unten sind Beispiele, dieselben wie im Band oben. Das ist kein Live-Feed. Live-Kurse öffnen sich in einem finanzierten Konto.',
     ],
     'product' => [
-        'eyebrow' => 'Produkt',
+        'eyebrow' => 'Plattform',
         'title' => 'Chart, Notiz, Bestätigung.',
-        'lead' => 'Die Plattform sind drei Teile auf einem Bildschirm. Die KI schreibt die Notiz. Den Button behältst du.',
+        'lead' => 'Die Plattform sind drei Teile auf einem Bildschirm. Die KI schreibt den Hinweis. Du drückst Bestätigen.',
         'cta' => 'Konto eröffnen',
         'chart_cap' => 'Du bestätigst den Handel.',
-        'parts_title' => 'Was auf dem Bildschirm ist',
+        'parts_title' => 'Wie es zusammenpasst',
         'parts' => [
             [
                 'title' => 'Der Chart',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Preise',
         'title' => 'Eine Einzahlung, die zu deiner Region passt',
-        'lead' => 'Die Mindesteinzahlung hängt von deiner Region ab. Eine persönliche Betreuung erklärt Betrag, Weg und wie der Zugang nach dem Formular freigeschaltet wird.',
+        'lead' => 'Die Mindesteinzahlung hängt von der Region ab, in der du bist. Ein persönlicher Manager erklärt Betrag, Methode und wie sich die Charts öffnen, sobald das Konto finanziert ist.',
         'access' => 'Kontozugang',
         'min_label' => 'Mindesteinzahlung',
         'min_value' => 'Für deine Region festgelegt',
         'unlock' => 'Charts, Werkzeuge und KI-Begleitung werden freigeschaltet, sobald das Konto eingezahlt ist. Deine Betreuung bestätigt zuerst die Details.',
         'form_heading' => 'Konto erstellen',
-        'form_title' => 'In weniger als 2 Minuten eröffnen',
+        'form_title' => 'Anfrage in unter 2 Minuten senden',
     ],
     'signup' => [
         'eyebrow' => 'Loslegen',
@@ -431,16 +431,16 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Team',
-        'title' => 'Wer deinen Brief liest.',
-        'lead' => 'Sieben Aufgaben. Eine Frage geht an die Person, der diese Aufgabe gehört. Helen Ward leitet den Desk. Deinen Auftrag setzt sie nicht.',
+        'title' => 'Wer deine E-Mail liest.',
+        'lead' => 'Sieben Rollen. Eine Frage geht an die Person mit dieser Rolle. Helen Ward führt das Team. Sie legt deine Order nicht.',
         'routes' => [
             'Gebühren und Einzahlungen gehen an die Finanzdirektorin.',
             'Chart und Notiz gehen an den technischen Direktor.',
             'Eine neue Anfrage geht an den kaufmännischen Direktor, danach an den Managing Partner.',
             'Wie der Bildschirm funktioniert, geht an die Produktdirektorin.',
-            'Ein Brief zu einer Anfrage, die du schon gesendet hast, geht an die Kundenbetreuung.',
+            'Eine E-Mail zu einer Anfrage, die du schon gesendet hast, geht an die Kundenbetreuung.',
         ],
-        'mail' => 'Schreib an {email} und setze die Aufgabe in die erste Zeile. Keine Kartennummern. Keine Passwörter.',
+        'mail' => 'Schreib an {email} und setze die Rolle in die erste Zeile. Keine Kartennummern. Keine Passwörter.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Vorstandsvorsitzende (CEO)',
@@ -480,18 +480,18 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Support für Kryptowährungen',
+        'title' => 'Support',
         'service_title' => 'Service und Support',
-        'service' => 'Der Desk sind sieben Personen. Nenne die Aufgabe in der ersten Zeile, dann landet der Brief dort. Wir rufen nicht an, weil ein Formular gesendet wurde, und niemand bestätigt einen Auftrag für dich.',
+        'service' => 'Das Team sind sieben Personen. Nenne die Rolle in der ersten Zeile, dann kommt die E-Mail dort an. Wir rufen nicht an, nur weil ein Formular gesendet wurde, und niemand bestätigt eine Order für dich.',
         'write' => 'Schreib an {email}.',
         'hours_title' => 'Supportzeiten',
-        'hours' => 'Die Post wird Tag und Nacht gelesen. Eine Antwort dauert in der Regel ein paar Stunden. Wenn wir nicht sofort antworten können, antwortet die nächste Person in dieser Rolle.',
+        'hours' => 'Post wird Tag und Nacht gelesen. Eine Antwort dauert in der Regel ein paar Stunden. Können wir nicht sofort antworten, antwortet die nächste Person in dieser Rolle.',
         'never' => 'Sende keine Kartennummer, kein Passwort und keinen Einmalcode.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Schreib mit der Frage in der ersten Zeile.',
-        'lead' => 'E-Mail an {email}. Eine Antwort dauert in der Regel ein paar Stunden. Der Desk ruft nicht an, weil ein Formular gesendet wurde.',
+        'lead' => 'E-Mail an {email}. Eine Antwort dauert in der Regel ein paar Stunden. Das Team ruft nicht an, nur weil ein Formular gesendet wurde.',
         'topics' => [
             [
                 'title' => 'Das Formular',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Nutzungsbedingungen',
             'updated' => 'Zuletzt aktualisiert: 18. November 2026',
-            'intro' => 'Mit dem Zugriff auf {brand} stimmst du diesen Nutzungsbedingungen zu. Wenn du nicht einverstanden bist, nutze unsere Dienste nicht.',
+            'intro' => 'Durch die Nutzung dieser Website akzeptierst du diese Nutzungsbedingungen. Wenn du nicht einverstanden bist, nutze unsere Dienste nicht.',
             'sections' => [
                 [
                     'h' => 'Teilnahmeberechtigung',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Cookie-Hinweis',
             'updated' => 'Zuletzt aktualisiert: 18. November 2026',
-            'intro' => '{brand} verwendet Cookies, die nötig sind, um die Website zu betreiben, eine Sprachwahl zu speichern und eine Registrierungssitzung zuverlässig zu halten.',
+            'intro' => '{brand} verwendet Cookies, die nötig sind, um die Website zu betreiben, eine Sprachwahl zu merken und das Formular vor automatischem Missbrauch zu schützen.',
             'sections' => [
                 [
                     'h' => 'Was wir speichern',
-                    'p' => 'Ein Sprach-Cookie, eine Klick-Kennung und ein kurzlebiges Formular-Token. Auf dieser Seite setzen wir keine Werbe-Pixel ein.',
+                    'p' => 'Ein Sprach-Cookie, eine Klick-Kennung und ein kurzlebiges Formular-Token. Wir verwenden auf dieser Website keine Werbe-Pixel.',
                 ],
                 [
                     'h' => 'Steuerung',

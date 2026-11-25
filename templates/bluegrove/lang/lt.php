@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platforma | {brand}',
-            'description' => 'Grafikas, pastaba, patvirtinimas. DI rašo užuominą. Mygtukas lieka jūsų.',
+            'description' => 'Grafikas, pastaba, patvirtinimas. DI rašo užuominą. Jūs spaudžiate patvirtinti.',
         ],
         'offer' => [
             'title' => 'Kainos | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Komanda | {brand}',
-            'description' => 'Kas skaito jūsų laišką {brand}. Septyni darbai, vienas stalas.',
+            'description' => 'Kas skaito jūsų el. laišką {brand}. Septyni darbai, viena komanda.',
         ],
         'sign-up' => [
             'title' => 'Atidaryti paskyrą | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Apie',
-        'product' => 'Produktas',
+        'product' => 'Platforma',
         'faq' => 'DUK',
         'team' => 'Komanda',
         'contact' => 'Kontaktai',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Kuo išsiskiria {brand}? Paprastu būdu skaityti rinką. Ekranas su DI pastaba šalia grafiko padeda apsispręsti ir išlaikyti riziką akyse. Kiekvieną pavedimą vis tiek patvirtinate jūs.',
+        'lead' => 'Paprastas būdas skaityti rinką. DI pastaba šalia grafiko padeda apsispręsti ir išlaikyti riziką akyse. Kiekvieną pavedimą vis tiek patvirtinate jūs.',
         'form_title' => 'Prašyti paskyros',
         'first_name' => 'Vardas',
         'last_name' => 'Pavardė',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Sukurta pradedantiesiems',
-        'title' => 'Trys žingsniai. Tada jau esate rinkoje.',
+        'title' => 'Trys žingsniai nuo formos iki pirmo pavedimo.',
         'lead' => 'Be terminalo žargono — aiškus kelias nuo registracijos iki pirmos pozicijos.',
         'watchlist' => 'Stebimųjų sąrašas',
         'fund' => 'Minimumas',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'DI juostoje',
+        'eyebrow' => 'DI šalia grafiko',
         'title' => 'Signalas, kurį perskaitote iš karto',
         'lead' => 'Rinkos triukšmas įeina. Išeina trumpa pastaba. Sprendžiate jūs.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Pradžia',
             ],
             [
-                'title' => '6 mėnesių patirtis',
-                'text' => 'Jau patogu su juosta. Pastaba lieka vienas žodis.',
+                'title' => 'Kai grafikas jau pažįstamas',
+                'text' => 'Jau patogu su juosta. Pastaba lieka trumpa.',
                 'mark' => 'Tolygiai',
             ],
             [
-                'title' => '1+ metų prekyba',
+                'title' => 'Kai prekiaujate dažniau',
                 'text' => 'Dydį renkatės jūs. Priminimas pasirodo prieš patvirtinimą.',
                 'mark' => 'Jūsų sprendimas',
             ],
             [
-                'title' => '2+ metai',
+                'title' => 'Kai naudojate daugiau porų',
                 'text' => 'Daugiau porų, ta pati taisyklė. Be jūsų pavedimas neišeina.',
                 'mark' => 'Sprendžiate jūs',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'viena trumpa pastaba',
     ],
     'voices' => [
-        'eyebrow' => 'Nuo stalo',
+        'eyebrow' => 'Iš komandos',
         'title' => 'Žmonėms patinka, kaip paprasta.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kyjivas',
-                'quote' => 'Aišku nuo pirmo ekrano. Pastaba yra vienas žodis, o mygtuką vis tiek spaudžiu pati.',
+                'quote' => 'Aišku nuo pirmo ekrano. Pastaba trumpa, o patvirtinti vis tiek spaudžiu pati.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Pradėkite',
         'title' => 'Sukurkite savo {brand} paskyrą',
-        'lead' => 'Junkitės prie premium platformos, kuri lieka paprasta — DI palyda nuo pirmos dienos.',
-        'form_title' => 'Atidarykite greičiau nei per 2 minutes',
+        'lead' => 'Platforma, kuri lieka paprasta — trumpa DI užuomina nuo pirmo ekrano.',
+        'form_title' => 'Siųskite užklausą greičiau nei per 2 minutes',
     ],
     'faq' => [
         'eyebrow' => 'DUK',
         'title' => 'Trumpi atsakymai',
         'more' => 'Skaityti visus DUK →',
         'page_title' => 'Atsakymai prieš ką nors finansuojant',
-        'page_lead' => 'Pradžia, pastaba, pinigai ir saugumas. Jei jūsų klausimo čia nėra, rašykite {email}.',
+        'page_lead' => 'Pradžia, pastaba, pinigai ir saugumas — dažni klausimai. Jei jūsų klausimo čia nėra, rašykite {email}.',
         'items' => [
             [
                 'q' => 'Ar reikia prekybos patirties?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Kas vyksta po pateikimo?',
-                        'a' => 'Prašymas išsaugomas. Puslapyje matote patvirtinimą. Tai nėra pažadas, kad paskyra jau atidaryta, ir niekas nesiunčiamas jums skambinti.',
+                        'a' => 'Prašymas išsaugomas. Puslapyje matote patvirtinimą. Tai nėra pažadas, kad paskyra jau atidaryta, ir neskambiname tik todėl, kad išsiuntėte formą.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Kokios rinkos rodomos?',
-                        'a' => 'Pavyzdžiai yra BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD ir GBP/USD. Darbo knyga atsiveria finansuotoje paskyroje.',
+                        'a' => 'Pavyzdžiai yra BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD ir GBP/USD. Gyvos kainos ir visas porų sąrašas atsiveria finansuotoje paskyroje.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Kokius mokėjimo būdus gali naudoti paskyra?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay ir banko pavedimą. Registracijos forma kortelės nenuskaito. Būdas ir bet kuris mokestis rodomi prieš patvirtinant įnašą paskyros viduje.',
+                        'a' => 'Būdai priklauso nuo regiono. Asmeninis vadybininkas pasakys, kuriuos galite naudoti, ir bet kurį mokestį, prieš patvirtinant įnašą. Registracijos forma kortelės nenuskaito.',
                     ],
                     [
                         'q' => 'Kaip veikia išėmimai?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Ar ryšys šifruotas?',
-                        'a' => 'Svetainė teikiama per HTTPS. Kai paskyra jau yra, prisijungimo duomenis saugokite patys. {brand} papildomų leidimų jūsų telefone nereikia.',
+                        'a' => 'Svetainė teikiama per HTTPS. Kai paskyra jau yra, prisijungimo duomenis saugokite patys.',
                     ],
                     [
                         'q' => 'Ar galiu prarasti pinigus?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Apie',
         'title' => 'Trumpa pastaba. Tada sprendžiate jūs.',
-        'lead' => '{brand} ekraną mažą laiko tyčia. Rinka triukšminga. Pastaba yra vienas žodis, parašytas paprasta kalba, ir be jūsų pavedimo niekada neišsiunčia.',
+        'lead' => '{brand} ekraną mažą laiko tyčia. Rinka triukšminga. Pastaba yra trumpa užuomina — pirkti, laikyti ar stebėti — paprasta kalba, ir be jūsų pavedimo niekada neišsiunčia.',
         'cta' => 'Atidaryti paskyrą',
-        'caption' => 'Vienas stalas. Vienas žalias grafikas.',
+        'caption' => 'Viena komanda. Vienas žalias grafikas.',
         'facts_title' => 'Keturi dalykai, kuriuos verta žinoti pirmiausia',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Rinkos šiame ekrane',
-        'markets_lead' => 'Žemiau esančios kainos yra pavyzdžiai, tie patys kaip juostoje viršuje. Tai nėra tiesioginis srautas. Darbo knyga atsiveria finansuotoje paskyroje.',
+        'markets_lead' => 'Žemiau esančios kainos yra pavyzdžiai, tie patys kaip juostoje viršuje. Tai nėra tiesioginis srautas. Gyvos kainos atsiveria finansuotoje paskyroje.',
     ],
     'product' => [
-        'eyebrow' => 'Produktas',
+        'eyebrow' => 'Platforma',
         'title' => 'Grafikas, pastaba, patvirtinimas.',
-        'lead' => 'Platforma yra trys dalys viename ekrane. Pastabą rašo DI. Mygtukas lieka jūsų.',
+        'lead' => 'Platforma yra trys dalys viename ekrane. Pastabą rašo DI. Jūs spaudžiate patvirtinti.',
         'cta' => 'Atidaryti paskyrą',
         'chart_cap' => 'Sandorį patvirtinate jūs.',
-        'parts_title' => 'Kas yra ekrane',
+        'parts_title' => 'Kaip tai susijungia',
         'parts' => [
             [
                 'title' => 'Grafikas',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Kainos',
         'title' => 'Finansavimas, tinkantis jūsų regionui',
-        'lead' => 'Minimalus įnašas priklauso nuo regiono, kuriame esate. Asmeninis vadybininkas paaiškina sumą, būdą ir tai, kaip prieiga atsiveria po formos išsiuntimo.',
+        'lead' => 'Minimalus įnašas priklauso nuo regiono, kuriame esate. Asmeninis vadybininkas paaiškina sumą, būdą ir tai, kaip grafikai atsiveria, kai paskyra finansuota.',
         'access' => 'Prieiga prie paskyros',
         'min_label' => 'Minimalus įnašas',
         'min_value' => 'Nustatyta jūsų regionui',
         'unlock' => 'Grafikai, įrankiai ir DI palyda atsiveria, kai paskyra finansuota. Detales pirmiausia patvirtina jūsų vadybininkas.',
         'form_heading' => 'Sukurkite paskyrą',
-        'form_title' => 'Atidarykite greičiau nei per 2 minutes',
+        'form_title' => 'Siųskite užklausą greičiau nei per 2 minutes',
     ],
     'signup' => [
         'eyebrow' => 'Pradėkite',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Komanda',
-        'title' => 'Kas skaito jūsų laišką.',
-        'lead' => 'Septyni darbai. Klausimas eina žmogui, kuris tą darbą valdo. Stalą veda Helen Ward. Ji jūsų pavedimo nepateikia.',
+        'title' => 'Kas skaito jūsų el. laišką.',
+        'lead' => 'Septyni darbai. Klausimas eina žmogui, kuris tą darbą valdo. Komandą veda Helen Ward. Ji jūsų pavedimo nepateikia.',
         'routes' => [
             'Mokesčiai ir įnašai eina finansų direktoriui.',
             'Grafikas ir pastaba eina techniniam direktoriui.',
             'Naujas prašymas eina komerciniam direktoriui, tada vadovaujančiam partneriui.',
             'Kaip veikia ekranas, eina produkto direktoriui.',
-            'Laiškas apie jau išsiųstą prašymą eina klientų priežiūrai.',
+            'El. laiškas apie jau išsiųstą prašymą eina klientų priežiūrai.',
         ],
         'mail' => 'Rašykite {email} ir darbą dėkite pirmoje eilutėje. Jokių kortelės numerių. Jokių slaptažodžių.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Kriptovaliutos palaikymas',
+        'title' => 'Pagalba',
         'service_title' => 'Paslauga ir palaikymas',
-        'service' => 'Stalas yra septyni žmonės. Įvardykite darbą pirmoje eilutėje ir laiškas ten nueina. Neskambiname todėl, kad forma išsiųsta, ir niekas pavedimo už jus nepatvirtina.',
+        'service' => 'Komanda yra septyni žmonės. Įvardykite darbą pirmoje eilutėje ir el. laiškas ten nueina. Neskambiname tik todėl, kad forma išsiųsta, ir niekas pavedimo už jus nepatvirtina.',
         'write' => 'Rašykite {email}.',
         'hours_title' => 'Palaikymo valandos',
         'hours' => 'Laiškai skaitomi dieną ir naktį. Įprastas atsakymas užtrunka kelias valandas. Jei iš karto atsakyti negalime, atsako kitas tos rolės žmogus.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontaktai',
         'title' => 'Rašykite, klausimą dėdami pirmoje eilutėje.',
-        'lead' => 'Rašykite {email}. Įprastas atsakymas užtrunka kelias valandas. Stalas neskambina todėl, kad forma išsiųsta.',
+        'lead' => 'Rašykite {email}. Įprastas atsakymas užtrunka kelias valandas. Komanda neskambina tik todėl, kad forma išsiųsta.',
         'topics' => [
             [
                 'title' => 'Forma',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Naudojimo sąlygos',
             'updated' => 'Paskutinį kartą atnaujinta: 2026 m. lapkričio 18 d.',
-            'intro' => 'Prisijungdami prie {brand} sutinkate su šiomis naudojimo sąlygomis. Jei nesutinkate, mūsų paslaugomis nesinaudokite.',
+            'intro' => 'Naudodamiesi šia svetaine sutinkate su šiomis naudojimo sąlygomis. Jei nesutinkate, mūsų paslaugomis nesinaudokite.',
             'sections' => [
                 [
                     'h' => 'Tinkamumas',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Slapukų pranešimas',
             'updated' => 'Paskutinį kartą atnaujinta: 2026 m. lapkričio 18 d.',
-            'intro' => '{brand} naudoja slapukus, kurių reikia svetainei veikti, kalbos pasirinkimui įsiminti ir registracijos seansui išlaikyti sąžiningam.',
+            'intro' => '{brand} naudoja slapukus, kurių reikia svetainei veikti, kalbos pasirinkimui įsiminti ir formai apsaugoti nuo automatinio piktnaudžiavimo.',
             'sections' => [
                 [
                     'h' => 'Ką saugome',
-                    'p' => 'Kalbos slapuką, paspaudimo identifikatorių ir trumpalaikį formos žetoną. Šiame puslapyje reklaminių pikselių nenaudojame.',
+                    'p' => 'Kalbos slapuką, paspaudimo identifikatorių ir trumpalaikį formos žetoną. Šioje svetainėje reklaminių pikselių nenaudojame.',
                 ],
                 [
                     'h' => 'Valdymas',

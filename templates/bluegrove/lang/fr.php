@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Plateforme | {brand}',
-            'description' => 'Graphique, note, confirmation. L’IA écrit le signal. Le bouton reste à vous.',
+            'description' => 'Graphique, note, confirmation. L’IA écrit l’indice. Vous appuyez sur confirmer.',
         ],
         'offer' => [
             'title' => 'Tarifs | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Équipe | {brand}',
-            'description' => 'Qui lit votre lettre chez {brand}. Sept fonctions, un desk.',
+            'description' => 'Qui lit votre e-mail chez {brand}. Sept fonctions, une équipe.',
         ],
         'sign-up' => [
             'title' => 'Ouvrir un compte | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'À propos',
-        'product' => 'Produit',
+        'product' => 'Plateforme',
         'faq' => 'FAQ',
         'team' => 'Équipe',
         'contact' => 'Contact',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Qu’est-ce qui distingue {brand} ? Une façon claire de lire le marché. L’écran, avec une note IA à côté du graphique, vous aide à décider et à garder le risque en vue. Vous confirmez encore chaque ordre.',
+        'lead' => 'Une façon claire de lire le marché. La note IA est à côté du graphique, pour décider et garder le risque en vue. Vous confirmez encore chaque ordre.',
         'form_title' => 'Demander un compte',
         'first_name' => 'Prénom',
         'last_name' => 'Nom',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Conçu pour débuter',
-        'title' => 'Trois étapes. Ensuite vous êtes sur le marché.',
+        'title' => 'Trois étapes du formulaire à votre premier ordre.',
         'lead' => 'Pas de jargon de terminal — un chemin clair de l’inscription à votre première position.',
         'watchlist' => 'Liste de suivi',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'L’IA sur le flux',
+        'eyebrow' => 'L’IA à côté du graphique',
         'title' => 'Un signal que vous lisez d’un coup d’œil',
         'lead' => 'Le bruit du marché entre. Une note courte en sort. Vous décidez.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Départ',
             ],
             [
-                'title' => '6 mois d’expérience',
-                'text' => 'À l’aise avec le flux. La note reste un mot.',
+                'title' => 'Quand le graphique est familier',
+                'text' => 'À l’aise avec le flux. La note reste courte.',
                 'mark' => 'Stable',
             ],
             [
-                'title' => 'Plus d’1 an de trading',
+                'title' => 'Quand vous tradez plus souvent',
                 'text' => 'Vous choisissez la taille. Un rappel s’affiche avant la confirmation.',
                 'mark' => 'À vous de voir',
             ],
             [
-                'title' => 'Plus de 2 ans',
+                'title' => 'Quand vous utilisez plus de paires',
                 'text' => 'Plus de paires, la même règle. Rien n’envoie un ordre sans vous.',
                 'mark' => 'Vous décidez',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'une note courte',
     ],
     'voices' => [
-        'eyebrow' => 'Depuis le desk',
+        'eyebrow' => 'Depuis l’équipe',
         'title' => 'Les gens aiment à quel point c’est clair.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kiev',
-                'quote' => 'Clair dès le premier écran. La note est un mot, et c’est moi qui appuie sur le bouton.',
+                'quote' => 'Clair dès le premier écran. La note est courte, et c’est moi qui appuie sur confirmer.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Commencer',
         'title' => 'Créez votre compte {brand}',
-        'lead' => 'Une plateforme premium qui reste simple — un guidage IA dès le premier jour.',
-        'form_title' => 'Ouvrez en moins de 2 minutes',
+        'lead' => 'Une plateforme qui reste simple — un indice IA court dès le premier écran.',
+        'form_title' => 'Envoyez une demande en moins de 2 minutes',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Réponses rapides',
         'more' => 'Lire la FAQ complète →',
         'page_title' => 'Des réponses avant d’apporter des fonds',
-        'page_lead' => 'Le départ, la note, l’argent et la sécurité. Si votre question n’est pas ici, écrivez à {email}.',
+        'page_lead' => 'Le départ, la note, l’argent et la sécurité — les questions fréquentes. Si la vôtre n’est pas ici, écrivez à {email}.',
         'items' => [
             [
                 'q' => 'Faut-il une expérience de trading ?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Que se passe-t-il après l’envoi ?',
-                        'a' => 'La demande est enregistrée. Vous voyez une confirmation sur la page. Ce n’est pas la promesse qu’un compte est déjà ouvert, et personne n’est envoyé pour vous appeler.',
+                        'a' => 'La demande est enregistrée. Vous voyez une confirmation sur la page. Ce n’est pas la promesse qu’un compte est déjà ouvert, et nous n’appelons pas seulement parce que vous avez envoyé un formulaire.',
                     ],
                 ],
             ],
@@ -292,7 +292,7 @@ return [
                 'items' => [
                     [
                         'q' => 'Comment l’IA aide-t-elle ?',
-                        'a' => 'Elle transforme le flux en un signal court. Elle ne passe pas d’ordres, ne change pas votre taille et ne déplace pas d’argent. Vous confirmez chaque ordre.',
+                        'a' => 'Elle transforme le flux en un indice court. Elle ne passe pas d’ordres, ne change pas votre taille et ne déplace pas d’argent. Vous confirmez chaque ordre.',
                     ],
                     [
                         'q' => 'Les prix de ce site sont-ils en direct ?',
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Quels marchés sont affichés ?',
-                        'a' => 'Les exemples sont BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD et GBP/USD. Le livre de travail s’ouvre dans un compte financé.',
+                        'a' => 'Les exemples sont BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD et GBP/USD. Les cours en direct et la liste complète des paires s’ouvrent dans un compte financé.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Quels moyens de paiement le compte peut-il utiliser ?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay et virement bancaire. Le formulaire d’inscription ne débite pas de carte. Le moyen et les éventuels frais s’affichent avant que vous confirmiez un versement dans le compte.',
+                        'a' => 'Les moyens dépendent de la région. Votre interlocuteur personnel indique ceux que vous pouvez utiliser, et d’éventuels frais, avant que vous confirmiez un versement. Le formulaire d’inscription ne débite pas de carte.',
                     ],
                     [
                         'q' => 'Comment fonctionnent les retraits ?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'La connexion est-elle chiffrée ?',
-                        'a' => 'Le site est servi en HTTPS. Gardez vos identifiants pour vous une fois le compte créé. {brand} n’a pas besoin d’autorisations supplémentaires sur votre téléphone.',
+                        'a' => 'Le site est servi en HTTPS. Gardez vos identifiants pour vous une fois le compte créé.',
                     ],
                     [
                         'q' => 'Puis-je perdre de l’argent ?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'À propos',
         'title' => 'Une note courte. Ensuite vous décidez.',
-        'lead' => '{brand} garde l’écran petit exprès. Le marché est bruyant. La note est un mot, en langage clair, et elle n’envoie jamais un ordre sans vous.',
+        'lead' => '{brand} garde l’écran petit exprès. Le marché est bruyant. La note est un indice court — acheter, conserver ou surveiller — en langage clair, et elle n’envoie jamais un ordre sans vous.',
         'cta' => 'Ouvrir un compte',
-        'caption' => 'Un desk. Un graphique vert.',
+        'caption' => 'Une équipe. Un graphique vert.',
         'facts_title' => 'Quatre choses à savoir d’abord',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Marchés sur cet écran',
-        'markets_lead' => 'Les prix ci-dessous sont des exemples, les mêmes que dans le flux en haut. Ce n’est pas un flux en direct. Le livre de travail s’ouvre dans un compte financé.',
+        'markets_lead' => 'Les prix ci-dessous sont des exemples, les mêmes que dans le flux en haut. Ce n’est pas un flux en direct. Les cours en direct s’ouvrent dans un compte financé.',
     ],
     'product' => [
-        'eyebrow' => 'Produit',
+        'eyebrow' => 'Plateforme',
         'title' => 'Graphique, note, confirmation.',
-        'lead' => 'La plateforme, ce sont trois éléments sur un seul écran. L’IA écrit la note. Le bouton reste à vous.',
+        'lead' => 'La plateforme, ce sont trois éléments sur un seul écran. L’IA écrit la note. Vous appuyez sur confirmer.',
         'cta' => 'Ouvrir un compte',
         'chart_cap' => 'Vous confirmez l’opération.',
-        'parts_title' => 'Ce qu’il y a à l’écran',
+        'parts_title' => 'Comment ça s’assemble',
         'parts' => [
             [
                 'title' => 'Le graphique',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Tarifs',
         'title' => 'Un financement adapté à votre région',
-        'lead' => 'Le dépôt minimum dépend de la région où vous êtes. Un interlocuteur personnel explique le montant, le moyen et la façon dont l’accès se débloque après l’envoi du formulaire.',
+        'lead' => 'Le dépôt minimum dépend de la région où vous êtes. Un interlocuteur personnel explique le montant, le moyen et la façon dont les graphiques se débloquent une fois le compte financé.',
         'access' => 'Accès au compte',
         'min_label' => 'Dépôt minimum',
         'min_value' => 'Fixé pour votre région',
         'unlock' => 'Graphiques, outils et guidage IA se débloquent une fois le compte financé. Votre interlocuteur confirme d’abord les détails.',
         'form_heading' => 'Créez votre compte',
-        'form_title' => 'Ouvrez en moins de 2 minutes',
+        'form_title' => 'Envoyez une demande en moins de 2 minutes',
     ],
     'signup' => [
         'eyebrow' => 'Commencer',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Équipe',
-        'title' => 'Qui lit votre lettre.',
-        'lead' => 'Sept fonctions. Une question va à la personne qui porte cette fonction. Helen Ward dirige le desk. Elle ne passe pas votre ordre.',
+        'title' => 'Qui lit votre e-mail.',
+        'lead' => 'Sept fonctions. Une question va à la personne qui porte cette fonction. Helen Ward dirige l’équipe. Elle ne passe pas votre ordre.',
         'routes' => [
             'Les frais et les versements vont à la directrice financière.',
             'Le graphique et la note vont au directeur technique.',
             'Une nouvelle demande va au directeur commercial, puis à l’associé gérant.',
             'Le fonctionnement de l’écran va à la directrice produit.',
-            'Une lettre sur une demande déjà envoyée va à la relation client.',
+            'Un e-mail sur une demande déjà envoyée va à la relation client.',
         ],
         'mail' => 'Écrivez à {email} et mettez la fonction en première ligne. Pas de numéros de carte. Pas de mots de passe.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Assistance cryptomonnaies',
+        'title' => 'Assistance',
         'service_title' => 'Service et assistance',
-        'service' => 'Le desk, ce sont sept personnes. Nommez la fonction en première ligne et la lettre y arrive. Nous n’appelons pas parce qu’un formulaire a été envoyé, et personne ne confirme un ordre à votre place.',
+        'service' => 'L’équipe, ce sont sept personnes. Nommez la fonction en première ligne et l’e-mail y arrive. Nous n’appelons pas seulement parce qu’un formulaire a été envoyé, et personne ne confirme un ordre à votre place.',
         'write' => 'Écrivez à {email}.',
         'hours_title' => 'Horaires d’assistance',
         'hours' => 'Le courrier est lu jour et nuit. Une réponse habituelle prend quelques heures. Si nous ne pouvons pas répondre tout de suite, la personne suivante dans ce rôle répond.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Écrivez avec la question en première ligne.',
-        'lead' => 'E-mail à {email}. Une réponse habituelle prend quelques heures. Le desk n’appelle pas parce qu’un formulaire a été envoyé.',
+        'lead' => 'E-mail à {email}. Une réponse habituelle prend quelques heures. L’équipe n’appelle pas seulement parce qu’un formulaire a été envoyé.',
         'topics' => [
             [
                 'title' => 'Le formulaire',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Conditions d’utilisation',
             'updated' => 'Dernière mise à jour : 18 novembre 2026',
-            'intro' => 'En accédant à {brand}, vous acceptez ces conditions d’utilisation. Si vous n’êtes pas d’accord, n’utilisez pas nos services.',
+            'intro' => 'En utilisant ce site, vous acceptez ces conditions d’utilisation. Si vous n’êtes pas d’accord, n’utilisez pas nos services.',
             'sections' => [
                 [
                     'h' => 'Éligibilité',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Avis cookies',
             'updated' => 'Dernière mise à jour : 18 novembre 2026',
-            'intro' => '{brand} utilise des cookies nécessaires pour faire fonctionner le site, mémoriser un choix de langue et garder honnête une session d’inscription.',
+            'intro' => '{brand} utilise des cookies nécessaires pour faire fonctionner le site, mémoriser un choix de langue et protéger le formulaire contre les abus automatiques.',
             'sections' => [
                 [
                     'h' => 'Ce que nous conservons',
-                    'p' => 'Un cookie de langue, un identifiant de clic et un jeton de formulaire de courte durée. Nous n’utilisons pas de pixels publicitaires sur cette page.',
+                    'p' => 'Un cookie de langue, un identifiant de clic et un jeton de formulaire de courte durée. Nous n’utilisons pas de pixels publicitaires sur ce site.',
                 ],
                 [
                     'h' => 'Contrôle',

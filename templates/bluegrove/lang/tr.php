@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platform | {brand}',
-            'description' => 'Grafik, not, onay. Notu yapay zekâ yazar. Düğme sizde kalır.',
+            'description' => 'Grafik, not, onay. Notu yapay zekâ yazar. Onayı siz basarsınız.',
         ],
         'offer' => [
             'title' => 'Ücretler | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Ekip | {brand}',
-            'description' => '{brand} içinde mektubunuzu kim okur. Yedi görev, tek masa.',
+            'description' => '{brand} içinde e-postanızı kim okur. Yedi görev, tek ekip.',
         ],
         'sign-up' => [
             'title' => 'Hesap aç | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Hakkımızda',
-        'product' => 'Ürün',
+        'product' => 'Platform',
         'faq' => 'SSS',
         'team' => 'Ekip',
         'contact' => 'İletişim',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => '{brand} farkı nedir? Piyasayı sade okumanın bir yolu. Grafiğin yanındaki yapay zekâ notu, karar vermenize ve riski göz önünde tutmanıza yardım eder. Her emri yine siz onaylarsınız.',
+        'lead' => 'Piyasayı sade okumanın bir yolu. Grafiğin yanındaki yapay zekâ notu, karar vermenize ve riski göz önünde tutmanıza yardım eder. Her emri yine siz onaylarsınız.',
         'form_title' => 'Hesap isteyin',
         'first_name' => 'Ad',
         'last_name' => 'Soyad',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Yeni başlayanlar için',
-        'title' => 'Üç adım. Sonra piyasadasınız.',
+        'title' => 'Formdan ilk emre üç adım.',
         'lead' => 'Terminal jargonu yok — kayıttan ilk pozisyona net bir yol.',
         'watchlist' => 'İzleme listesi',
         'fund' => 'Asgari',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'Akışta yapay zekâ',
+        'eyebrow' => 'Grafiğin yanında yapay zekâ',
         'title' => 'Bir bakışta okunan bir sinyal',
         'lead' => 'Piyasa gürültüsü girer. Kısa bir not çıkar. Karar sizindir.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Başlangıç',
             ],
             [
-                'title' => '6 aylık deneyim',
-                'text' => 'Akışa alışmışsınızdır. Not tek sözcük kalır.',
+                'title' => 'Grafik tanıdık olduğunda',
+                'text' => 'Akışa alışmışsınızdır. Not kısa kalır.',
                 'mark' => 'Dengeli',
             ],
             [
-                'title' => '1+ yıl işlem',
+                'title' => 'Daha sık işlem yaptığınızda',
                 'text' => 'Boyutu siz seçersiniz. Onaydan önce bir hatırlatma görünür.',
                 'mark' => 'Sizin kararınız',
             ],
             [
-                'title' => '2+ yıl',
+                'title' => 'Daha fazla çift kullandığınızda',
                 'text' => 'Daha fazla parite, aynı kural. Siz olmadan hiçbir emir gitmez.',
                 'mark' => 'Siz karar verirsiniz',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'tek kısa not',
     ],
     'voices' => [
-        'eyebrow' => 'Masadan',
+        'eyebrow' => 'Ekipten',
         'title' => 'İnsanlar sadeliğini seviyor.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kiev',
-                'quote' => 'İlk ekrandan net. Not tek sözcük ve düğmeye hâlâ kendim basıyorum.',
+                'quote' => 'İlk ekrandan net. Not kısa ve onaya hâlâ kendim basıyorum.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Başlayın',
         'title' => '{brand} hesabınızı oluşturun',
-        'lead' => 'Sade kalan bir premium platforma katılın — ilk günden yapay zekâ yönlendirmesi.',
-        'form_title' => '2 dakikadan kısa sürede açın',
+        'lead' => 'Sade kalan bir platform — ilk ekrandan kısa bir yapay zekâ işareti.',
+        'form_title' => '2 dakikadan kısa sürede istek gönderin',
     ],
     'faq' => [
         'eyebrow' => 'SSS',
         'title' => 'Kısa yanıtlar',
         'more' => 'Tüm SSS metnini okuyun →',
         'page_title' => 'Herhangi bir tutar yatırmadan önce yanıtlar',
-        'page_lead' => 'Başlangıç, not, para ve güvenlik. Sorunuz burada yoksa {email} adresine yazın.',
+        'page_lead' => 'Başlangıç, not, para ve güvenlik — sık sorulanlar. Sorunuz burada yoksa {email} adresine yazın.',
         'items' => [
             [
                 'q' => 'İşlem deneyimi gerekir mi?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Gönderdikten sonra ne olur?',
-                        'a' => 'Başvuru kaydedilir. Sayfada bir onay görürsünüz. Bu, hesabın çoktan açıldığına dair bir söz değildir ve sizi aramak üzere kimse yola çıkarılmaz.',
+                        'a' => 'Başvuru kaydedilir. Sayfada bir onay görürsünüz. Bu, hesabın çoktan açıldığına dair bir söz değildir ve form gönderildiği için aramayız.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Hangi piyasalar gösterilir?',
-                        'a' => 'Örnekler BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD ve GBP/USD. Çalışma defteri, fonlanmış hesapta açılır.',
+                        'a' => 'Örnekler BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD ve GBP/USD. Canlı fiyatlar ve tam çift listesi, fonlanmış hesapta açılır.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Hesap hangi ödeme yöntemlerini kullanabilir?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay ve banka havalesi. Kayıt formu karttan çekim yapmaz. Yöntem ve varsa ücret, hesap içinde bir yatırmayı onaylamadan önce gösterilir.',
+                        'a' => 'Yöntemler bölgeye göre değişir. Kişisel yöneticiniz hangilerini kullanabileceğinizi ve varsa ücreti, yatırmayı onaylamadan önce söyler. Kayıt formu karttan çekim yapmaz.',
                     ],
                     [
                         'q' => 'Para çekme nasıl işler?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Bağlantı şifreli mi?',
-                        'a' => 'Site HTTPS üzerinden sunulur. Hesap oluştuktan sonra kendi girişinizi gizli tutun. {brand} telefonunuzda ek izin istemez.',
+                        'a' => 'Site HTTPS üzerinden sunulur. Hesap oluştuktan sonra kendi girişinizi gizli tutun.',
                     ],
                     [
                         'q' => 'Para kaybedebilir miyim?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Hakkımızda',
         'title' => 'Kısa bir not. Sonra siz karar verirsiniz.',
-        'lead' => '{brand} ekranı bilerek küçük tutar. Piyasa gürültülüdür. Not tek sözcüktür, sade bir dille yazılır ve siz olmadan asla emir göndermez.',
+        'lead' => '{brand} ekranı bilerek küçük tutar. Piyasa gürültülüdür. Not kısa bir işarettir — al, tut veya izle — sade bir dille yazılır ve siz olmadan asla emir göndermez.',
         'cta' => 'Hesap aç',
-        'caption' => 'Tek masa. Tek yeşil grafik.',
+        'caption' => 'Tek ekip. Tek yeşil grafik.',
         'facts_title' => 'Önce bilinmesi gereken dört şey',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Bu ekrandaki piyasalar',
-        'markets_lead' => 'Aşağıdaki fiyatlar örnektir, üstteki akıştaki örneklerle aynıdır. Canlı bir akış değildir. Çalışma defteri fonlanmış hesapta açılır.',
+        'markets_lead' => 'Aşağıdaki fiyatlar örnektir, üstteki akıştaki örneklerle aynıdır. Canlı bir akış değildir. Canlı fiyatlar fonlanmış hesapta açılır.',
     ],
     'product' => [
-        'eyebrow' => 'Ürün',
+        'eyebrow' => 'Platform',
         'title' => 'Grafik, not, onay.',
-        'lead' => 'Platform, tek ekranda üç parçadır. Notu yapay zekâ yazar. Düğme sizde kalır.',
+        'lead' => 'Platform, tek ekranda üç parçadır. Notu yapay zekâ yazar. Onayı siz basarsınız.',
         'cta' => 'Hesap aç',
         'chart_cap' => 'İşlemi siz onaylarsınız.',
-        'parts_title' => 'Ekranda ne var',
+        'parts_title' => 'Nasıl bir araya geliyor',
         'parts' => [
             [
                 'title' => 'Grafik',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Ücretler',
         'title' => 'Bölgenize uyan fonlama',
-        'lead' => 'Asgari tutar bulunduğunuz bölgeye göre değişir. Kişisel yöneticiniz, formu gönderdikten sonra tutarı, yöntemi ve erişimin nasıl açıldığını anlatır.',
+        'lead' => 'Asgari tutar bulunduğunuz bölgeye göre değişir. Kişisel yöneticiniz tutarı, yöntemi ve hesap fonlandıktan sonra grafiklerin nasıl açıldığını anlatır.',
         'access' => 'Hesap erişimi',
         'min_label' => 'Asgari tutar',
         'min_value' => 'Bölgeniz için belirlenir',
         'unlock' => 'Grafikler, araçlar ve yapay zekâ yönlendirmesi hesap fonlandıktan sonra açılır. Yöneticiniz önce ayrıntıları teyit eder.',
         'form_heading' => 'Hesabınızı oluşturun',
-        'form_title' => '2 dakikadan kısa sürede açın',
+        'form_title' => '2 dakikadan kısa sürede istek gönderin',
     ],
     'signup' => [
         'eyebrow' => 'Başlayın',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Ekip',
-        'title' => 'Mektubunuzu kim okur.',
-        'lead' => 'Yedi görev. Soru, o görevin sahibi olan kişiye gider. Helen Ward masayı yönetir. Sizin emrinizi o vermez.',
+        'title' => 'E-postanızı kim okur.',
+        'lead' => 'Yedi görev. Soru, o görevin sahibi olan kişiye gider. Helen Ward ekibi yönetir. Sizin emrinizi o vermez.',
         'routes' => [
             'Ücretler ve para yatırma finans direktörüne gider.',
             'Grafik ve not teknik direktöre gider.',
             'Yeni bir başvuru ticari direktöre, ardından yönetici ortağa gider.',
             'Ekranın nasıl çalıştığı ürün direktörüne gider.',
-            'Daha önce gönderdiğiniz bir başvuruya dair mektup müşteri ilişkilerine gider.',
+            'Daha önce gönderdiğiniz bir başvuruya dair e-posta müşteri ilişkilerine gider.',
         ],
         'mail' => '{email} adresine yazın ve görevi ilk satıra koyun. Kart numarası yok. Parola yok.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Kripto para desteği',
+        'title' => 'Destek',
         'service_title' => 'Hizmet ve destek',
-        'service' => 'Masa yedi kişidir. Görevi ilk satırda yazın, mektup oraya gider. Form gönderildiği için aramayız ve kimse sizin yerinize bir emri onaylamaz.',
+        'service' => 'Ekip yedi kişidir. Görevi ilk satırda yazın, e-posta oraya gider. Form gönderildiği için aramayız ve kimse sizin yerinize bir emri onaylamaz.',
         'write' => '{email} adresine yazın.',
         'hours_title' => 'Destek saatleri',
         'hours' => 'Posta gece gündüz okunur. Yanıt genellikle birkaç saat sürer. Hemen yanıtlayamazsak o görevdeki sonraki kişi yanıtlar.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'İletişim',
         'title' => 'Soruyu ilk satıra yazın.',
-        'lead' => 'E-posta {email}. Yanıt genellikle birkaç saat sürer. Masa, form gönderildiği için aramaz.',
+        'lead' => 'E-posta {email}. Yanıt genellikle birkaç saat sürer. Ekip, form gönderildiği için aramaz.',
         'topics' => [
             [
                 'title' => 'Form',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Kullanım Koşulları',
             'updated' => 'Son güncelleme: 18 Kasım 2026',
-            'intro' => '{brand} sitesine girerek bu Kullanım Koşullarını kabul edersiniz. Kabul etmiyorsanız hizmetlerimizi kullanmayın.',
+            'intro' => 'Bu web sitesini kullanarak bu Kullanım Koşullarını kabul edersiniz. Kabul etmiyorsanız hizmetlerimizi kullanmayın.',
             'sections' => [
                 [
                     'h' => 'Uygunluk',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Çerez bildirimi',
             'updated' => 'Son güncelleme: 18 Kasım 2026',
-            'intro' => '{brand}, sitenin çalışması, dil seçiminin hatırlanması ve kayıt oturumunun dürüst kalması için gerekli çerezleri kullanır.',
+            'intro' => '{brand}, sitenin çalışması, dil seçiminin hatırlanması ve formu otomatik kötüye kullanımdan korumak için gerekli çerezleri kullanır.',
             'sections' => [
                 [
                     'h' => 'Neyi saklarız',
-                    'p' => 'Bir dil çerezi, bir tıklama tanımlayıcısı ve kısa ömürlü bir form belirteci. Bu sayfada reklam pikseli kullanmayız.',
+                    'p' => 'Bir dil çerezi, bir tıklama tanımlayıcısı ve kısa ömürlü bir form belirteci. Bu sitede reklam pikseli kullanmayız.',
                 ],
                 [
                     'h' => 'Kontrol',

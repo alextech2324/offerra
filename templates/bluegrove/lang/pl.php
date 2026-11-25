@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platforma | {brand}',
-            'description' => 'Wykres, notatka, potwierdzenie. AI pisze wskazówkę. Przycisk zostaje u ciebie.',
+            'description' => 'Wykres, notatka, potwierdzenie. AI pisze wskazówkę. Ty naciskasz potwierdź.',
         ],
         'offer' => [
             'title' => 'Cennik | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Zespół | {brand}',
-            'description' => 'Kto czyta list w {brand}. Siedem ról, jedno biuro.',
+            'description' => 'Kto czyta e-mail w {brand}. Siedem ról, jeden zespół.',
         ],
         'sign-up' => [
             'title' => 'Otwórz rachunek | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'O nas',
-        'product' => 'Produkt',
+        'product' => 'Platforma',
         'faq' => 'FAQ',
         'team' => 'Zespół',
         'contact' => 'Kontakt',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Co wyróżnia {brand}? Prosty sposób czytania rynku. Ekran, z notatką AI obok wykresu, pomaga zdecydować i trzymać ryzyko w polu widzenia. Każde zlecenie i tak potwierdzasz samodzielnie.',
+        'lead' => 'Prosty sposób czytania rynku. Notatka AI siedzi obok wykresu, żebyś mógł zdecydować i trzymać ryzyko w polu widzenia. Każde zlecenie i tak potwierdzasz samodzielnie.',
         'form_title' => 'Poproś o rachunek',
         'first_name' => 'Imię',
         'last_name' => 'Nazwisko',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Dla początkujących',
-        'title' => 'Trzy kroki. Potem jesteś na rynku.',
+        'title' => 'Trzy kroki od formularza do pierwszego zlecenia.',
         'lead' => 'Bez żargonu terminala — wyraźna droga od rejestracji do pierwszej pozycji.',
         'watchlist' => 'Obserwowane',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI na notowaniach',
+        'eyebrow' => 'AI obok wykresu',
         'title' => 'Sygnał, który czytasz od razu',
         'lead' => 'Szum rynku wchodzi. Wychodzi krótka notatka. Decyzja jest twoja.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Start',
             ],
             [
-                'title' => '6 miesięcy doświadczenia',
-                'text' => 'Notowania są już znajome. Notatka zostaje jednym słowem.',
+                'title' => 'Gdy wykres jest już znajomy',
+                'text' => 'Notowania są już znajome. Notatka zostaje krótka.',
                 'mark' => 'Równo',
             ],
             [
-                'title' => '1+ rok obrotu',
+                'title' => 'Gdy handlujesz częściej',
                 'text' => 'Wielkość wybierasz samodzielnie. Przypomnienie pojawia się, zanim potwierdzisz.',
                 'mark' => 'Twój ruch',
             ],
             [
-                'title' => '2+ lata',
+                'title' => 'Gdy używasz więcej par',
                 'text' => 'Więcej par, ta sama zasada. Nic nie wysyła zlecenia bez ciebie.',
                 'mark' => 'Decydujesz',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'jedna krótka notatka',
     ],
     'voices' => [
-        'eyebrow' => 'Z biura',
+        'eyebrow' => 'Od zespołu',
         'title' => 'Ludziom podoba się, że to jest proste.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kijów',
-                'quote' => 'Jasne od pierwszego ekranu. Notatka to jedno słowo, a przycisk i tak naciskam sama.',
+                'quote' => 'Jasne od pierwszego ekranu. Notatka jest krótka, a potwierdź i tak naciskam sama.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Zacznij',
         'title' => 'Załóż rachunek {brand}',
-        'lead' => 'Wejdź na platformę premium, która zostaje prosta — prowadzenie AI od pierwszego dnia.',
-        'form_title' => 'Otwarcie w mniej niż 2 minuty',
+        'lead' => 'Platforma, która zostaje prosta — krótka wskazówka AI od pierwszego ekranu.',
+        'form_title' => 'Wyślij zgłoszenie w mniej niż 2 minuty',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Krótkie odpowiedzi',
         'more' => 'Czytaj całe FAQ →',
         'page_title' => 'Odpowiedzi, zanim cokolwiek zasilisz',
-        'page_lead' => 'Start, notatka, pieniądze i bezpieczeństwo. Jeśli pytania tu nie ma, napisz na {email}.',
+        'page_lead' => 'Start, notatka, pieniądze i bezpieczeństwo — częste pytania. Jeśli pytania tu nie ma, napisz na {email}.',
         'items' => [
             [
                 'q' => 'Czy potrzebuję doświadczenia w obrocie?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Co się dzieje po wysłaniu?',
-                        'a' => 'Zgłoszenie zostaje zapisane. Na stronie widać potwierdzenie. To nie jest obietnica, że rachunek już jest otwarty, i nikt nie wyrusza, żeby do ciebie dzwonić.',
+                        'a' => 'Zgłoszenie zostaje zapisane. Na stronie widać potwierdzenie. To nie jest obietnica, że rachunek już jest otwarty, i nie dzwonimy tylko dlatego, że wysłałeś formularz.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Jakie rynki są pokazane?',
-                        'a' => 'Przykłady to BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD i GBP/USD. Robocza księga otwiera się na zasilonym rachunku.',
+                        'a' => 'Przykłady to BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD i GBP/USD. Ceny na żywo i pełna lista par otwierają się na zasilonym rachunku.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Jakich metod płatności może użyć rachunek?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay i przelew bankowy. Formularz rejestracji nie obciąża karty. Metoda i ewentualna opłata są pokazane, zanim potwierdzisz wpłatę na rachunku.',
+                        'a' => 'Metody zależą od regionu. Osobisty opiekun wymienia te, których możesz użyć, i ewentualną opłatę, zanim potwierdzisz wpłatę. Formularz rejestracji nie obciąża karty.',
                     ],
                     [
                         'q' => 'Jak działają wypłaty?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Czy połączenie jest szyfrowane?',
-                        'a' => 'Strona jest serwowana przez HTTPS. Login trzymaj dla siebie, gdy rachunek już istnieje. {brand} nie potrzebuje dodatkowych uprawnień w telefonie.',
+                        'a' => 'Strona jest serwowana przez HTTPS. Login trzymaj dla siebie, gdy rachunek już istnieje.',
                     ],
                     [
                         'q' => 'Czy mogę stracić pieniądze?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'O nas',
         'title' => 'Krótka notatka. Potem decydujesz.',
-        'lead' => '{brand} trzyma ekran mały celowo. Rynek jest głośny. Notatka to jedno słowo, prostym językiem, i nigdy nie wysyła zlecenia bez ciebie.',
+        'lead' => '{brand} trzyma ekran mały celowo. Rynek jest głośny. Notatka to krótka wskazówka — kup, trzymaj albo obserwuj — prostym językiem, i nigdy nie wysyła zlecenia bez ciebie.',
         'cta' => 'Otwórz rachunek',
-        'caption' => 'Jedno biuro. Jeden zielony wykres.',
+        'caption' => 'Jeden zespół. Jeden zielony wykres.',
         'facts_title' => 'Cztery rzeczy na początek',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Rynki na tym ekranie',
-        'markets_lead' => 'Ceny poniżej są przykładami, tymi samymi co na taśmie u góry. To nie jest strumień na żywo. Zasilony rachunek jest miejscem, w którym otwiera się księga robocza.',
+        'markets_lead' => 'Ceny poniżej są przykładami, tymi samymi co na taśmie u góry. To nie jest strumień na żywo. Ceny na żywo otwierają się na zasilonym rachunku.',
     ],
     'product' => [
-        'eyebrow' => 'Produkt',
+        'eyebrow' => 'Platforma',
         'title' => 'Wykres, notatka, potwierdzenie.',
-        'lead' => 'Platforma to trzy elementy na jednym ekranie. AI pisze notatkę. Przycisk zostaje u ciebie.',
+        'lead' => 'Platforma to trzy elementy na jednym ekranie. AI pisze notatkę. Ty naciskasz potwierdź.',
         'cta' => 'Otwórz rachunek',
         'chart_cap' => 'Potwierdzasz transakcję.',
-        'parts_title' => 'Co jest na ekranie',
+        'parts_title' => 'Jak to się składa',
         'parts' => [
             [
                 'title' => 'Wykres',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Cennik',
         'title' => 'Zasilenie dopasowane do regionu',
-        'lead' => 'Wpłata minimalna zależy od regionu, w którym jesteś. Osobisty opiekun wyjaśnia kwotę, metodę i to, jak dostęp się odblokowuje, gdy wyślesz formularz.',
+        'lead' => 'Wpłata minimalna zależy od regionu, w którym jesteś. Osobisty opiekun wyjaśnia kwotę, metodę i to, jak wykresy się odblokowują, gdy rachunek jest zasilony.',
         'access' => 'Dostęp do rachunku',
         'min_label' => 'Wpłata minimalna',
         'min_value' => 'Ustalona dla regionu',
         'unlock' => 'Wykresy, narzędzia i prowadzenie AI odblokowują się po zasileniu rachunku. Opiekun najpierw potwierdza szczegóły.',
         'form_heading' => 'Załóż rachunek',
-        'form_title' => 'Otwarcie w mniej niż 2 minuty',
+        'form_title' => 'Wyślij zgłoszenie w mniej niż 2 minuty',
     ],
     'signup' => [
         'eyebrow' => 'Zacznij',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Zespół',
-        'title' => 'Kto czyta list.',
-        'lead' => 'Siedem ról. Pytanie idzie do osoby, która daną rolę pełni. Helen Ward prowadzi biuro. Nie składa twojego zlecenia.',
+        'title' => 'Kto czyta e-mail.',
+        'lead' => 'Siedem ról. Pytanie idzie do osoby, która daną rolę pełni. Helen Ward prowadzi zespół. Nie składa twojego zlecenia.',
         'routes' => [
             'Opłaty i wpłaty idą do dyrektora finansowego.',
             'Wykres i notatka idą do dyrektora technicznego.',
             'Nowe zgłoszenie idzie do dyrektora handlowego, a potem do partnera zarządzającego.',
             'To, jak działa ekran, idzie do dyrektora produktu.',
-            'List o zgłoszeniu, które już zostało wysłane, idzie do obsługi klienta.',
+            'E-mail o zgłoszeniu, które już zostało wysłane, idzie do obsługi klienta.',
         ],
         'mail' => 'Napisz na {email} i w pierwszym wierszu podaj rolę. Bez numerów kart. Bez haseł.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Wsparcie przy kryptowalutach',
+        'title' => 'Wsparcie',
         'service_title' => 'Usługa i wsparcie',
-        'service' => 'Biuro to siedem osób. Nazwij rolę w pierwszym wierszu, a list tam trafi. Nie dzwonimy dlatego, że formularz został wysłany, i nikt nie potwierdza zlecenia za ciebie.',
+        'service' => 'Zespół to siedem osób. Nazwij rolę w pierwszym wierszu, a e-mail tam trafi. Nie dzwonimy tylko dlatego, że formularz został wysłany, i nikt nie potwierdza zlecenia za ciebie.',
         'write' => 'Napisz na {email}.',
         'hours_title' => 'Godziny wsparcia',
         'hours' => 'Poczta jest czytana w dzień i w nocy. Odpowiedź zwykle zajmuje kilka godzin. Jeśli nie damy rady od razu, odpisuje kolejna osoba na tej roli.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Napisz, a pytanie daj w pierwszym wierszu.',
-        'lead' => 'E-mail {email}. Odpowiedź zwykle zajmuje kilka godzin. Biuro nie dzwoni dlatego, że formularz został wysłany.',
+        'lead' => 'E-mail {email}. Odpowiedź zwykle zajmuje kilka godzin. Zespół nie dzwoni tylko dlatego, że formularz został wysłany.',
         'topics' => [
             [
                 'title' => 'Formularz',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Regulamin',
             'updated' => 'Ostatnia aktualizacja: 18 listopada 2026',
-            'intro' => 'Wchodząc na {brand}, akceptujesz ten regulamin. Jeśli się nie zgadzasz, nie korzystaj z usług.',
+            'intro' => 'Korzystając z tej strony, akceptujesz ten regulamin. Jeśli się nie zgadzasz, nie korzystaj z usług.',
             'sections' => [
                 [
                     'h' => 'Kto może korzystać',
@@ -618,7 +618,7 @@ return [
         'cookie-policy' => [
             'title' => 'Informacja o plikach cookie',
             'updated' => 'Ostatnia aktualizacja: 18 listopada 2026',
-            'intro' => '{brand} używa plików cookie potrzebnych do działania strony, zapamiętania wyboru języka i rzetelnej sesji rejestracji.',
+            'intro' => '{brand} używa plików cookie potrzebnych do działania strony, zapamiętania wyboru języka i ochrony formularza przed automatycznym nadużyciem.',
             'sections' => [
                 [
                     'h' => 'Co zapisujemy',

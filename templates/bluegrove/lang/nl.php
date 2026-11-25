@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platform | {brand}',
-            'description' => 'Grafiek, notitie, bevestigen. De AI schrijft de aanwijzing. Jij houdt de knop.',
+            'description' => 'Grafiek, notitie, bevestigen. De AI schrijft de aanwijzing. Jij drukt bevestigen.',
         ],
         'offer' => [
             'title' => 'Tarieven | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Team | {brand}',
-            'description' => 'Wie je brief leest bij {brand}. Zeven rollen, één desk.',
+            'description' => 'Wie je e-mail leest bij {brand}. Zeven rollen, één team.',
         ],
         'sign-up' => [
             'title' => 'Account openen | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Over',
-        'product' => 'Product',
+        'product' => 'Platform',
         'faq' => 'FAQ',
         'team' => 'Team',
         'contact' => 'Contact',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Wat onderscheidt {brand}? Een heldere manier om de markt te lezen. Het scherm, met een AI-notitie naast de grafiek, helpt je kiezen en het risico in beeld te houden. Jij bevestigt nog steeds elke order.',
+        'lead' => 'Een heldere manier om de markt te lezen. De AI-notitie zit naast de grafiek, zodat je kunt kiezen en het risico in beeld houdt. Jij bevestigt nog steeds elke order.',
         'form_title' => 'Vraag een account aan',
         'first_name' => 'Voornaam',
         'last_name' => 'Achternaam',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Gemaakt voor beginners',
-        'title' => 'Drie stappen. Daarna zit je in de markt.',
+        'title' => 'Drie stappen van het formulier naar je eerste order.',
         'lead' => 'Geen jargon van een terminal — een helder pad van aanmelding naar je eerste positie.',
         'watchlist' => 'Volglijst',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI op het koerslint',
+        'eyebrow' => 'AI naast de grafiek',
         'title' => 'Een signaal dat je in één oogopslag leest',
         'lead' => 'Marktruis gaat erin. Een korte notitie komt eruit. Jij beslist.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Start',
             ],
             [
-                'title' => '6 maanden ervaring',
-                'text' => 'Vertrouwd met het koerslint. De notitie blijft één woord.',
+                'title' => 'Als de grafiek vertrouwd is',
+                'text' => 'Vertrouwd met het koerslint. De notitie blijft kort.',
                 'mark' => 'Stabiel',
             ],
             [
-                'title' => '1+ jaar handelen',
+                'title' => 'Als je vaker handelt',
                 'text' => 'Jij kiest de omvang. Een herinnering verschijnt voordat je bevestigt.',
                 'mark' => 'Jouw keus',
             ],
             [
-                'title' => '2+ jaar',
+                'title' => 'Als je meer paren gebruikt',
                 'text' => 'Meer paren, dezelfde regel. Niets verstuurt een order zonder jou.',
                 'mark' => 'Jij beslist',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'één korte notitie',
     ],
     'voices' => [
-        'eyebrow' => 'Van de desk',
+        'eyebrow' => 'Van het team',
         'title' => 'Mensen waarderen hoe helder het is.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kyiv',
-                'quote' => 'Helder vanaf het eerste scherm. De notitie is één woord, en ik druk nog steeds zelf op de knop.',
+                'quote' => 'Helder vanaf het eerste scherm. De notitie is kort, en bevestigen druk ik nog steeds zelf.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Aan de slag',
         'title' => 'Maak je account bij {brand}',
-        'lead' => 'Stap in op een premium platform dat eenvoudig blijft — AI-begeleiding vanaf dag één.',
-        'form_title' => 'Openen in minder dan 2 minuten',
+        'lead' => 'Een platform dat eenvoudig blijft — een korte AI-aanwijzing vanaf het eerste scherm.',
+        'form_title' => 'Stuur een verzoek in minder dan 2 minuten',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Korte antwoorden',
         'more' => 'Lees de volledige FAQ →',
         'page_title' => 'Antwoorden voordat je iets stort',
-        'page_lead' => 'Start, de notitie, geld en veiligheid. Staat je vraag er niet bij, schrijf dan naar {email}.',
+        'page_lead' => 'Start, de notitie, geld en veiligheid — de veelgestelde vragen. Staat je vraag er niet bij, schrijf dan naar {email}.',
         'items' => [
             [
                 'q' => 'Heb ik handelservaring nodig?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Wat gebeurt er nadat ik verstuur?',
-                        'a' => 'Het verzoek wordt bewaard. Je ziet een bevestiging op de pagina. Dat is geen belofte dat een account al open is, en er wordt niemand op pad gestuurd om je te bellen.',
+                        'a' => 'Het verzoek wordt bewaard. Je ziet een bevestiging op de pagina. Dat is geen belofte dat een account al open is, en we bellen niet alleen omdat je een formulier hebt verstuurd.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Welke markten worden getoond?',
-                        'a' => 'De voorbeelden zijn BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD en GBP/USD. Het werkboek opent in een gefinancierd account.',
+                        'a' => 'De voorbeelden zijn BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD en GBP/USD. Liveprijzen en de volledige parenlijst openen in een gefinancierd account.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Welke betaalmethoden kan het account gebruiken?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay en overschrijving. Het registratieformulier schrijft geen kaart af. De methode en eventuele kosten staan op het scherm voordat je een storting in het account bevestigt.',
+                        'a' => 'De methoden hangen af van de regio. Je persoonlijke manager noemt die je kunt gebruiken, en eventuele kosten, voordat je een storting bevestigt. Het registratieformulier schrijft geen kaart af.',
                     ],
                     [
                         'q' => 'Hoe werken opnames?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Is de verbinding versleuteld?',
-                        'a' => 'De site wordt aangeboden via HTTPS. Houd je eigen login privé zodra er een account is. {brand} heeft geen extra rechten op je telefoon nodig.',
+                        'a' => 'De site wordt aangeboden via HTTPS. Houd je eigen login privé zodra er een account is.',
                     ],
                     [
                         'q' => 'Kan ik geld verliezen?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Over',
         'title' => 'Een korte notitie. Daarna beslis jij.',
-        'lead' => '{brand} houdt het scherm met opzet klein. De markt is rumoerig. De notitie is één woord, in gewone taal, en verstuurt nooit een order zonder jou.',
+        'lead' => '{brand} houdt het scherm met opzet klein. De markt is rumoerig. De notitie is een korte aanwijzing — kopen, houden of kijken — in gewone taal, en verstuurt nooit een order zonder jou.',
         'cta' => 'Account openen',
-        'caption' => 'Eén desk. Eén groene grafiek.',
+        'caption' => 'Eén team. Eén groene grafiek.',
         'facts_title' => 'Vier dingen om eerst te weten',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Markten op dit scherm',
-        'markets_lead' => 'De prijzen hieronder zijn voorbeelden, dezelfde als in het koerslint bovenaan. Het is geen live feed. Een gefinancierd account is waar het werkboek opent.',
+        'markets_lead' => 'De prijzen hieronder zijn voorbeelden, dezelfde als in het koerslint bovenaan. Het is geen live feed. Liveprijzen openen in een gefinancierd account.',
     ],
     'product' => [
-        'eyebrow' => 'Product',
+        'eyebrow' => 'Platform',
         'title' => 'Grafiek, notitie, bevestigen.',
-        'lead' => 'Het platform is drie onderdelen op één scherm. De AI schrijft de notitie. Jij houdt de knop.',
+        'lead' => 'Het platform is drie onderdelen op één scherm. De AI schrijft de notitie. Jij drukt bevestigen.',
         'cta' => 'Account openen',
         'chart_cap' => 'Jij bevestigt de transactie.',
-        'parts_title' => 'Wat er op het scherm staat',
+        'parts_title' => 'Hoe het in elkaar past',
         'parts' => [
             [
                 'title' => 'De grafiek',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Tarieven',
         'title' => 'Storten dat past bij je regio',
-        'lead' => 'De minimale storting hangt af van de regio waar je zit. Een persoonlijke manager legt het bedrag, de methode en hoe toegang vrijkomt uit nadat je het formulier verstuurt.',
+        'lead' => 'De minimale storting hangt af van de regio waar je zit. Een persoonlijke manager legt het bedrag, de methode en hoe de grafieken vrijkomen uit zodra het account is gefinancierd.',
         'access' => 'Toegang tot het account',
         'min_label' => 'Minimale storting',
         'min_value' => 'Vastgesteld voor je regio',
         'unlock' => 'Grafieken, tools en AI-begeleiding komen vrij zodra het account is gestort. Je manager bevestigt eerst de details.',
         'form_heading' => 'Maak je account',
-        'form_title' => 'Openen in minder dan 2 minuten',
+        'form_title' => 'Stuur een verzoek in minder dan 2 minuten',
     ],
     'signup' => [
         'eyebrow' => 'Aan de slag',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Team',
-        'title' => 'Wie je brief leest.',
-        'lead' => 'Zeven rollen. Een vraag gaat naar de persoon die die rol heeft. Helen Ward leidt de desk. Zij plaatst je order niet.',
+        'title' => 'Wie je e-mail leest.',
+        'lead' => 'Zeven rollen. Een vraag gaat naar de persoon die die rol heeft. Helen Ward leidt het team. Zij plaatst je order niet.',
         'routes' => [
             'Kosten en stortingen gaan naar de financieel directeur.',
             'De grafiek en de notitie gaan naar de technisch directeur.',
             'Een nieuw verzoek gaat naar de commercieel directeur, daarna naar de beherende vennoot.',
             'Hoe het scherm werkt gaat naar de productdirecteur.',
-            'Een brief over een verzoek dat je al verstuurde gaat naar klantenzorg.',
+            'Een e-mail over een verzoek dat je al verstuurde gaat naar klantenzorg.',
         ],
         'mail' => 'Schrijf naar {email} en zet de rol op de eerste regel. Geen kaartnummers. Geen wachtwoorden.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Ondersteuning bij cryptovaluta',
+        'title' => 'Support',
         'service_title' => 'Dienst en support',
-        'service' => 'De desk is zeven mensen. Noem de rol op de eerste regel en de brief gaat daarheen. We bellen niet omdat een formulier is verstuurd, en niemand bevestigt een order voor je.',
+        'service' => 'Het team is zeven mensen. Noem de rol op de eerste regel en de e-mail gaat daarheen. We bellen niet alleen omdat een formulier is verstuurd, en niemand bevestigt een order voor je.',
         'write' => 'Schrijf naar {email}.',
         'hours_title' => 'Supporturen',
         'hours' => 'E-mail wordt dag en nacht gelezen. Een antwoord duurt doorgaans een paar uur. Kunnen we niet meteen antwoorden, dan antwoordt de volgende persoon in die rol.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Schrijf met de vraag op de eerste regel.',
-        'lead' => 'E-mail {email}. Een antwoord duurt doorgaans een paar uur. De desk belt niet omdat een formulier is verstuurd.',
+        'lead' => 'E-mail {email}. Een antwoord duurt doorgaans een paar uur. Het team belt niet alleen omdat een formulier is verstuurd.',
         'topics' => [
             [
                 'title' => 'Het formulier',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Gebruiksvoorwaarden',
             'updated' => 'Laatst bijgewerkt: 18 november 2026',
-            'intro' => 'Door {brand} te openen ga je akkoord met deze gebruiksvoorwaarden. Als je niet akkoord gaat, gebruik onze diensten dan niet.',
+            'intro' => 'Door deze website te gebruiken ga je akkoord met deze gebruiksvoorwaarden. Als je niet akkoord gaat, gebruik onze diensten dan niet.',
             'sections' => [
                 [
                     'h' => 'Geschiktheid',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Cookieverklaring',
             'updated' => 'Laatst bijgewerkt: 18 november 2026',
-            'intro' => '{brand} gebruikt cookies die nodig zijn om de site te laten werken, een taalkeuze te onthouden en een registratiesessie betrouwbaar te houden.',
+            'intro' => '{brand} gebruikt cookies die nodig zijn om de site te laten werken, een taalkeuze te onthouden en het formulier te beschermen tegen automatisch misbruik.',
             'sections' => [
                 [
                     'h' => 'Wat we bewaren',
-                    'p' => 'Een taalcookie, een klikidentificatie en een kortlevend formuliertoken. We gebruiken geen advertentiepixels op deze pagina.',
+                    'p' => 'Een taalcookie, een klikidentificatie en een kortlevend formuliertoken. We gebruiken geen advertentiepixels op deze site.',
                 ],
                 [
                     'h' => 'Beheer',

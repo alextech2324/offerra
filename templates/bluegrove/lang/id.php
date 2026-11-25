@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platform | {brand}',
-            'description' => 'Grafik, catatan, konfirmasi. AI menulis isyarat. Tombol tetap di tangan Anda.',
+            'description' => 'Grafik, catatan, konfirmasi. AI menulis petunjuk. Anda menekan konfirmasi.',
         ],
         'offer' => [
             'title' => 'Harga | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Tim | {brand}',
-            'description' => 'Siapa yang membaca surat Anda di {brand}. Tujuh pekerjaan, satu meja.',
+            'description' => 'Siapa yang membaca email Anda di {brand}. Tujuh pekerjaan, satu tim.',
         ],
         'sign-up' => [
             'title' => 'Buka akun | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Tentang',
-        'product' => 'Produk',
+        'product' => 'Platform',
         'faq' => 'Pertanyaan umum',
         'team' => 'Tim',
         'contact' => 'Kontak',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Apa yang membedakan {brand}? Cara yang lugas untuk membaca pasar. Layar, dengan catatan AI di samping grafik, membantu Anda memutuskan dan menjaga risiko tetap terlihat. Anda tetap mengonfirmasi setiap order.',
+        'lead' => 'Cara yang lugas untuk membaca pasar. Catatan AI duduk di samping grafik agar Anda bisa memutuskan dan menjaga risiko tetap terlihat. Anda tetap mengonfirmasi setiap order.',
         'form_title' => 'Ajukan akun',
         'first_name' => 'Nama depan',
         'last_name' => 'Nama belakang',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Dibuat untuk pemula',
-        'title' => 'Tiga langkah. Lalu Anda sudah di pasar.',
+        'title' => 'Tiga langkah dari formulir ke order pertama.',
         'lead' => 'Tanpa jargon terminal — jalur yang jelas dari pendaftaran ke posisi pertama Anda.',
         'watchlist' => 'Daftar pantau',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI di pita',
+        'eyebrow' => 'AI di samping grafik',
         'title' => 'Sinyal yang terbaca dalam sekali lihat',
         'lead' => 'Kebisingan pasar masuk. Catatan pendek keluar. Anda yang memutuskan.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Mulai',
             ],
             [
-                'title' => '6 bulan pengalaman',
-                'text' => 'Nyaman dengan pita. Catatan tetap satu kata.',
+                'title' => 'Ketika grafik sudah familiar',
+                'text' => 'Nyaman dengan pita. Catatan tetap singkat.',
                 'mark' => 'Stabil',
             ],
             [
-                'title' => '1+ tahun berdagang',
+                'title' => 'Ketika Anda berdagang lebih sering',
                 'text' => 'Anda memilih ukuran. Pengingat muncul sebelum Anda mengonfirmasi.',
                 'mark' => 'Keputusan Anda',
             ],
             [
-                'title' => '2+ tahun',
+                'title' => 'Ketika Anda memakai lebih banyak pasangan',
                 'text' => 'Lebih banyak pasangan, aturan yang sama. Tidak ada yang mengirim order tanpa Anda.',
                 'mark' => 'Anda yang putuskan',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'satu catatan pendek',
     ],
     'voices' => [
-        'eyebrow' => 'Dari meja',
+        'eyebrow' => 'Dari tim',
         'title' => 'Orang menyukai betapa lugasnya.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kyiv',
-                'quote' => 'Jelas sejak layar pertama. Catatannya satu kata, dan tombolnya tetap saya tekan sendiri.',
+                'quote' => 'Jelas sejak layar pertama. Catatannya singkat, dan konfirmasi tetap saya tekan sendiri.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Mulai',
         'title' => 'Buat akun {brand} Anda',
-        'lead' => 'Gabung ke platform premium yang tetap sederhana — panduan AI sejak hari pertama.',
-        'form_title' => 'Buka dalam waktu di bawah 2 menit',
+        'lead' => 'Platform yang tetap sederhana — petunjuk AI singkat sejak layar pertama.',
+        'form_title' => 'Kirim permintaan dalam waktu di bawah 2 menit',
     ],
     'faq' => [
         'eyebrow' => 'Pertanyaan umum',
         'title' => 'Jawaban singkat',
         'more' => 'Baca pertanyaan umum selengkapnya →',
         'page_title' => 'Jawaban sebelum Anda mendanai apa pun',
-        'page_lead' => 'Awal, catatan, uang, dan keamanan. Jika pertanyaan Anda tidak ada di sini, tulis ke {email}.',
+        'page_lead' => 'Awal, catatan, uang, dan keamanan — pertanyaan yang sering muncul. Jika pertanyaan Anda tidak ada di sini, tulis ke {email}.',
         'items' => [
             [
                 'q' => 'Apakah saya perlu pengalaman trading?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Apa yang terjadi setelah saya kirim?',
-                        'a' => 'Permintaan tersimpan. Anda melihat konfirmasi di halaman. Ini bukan janji bahwa akun sudah terbuka, dan tidak ada orang yang dikirim untuk menelepon Anda.',
+                        'a' => 'Permintaan tersimpan. Anda melihat konfirmasi di halaman. Ini bukan janji bahwa akun sudah terbuka, dan kami tidak menelepon hanya karena Anda mengirim formulir.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Pasar mana yang ditampilkan?',
-                        'a' => 'Contohnya adalah BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD, dan GBP/USD. Buku kerja terbuka di akun yang sudah didanai.',
+                        'a' => 'Contohnya adalah BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD, dan GBP/USD. Harga langsung dan daftar pasangan lengkap terbuka di akun yang sudah didanai.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Metode pembayaran apa yang dapat dipakai akun?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay, dan transfer bank. Formulir pendaftaran tidak menagih kartu. Metode dan biaya apa pun ditampilkan sebelum Anda mengonfirmasi deposit di dalam akun.',
+                        'a' => 'Metode bergantung pada wilayah. Manajer pribadi Anda menyebutkan yang dapat Anda pakai, dan biaya apa pun, sebelum Anda mengonfirmasi deposit. Formulir pendaftaran tidak menagih kartu.',
                     ],
                     [
                         'q' => 'Bagaimana penarikan bekerja?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Apakah koneksi terenkripsi?',
-                        'a' => 'Situs disajikan melalui HTTPS. Jaga data masuk Anda sendiri setelah akun ada. {brand} tidak membutuhkan izin tambahan di ponsel Anda.',
+                        'a' => 'Situs disajikan melalui HTTPS. Jaga data masuk Anda sendiri secara pribadi setelah akun ada.',
                     ],
                     [
                         'q' => 'Bisakah saya kehilangan uang?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Tentang',
         'title' => 'Catatan pendek. Lalu Anda putuskan.',
-        'lead' => '{brand} menjaga layar tetap kecil dengan sengaja. Pasar berisik. Catatan itu satu kata, ditulis dalam bahasa yang lugas, dan tidak pernah mengirim order tanpa Anda.',
+        'lead' => '{brand} menjaga layar tetap kecil dengan sengaja. Pasar berisik. Catatan itu petunjuk singkat — beli, tahan, atau pantau — dalam bahasa yang lugas, dan tidak pernah mengirim order tanpa Anda.',
         'cta' => 'Buka akun',
-        'caption' => 'Satu meja. Satu grafik hijau.',
+        'caption' => 'Satu tim. Satu grafik hijau.',
         'facts_title' => 'Empat hal yang perlu diketahui lebih dulu',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Pasar di layar ini',
-        'markets_lead' => 'Harga di bawah adalah contoh, sama dengan yang ada di pita atas. Itu bukan umpan langsung. Buku kerja terbuka di akun yang sudah didanai.',
+        'markets_lead' => 'Harga di bawah adalah contoh, sama dengan yang ada di pita atas. Itu bukan umpan langsung. Harga langsung terbuka di akun yang sudah didanai.',
     ],
     'product' => [
-        'eyebrow' => 'Produk',
+        'eyebrow' => 'Platform',
         'title' => 'Grafik, catatan, konfirmasi.',
-        'lead' => 'Platform ini tiga bagian di satu layar. AI menulis catatan. Tombol tetap di tangan Anda.',
+        'lead' => 'Platform ini tiga bagian di satu layar. AI menulis catatan. Anda menekan konfirmasi.',
         'cta' => 'Buka akun',
         'chart_cap' => 'Anda yang mengonfirmasi transaksi.',
-        'parts_title' => 'Apa yang ada di layar',
+        'parts_title' => 'Bagaimana semuanya menyatu',
         'parts' => [
             [
                 'title' => 'Grafik',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Harga',
         'title' => 'Pendanaan yang sesuai wilayah Anda',
-        'lead' => 'Deposit minimum bergantung pada wilayah tempat Anda berada. Manajer pribadi menjelaskan jumlah, cara, dan bagaimana akses terbuka setelah formulir terkirim.',
+        'lead' => 'Deposit minimum bergantung pada wilayah tempat Anda berada. Manajer pribadi menjelaskan jumlah, cara, dan bagaimana grafik terbuka setelah akun didanai.',
         'access' => 'Akses akun',
         'min_label' => 'Deposit minimum',
         'min_value' => 'Ditetapkan untuk wilayah Anda',
         'unlock' => 'Grafik, alat, dan panduan AI terbuka setelah akun didanai. Manajer Anda mengonfirmasi detailnya lebih dulu.',
         'form_heading' => 'Buat akun Anda',
-        'form_title' => 'Buka dalam waktu di bawah 2 menit',
+        'form_title' => 'Kirim permintaan dalam waktu di bawah 2 menit',
     ],
     'signup' => [
         'eyebrow' => 'Mulai',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Tim',
-        'title' => 'Siapa yang membaca surat Anda.',
-        'lead' => 'Tujuh pekerjaan. Pertanyaan pergi ke orang yang memegang pekerjaan itu. Helen Ward memimpin meja. Ia tidak memasang order Anda.',
+        'title' => 'Siapa yang membaca email Anda.',
+        'lead' => 'Tujuh pekerjaan. Pertanyaan pergi ke orang yang memegang pekerjaan itu. Helen Ward memimpin tim. Ia tidak memasang order Anda.',
         'routes' => [
             'Biaya dan deposit pergi ke direktur keuangan.',
             'Grafik dan catatan pergi ke direktur teknis.',
             'Permintaan baru pergi ke direktur komersial, lalu ke mitra pengelola.',
             'Cara layar bekerja pergi ke direktur produk.',
-            'Surat tentang permintaan yang sudah Anda kirim pergi ke layanan klien.',
+            'Email tentang permintaan yang sudah Anda kirim pergi ke layanan klien.',
         ],
         'mail' => 'Tulis ke {email} dan cantumkan pekerjaan di baris pertama. Tanpa nomor kartu. Tanpa kata sandi.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Dukungan mata uang kripto',
+        'title' => 'Dukungan',
         'service_title' => 'Layanan dan dukungan',
-        'service' => 'Meja ini tujuh orang. Sebut pekerjaan di baris pertama dan surat pergi ke sana. Kami tidak menelepon hanya karena formulir terkirim, dan tidak ada yang mengonfirmasi order untuk Anda.',
+        'service' => 'Tim ini tujuh orang. Sebut pekerjaan di baris pertama dan email pergi ke sana. Kami tidak menelepon hanya karena formulir terkirim, dan tidak ada yang mengonfirmasi order untuk Anda.',
         'write' => 'Tulis ke {email}.',
         'hours_title' => 'Jam dukungan',
         'hours' => 'Surat dibaca sepanjang siang dan malam. Balasan biasa butuh beberapa jam. Jika kami tidak dapat menjawab segera, orang berikutnya dalam peran itu yang membalas.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontak',
         'title' => 'Tulis dengan pertanyaan di baris pertama.',
-        'lead' => 'Email {email}. Balasan biasa butuh beberapa jam. Meja tidak menelepon hanya karena formulir terkirim.',
+        'lead' => 'Email {email}. Balasan biasa butuh beberapa jam. Tim tidak menelepon hanya karena formulir terkirim.',
         'topics' => [
             [
                 'title' => 'Formulir',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Ketentuan Penggunaan',
             'updated' => 'Terakhir diperbarui: 18 November 2026',
-            'intro' => 'Dengan mengakses {brand}, Anda menyetujui Ketentuan Penggunaan ini. Jika Anda tidak setuju, jangan pakai layanan kami.',
+            'intro' => 'Dengan menggunakan situs ini, Anda menyetujui Ketentuan Penggunaan ini. Jika Anda tidak setuju, jangan pakai layanan kami.',
             'sections' => [
                 [
                     'h' => 'Kelayakan',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Pemberitahuan cookie',
             'updated' => 'Terakhir diperbarui: 18 November 2026',
-            'intro' => '{brand} memakai cookie yang diperlukan untuk menjalankan situs, mengingat pilihan bahasa, dan menjaga sesi pendaftaran tetap jujur.',
+            'intro' => '{brand} memakai cookie yang diperlukan untuk menjalankan situs, mengingat pilihan bahasa, dan melindungi formulir dari penyalahgunaan otomatis.',
             'sections' => [
                 [
                     'h' => 'Yang kami simpan',
-                    'p' => 'Cookie bahasa, pengenal klik, dan token formulir yang berumur pendek. Kami tidak memakai piksel iklan di halaman ini.',
+                    'p' => 'Cookie bahasa, pengenal klik, dan token formulir yang berumur pendek. Kami tidak memakai piksel iklan di situs ini.',
                 ],
                 [
                     'h' => 'Pengendalian',

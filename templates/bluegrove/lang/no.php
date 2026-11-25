@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Plattform | {brand}',
-            'description' => 'Graf, notat, bekreft. AI-en skriver signalet. Knappen er din.',
+            'description' => 'Graf, notat, bekreft. AI-en skriver signalet. Du trykker bekreft.',
         ],
         'offer' => [
             'title' => 'Priser | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Team | {brand}',
-            'description' => 'Hvem som leser brevet ditt hos {brand}. Sju roller, én desk.',
+            'description' => 'Hvem som leser e-posten din hos {brand}. Sju roller, ett team.',
         ],
         'sign-up' => [
             'title' => 'Åpne konto | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Om oss',
-        'product' => 'Produkt',
+        'product' => 'Plattform',
         'faq' => 'FAQ',
         'team' => 'Team',
         'contact' => 'Kontakt',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Hva skiller {brand} ut? En enkel måte å lese markedet på. Skjermen, med et AI-notat ved siden av grafen, hjelper deg å bestemme og holde risikoen i sikte. Du bekrefter fortsatt hver ordre.',
+        'lead' => 'En enkel måte å lese markedet på. AI-notatet sitter ved siden av grafen, så du kan bestemme og holde risikoen i sikte. Du bekrefter fortsatt hver ordre.',
         'form_title' => 'Be om en konto',
         'first_name' => 'Fornavn',
         'last_name' => 'Etternavn',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Bygget for nybegynnere',
-        'title' => 'Tre steg. Så er du i markedet.',
+        'title' => 'Tre steg fra skjemaet til den første ordren.',
         'lead' => 'Ingen terminaljargong — en tydelig vei fra registrering til den første posisjonen din.',
         'watchlist' => 'Følgeliste',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI på båndet',
+        'eyebrow' => 'AI ved siden av grafen',
         'title' => 'Et signal du kan lese med et blikk',
         'lead' => 'Markedsstøyen går inn. Et kort notat kommer ut. Du bestemmer.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Start',
             ],
             [
-                'title' => '6 måneders erfaring',
-                'text' => 'Trygg på båndet. Notatet forblir ett ord.',
+                'title' => 'Når grafen er kjent',
+                'text' => 'Trygg på båndet. Notatet forblir kort.',
                 'mark' => 'Stabil',
             ],
             [
-                'title' => '1+ år med handel',
+                'title' => 'Når du handler oftere',
                 'text' => 'Du velger størrelsen. En påminnelse vises før du bekrefter.',
                 'mark' => 'Ditt valg',
             ],
             [
-                'title' => '2+ år',
+                'title' => 'Når du bruker flere par',
                 'text' => 'Flere par, samme regel. Ingenting sender en ordre uten deg.',
                 'mark' => 'Du bestemmer',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'ett kort notat',
     ],
     'voices' => [
-        'eyebrow' => 'Fra desken',
+        'eyebrow' => 'Fra teamet',
         'title' => 'Folk liker hvor enkelt det er.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kyiv',
-                'quote' => 'Tydelig fra første skjerm. Notatet er ett ord, og jeg trykker fortsatt på knappen selv.',
+                'quote' => 'Tydelig fra første skjerm. Notatet er kort, og jeg trykker fortsatt på bekreft selv.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Kom i gang',
         'title' => 'Opprett {brand}-kontoen din',
-        'lead' => 'Bli med på en premiumplattform som forblir enkel — AI-veiledning fra dag én.',
-        'form_title' => 'Åpne på under 2 minutter',
+        'lead' => 'En plattform som forblir enkel — et kort AI-hint fra første skjerm.',
+        'form_title' => 'Send en forespørsel på under 2 minutter',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Korte svar',
         'more' => 'Les hele FAQ →',
         'page_title' => 'Svar før du setter inn noe',
-        'page_lead' => 'Start, notatet, penger og sikkerhet. Hvis spørsmålet ditt ikke er her, skriv til {email}.',
+        'page_lead' => 'Start, notatet, penger og sikkerhet — de vanlige spørsmålene. Hvis spørsmålet ditt ikke er her, skriv til {email}.',
         'items' => [
             [
                 'q' => 'Trenger jeg handelserfaring?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Hva skjer etter at jeg har sendt?',
-                        'a' => 'Forespørselen lagres. Du ser en bekreftelse på siden. Det er ikke et løfte om at en konto allerede er åpen, og ingen sendes ut for å ringe deg.',
+                        'a' => 'Forespørselen lagres. Du ser en bekreftelse på siden. Det er ikke et løfte om at en konto allerede er åpen, og vi ringer ikke bare fordi du har sendt et skjema.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Hvilke markeder vises?',
-                        'a' => 'Eksemplene er BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD og GBP/USD. Arbeidsboken åpnes på en finansiert konto.',
+                        'a' => 'Eksemplene er BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD og GBP/USD. Livepriser og den fulle parlisten åpnes på en finansiert konto.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Hvilke betalingsmetoder kan kontoen bruke?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay og bankoverføring. Registreringsskjemaet belaster ikke et kort. Metoden og et eventuelt gebyr vises før du bekrefter et innskudd inne på kontoen.',
+                        'a' => 'Metodene avhenger av regionen. Den personlige rådgiveren viser dem du kan bruke, og et eventuelt gebyr, før du bekrefter et innskudd. Registreringsskjemaet belaster ikke et kort.',
                     ],
                     [
                         'q' => 'Hvordan fungerer uttak?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Er tilkoblingen kryptert?',
-                        'a' => 'Nettstedet leveres over HTTPS. Hold din egen pålogging privat når en konto finnes. {brand} trenger ikke ekstra tillatelser på telefonen din.',
+                        'a' => 'Nettstedet leveres over HTTPS. Hold din egen pålogging privat når en konto finnes.',
                     ],
                     [
                         'q' => 'Kan jeg tape penger?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Om oss',
         'title' => 'Et kort notat. Så bestemmer du.',
-        'lead' => '{brand} holder skjermen liten med vilje. Markedet er støyende. Notatet er ett ord, skrevet på klarspråk, og det sender aldri en ordre uten deg.',
+        'lead' => '{brand} holder skjermen liten med vilje. Markedet er støyende. Notatet er et kort hint — kjøp, hold eller se — på klarspråk, og det sender aldri en ordre uten deg.',
         'cta' => 'Åpne konto',
-        'caption' => 'Én desk. Én grønn graf.',
+        'caption' => 'Ett team. Én grønn graf.',
         'facts_title' => 'Fire ting du bør vite først',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Markeder på denne skjermen',
-        'markets_lead' => 'Prisene nedenfor er eksempler, de samme som i båndet øverst. De er ikke en live-feed. En finansiert konto er der arbeidsboken åpnes.',
+        'markets_lead' => 'Prisene nedenfor er eksempler, de samme som i båndet øverst. De er ikke en live-feed. Livepriser åpnes på en finansiert konto.',
     ],
     'product' => [
-        'eyebrow' => 'Produkt',
+        'eyebrow' => 'Plattform',
         'title' => 'Graf, notat, bekreft.',
-        'lead' => 'Plattformen er tre deler på én skjerm. AI-en skriver notatet. Knappen er din.',
+        'lead' => 'Plattformen er tre deler på én skjerm. AI-en skriver notatet. Du trykker bekreft.',
         'cta' => 'Åpne konto',
         'chart_cap' => 'Du bekrefter handelen.',
-        'parts_title' => 'Det som er på skjermen',
+        'parts_title' => 'Hvordan det henger sammen',
         'parts' => [
             [
                 'title' => 'Grafen',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Priser',
         'title' => 'Innskudd som passer regionen din',
-        'lead' => 'Minsteinnskuddet avhenger av regionen du er i. En personlig rådgiver forklarer beløpet, metoden og hvordan tilgangen åpnes etter at du har sendt skjemaet.',
+        'lead' => 'Minsteinnskuddet avhenger av regionen du er i. En personlig rådgiver forklarer beløpet, metoden og hvordan grafene åpnes når kontoen er finansiert.',
         'access' => 'Kontotilgang',
         'min_label' => 'Minsteinnskudd',
         'min_value' => 'Satt for regionen din',
         'unlock' => 'Grafer, verktøy og AI-veiledning åpnes når kontoen er finansiert. Rådgiveren din bekrefter detaljene først.',
         'form_heading' => 'Opprett kontoen din',
-        'form_title' => 'Åpne på under 2 minutter',
+        'form_title' => 'Send en forespørsel på under 2 minutter',
     ],
     'signup' => [
         'eyebrow' => 'Kom i gang',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Team',
-        'title' => 'Hvem som leser brevet ditt.',
-        'lead' => 'Sju roller. Et spørsmål går til personen som eier den rollen. Helen Ward leder desken. Hun legger ikke inn ordren din.',
+        'title' => 'Hvem som leser e-posten din.',
+        'lead' => 'Sju roller. Et spørsmål går til personen som eier den rollen. Helen Ward leder teamet. Hun legger ikke inn ordren din.',
         'routes' => [
             'Gebyrer og innskudd går til finansdirektøren.',
             'Grafen og notatet går til den tekniske direktøren.',
             'En ny forespørsel går til den kommersielle direktøren, og deretter til den ledende partneren.',
             'Hvordan skjermen virker, går til produktdirektøren.',
-            'Et brev om en forespørsel du allerede har sendt, går til kundeomsorg.',
+            'En e-post om en forespørsel du allerede har sendt, går til kundeomsorg.',
         ],
         'mail' => 'Skriv til {email}, og sett rollen på første linje. Ingen kortnumre. Ingen passord.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Støtte for kryptovaluta',
+        'title' => 'Support',
         'service_title' => 'Tjeneste og støtte',
-        'service' => 'Desken er sju personer. Nevn rollen på første linje, så går brevet dit. Vi ringer ikke fordi et skjema er sendt, og ingen bekrefter en ordre for deg.',
+        'service' => 'Teamet er sju personer. Nevn rollen på første linje, så går e-posten dit. Vi ringer ikke bare fordi et skjema er sendt, og ingen bekrefter en ordre for deg.',
         'write' => 'Skriv til {email}.',
         'hours_title' => 'Støttetider',
         'hours' => 'E-post leses dag og natt. Et typisk svar tar noen timer. Hvis vi ikke kan svare med en gang, svarer neste person i den rollen.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Skriv med spørsmålet på første linje.',
-        'lead' => 'Send e-post til {email}. Et typisk svar tar noen timer. Desken ringer ikke fordi et skjema er sendt.',
+        'lead' => 'Send e-post til {email}. Et typisk svar tar noen timer. Teamet ringer ikke bare fordi et skjema er sendt.',
         'topics' => [
             [
                 'title' => 'Skjemaet',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Bruksvilkår',
             'updated' => 'Sist oppdatert: 18. november 2026',
-            'intro' => 'Ved å bruke {brand} godtar du disse bruksvilkårene. Hvis du ikke godtar dem, skal du ikke bruke tjenestene våre.',
+            'intro' => 'Ved å bruke dette nettstedet godtar du disse bruksvilkårene. Hvis du ikke godtar dem, skal du ikke bruke tjenestene våre.',
             'sections' => [
                 [
                     'h' => 'Berettigelse',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Erklæring om informasjonskapsler',
             'updated' => 'Sist oppdatert: 18. november 2026',
-            'intro' => '{brand} bruker informasjonskapsler som trengs for å drive nettstedet, huske et språkvalg og holde en registreringsøkt ærlig.',
+            'intro' => '{brand} bruker informasjonskapsler som trengs for å drive nettstedet, huske et språkvalg og beskytte skjemaet mot automatisk misbruk.',
             'sections' => [
                 [
                     'h' => 'Det vi lagrer',
-                    'p' => 'En språk-cookie, en klikkidentifikator og et kortvarig skjematoken. Vi bruker ikke annonsepiksler på denne siden.',
+                    'p' => 'En språk-cookie, en klikkidentifikator og et kortvarig skjematoken. Vi bruker ikke annonsepiksler på dette nettstedet.',
                 ],
                 [
                     'h' => 'Styring',

@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platform | {brand}',
-            'description' => 'Chart, note, confirm. The AI writes the cue. You keep the button.',
+            'description' => 'Chart, note, confirm. The AI writes the cue. You press confirm.',
         ],
         'offer' => [
             'title' => 'Pricing | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Team | {brand}',
-            'description' => 'Who reads your letter at {brand}. Seven jobs, one desk.',
+            'description' => 'Who reads your email at {brand}. Seven roles, one team.',
         ],
         'sign-up' => [
             'title' => 'Open account | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'About',
-        'product' => 'Product',
+        'product' => 'Platform',
         'faq' => 'FAQ',
         'team' => 'Team',
         'contact' => 'Contact',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'What sets {brand} apart? A plain way to read the market. The screen, with an AI note beside the chart, helps you decide and keep the risk in view. You still confirm every order.',
+        'lead' => 'A plain way to read the market. An AI note sits beside the chart so you can decide and keep risk in sight. You still confirm every order.',
         'form_title' => 'Request an account',
         'first_name' => 'First name',
         'last_name' => 'Last name',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Built for beginners',
-        'title' => 'Three steps. Then you are in the market.',
+        'title' => 'Three steps from the form to your first order.',
         'lead' => 'No terminal jargon — a clear path from sign-up to your first position.',
         'watchlist' => 'Watchlist',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI on the tape',
+        'eyebrow' => 'AI beside the chart',
         'title' => 'A signal you can read at a glance',
         'lead' => 'Market noise goes in. A short note comes out. You decide.',
         'items' => [
@@ -160,9 +160,9 @@ return [
         'lead' => 'The note stays short. The decision stays yours. This is not a forecast and not a daily payout.',
         'items' => [
             ['title' => 'No experience required', 'text' => 'First week on the screen. You learn the chart, then you confirm.', 'mark' => 'Start'],
-            ['title' => '6 months of experience', 'text' => 'Comfortable with the tape. The note stays one word.', 'mark' => 'Steady'],
-            ['title' => '1+ year of trading', 'text' => 'You choose the size. A reminder shows before you confirm.', 'mark' => 'Your call'],
-            ['title' => '2+ years', 'text' => 'More pairs, same rule. Nothing sends an order without you.', 'mark' => 'You decide'],
+            ['title' => 'Once the chart is familiar', 'text' => 'You know the quotes. The note stays short.', 'mark' => 'Steady'],
+            ['title' => 'When you trade more often', 'text' => 'You choose the size. A reminder shows before you confirm.', 'mark' => 'Your call'],
+            ['title' => 'When you use more pairs', 'text' => 'More pairs, same rule. Nothing sends an order without you.', 'mark' => 'You decide'],
         ],
         'note' => 'Illustration only. Markets can lose money. You confirm every order.',
         'cap_a' => 'You confirm',
@@ -171,10 +171,10 @@ return [
         'cap_b2' => 'one short note',
     ],
     'voices' => [
-        'eyebrow' => 'From the desk',
+        'eyebrow' => 'From the team',
         'title' => 'People like how plain it is.',
         'items' => [
-            ['name' => 'Marta K.', 'place' => 'Kyiv', 'quote' => 'Clear from the first screen. The note is one word, and I still press the button myself.'],
+            ['name' => 'Marta K.', 'place' => 'Kyiv', 'quote' => 'Clear from the first screen. The note is short, and I still press confirm myself.'],
             ['name' => 'Daniel R.', 'place' => 'London', 'quote' => 'No terminal jargon. I read the cue, check the chart, and decide. That is the whole product.'],
             ['name' => 'Sofia L.', 'place' => 'Lisbon', 'quote' => 'The steps were clear. I knew what the form would ask before I filled it in.'],
             ['name' => 'Owen P.', 'place' => 'Dublin', 'quote' => 'I started with no experience. The three steps made sense before I sent any details.'],
@@ -188,15 +188,15 @@ return [
     'join' => [
         'eyebrow' => 'Get started',
         'title' => 'Create your {brand} account',
-        'lead' => 'Join a premium platform that stays simple — AI guidance from day one.',
-        'form_title' => 'Open in under 2 minutes',
+        'lead' => 'Join a platform that stays simple — a short AI note from the first screen.',
+        'form_title' => 'Send a request in under 2 minutes',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Quick answers',
         'more' => 'Read the full FAQ →',
         'page_title' => 'Answers before you fund anything',
-        'page_lead' => 'Start, the note, money, and safety. If your question is not here, write to {email}.',
+        'page_lead' => 'Start, the note, money, and safety — the common questions. If yours is not here, write to {email}.',
         'items' => [
             ['q' => 'Do I need trading experience?', 'a' => 'No. {brand} is built for first-time investors — AI notes in plain language.'],
             ['q' => 'What is the minimum deposit?', 'a' => 'It depends on the region you are in. After you send the form, a personal manager explains the amount, the method, and the next step. Nothing is charged on this website.'],
@@ -210,16 +210,16 @@ return [
                     ['q' => 'How do I start?', 'a' => 'Leave your name, email, and phone on the Open account form. That form stores the request. It does not open a funded account by itself and it does not take a deposit. Funding happens later, inside the account. The minimum depends on your region; a personal manager confirms it with you.'],
                     ['q' => 'Do I need trading experience?', 'a' => 'No. The note is one word — buy, hold, or watch — with a short sentence under it. You can read the three steps on the home page before you send anything.'],
                     ['q' => 'What do I send in the form?', 'a' => 'First name, last name, email, and a phone number with a country code. No card number, no password, and no photo of an identity document on this website.'],
-                    ['q' => 'What happens after I submit?', 'a' => 'The request is saved. You see a confirmation on the page. This is not a promise that an account is already open, and nobody is dispatched to call you.'],
+                    ['q' => 'What happens after I submit?', 'a' => 'The request is saved. You see a confirmation on the page. This is not a promise that an account is already open, and nobody will call you just because you sent the form.'],
                 ],
             ],
             [
                 'id' => 'note',
                 'title' => 'The note and the chart',
                 'items' => [
-                    ['q' => 'How does the AI help?', 'a' => 'It turns the tape into a short cue. It does not place orders, change your size, or move money. You confirm every order.'],
-                    ['q' => 'Are the prices on this website live?', 'a' => 'No. The tape, the candles, and the quote lists use fixed numbers so the layout is clear. They are not a feed you can trade against.'],
-                    ['q' => 'Which markets are shown?', 'a' => 'The samples are BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD, and GBP/USD. The working book opens in a funded account.'],
+                    ['q' => 'How does the AI help?', 'a' => 'It turns the quotes into a short cue. It does not place orders, change your size, or move money. You confirm every order.'],
+                    ['q' => 'Are the prices on this website live?', 'a' => 'No. The quotes, the candles, and the lists use fixed numbers so the layout is clear. They are not a feed you can trade against.'],
+                    ['q' => 'Which markets are shown?', 'a' => 'The samples are BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD, and GBP/USD. Live prices and a full pair list open in a funded account.'],
                 ],
             ],
             [
@@ -228,7 +228,7 @@ return [
                 'items' => [
                     ['q' => 'What is the minimum deposit?', 'a' => 'The minimum deposit depends on the region you are in. A personal manager explains the exact amount, the currency, and the payment methods before you fund anything. This website does not show a single figure because it is not the same for every country.'],
                     ['q' => 'Are there hidden fees?', 'a' => 'Fees are shown before you confirm a deposit, a withdrawal, or an order. If a fee applies, it is on that screen, not in a footnote after the fact.'],
-                    ['q' => 'Which payment methods can the account use?', 'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay, and bank transfer. The registration form does not charge a card. The method and any fee are shown before you confirm a deposit inside the account.'],
+                    ['q' => 'Which payment methods can the account use?', 'a' => 'The methods depend on your region. A personal manager lists the ones you can use, and any fee, before you confirm a deposit. The registration form does not charge a card.'],
                     ['q' => 'How do withdrawals work?', 'a' => 'A withdrawal is requested inside the account and checked against the terms. The timing depends on the payment method and is shown before you confirm. This website cannot start a withdrawal.'],
                 ],
             ],
@@ -238,7 +238,7 @@ return [
                 'items' => [
                     ['q' => 'What does the form store?', 'a' => 'Your name, email, phone, and country code. It does not store a card number. Read the Privacy page for the full list.'],
                     ['q' => 'Will support ask for my password or card?', 'a' => 'No. Mail from {email} will not ask you to paste a password, a one-time code, or a full card number.'],
-                    ['q' => 'Is the connection encrypted?', 'a' => 'The site is served over HTTPS. Keep your own login private once an account exists. {brand} does not need extra permissions on your phone.'],
+                    ['q' => 'Is the connection encrypted?', 'a' => 'The site is served over HTTPS. Keep your own login private once an account exists.'],
                     ['q' => 'Can I lose money?', 'a' => 'Yes. FX, CFDs, and crypto can fall. The note is not a forecast and not a promise of a daily result. Only use money you can afford to lose.'],
                 ],
             ],
@@ -247,9 +247,9 @@ return [
     'about' => [
         'eyebrow' => 'About',
         'title' => 'A short note. Then you decide.',
-        'lead' => '{brand} keeps the screen small on purpose. The market is noisy. The note is one word, written in plain English, and it never sends an order without you.',
+        'lead' => '{brand} keeps the screen small on purpose. The market is noisy. The note is a short cue — buy, hold, or watch — in plain language, and it never sends an order without you.',
         'cta' => 'Open account',
-        'caption' => 'One desk. One green chart.',
+        'caption' => 'One team. One green chart.',
         'facts_title' => 'Four things to know first',
         'facts' => [
             ['title' => 'What it is', 'text' => 'A screen for crypto and FX with one short note: buy, hold, or watch.'],
@@ -258,34 +258,34 @@ return [
             ['title' => 'What it is not', 'text' => 'Not a live price feed, not a promise of profit, and not a form that takes a card.'],
         ],
         'markets_title' => 'Markets on this screen',
-        'markets_lead' => 'The prices below are samples, the same ones in the tape at the top. They are not a live feed. A funded account is where the working book opens.',
+        'markets_lead' => 'The prices below are samples, the same ones in the quotes at the top. They are not a live feed. Live prices open in a funded account.',
     ],
     'product' => [
-        'eyebrow' => 'Product',
+        'eyebrow' => 'Platform',
         'title' => 'Chart, note, confirm.',
-        'lead' => 'The platform is three pieces on one screen. The AI writes the note. You keep the button.',
+        'lead' => 'The platform is three pieces on one screen. The AI writes the note. You press confirm.',
         'cta' => 'Open account',
         'chart_cap' => 'You confirm the trade.',
-        'parts_title' => 'What is on the screen',
+        'parts_title' => 'How it fits together',
         'parts' => [
             ['title' => 'The chart', 'text' => 'Candles for the pair you picked. On this website the chart is a sample, so you can see the layout before an account exists.'],
             ['title' => 'The note', 'text' => 'Buy, hold, or watch. One word, plus a sentence on why. It does not place the order.'],
             ['title' => 'The reminder', 'text' => 'Before you change size, the screen repeats the risk. You can stop there.'],
             ['title' => 'The watchlist', 'text' => 'A short list of pairs, not a wall of tickers. BTC, ETH, SOL, XRP, and two FX pairs are the samples.'],
-            ['title' => 'The confirm', 'text' => 'Nothing leaves your account until you press confirm. There is no hidden auto-trade switch on this site.'],
+            ['title' => 'Confirmation', 'text' => 'Nothing leaves your account until you press confirm. There is no hidden auto-trade switch on this site.'],
             ['title' => 'The start', 'text' => 'The minimum deposit depends on the region you are in. A personal manager confirms the amount and the method before any money moves.'],
         ],
     ],
     'offer' => [
         'eyebrow' => 'Pricing',
         'title' => 'Funding that fits your region',
-        'lead' => 'The minimum deposit depends on the region you are in. A personal manager explains the amount, the method, and how access unlocks after you send the form.',
+        'lead' => 'The minimum deposit depends on the region you are in. A personal manager explains the amount, the method, and how charts unlock once the account is funded.',
         'access' => 'Account access',
         'min_label' => 'Minimum deposit',
         'min_value' => 'Set for your region',
         'unlock' => 'Charts, tools, and AI guidance unlock once the account is funded. Your manager confirms the details first.',
         'form_heading' => 'Create your account',
-        'form_title' => 'Open in under 2 minutes',
+        'form_title' => 'Send a request in under 2 minutes',
     ],
     'signup' => [
         'eyebrow' => 'Get started',
@@ -295,16 +295,16 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Team',
-        'title' => 'Who reads your letter.',
-        'lead' => 'Seven jobs. A question goes to the person who owns that job. Helen Ward runs the desk. She does not place your order.',
+        'title' => 'Who reads your email.',
+        'lead' => 'Seven roles. A question goes to the person who owns that role. Helen Ward runs the team. She does not place your order.',
         'routes' => [
             'Fees and deposits go to the finance director.',
             'The chart and the note go to the technical director.',
             'A new request goes to the commercial director, then to the managing partner.',
             'How the screen works goes to the product director.',
-            'A letter about a request you already sent goes to client care.',
+            'An email about a request you already sent goes to client care.',
         ],
-        'mail' => 'Write to {email} and put the job in the first line. No card numbers. No passwords.',
+        'mail' => 'Write to {email} and name the role in the first line. No card numbers. No passwords.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Chief executive (CEO)',
@@ -320,18 +320,18 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Cryptocurrency support',
+        'title' => 'Support',
         'service_title' => 'Service and support',
-        'service' => 'The desk is seven people. Name the job in the first line and the letter goes there. We do not call because a form was sent, and nobody confirms an order for you.',
+        'service' => 'The team is seven people. Name the role in the first line and the email goes there. We do not call just because you sent a form, and nobody confirms an order for you.',
         'write' => 'Write to {email}.',
         'hours_title' => 'Support hours',
-        'hours' => 'Mail is read through the day and night. A typical reply takes a few hours. If we cannot answer at once, the next person in that role replies.',
+        'hours' => 'Mail is read day and night. A typical reply takes a few hours. If we cannot answer at once, the next person in that role replies.',
         'never' => 'Do not send a card number, a password, or a one-time code.',
     ],
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Write with the question in the first line.',
-        'lead' => 'Email {email}. A typical reply takes a few hours. The desk does not call because a form was sent.',
+        'lead' => 'Email {email}. A typical reply takes a few hours. The team does not call just because you sent a form.',
         'topics' => [
             ['title' => 'The form', 'text' => 'What was saved, a duplicate email, or a wrong country code.'],
             ['title' => 'Deposits', 'text' => 'The minimum depends on your region. A personal manager explains methods and fees before you confirm.'],
@@ -400,7 +400,7 @@ return [
         'terms' => [
             'title' => 'Terms of Use',
             'updated' => 'Last updated: 18 November 2026',
-            'intro' => 'By accessing {brand}, you agree to these Terms of Use. If you do not agree, do not use our services.',
+            'intro' => 'By using this website, you agree to these Terms of Use. If you do not agree, do not use our services.',
             'sections' => [
                 ['h' => 'Eligibility', 'p' => 'You must be at least 18 and legally allowed to trade financial instruments in your jurisdiction.'],
                 ['h' => 'Risk disclosure', 'p' => 'Trading cryptocurrencies, forex, CFDs, and other financial instruments carries a substantial risk of loss. Past performance does not guarantee future results. Trade only with capital you can afford to lose.'],
@@ -413,9 +413,9 @@ return [
         'cookie-policy' => [
             'title' => 'Cookie notice',
             'updated' => 'Last updated: 18 November 2026',
-            'intro' => '{brand} uses cookies that are needed to run the site, remember a language choice, and keep a registration session honest.',
+            'intro' => '{brand} uses cookies that are needed to run the site, remember a language choice, and protect the account form from automated abuse.',
             'sections' => [
-                ['h' => 'What we store', 'p' => 'A language cookie, a click identifier, and a short-lived form token. We do not use advertising pixels on this page.'],
+                ['h' => 'What we store', 'p' => 'A language cookie, a click identifier, and a short-lived form token. We do not use advertising pixels on this site.'],
                 ['h' => 'Control', 'p' => 'You can block cookies in your browser. The account form may then fail to submit until you reload.'],
             ],
         ],

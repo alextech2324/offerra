@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Alusta | {brand}',
-            'description' => 'Kaavio, huomio, vahvista. Tekoäly kirjoittaa vihjeen. Painike pysyy sinulla.',
+            'description' => 'Kaavio, muistiinpano, vahvistus. Tekoäly kirjoittaa vihjeen. Sinä painat vahvista.',
         ],
         'offer' => [
             'title' => 'Hinnat | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Tiimi | {brand}',
-            'description' => 'Kuka lukee kirjeesi palvelussa {brand}. Seitsemän tehtävää, yksi pöytä.',
+            'description' => 'Kuka lukee sähköpostisi {brand}-tiimissä. Seitsemän tehtävää, yksi tiimi.',
         ],
         'sign-up' => [
             'title' => 'Avaa tili | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Tietoa',
-        'product' => 'Tuote',
+        'product' => 'Alusta',
         'faq' => 'UKK',
         'team' => 'Tiimi',
         'contact' => 'Yhteys',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Mikä erottaa palvelun {brand}? Selkeä tapa lukea markkinaa. Näyttö, ja tekoälyhuomio kaavion vieressä, auttaa päättämään ja pitämään riskin näkyvissä. Vahvistat yhä jokaisen toimeksiannon.',
+        'lead' => 'Selkeä tapa lukea markkinaa. Tekoälyn muistiinpano on kaavion vieressä, jotta voit päättää ja pitää riskin näkyvissä. Jokaisen toimeksiannon vahvistat silti itse.',
         'form_title' => 'Pyydä tiliä',
         'first_name' => 'Etunimi',
         'last_name' => 'Sukunimi',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Tehty aloittelijoille',
-        'title' => 'Kolme askelta. Sitten olet markkinoilla.',
+        'title' => 'Kolme askelta lomakkeesta ensimmäiseen toimeksiantoon.',
         'lead' => 'Ei päätejargonia — selkeä polku rekisteröitymisestä ensimmäiseen positioosi.',
         'watchlist' => 'Seurantalista',
         'fund' => 'Minimi',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'Tekoäly nauhalla',
+        'eyebrow' => 'Tekoäly kaavion vieressä',
         'title' => 'Signaali, jonka luet yhdellä silmäyksellä',
         'lead' => 'Markkinakohina menee sisään. Lyhyt huomio tulee ulos. Sinä päätät.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Alku',
             ],
             [
-                'title' => '6 kuukauden kokemus',
-                'text' => 'Nauha on tuttu. Huomio pysyy yhtenä sanana.',
+                'title' => 'Kun kaavio on tuttu',
+                'text' => 'Nauha on jo tuttu. Muistiinpano pysyy lyhyenä.',
                 'mark' => 'Vakaa',
             ],
             [
-                'title' => '1+ vuosi kaupankäyntiä',
+                'title' => 'Kun käyt kauppaa useammin',
                 'text' => 'Sinä valitset koon. Muistutus näkyy ennen vahvistusta.',
                 'mark' => 'Sinun valintasi',
             ],
             [
-                'title' => '2+ vuotta',
+                'title' => 'Kun käytät useampia pareja',
                 'text' => 'Enemmän pareja, sama sääntö. Mikään ei lähetä toimeksiantoa ilman sinua.',
                 'mark' => 'Sinä päätät',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'yksi lyhyt huomio',
     ],
     'voices' => [
-        'eyebrow' => 'Pöydältä',
+        'eyebrow' => 'Tiimiltä',
         'title' => 'Ihmiset pitävät siitä, miten selkeää se on.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kiova',
-                'quote' => 'Selkeää heti ensimmäisestä näytöstä. Huomio on yksi sana, ja painan yhä painiketta itse.',
+                'quote' => 'Selkeä jo ensimmäiseltä näytöltä. Muistiinpano on lyhyt, ja vahvistaa painan itse.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Aloita',
         'title' => 'Luo {brand}-tilisi',
-        'lead' => 'Liity premium-alustaan, joka pysyy yksinkertaisena — tekoälyohjaus ensimmäisestä päivästä.',
-        'form_title' => 'Avaa alle 2 minuutissa',
+        'lead' => 'Alusta, joka pysyy yksinkertaisena — lyhyt tekoälyvihje ensimmäiseltä näytöltä.',
+        'form_title' => 'Lähetä pyyntö alle 2 minuutissa',
     ],
     'faq' => [
         'eyebrow' => 'UKK',
         'title' => 'Lyhyet vastaukset',
         'more' => 'Lue koko UKK →',
         'page_title' => 'Vastauksia ennen kuin rahoitat mitään',
-        'page_lead' => 'Aloitus, huomio, raha ja turvallisuus. Jos kysymystäsi ei ole täällä, kirjoita osoitteeseen {email}.',
+        'page_lead' => 'Aloitus, muistiinpano, raha ja turvallisuus — yleiset kysymykset. Jos sinun ei ole tässä, kirjoita {email}.',
         'items' => [
             [
                 'q' => 'Tarvitsenko kaupankäyntikokemusta?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Mitä tapahtuu lähettämisen jälkeen?',
-                        'a' => 'Pyyntö tallennetaan. Näet vahvistuksen sivulla. Se ei ole lupaus siitä, että tili on jo auki, eikä ketään lähetetä soittamaan sinulle.',
+                        'a' => 'Pyyntö tallentuu. Näet vahvistuksen sivulla. Se ei ole lupaus, että tili on jo auki, emmekä soita vain siksi, että lähetimme lomakkeen.',
                     ],
                 ],
             ],
@@ -292,15 +292,15 @@ return [
                 'items' => [
                     [
                         'q' => 'Miten tekoäly auttaa?',
-                        'a' => 'Se muuttaa nauhan lyhyeksi vihjeeksi. Se ei aseta toimeksiantoja, ei muuta kokoasi eikä siirrä rahaa. Vahvistat jokaisen toimeksiannon.',
+                        'a' => 'Se tekee nauhasta lyhyen vihjeen. Se ei tee toimeksiantoja, ei muuta kokoasi eikä siirrä rahaa. Jokaisen toimeksiannon vahvistat sinä.',
                     ],
                     [
                         'q' => 'Ovatko tämän sivuston hinnat reaaliaikaisia?',
-                        'a' => 'Eivät. Nauha, kynttilät ja kurssilistat käyttävät kiinteitä lukuja, jotta asettelu on selkeä. Ne eivät ole syöte, jota vastaan voi käydä kauppaa.',
+                        'a' => 'Ei. Nauha, kynttilät ja noteerauslistat käyttävät kiinteitä lukuja, jotta asettelu on selkeä. Se ei ole syöte, jolla voi käydä kauppaa.',
                     ],
                     [
                         'q' => 'Mitkä markkinat näytetään?',
-                        'a' => 'Esimerkit ovat BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD ja GBP/USD. Työkirja avautuu rahoitetulla tilillä.',
+                        'a' => 'Esimerkit ovat BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD ja GBP/USD. Livehinnat ja täysi parilista avautuvat rahoitetussa tilissä.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Mitä maksutapoja tili voi käyttää?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay ja tilisiirto. Rekisteröintilomake ei veloita korttia. Tapa ja mahdollinen palkkio näytetään ennen kuin vahvistat talletuksen tilin sisällä.',
+                        'a' => 'Tavat riippuvat alueesta. Henkilökohtainen manageri kertoo, mitä voit käyttää, ja mahdollisen kulun, ennen kuin vahvistat talletuksen. Rekisteröintilomake ei veloita korttia.',
                     ],
                     [
                         'q' => 'Miten nostot toimivat?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Onko yhteys salattu?',
-                        'a' => 'Sivusto tarjotaan HTTPS-yhteydellä. Pidä oma kirjautumisesi omana tietonasi, kun tili on olemassa. {brand} ei tarvitse ylimääräisiä oikeuksia puhelimeesi.',
+                        'a' => 'Sivusto palvellaan HTTPS:llä. Pidä oma kirjautumisesi yksityisenä, kun tili on olemassa.',
                     ],
                     [
                         'q' => 'Voinko menettää rahaa?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Tietoa',
         'title' => 'Lyhyt huomio. Sitten sinä päätät.',
-        'lead' => '{brand} pitää näytön pienenä tarkoituksella. Markkina on äänekäs. Huomio on yksi sana, kirjoitettu selkeällä suomella, eikä se koskaan lähetä toimeksiantoa ilman sinua.',
+        'lead' => '{brand} pitää näytön pienenä tahallaan. Markkina on äänekäs. Muistiinpano on lyhyt vihje — osta, pidä tai seuraa — selkokielellä, eikä se koskaan lähetä toimeksiantoa ilman sinua.',
         'cta' => 'Avaa tili',
-        'caption' => 'Yksi pöytä. Yksi vihreä kaavio.',
+        'caption' => 'Yksi tiimi. Yksi vihreä kaavio.',
         'facts_title' => 'Neljä asiaa, jotka kannattaa tietää ensin',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Markkinat tällä näytöllä',
-        'markets_lead' => 'Alla olevat hinnat ovat esimerkkejä, samoja kuin nauhassa ylhäällä. Ne eivät ole live-syöte. Rahoitettu tili on se paikka, jossa työkirja avautuu.',
+        'markets_lead' => 'Alla olevat hinnat ovat esimerkkejä, samat kuin nauhassa ylhäällä. Ne eivät ole live-syöte. Livehinnat avautuvat rahoitetussa tilissä.',
     ],
     'product' => [
-        'eyebrow' => 'Tuote',
+        'eyebrow' => 'Alusta',
         'title' => 'Kaavio, huomio, vahvista.',
-        'lead' => 'Alusta on kolme osaa yhdellä näytöllä. Tekoäly kirjoittaa huomion. Painike pysyy sinulla.',
+        'lead' => 'Alusta on kolme osaa yhdellä näytöllä. Tekoäly kirjoittaa muistiinpanon. Sinä painat vahvista.',
         'cta' => 'Avaa tili',
         'chart_cap' => 'Sinä vahvistat kaupan.',
-        'parts_title' => 'Mitä näytöllä on',
+        'parts_title' => 'Miten se liittyy yhteen',
         'parts' => [
             [
                 'title' => 'Kaavio',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Hinnat',
         'title' => 'Rahoitus, joka sopii alueellesi',
-        'lead' => 'Vähimmäistalletus riippuu alueesta, jossa olet. Henkilökohtainen asiakasvastaava selittää summan, tavan ja sen, miten pääsy avautuu, kun olet lähettänyt lomakkeen.',
+        'lead' => 'Vähimmäistalletus riippuu alueesta, jossa olet. Henkilökohtainen manageri selittää summan, tavan ja sen, miten kaaviot avautuvat, kun tili on rahoitettu.',
         'access' => 'Pääsy tilille',
         'min_label' => 'Vähimmäistalletus',
         'min_value' => 'Asetettu alueellesi',
         'unlock' => 'Kaaviot, työkalut ja tekoälyohjaus avautuvat, kun tili on rahoitettu. Asiakasvastaavasi vahvistaa yksityiskohdat ensin.',
         'form_heading' => 'Luo tilisi',
-        'form_title' => 'Avaa alle 2 minuutissa',
+        'form_title' => 'Lähetä pyyntö alle 2 minuutissa',
     ],
     'signup' => [
         'eyebrow' => 'Aloita',
@@ -431,16 +431,16 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Tiimi',
-        'title' => 'Kuka lukee kirjeesi.',
-        'lead' => 'Seitsemän tehtävää. Kysymys menee sille, joka vastaa siitä tehtävästä. Helen Ward johtaa pöytää. Hän ei aseta toimeksiantoasi.',
+        'title' => 'Kuka lukee sähköpostisi.',
+        'lead' => 'Seitsemän tehtävää. Kysymys menee sille, jolla tehtävä on. Helen Ward johtaa tiimiä. Hän ei tee toimeksiantoasi.',
         'routes' => [
             'Palkkiot ja talletukset menevät talousjohtajalle.',
             'Kaavio ja huomio menevät tekniselle johtajalle.',
             'Uusi pyyntö menee kaupalliselle johtajalle ja sitten johtavalle osakkaalle.',
             'Se, miten näyttö toimii, menee tuotejohtajalle.',
-            'Kirje jo lähettämästäsi pyynnöstä menee asiakaspalveluun.',
+            'Sähköposti jo lähetetystä pyynnöstä menee asiakaspalveluun.',
         ],
-        'mail' => 'Kirjoita osoitteeseen {email} ja laita tehtävä ensimmäiselle riville. Ei kortin numeroita. Ei salasanoja.',
+        'mail' => 'Kirjoita {email} ja laita tehtävä ensimmäiselle riville. Ei korttinumeroita. Ei salasanoja.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Toimitusjohtaja (CEO)',
@@ -480,18 +480,18 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Kryptovaluuttojen tuki',
+        'title' => 'Tuki',
         'service_title' => 'Palvelu ja tuki',
-        'service' => 'Pöydässä on seitsemän ihmistä. Nimeä tehtävä ensimmäisellä rivillä, niin kirje menee sinne. Emme soita siksi, että lomake lähetettiin, eikä kukaan vahvista toimeksiantoa puolestasi.',
+        'service' => 'Tiimi on seitsemän ihmistä. Nimeä tehtävä ensimmäisellä rivillä, niin sähköposti menee sinne. Emme soita vain siksi, että lomake lähetettiin, eikä kukaan vahvista toimeksiantoa puolestasi.',
         'write' => 'Kirjoita osoitteeseen {email}.',
         'hours_title' => 'Tuen ajat',
-        'hours' => 'Postia luetaan päivin ja öin. Tyypillinen vastaus vie muutaman tunnin. Jos emme voi vastata heti, seuraava saman roolin henkilö vastaa.',
+        'hours' => 'Posti luetaan päivin ja öin. Vastaus kestää yleensä muutaman tunnin. Jos emme voi vastata heti, vastaa seuraava ihminen samassa tehtävässä.',
         'never' => 'Älä lähetä kortin numeroa, salasanaa tai kertakoodia.',
     ],
     'contact' => [
         'eyebrow' => 'Yhteys',
         'title' => 'Kirjoita niin, että kysymys on ensimmäisellä rivillä.',
-        'lead' => 'Lähetä sähköposti osoitteeseen {email}. Tyypillinen vastaus vie muutaman tunnin. Pöytä ei soita siksi, että lomake lähetettiin.',
+        'lead' => 'Sähköposti {email}. Vastaus kestää yleensä muutaman tunnin. Tiimi ei soita vain siksi, että lomake lähetettiin.',
         'topics' => [
             [
                 'title' => 'Lomake',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Käyttöehdot',
             'updated' => 'Päivitetty viimeksi: 18. marraskuuta 2026',
-            'intro' => 'Käyttämällä palvelua {brand} hyväksyt nämä käyttöehdot. Jos et hyväksy niitä, älä käytä palveluitamme.',
+            'intro' => 'Käyttämällä tätä verkkosivustoa hyväksyt nämä käyttöehdot. Jos et hyväksy, älä käytä palveluitamme.',
             'sections' => [
                 [
                     'h' => 'Kelpoisuus',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Evästeilmoitus',
             'updated' => 'Päivitetty viimeksi: 18. marraskuuta 2026',
-            'intro' => '{brand} käyttää evästeitä, joita tarvitaan sivuston toimintaan, kielivalinnan muistamiseen ja rekisteröinti-istunnon pitämiseen rehellisenä.',
+            'intro' => '{brand} käyttää evästeitä, joita tarvitaan sivuston toimintaan, kielivalinnan muistamiseen ja lomakkeen suojaamiseen automaattiselta väärinkäytöltä.',
             'sections' => [
                 [
                     'h' => 'Mitä tallennamme',
-                    'p' => 'Kielievästeen, klikkaustunnisteen ja lyhytikäisen lomaketunnisteen. Emme käytä mainospikseleitä tällä sivulla.',
+                    'p' => 'Kielievästeen, klikkaustunnisteen ja lyhytikäisen lomaketunnisteen. Emme käytä mainospikseleitä tällä sivustolla.',
                 ],
                 [
                     'h' => 'Hallinta',

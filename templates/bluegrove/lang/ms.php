@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platform | {brand}',
-            'description' => 'Carta, nota, sahkan. AI menulis petunjuk. Butang kekal di tangan anda.',
+            'description' => 'Carta, nota, sahkan. AI menulis petunjuk. Anda menekan sahkan.',
         ],
         'offer' => [
             'title' => 'Harga | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Pasukan | {brand}',
-            'description' => 'Siapa yang membaca surat anda di {brand}. Tujuh tugas, satu meja.',
+            'description' => 'Siapa yang membaca e-mel anda di {brand}. Tujuh tugas, satu pasukan.',
         ],
         'sign-up' => [
             'title' => 'Buka akaun | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Perihal',
-        'product' => 'Produk',
+        'product' => 'Platform',
         'faq' => 'Soalan lazim',
         'team' => 'Pasukan',
         'contact' => 'Hubungi',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Apa yang membezakan {brand}? Cara yang mudah untuk membaca pasaran. Skrin, dengan nota AI di sisi carta, membantu anda memutuskan dan mengekalkan risiko dalam pandangan. Anda tetap mengesahkan setiap pesanan.',
+        'lead' => 'Cara yang mudah untuk membaca pasaran. Nota AI duduk di sisi carta supaya anda boleh memutuskan dan mengekalkan risiko dalam pandangan. Anda tetap mengesahkan setiap pesanan.',
         'form_title' => 'Mohon akaun',
         'first_name' => 'Nama pertama',
         'last_name' => 'Nama keluarga',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Dibina untuk pemula',
-        'title' => 'Tiga langkah. Kemudian anda sudah di pasaran.',
+        'title' => 'Tiga langkah dari borang ke pesanan pertama.',
         'lead' => 'Tiada jargon terminal — laluan yang jelas dari pendaftaran ke kedudukan pertama anda.',
         'watchlist' => 'Senarai pantau',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI pada pita',
+        'eyebrow' => 'AI di sisi carta',
         'title' => 'Isyarat yang boleh dibaca sekilas pandang',
         'lead' => 'Hingar pasaran masuk. Nota pendek keluar. Anda yang memutuskan.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Mula',
             ],
             [
-                'title' => '6 bulan pengalaman',
-                'text' => 'Selesa dengan pita. Nota kekal satu perkataan.',
+                'title' => 'Apabila carta sudah biasa',
+                'text' => 'Selesa dengan pita. Nota kekal ringkas.',
                 'mark' => 'Stabil',
             ],
             [
-                'title' => '1+ tahun berdagang',
+                'title' => 'Apabila anda berdagang lebih kerap',
                 'text' => 'Anda memilih saiz. Peringatan muncul sebelum anda mengesahkan.',
                 'mark' => 'Keputusan anda',
             ],
             [
-                'title' => '2+ tahun',
+                'title' => 'Apabila anda memakai lebih banyak pasangan',
                 'text' => 'Lebih banyak pasangan, peraturan yang sama. Tiada apa-apa menghantar pesanan tanpa anda.',
                 'mark' => 'Anda putuskan',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'satu nota pendek',
     ],
     'voices' => [
-        'eyebrow' => 'Dari meja',
+        'eyebrow' => 'Dari pasukan',
         'title' => 'Orang suka betapa mudahnya.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kyiv',
-                'quote' => 'Jelas dari skrin pertama. Nota itu satu perkataan, dan saya tetap menekan butang sendiri.',
+                'quote' => 'Jelas dari skrin pertama. Nota itu ringkas, dan saya tetap menekan sahkan sendiri.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Mulakan',
         'title' => 'Cipta akaun {brand} anda',
-        'lead' => 'Sertai platform premium yang kekal ringkas — panduan AI dari hari pertama.',
-        'form_title' => 'Buka dalam masa kurang daripada 2 minit',
+        'lead' => 'Platform yang kekal ringkas — petunjuk AI pendek dari skrin pertama.',
+        'form_title' => 'Hantar permintaan dalam masa kurang daripada 2 minit',
     ],
     'faq' => [
         'eyebrow' => 'Soalan lazim',
         'title' => 'Jawapan ringkas',
         'more' => 'Baca soalan lazim penuh →',
         'page_title' => 'Jawapan sebelum anda membiayai apa-apa',
-        'page_lead' => 'Permulaan, nota, wang dan keselamatan. Jika soalan anda tiada di sini, tulis ke {email}.',
+        'page_lead' => 'Permulaan, nota, wang dan keselamatan — soalan lazim. Jika soalan anda tiada di sini, tulis ke {email}.',
         'items' => [
             [
                 'q' => 'Perlukah saya berpengalaman berdagang?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Apa yang berlaku selepas saya hantar?',
-                        'a' => 'Permohonan disimpan. Anda melihat pengesahan di halaman. Ini bukan janji bahawa akaun sudah terbuka, dan tiada sesiapa dihantar untuk menghubungi anda.',
+                        'a' => 'Permohonan disimpan. Anda melihat pengesahan di halaman. Ini bukan janji bahawa akaun sudah terbuka, dan kami tidak menelefon hanya kerana anda menghantar borang.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Pasaran mana yang ditunjukkan?',
-                        'a' => 'Contohnya ialah BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD dan GBP/USD. Buku kerja dibuka dalam akaun yang sudah dibiayai.',
+                        'a' => 'Contohnya ialah BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD dan GBP/USD. Harga langsung dan senarai pasangan penuh dibuka dalam akaun yang sudah dibiayai.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Kaedah bayaran mana yang boleh digunakan akaun?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay dan pindahan bank. Borang pendaftaran tidak mencaj kad. Kaedah dan sebarang yuran ditunjukkan sebelum anda mengesahkan deposit di dalam akaun.',
+                        'a' => 'Kaedah bergantung pada rantau. Pengurus peribadi anda menyenaraikan yang boleh anda gunakan, dan sebarang yuran, sebelum anda mengesahkan deposit. Borang pendaftaran tidak mencaj kad.',
                     ],
                     [
                         'q' => 'Bagaimana pengeluaran berfungsi?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Adakah sambungan disulitkan?',
-                        'a' => 'Laman disediakan melalui HTTPS. Simpan log masuk anda sendiri secara peribadi setelah akaun wujud. {brand} tidak memerlukan kebenaran tambahan pada telefon anda.',
+                        'a' => 'Laman disediakan melalui HTTPS. Simpan log masuk anda sendiri secara peribadi setelah akaun wujud.',
                     ],
                     [
                         'q' => 'Bolehkah saya kehilangan wang?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Perihal',
         'title' => 'Nota pendek. Kemudian anda putuskan.',
-        'lead' => '{brand} mengekalkan skrin kecil dengan sengaja. Pasaran bising. Nota itu satu perkataan, ditulis dalam bahasa yang mudah, dan ia tidak pernah menghantar pesanan tanpa anda.',
+        'lead' => '{brand} mengekalkan skrin kecil dengan sengaja. Pasaran bising. Nota itu petunjuk pendek — beli, tahan, atau pantau — dalam bahasa yang mudah, dan ia tidak pernah menghantar pesanan tanpa anda.',
         'cta' => 'Buka akaun',
-        'caption' => 'Satu meja. Satu carta hijau.',
+        'caption' => 'Satu pasukan. Satu carta hijau.',
         'facts_title' => 'Empat perkara untuk diketahui dahulu',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Pasaran pada skrin ini',
-        'markets_lead' => 'Harga di bawah ialah contoh, yang sama pada pita di atas. Ia bukan suapan langsung. Akaun yang dibiayai ialah tempat buku kerja dibuka.',
+        'markets_lead' => 'Harga di bawah ialah contoh, yang sama pada pita di atas. Ia bukan suapan langsung. Harga langsung dibuka dalam akaun yang sudah dibiayai.',
     ],
     'product' => [
-        'eyebrow' => 'Produk',
+        'eyebrow' => 'Platform',
         'title' => 'Carta, nota, sahkan.',
-        'lead' => 'Platform ialah tiga bahagian pada satu skrin. AI menulis nota. Anda memegang butang.',
+        'lead' => 'Platform ialah tiga bahagian pada satu skrin. AI menulis nota. Anda menekan sahkan.',
         'cta' => 'Buka akaun',
         'chart_cap' => 'Anda mengesahkan dagangan.',
-        'parts_title' => 'Apa yang ada pada skrin',
+        'parts_title' => 'Bagaimana ia bersatu',
         'parts' => [
             [
                 'title' => 'Carta',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Harga',
         'title' => 'Pembiayaan yang sesuai dengan rantau anda',
-        'lead' => 'Deposit minimum bergantung pada rantau anda. Pengurus peribadi menerangkan jumlah, kaedah, dan bagaimana akses dibuka selepas anda menghantar borang.',
+        'lead' => 'Deposit minimum bergantung pada rantau anda. Pengurus peribadi menerangkan jumlah, kaedah, dan bagaimana carta dibuka selepas akaun dibiayai.',
         'access' => 'Akses akaun',
         'min_label' => 'Deposit minimum',
         'min_value' => 'Ditetapkan untuk rantau anda',
         'unlock' => 'Carta, alat dan panduan AI terbuka setelah akaun dibiayai. Pengurus anda mengesahkan butiran dahulu.',
         'form_heading' => 'Cipta akaun anda',
-        'form_title' => 'Buka dalam masa kurang daripada 2 minit',
+        'form_title' => 'Hantar permintaan dalam masa kurang daripada 2 minit',
     ],
     'signup' => [
         'eyebrow' => 'Mulakan',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Pasukan',
-        'title' => 'Siapa yang membaca surat anda.',
-        'lead' => 'Tujuh tugas. Soalan pergi kepada orang yang memiliki tugas itu. Helen Ward mengetuai meja. Dia tidak meletakkan pesanan anda.',
+        'title' => 'Siapa yang membaca e-mel anda.',
+        'lead' => 'Tujuh tugas. Soalan pergi kepada orang yang memiliki tugas itu. Helen Ward mengetuai pasukan. Dia tidak meletakkan pesanan anda.',
         'routes' => [
             'Yuran dan deposit pergi kepada pengarah kewangan.',
             'Carta dan nota pergi kepada pengarah teknikal.',
             'Permohonan baharu pergi kepada pengarah komersial, kemudian kepada rakan pengurusan.',
             'Cara skrin berfungsi pergi kepada pengarah produk.',
-            'Surat tentang permohonan yang sudah anda hantar pergi kepada jagaan pelanggan.',
+            'E-mel tentang permohonan yang sudah anda hantar pergi kepada jagaan pelanggan.',
         ],
         'mail' => 'Tulis ke {email} dan letakkan tugas pada baris pertama. Tiada nombor kad. Tiada kata laluan.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Sokongan mata wang kripto',
+        'title' => 'Sokongan',
         'service_title' => 'Perkhidmatan dan sokongan',
-        'service' => 'Meja ini tujuh orang. Namakan tugas pada baris pertama dan surat pergi ke sana. Kami tidak menelefon kerana borang dihantar, dan tiada sesiapa mengesahkan pesanan untuk anda.',
+        'service' => 'Pasukan ini tujuh orang. Namakan tugas pada baris pertama dan e-mel pergi ke sana. Kami tidak menelefon hanya kerana borang dihantar, dan tiada sesiapa mengesahkan pesanan untuk anda.',
         'write' => 'Tulis ke {email}.',
         'hours_title' => 'Waktu sokongan',
         'hours' => 'Mel dibaca sepanjang siang dan malam. Balasan biasa mengambil masa beberapa jam. Jika kami tidak dapat menjawab serta-merta, orang seterusnya dalam peranan itu membalas.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Hubungi',
         'title' => 'Tulis dengan soalan pada baris pertama.',
-        'lead' => 'E-mel {email}. Balasan biasa mengambil masa beberapa jam. Meja tidak menelefon kerana borang dihantar.',
+        'lead' => 'E-mel {email}. Balasan biasa mengambil masa beberapa jam. Pasukan tidak menelefon hanya kerana borang dihantar.',
         'topics' => [
             [
                 'title' => 'Borang',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Terma penggunaan',
             'updated' => 'Kemas kini terakhir: 18 November 2026',
-            'intro' => 'Dengan mengakses {brand}, anda bersetuju dengan Terma penggunaan ini. Jika anda tidak bersetuju, jangan gunakan perkhidmatan kami.',
+            'intro' => 'Dengan menggunakan laman web ini, anda bersetuju dengan Terma penggunaan ini. Jika anda tidak bersetuju, jangan gunakan perkhidmatan kami.',
             'sections' => [
                 [
                     'h' => 'Kelayakan',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Notis kuki',
             'updated' => 'Kemas kini terakhir: 18 November 2026',
-            'intro' => '{brand} menggunakan kuki yang diperlukan untuk menjalankan laman, mengingati pilihan bahasa, dan mengekalkan sesi pendaftaran dengan jujur.',
+            'intro' => '{brand} menggunakan kuki yang diperlukan untuk menjalankan laman, mengingati pilihan bahasa, dan melindungi borang daripada penyalahgunaan automatik.',
             'sections' => [
                 [
                     'h' => 'Apa yang kami simpan',
-                    'p' => 'Kuki bahasa, pengecam klik, dan token borang yang singkat. Kami tidak menggunakan piksel pengiklanan di halaman ini.',
+                    'p' => 'Kuki bahasa, pengecam klik, dan token borang yang singkat. Kami tidak menggunakan piksel pengiklanan di laman ini.',
                 ],
                 [
                     'h' => 'Kawalan',

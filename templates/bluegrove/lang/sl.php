@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platforma | {brand}',
-            'description' => 'Graf, opomba, potrditev. UI napiše namig. Gumb obdržite vi.',
+            'description' => 'Graf, opomba, potrditev. UI napiše namig. Potrditev pritisnete vi.',
         ],
         'offer' => [
             'title' => 'Cene | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Ekipa | {brand}',
-            'description' => 'Kdo pri {brand} bere vaše pismo. Sedem vlog, en pult.',
+            'description' => 'Kdo pri {brand} bere vaš e-poštni naslov. Sedem vlog, ena ekipa.',
         ],
         'sign-up' => [
             'title' => 'Odprite račun | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'O nas',
-        'product' => 'Izdelek',
+        'product' => 'Platforma',
         'faq' => 'Vprašanja',
         'team' => 'Ekipa',
         'contact' => 'Kontakt',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Kaj {brand} loči od drugih? Preprost način branja trga. Zaslon z opombo UI ob grafu pomaga pri odločitvi in drži tveganje pred očmi. Vsako naročilo še vedno potrdite sami.',
+        'lead' => 'Preprost način branja trga. Opomba UI sedi ob grafu, da se odločite in držite tveganje pred očmi. Vsako naročilo še vedno potrdite sami.',
         'form_title' => 'Zaprosite za račun',
         'first_name' => 'Ime',
         'last_name' => 'Priimek',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Za začetnike',
-        'title' => 'Trije koraki. Potem ste na trgu.',
+        'title' => 'Trije koraki od obrazca do prvega naročila.',
         'lead' => 'Brez žargona terminala — jasna pot od prijave do prve pozicije.',
         'watchlist' => 'Opazovani',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'UI na traku',
+        'eyebrow' => 'UI ob grafu',
         'title' => 'Signal, ki ga preberete na prvi pogled',
         'lead' => 'Tržni šum gre noter. Ven pride kratka opomba. Odločite vi.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Začetek',
             ],
             [
-                'title' => '6 mesecev izkušenj',
-                'text' => 'S trakom ste že sproščeni. Opomba ostane ena beseda.',
+                'title' => 'Ko je graf že znan',
+                'text' => 'S trakom ste že sproščeni. Opomba ostane kratka.',
                 'mark' => 'Mirno',
             ],
             [
-                'title' => '1+ leto trgovanja',
+                'title' => 'Ko trgujete pogosteje',
                 'text' => 'Velikost izberete vi. Pred potrditvijo se pokaže opomnik.',
                 'mark' => 'Vaša odločitev',
             ],
             [
-                'title' => '2+ leti',
+                'title' => 'Ko uporabljate več parov',
                 'text' => 'Več parov, isto pravilo. Nič ne pošlje naročila brez vas.',
                 'mark' => 'Vi odločite',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'ena kratka opomba',
     ],
     'voices' => [
-        'eyebrow' => 'S pulta',
+        'eyebrow' => 'Od ekipe',
         'title' => 'Ljudem ugaja, kako preprosto je.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kijev',
-                'quote' => 'Jasno že na prvem zaslonu. Opomba je ena beseda, gumb pa še vedno pritisnem sama.',
+                'quote' => 'Jasno že na prvem zaslonu. Opomba je kratka, potrditev pa še vedno pritisnem sama.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Začnite',
         'title' => 'Ustvarite račun {brand}',
-        'lead' => 'Pridružite se premijski platformi, ki ostane preprosta — vodenje UI od prvega dne.',
-        'form_title' => 'Odprete v manj kot 2 minutah',
+        'lead' => 'Platforma, ki ostane preprosta — kratek namig UI od prvega zaslona.',
+        'form_title' => 'Pošljite zahtevo v manj kot 2 minutah',
     ],
     'faq' => [
         'eyebrow' => 'Vprašanja',
         'title' => 'Hitri odgovori',
         'more' => 'Preberite vsa vprašanja →',
         'page_title' => 'Odgovori, preden karkoli nakažete',
-        'page_lead' => 'Začetek, opomba, denar in varnost. Če vašega vprašanja ni tukaj, pišite na {email}.',
+        'page_lead' => 'Začetek, opomba, denar in varnost — pogosta vprašanja. Če vašega vprašanja ni tukaj, pišite na {email}.',
         'items' => [
             [
                 'q' => 'Ali potrebujem izkušnje s trgovanjem?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Kaj se zgodi po oddaji?',
-                        'a' => 'Zahteva se shrani. Na strani vidite potrditev. To ni obljuba, da je račun že odprt, in nihče ni napoten, da vas pokliče.',
+                        'a' => 'Zahteva se shrani. Na strani vidite potrditev. To ni obljuba, da je račun že odprt, in ne kličemo samo zato, ker ste poslali obrazec.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Kateri trgi so prikazani?',
-                        'a' => 'Vzorci so BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD in GBP/USD. Delovna knjiga se odpre v financiranem računu.',
+                        'a' => 'Vzorci so BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD in GBP/USD. Cene v živo in polni seznam parov se odprejo v financiranem računu.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Katere načine plačila lahko račun uporabi?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay in bančno nakazilo. Registracijski obrazec kartice ne bremeni. Način in morebitni strošek se pokažeta, preden polog potrdite znotraj računa.',
+                        'a' => 'Načini so odvisni od regije. Osebni upravitelj navede tiste, ki jih lahko uporabite, in morebitni strošek, preden polog potrdite. Registracijski obrazec kartice ne bremeni.',
                     ],
                     [
                         'q' => 'Kako delujejo dvigi?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Ali je povezava šifrirana?',
-                        'a' => 'Mesto teče prek HTTPS. Ko račun obstaja, prijavo obdržite zase. {brand} ne potrebuje dodatnih dovoljenj na telefonu.',
+                        'a' => 'Mesto teče prek HTTPS. Ko račun obstaja, prijavo obdržite zase.',
                     ],
                     [
                         'q' => 'Ali lahko izgubim denar?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'O nas',
         'title' => 'Kratka opomba. Potem se odločite.',
-        'lead' => '{brand} drži zaslon namenoma majhen. Trg je hrupen. Opomba je ena beseda, napisana v navadnem jeziku, in nikoli ne pošlje naročila brez vas.',
+        'lead' => '{brand} drži zaslon namenoma majhen. Trg je hrupen. Opomba je kratek namig — kupi, drži ali spremljaj — v navadnem jeziku, in nikoli ne pošlje naročila brez vas.',
         'cta' => 'Odprite račun',
-        'caption' => 'En pult. En zelen graf.',
+        'caption' => 'Ena ekipa. En zelen graf.',
         'facts_title' => 'Štiri stvari, ki jih je treba vedeti najprej',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Trgi na tem zaslonu',
-        'markets_lead' => 'Cene spodaj so vzorci, isti kot na traku zgoraj. Niso vir v živo. Delovna knjiga se odpre v financiranem računu.',
+        'markets_lead' => 'Cene spodaj so vzorci, isti kot na traku zgoraj. Niso vir v živo. Cene v živo se odprejo v financiranem računu.',
     ],
     'product' => [
-        'eyebrow' => 'Izdelek',
+        'eyebrow' => 'Platforma',
         'title' => 'Graf, opomba, potrditev.',
-        'lead' => 'Platforma so trije deli na enem zaslonu. Opombo napiše UI. Gumb obdržite vi.',
+        'lead' => 'Platforma so trije deli na enem zaslonu. Opombo napiše UI. Potrditev pritisnete vi.',
         'cta' => 'Odprite račun',
         'chart_cap' => 'Posel potrdite vi.',
-        'parts_title' => 'Kaj je na zaslonu',
+        'parts_title' => 'Kako se to sestavi',
         'parts' => [
             [
                 'title' => 'Graf',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Cene',
         'title' => 'Financiranje, ki ustreza vaši regiji',
-        'lead' => 'Najmanjši polog je odvisen od regije, v kateri ste. Osebni upravitelj pojasni znesek, način in to, kako se dostop odklene, ko pošljete obrazec.',
+        'lead' => 'Najmanjši polog je odvisen od regije, v kateri ste. Osebni upravitelj pojasni znesek, način in to, kako se grafi odklenejo, ko je račun financiran.',
         'access' => 'Dostop do računa',
         'min_label' => 'Najmanjši polog',
         'min_value' => 'Določeno za vašo regijo',
         'unlock' => 'Grafi, orodja in vodenje UI se odklenejo, ko je račun financiran. Podrobnosti najprej potrdi vaš upravitelj.',
         'form_heading' => 'Ustvarite račun',
-        'form_title' => 'Odprete v manj kot 2 minutah',
+        'form_title' => 'Pošljite zahtevo v manj kot 2 minutah',
     ],
     'signup' => [
         'eyebrow' => 'Začnite',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Ekipa',
-        'title' => 'Kdo bere vaše pismo.',
-        'lead' => 'Sedem vlog. Vprašanje gre osebi, ki to vlogo drži. Helen Ward vodi pult. Vašega naročila ne odda.',
+        'title' => 'Kdo bere vaš e-poštni naslov.',
+        'lead' => 'Sedem vlog. Vprašanje gre osebi, ki to vlogo drži. Helen Ward vodi ekipo. Vašega naročila ne odda.',
         'routes' => [
             'Stroški in pologi gredo finančni direktorici.',
             'Graf in opomba gresta tehničnemu direktorju.',
             'Nova zahteva gre komercialnemu direktorju in nato upravljajočemu partnerju.',
             'Kako zaslon deluje, gre produktni direktorici.',
-            'Pismo o zahtevi, ki ste jo že poslali, gre v skrb za stranke.',
+            'E-pošta o zahtevi, ki ste jo že poslali, gre v skrb za stranke.',
         ],
         'mail' => 'Pišite na {email} in vlogo postavite v prvo vrstico. Brez številk kartic. Brez gesel.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Podpora za kriptovalute',
+        'title' => 'Podpora',
         'service_title' => 'Storitev in podpora',
-        'service' => 'Pult je sedem ljudi. Vlogo zapišite v prvo vrstico in pismo gre tja. Ne kličemo zato, ker je prišel obrazec, in nihče namesto vas ne potrdi naročila.',
+        'service' => 'Ekipa je sedem ljudi. Vlogo zapišite v prvo vrstico in e-pošta gre tja. Ne kličemo samo zato, ker je prišel obrazec, in nihče namesto vas ne potrdi naročila.',
         'write' => 'Pišite na {email}.',
         'hours_title' => 'Ure podpore',
         'hours' => 'Pošta se bere podnevi in ponoči. Običajen odgovor traja nekaj ur. Če ne moremo odgovoriti takoj, odgovori naslednja oseba v tej vlogi.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Vprašanje postavite v prvo vrstico.',
-        'lead' => 'Pišite na {email}. Običajen odgovor traja nekaj ur. Pult ne kliče zato, ker je prišel obrazec.',
+        'lead' => 'Pišite na {email}. Običajen odgovor traja nekaj ur. Ekipa ne kliče samo zato, ker je prišel obrazec.',
         'topics' => [
             [
                 'title' => 'Obrazec',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Pogoji uporabe',
             'updated' => 'Zadnja posodobitev: 18. november 2026',
-            'intro' => 'Z dostopom do {brand} se strinjate s temi pogoji uporabe. Če se ne strinjate, naših storitev ne uporabljajte.',
+            'intro' => 'Z uporabo tega spletnega mesta se strinjate s temi pogoji uporabe. Če se ne strinjate, naših storitev ne uporabljajte.',
             'sections' => [
                 [
                     'h' => 'Upravičenost',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Obvestilo o piškotkih',
             'updated' => 'Zadnja posodobitev: 18. november 2026',
-            'intro' => '{brand} uporablja piškotke, ki so potrebni za delovanje mesta, pomnjenje izbire jezika in pošteno registracijsko sejo.',
+            'intro' => '{brand} uporablja piškotke, ki so potrebni za delovanje mesta, pomnjenje izbire jezika in zaščito obrazca pred samodejno zlorabo.',
             'sections' => [
                 [
                     'h' => 'Kaj shranimo',
-                    'p' => 'Piškotek jezika, identifikator klika in kratkotrajni žeton obrazca. Na tej strani ne uporabljamo oglasnih pikslov.',
+                    'p' => 'Piškotek jezika, identifikator klika in kratkotrajni žeton obrazca. Na tem mestu ne uporabljamo oglasnih pikslov.',
                 ],
                 [
                     'h' => 'Nadzor',

@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platforma | {brand}',
-            'description' => 'Grafiks, piezīme, apstiprinājums. MI raksta norādi. Poga paliek jums.',
+            'description' => 'Grafiks, piezīme, apstiprinājums. MI raksta norādi. Jūs nospiežat apstiprināt.',
         ],
         'offer' => [
             'title' => 'Cenas | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Komanda | {brand}',
-            'description' => 'Kurš lasa jūsu vēstuli {brand}. Septiņi darbi, viens galds.',
+            'description' => 'Kurš lasa jūsu e-pastu {brand}. Septiņi darbi, viena komanda.',
         ],
         'sign-up' => [
             'title' => 'Atvērt kontu | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Par mums',
-        'product' => 'Produkts',
+        'product' => 'Platforma',
         'faq' => 'BUJ',
         'team' => 'Komanda',
         'contact' => 'Kontakti',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Ar ko {brand} atšķiras? Ar vienkāršu veidu lasīt tirgu. Ekrāns ar MI piezīmi blakus grafikam palīdz izlemt un paturēt risku redzamā vietā. Katru rīkojumu jūs tāpat apstiprināt.',
+        'lead' => 'Vienkāršs veids, kā lasīt tirgu. MI piezīme sēž blakus grafikam, lai jūs varētu izlemt un paturēt risku redzamā vietā. Katru rīkojumu jūs tāpat apstiprināt.',
         'form_title' => 'Pieprasīt kontu',
         'first_name' => 'Vārds',
         'last_name' => 'Uzvārds',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Veidots iesācējiem',
-        'title' => 'Trīs soļi. Tad jūs jau esat tirgū.',
+        'title' => 'Trīs soļi no veidlapas līdz pirmajam rīkojumam.',
         'lead' => 'Bez termināļa žargona — skaidrs ceļš no reģistrācijas līdz pirmajai pozīcijai.',
         'watchlist' => 'Vērošanas saraksts',
         'fund' => 'Minimums',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'MI uz lentes',
+        'eyebrow' => 'MI blakus grafikam',
         'title' => 'Signāls, ko izlasāt uzreiz',
         'lead' => 'Tirgus troksnis ieiet. Īsa piezīme iznāk. Lemjat jūs.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Sākums',
             ],
             [
-                'title' => '6 mēnešu pieredze',
-                'text' => 'Ērti ar lenti. Piezīme paliek viens vārds.',
+                'title' => 'Kad grafiks jau pazīstams',
+                'text' => 'Ērti ar lenti. Piezīme paliek īsa.',
                 'mark' => 'Līdzens',
             ],
             [
-                'title' => '1+ gads tirdzniecībā',
+                'title' => 'Kad tirgojaties biežāk',
                 'text' => 'Apjomu izvēlaties jūs. Atgādinājums parādās pirms apstiprināšanas.',
                 'mark' => 'Jūsu lēmums',
             ],
             [
-                'title' => '2+ gadi',
+                'title' => 'Kad lietojat vairāk pārus',
                 'text' => 'Vairāk pāru, tas pats noteikums. Bez jums rīkojums netiek sūtīts.',
                 'mark' => 'Lemjat jūs',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'viena īsa piezīme',
     ],
     'voices' => [
-        'eyebrow' => 'No galda',
+        'eyebrow' => 'No komandas',
         'title' => 'Cilvēkiem patīk, cik tas ir vienkārši.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kijiva',
-                'quote' => 'Skaidrs jau no pirmā ekrāna. Piezīme ir viens vārds, un pogu es joprojām spiežu pati.',
+                'quote' => 'Skaidrs jau no pirmā ekrāna. Piezīme ir īsa, un apstiprināt es joprojām spiežu pati.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Sāciet',
         'title' => 'Izveidojiet savu {brand} kontu',
-        'lead' => 'Pievienojieties premium platformai, kas paliek vienkārša — MI vadība no pirmās dienas.',
-        'form_title' => 'Atveriet ātrāk nekā 2 minūtēs',
+        'lead' => 'Platforma, kas paliek vienkārša — īsa MI norāde no pirmā ekrāna.',
+        'form_title' => 'Nosūtiet pieprasījumu ātrāk nekā 2 minūtēs',
     ],
     'faq' => [
         'eyebrow' => 'BUJ',
         'title' => 'Īsas atbildes',
         'more' => 'Lasīt pilnos BUJ →',
         'page_title' => 'Atbildes, pirms kaut ko finansējat',
-        'page_lead' => 'Sākums, piezīme, nauda un drošība. Ja jūsu jautājuma šeit nav, rakstiet uz {email}.',
+        'page_lead' => 'Sākums, piezīme, nauda un drošība — biežie jautājumi. Ja jūsu jautājuma šeit nav, rakstiet uz {email}.',
         'items' => [
             [
                 'q' => 'Vai vajag tirdzniecības pieredzi?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Kas notiek pēc nosūtīšanas?',
-                        'a' => 'Pieprasījums tiek saglabāts. Lapā redzat apstiprinājumu. Tas nav solījums, ka konts jau ir atvērts, un neviens netiek sūtīts jums zvanīt.',
+                        'a' => 'Pieprasījums tiek saglabāts. Lapā redzat apstiprinājumu. Tas nav solījums, ka konts jau ir atvērts, un mēs nezvanām tikai tāpēc, ka esat nosūtījis veidlapu.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Kuri tirgi ir parādīti?',
-                        'a' => 'Paraugi ir BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD un GBP/USD. Darba grāmata atveras finansētā kontā.',
+                        'a' => 'Paraugi ir BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD un GBP/USD. Tiešsaistes cenas un pilnais pāru saraksts atveras finansētā kontā.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Kuras maksājuma metodes konts var lietot?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay un bankas pārskaitījumu. Reģistrācijas veidlapa karti neapmaksā. Metode un jebkura maksa ir redzama, pirms apstiprināt iemaksu konta iekšienē.',
+                        'a' => 'Metodes ir atkarīgas no reģiona. Personīgais pārvaldnieks nosauc tās, ko varat izmantot, un jebkuru maksu, pirms apstiprināt iemaksu. Reģistrācijas veidlapa karti neapmaksā.',
                     ],
                     [
                         'q' => 'Kā darbojas izmaksas?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Vai savienojums ir šifrēts?',
-                        'a' => 'Vietne tiek sniegta caur HTTPS. Kad konts jau pastāv, pieteikšanās datus glabājiet pie sevis. {brand} papildu atļaujas jūsu tālrunī nav vajadzīgas.',
+                        'a' => 'Vietne tiek sniegta caur HTTPS. Kad konts jau pastāv, pieteikšanās datus glabājiet pie sevis.',
                     ],
                     [
                         'q' => 'Vai varu zaudēt naudu?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Par mums',
         'title' => 'Īsa piezīme. Tad lemjat jūs.',
-        'lead' => '{brand} ekrānu mazu tur ar nolūku. Tirgus ir trokšņains. Piezīme ir viens vārds, rakstīts vienkāršā valodā, un bez jums rīkojumu nekad nenosūta.',
+        'lead' => '{brand} ekrānu mazu tur ar nolūku. Tirgus ir trokšņains. Piezīme ir īsa norāde — pirkt, turēt vai skatīties — vienkāršā valodā, un bez jums rīkojumu nekad nenosūta.',
         'cta' => 'Atvērt kontu',
-        'caption' => 'Viens galds. Viens zaļš grafiks.',
+        'caption' => 'Viena komanda. Viens zaļš grafiks.',
         'facts_title' => 'Četras lietas, ko zināt vispirms',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Tirgi šajā ekrānā',
-        'markets_lead' => 'Cenas zemāk ir paraugi, tie paši, kas lentē augšā. Tā nav tiešā plūsma. Darba grāmata atveras finansētā kontā.',
+        'markets_lead' => 'Cenas zemāk ir paraugi, tie paši, kas lentē augšā. Tā nav tiešā plūsma. Tiešsaistes cenas atveras finansētā kontā.',
     ],
     'product' => [
-        'eyebrow' => 'Produkts',
+        'eyebrow' => 'Platforma',
         'title' => 'Grafiks, piezīme, apstiprinājums.',
-        'lead' => 'Platforma ir trīs daļas vienā ekrānā. Piezīmi raksta MI. Poga paliek jums.',
+        'lead' => 'Platforma ir trīs daļas vienā ekrānā. Piezīmi raksta MI. Jūs nospiežat apstiprināt.',
         'cta' => 'Atvērt kontu',
         'chart_cap' => 'Darījumu apstiprināt jūs.',
-        'parts_title' => 'Kas ir ekrānā',
+        'parts_title' => 'Kā tas sader kopā',
         'parts' => [
             [
                 'title' => 'Grafiks',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Cenas',
         'title' => 'Finansējums, kas der jūsu reģionam',
-        'lead' => 'Minimālā iemaksa ir atkarīga no reģiona, kurā atrodaties. Personīgais pārvaldnieks paskaidro summu, metodi un to, kā piekļuve atveras pēc veidlapas nosūtīšanas.',
+        'lead' => 'Minimālā iemaksa ir atkarīga no reģiona, kurā atrodaties. Personīgais pārvaldnieks paskaidro summu, metodi un to, kā grafiki atveras, kad konts ir finansēts.',
         'access' => 'Piekļuve kontam',
         'min_label' => 'Minimālā iemaksa',
         'min_value' => 'Noteikta jūsu reģionam',
         'unlock' => 'Grafiki, rīki un MI vadība atveras, kad konts ir finansēts. Detaļas vispirms apstiprina jūsu pārvaldnieks.',
         'form_heading' => 'Izveidojiet kontu',
-        'form_title' => 'Atveriet ātrāk nekā 2 minūtēs',
+        'form_title' => 'Nosūtiet pieprasījumu ātrāk nekā 2 minūtēs',
     ],
     'signup' => [
         'eyebrow' => 'Sāciet',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Komanda',
-        'title' => 'Kurš lasa jūsu vēstuli.',
-        'lead' => 'Septiņi darbi. Jautājums aiziet pie cilvēka, kurš to darbu vada. Galdu vada Helen Ward. Viņa jūsu rīkojumu neiesniedz.',
+        'title' => 'Kurš lasa jūsu e-pastu.',
+        'lead' => 'Septiņi darbi. Jautājums aiziet pie cilvēka, kurš to darbu vada. Komandu vada Helen Ward. Viņa jūsu rīkojumu neiesniedz.',
         'routes' => [
             'Maksas un iemaksas aiziet finanšu direktorei.',
             'Grafiks un piezīme aiziet tehniskajam direktoram.',
             'Jauns pieprasījums aiziet komerciālajam direktoram, tad vadošajam partnerim.',
             'Kā darbojas ekrāns, aiziet produkta direktorei.',
-            'Vēstule par jau nosūtītu pieprasījumu aiziet klientu aprūpei.',
+            'E-pasts par jau nosūtītu pieprasījumu aiziet klientu aprūpei.',
         ],
         'mail' => 'Rakstiet uz {email} un darbu lieciet pirmajā rindā. Nekādu kartes numuru. Nekādu paroļu.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Kriptovalūtas atbalsts',
+        'title' => 'Atbalsts',
         'service_title' => 'Pakalpojums un atbalsts',
-        'service' => 'Galds ir septiņi cilvēki. Nosauciet darbu pirmajā rindā, un vēstule aiziet tur. Mēs nezvanām tāpēc, ka veidlapa nosūtīta, un neviens rīkojumu jūsu vietā neapstiprina.',
+        'service' => 'Komanda ir septiņi cilvēki. Nosauciet darbu pirmajā rindā, un e-pasts aiziet tur. Mēs nezvanām tikai tāpēc, ka veidlapa nosūtīta, un neviens rīkojumu jūsu vietā neapstiprina.',
         'write' => 'Rakstiet uz {email}.',
         'hours_title' => 'Atbalsta stundas',
         'hours' => 'Vēstules tiek lasītas dienā un naktī. Parasta atbilde aizņem dažas stundas. Ja nevaram atbildēt uzreiz, atbild nākamais cilvēks tajā lomā.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontakti',
         'title' => 'Rakstiet, jautājumu liekot pirmajā rindā.',
-        'lead' => 'Rakstiet uz {email}. Parasta atbilde aizņem dažas stundas. Galds nezvana tāpēc, ka veidlapa nosūtīta.',
+        'lead' => 'Rakstiet uz {email}. Parasta atbilde aizņem dažas stundas. Komanda nezvana tikai tāpēc, ka veidlapa nosūtīta.',
         'topics' => [
             [
                 'title' => 'Veidlapa',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Lietošanas noteikumi',
             'updated' => 'Pēdējo reizi atjaunināts: 2026. gada 18. novembrī',
-            'intro' => 'Piekļūstot {brand}, jūs piekrītat šiem lietošanas noteikumiem. Ja nepiekrītat, mūsu pakalpojumus nelietojiet.',
+            'intro' => 'Izmantojot šo vietni, jūs piekrītat šiem lietošanas noteikumiem. Ja nepiekrītat, mūsu pakalpojumus nelietojiet.',
             'sections' => [
                 [
                     'h' => 'Atbilstība',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Sīkdatņu paziņojums',
             'updated' => 'Pēdējo reizi atjaunināts: 2026. gada 18. novembrī',
-            'intro' => '{brand} izmanto sīkdatnes, kas vajadzīgas, lai vietne darbotos, atcerētos valodas izvēli un godīgi uzturētu reģistrācijas sesiju.',
+            'intro' => '{brand} izmanto sīkdatnes, kas vajadzīgas, lai vietne darbotos, atcerētos valodas izvēli un aizsargātu veidlapu no automātiskas ļaunprātīgas izmantošanas.',
             'sections' => [
                 [
                     'h' => 'Ko glabājam',
-                    'p' => 'Valodas sīkdatni, klikšķa identifikatoru un īslaicīgu veidlapas marķieri. Šajā lapā reklāmas pikseļus neizmantojam.',
+                    'p' => 'Valodas sīkdatni, klikšķa identifikatoru un īslaicīgu veidlapas marķieri. Šajā vietnē reklāmas pikseļus neizmantojam.',
                 ],
                 [
                     'h' => 'Kontrole',

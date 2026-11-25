@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platforma | {brand}',
-            'description' => 'Graf, poznámka, potvrdenie. AI napíše pokyn. Tlačidlo zostáva vám.',
+            'description' => 'Graf, poznámka, potvrdenie. AI napíše pokyn. Potvrdenie stláčaš ty.',
         ],
         'offer' => [
             'title' => 'Cenník | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Tím | {brand}',
-            'description' => 'Kto v {brand} číta váš list. Sedem rolí, jeden pult.',
+            'description' => 'Kto v {brand} číta tvoj e-mail. Sedem rolí, jeden tím.',
         ],
         'sign-up' => [
             'title' => 'Otvoriť účet | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'O nás',
-        'product' => 'Produkt',
+        'product' => 'Platforma',
         'faq' => 'FAQ',
         'team' => 'Tím',
         'contact' => 'Kontakt',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Čím sa {brand} líši? Jednoduchým čítaním trhu. Obrazovka s poznámkou AI vedľa grafu pomáha rozhodnúť sa a mať riziko na očiach. Každý pokyn stále potvrdzujete vy.',
+        'lead' => 'Jednoduché čítanie trhu. Poznámka AI sedí vedľa grafu, aby si mohol rozhodnúť a mať riziko na očiach. Každý pokyn stále potvrdzuješ ty.',
         'form_title' => 'Požiadať o účet',
         'first_name' => 'Meno',
         'last_name' => 'Priezvisko',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Pre začiatočníkov',
-        'title' => 'Tri kroky. Potom ste na trhu.',
+        'title' => 'Tri kroky od formulára k prvému pokynu.',
         'lead' => 'Žiadny žargón terminálu — jasná cesta od registrácie k prvej pozícii.',
         'watchlist' => 'Sledované',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI na páske',
+        'eyebrow' => 'AI vedľa grafu',
         'title' => 'Signál, ktorý prečítate na prvý pohľad',
         'lead' => 'Trhový šum vojde dnu. Von vyjde krátka poznámka. Rozhodujete vy.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Štart',
             ],
             [
-                'title' => '6 mesiacov skúseností',
-                'text' => 'S páskou ste už v pohode. Poznámka zostáva jedno slovo.',
+                'title' => 'Keď je graf už známy',
+                'text' => 'S páskou ste už v pohode. Poznámka zostáva krátka.',
                 'mark' => 'Pokojne',
             ],
             [
-                'title' => '1+ rok obchodovania',
+                'title' => 'Keď obchoduješ častejšie',
                 'text' => 'Veľkosť volíte vy. Pred potvrdením sa ukáže pripomienka.',
                 'mark' => 'Vaše rozhodnutie',
             ],
             [
-                'title' => '2+ roky',
+                'title' => 'Keď používaš viac párov',
                 'text' => 'Viac párov, to isté pravidlo. Nič neodošle pokyn bez vás.',
                 'mark' => 'Rozhodujete vy',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'jedna krátka poznámka',
     ],
     'voices' => [
-        'eyebrow' => 'Z pultu',
+        'eyebrow' => 'Od tímu',
         'title' => 'Ľuďom sedí, aké je to priamočiare.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kyjev',
-                'quote' => 'Hneď na prvej obrazovke jasné. Poznámka je jedno slovo a tlačidlo stále stláčam sama.',
+                'quote' => 'Hneď na prvej obrazovke jasné. Poznámka je krátka a potvrdenie stále stláčam sama.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Začať',
         'title' => 'Vytvorte si účet {brand}',
-        'lead' => 'Pridajte sa k prémiovej platforme, ktorá zostáva jednoduchá — vedenie AI od prvého dňa.',
-        'form_title' => 'Otvoríte do 2 minút',
+        'lead' => 'Platforma, ktorá zostáva jednoduchá — krátky pokyn AI od prvej obrazovky.',
+        'form_title' => 'Pošlite žiadosť do 2 minút',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Rýchle odpovede',
         'more' => 'Prečítať celé FAQ →',
         'page_title' => 'Odpovede skôr, než čokoľvek vložíte',
-        'page_lead' => 'Začiatok, poznámka, peniaze a bezpečie. Ak tu vaša otázka nie je, napíšte na {email}.',
+        'page_lead' => 'Začiatok, poznámka, peniaze a bezpečie — časté otázky. Ak tu vaša otázka nie je, napíšte na {email}.',
         'items' => [
             [
                 'q' => 'Potrebujem skúsenosti s obchodovaním?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Čo sa stane po odoslaní?',
-                        'a' => 'Žiadosť sa uloží. Na stránke uvidíte potvrdenie. Nie je to sľub, že účet je už otvorený, a nikto nie je vyslaný, aby vám zavolal.',
+                        'a' => 'Žiadosť sa uloží. Na stránke uvidíte potvrdenie. Nie je to sľub, že účet je už otvorený, a nevoláme len preto, že ste odoslali formulár.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Ktoré trhy sa ukazujú?',
-                        'a' => 'Ukážky sú BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD a GBP/USD. Pracovná kniha sa otvára vo financovanom účte.',
+                        'a' => 'Ukážky sú BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD a GBP/USD. Živé ceny a plný zoznam párov sa otvárajú vo financovanom účte.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Aké spôsoby platby môže účet použiť?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay a bankový prevod. Registračný formulár kartu nezaťaží. Spôsob a prípadný poplatok sa ukážu pred potvrdením vkladu vo vnútri účtu.',
+                        'a' => 'Spôsoby závisia od regiónu. Osobný manažér vymenuje tie, ktoré môžete použiť, a prípadný poplatok, pred potvrdením vkladu. Registračný formulár kartu nezaťaží.',
                     ],
                     [
                         'q' => 'Ako fungujú výbery?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Je spojenie šifrované?',
-                        'a' => 'Web beží cez HTTPS. Keď účet existuje, prihlásenie si nechajte pre seba. {brand} nepotrebuje ďalšie povolenia na telefóne.',
+                        'a' => 'Web beží cez HTTPS. Keď účet existuje, prihlásenie si nechajte pre seba.',
                     ],
                     [
                         'q' => 'Môžem prísť o peniaze?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'O nás',
         'title' => 'Krátka poznámka. Potom sa rozhodnete.',
-        'lead' => '{brand} drží obrazovku zámerne malú. Trh je hlučný. Poznámka je jedno slovo, napísané jednoduchou rečou, a nikdy neodošle pokyn bez vás.',
+        'lead' => '{brand} drží obrazovku zámerne malú. Trh je hlučný. Poznámka je krátky pokyn — kúpiť, držať alebo sledovať — jednoduchou rečou, a nikdy neodošle pokyn bez vás.',
         'cta' => 'Otvoriť účet',
-        'caption' => 'Jeden pult. Jeden zelený graf.',
+        'caption' => 'Jeden tím. Jeden zelený graf.',
         'facts_title' => 'Štyri veci, ktoré treba vedieť najprv',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Trhy na tejto obrazovke',
-        'markets_lead' => 'Ceny nižšie sú ukážky, tie isté ako na páske hore. Nie je to živý zdroj. Pracovná kniha sa otvára vo financovanom účte.',
+        'markets_lead' => 'Ceny nižšie sú ukážky, tie isté ako na páske hore. Nie je to živý zdroj. Živé ceny sa otvárajú vo financovanom účte.',
     ],
     'product' => [
-        'eyebrow' => 'Produkt',
+        'eyebrow' => 'Platforma',
         'title' => 'Graf, poznámka, potvrdenie.',
-        'lead' => 'Platforma sú tri časti na jednej obrazovke. Poznámku píše AI. Tlačidlo zostáva vám.',
+        'lead' => 'Platforma sú tri časti na jednej obrazovke. Poznámku píše AI. Potvrdenie stláčaš ty.',
         'cta' => 'Otvoriť účet',
         'chart_cap' => 'Obchod potvrdzujete vy.',
-        'parts_title' => 'Čo je na obrazovke',
+        'parts_title' => 'Ako to drží spolu',
         'parts' => [
             [
                 'title' => 'Graf',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Cenník',
         'title' => 'Financovanie, ktoré sedí vášmu regiónu',
-        'lead' => 'Minimálny vklad závisí od regiónu, v ktorom ste. Osobný manažér vysvetlí sumu, spôsob a to, ako sa prístup odomkne po odoslaní formulára.',
+        'lead' => 'Minimálny vklad závisí od regiónu, v ktorom ste. Osobný manažér vysvetlí sumu, spôsob a to, ako sa grafy odomknú, keď je účet financovaný.',
         'access' => 'Prístup k účtu',
         'min_label' => 'Minimálny vklad',
         'min_value' => 'Nastavené pre váš región',
         'unlock' => 'Grafy, nástroje a vedenie AI sa odomknú, keď je účet financovaný. Podrobnosti najprv potvrdí váš manažér.',
         'form_heading' => 'Vytvorte si účet',
-        'form_title' => 'Otvoríte do 2 minút',
+        'form_title' => 'Pošlite žiadosť do 2 minút',
     ],
     'signup' => [
         'eyebrow' => 'Začať',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Tím',
-        'title' => 'Kto číta váš list.',
-        'lead' => 'Sedem rolí. Otázka ide človeku, ktorý tú rolu drží. Helen Ward vedie pult. Váš pokyn nezadáva.',
+        'title' => 'Kto číta tvoj e-mail.',
+        'lead' => 'Sedem rolí. Otázka ide človeku, ktorý tú rolu drží. Helen Ward vedie tím. Váš pokyn nezadáva.',
         'routes' => [
             'Poplatky a vklady idú finančnej riaditeľke.',
             'Graf a poznámka idú technickému riaditeľovi.',
             'Nová žiadosť ide obchodnému riaditeľovi a potom riadiacemu partnerovi.',
             'Ako obrazovka funguje, ide produktovej riaditeľke.',
-            'List o žiadosti, ktorú ste už poslali, ide do starostlivosti o klientov.',
+            'E-mail o žiadosti, ktorú ste už poslali, ide do starostlivosti o klientov.',
         ],
         'mail' => 'Napíšte na {email} a rolu dajte do prvého riadka. Žiadne čísla kariet. Žiadne heslá.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Podpora ku kryptomenám',
+        'title' => 'Podpora',
         'service_title' => 'Služba a podpora',
-        'service' => 'Pult je sedem ľudí. Rolu napíšte do prvého riadka a list tam pôjde. Nevoláme len preto, že prišiel formulár, a nikto za vás nepotvrdí pokyn.',
+        'service' => 'Tím je sedem ľudí. Rolu napíšte do prvého riadka a e-mail tam pôjde. Nevoláme len preto, že prišiel formulár, a nikto za vás nepotvrdí pokyn.',
         'write' => 'Napíšte na {email}.',
         'hours_title' => 'Hodiny podpory',
         'hours' => 'Pošta sa číta cez deň aj v noci. Odpoveď zvyčajne trvá pár hodín. Ak nevieme odpovedať hneď, odpovie ďalší človek v tej role.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Otázku dajte do prvého riadka.',
-        'lead' => 'Napíšte na {email}. Odpoveď zvyčajne trvá pár hodín. Pult nevolá len preto, že prišiel formulár.',
+        'lead' => 'Napíšte na {email}. Odpoveď zvyčajne trvá pár hodín. Tím nevolá len preto, že prišiel formulár.',
         'topics' => [
             [
                 'title' => 'Formulár',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Podmienky používania',
             'updated' => 'Posledná aktualizácia: 18. novembra 2026',
-            'intro' => 'Vstupom na {brand} súhlasíte s týmito podmienkami používania. Ak nesúhlasíte, naše služby nepoužívajte.',
+            'intro' => 'Používaním tejto webovej stránky súhlasíte s týmito podmienkami používania. Ak nesúhlasíte, naše služby nepoužívajte.',
             'sections' => [
                 [
                     'h' => 'Spôsobilosť',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Oznámenie o súboroch cookie',
             'updated' => 'Posledná aktualizácia: 18. novembra 2026',
-            'intro' => '{brand} používa súbory cookie, ktoré sú potrebné na chod webu, zapamätanie voľby jazyka a poctivú registračnú reláciu.',
+            'intro' => '{brand} používa súbory cookie, ktoré sú potrebné na chod webu, zapamätanie voľby jazyka a ochranu formulára pred automatickým zneužitím.',
             'sections' => [
                 [
                     'h' => 'Čo ukladáme',
-                    'p' => 'Cookie jazyka, identifikátor kliknutia a krátkodobý token formulára. Na tejto stránke nepoužívame reklamné pixely.',
+                    'p' => 'Cookie jazyka, identifikátor kliknutia a krátkodobý token formulára. Na tomto webe nepoužívame reklamné pixely.',
                 ],
                 [
                     'h' => 'Ovládanie',

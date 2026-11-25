@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platformă | {brand}',
-            'description' => 'Grafic, notă, confirmare. AI scrie indicația. Butonul rămâne la tine.',
+            'description' => 'Grafic, notă, confirmare. AI scrie indicația. Tu apeși confirmare.',
         ],
         'offer' => [
             'title' => 'Prețuri | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Echipă | {brand}',
-            'description' => 'Cine îți citește scrisoarea la {brand}. Șapte roluri, un singur birou.',
+            'description' => 'Cine îți citește e-mailul la {brand}. Șapte roluri, o singură echipă.',
         ],
         'sign-up' => [
             'title' => 'Deschide contul | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Despre',
-        'product' => 'Produs',
+        'product' => 'Platformă',
         'faq' => 'Întrebări',
         'team' => 'Echipă',
         'contact' => 'Contact',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Ce deosebește {brand}? Un fel limpede de a citi piața. Ecranul, cu o notă AI lângă grafic, te ajută să decizi și să ții riscul la vedere. Tu confirmi în continuare fiecare ordin.',
+        'lead' => 'Un fel limpede de a citi piața. Nota AI stă lângă grafic, ca să decizi și să ții riscul la vedere. Tu confirmi în continuare fiecare ordin.',
         'form_title' => 'Cere un cont',
         'first_name' => 'Prenume',
         'last_name' => 'Nume',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Pentru începători',
-        'title' => 'Trei pași. Apoi ești în piață.',
+        'title' => 'Trei pași de la formular la primul ordin.',
         'lead' => 'Fără jargon de terminal — un drum limpede de la înscriere până la prima poziție.',
         'watchlist' => 'Listă de urmărire',
         'fund' => 'Minim',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'AI pe cotații',
+        'eyebrow' => 'AI lângă grafic',
         'title' => 'Un semnal pe care îl citești dintr-o privire',
         'lead' => 'Zgomotul pieței intră. Iese o notă scurtă. Tu decizi.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Start',
             ],
             [
-                'title' => '6 luni de experiență',
-                'text' => 'Te-ai obișnuit cu cotațiile. Nota rămâne un singur cuvânt.',
+                'title' => 'Când graficul e deja familiar',
+                'text' => 'Te-ai obișnuit cu cotațiile. Nota rămâne scurtă.',
                 'mark' => 'Constant',
             ],
             [
-                'title' => '1+ an de tranzacționare',
+                'title' => 'Când tranzacționezi mai des',
                 'text' => 'Tu alegi dimensiunea. O reamintire apare înainte să confirmi.',
                 'mark' => 'Alegerea ta',
             ],
             [
-                'title' => '2+ ani',
+                'title' => 'Când folosești mai multe perechi',
                 'text' => 'Mai multe perechi, aceeași regulă. Nimic nu trimite un ordin fără tine.',
                 'mark' => 'Tu decizi',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'o notă scurtă',
     ],
     'voices' => [
-        'eyebrow' => 'De la birou',
+        'eyebrow' => 'De la echipă',
         'title' => 'Oamenilor le place cât este de simplu.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kiev',
-                'quote' => 'Limpede de la primul ecran. Nota este un cuvânt, iar butonul tot eu îl apăs.',
+                'quote' => 'Limpede de la primul ecran. Nota este scurtă, iar confirmarea tot eu o apăs.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Începe',
         'title' => 'Creează-ți contul {brand}',
-        'lead' => 'Intră pe o platformă premium care rămâne simplă — ghidare AI din prima zi.',
-        'form_title' => 'Deschidere în mai puțin de 2 minute',
+        'lead' => 'O platformă care rămâne simplă — o indicație AI scurtă de la primul ecran.',
+        'form_title' => 'Trimite o cerere în mai puțin de 2 minute',
     ],
     'faq' => [
         'eyebrow' => 'Întrebări',
         'title' => 'Răspunsuri scurte',
         'more' => 'Citește toate întrebările →',
         'page_title' => 'Răspunsuri înainte să alimentezi ceva',
-        'page_lead' => 'Start, nota, banii și siguranța. Dacă întrebarea nu este aici, scrie la {email}.',
+        'page_lead' => 'Start, nota, banii și siguranța — întrebările frecvente. Dacă întrebarea nu este aici, scrie la {email}.',
         'items' => [
             [
                 'q' => 'Am nevoie de experiență de tranzacționare?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Ce se întâmplă după ce trimit?',
-                        'a' => 'Cererea este salvată. Vezi o confirmare pe pagină. Nu este o promisiune că un cont este deja deschis și nimeni nu este trimis să te sune.',
+                        'a' => 'Cererea este salvată. Vezi o confirmare pe pagină. Nu este o promisiune că un cont este deja deschis și nu sunăm doar pentru că ai trimis un formular.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Ce piețe sunt arătate?',
-                        'a' => 'Exemplele sunt BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD și GBP/USD. Registrul de lucru se deschide într-un cont alimentat.',
+                        'a' => 'Exemplele sunt BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD și GBP/USD. Prețurile live și lista completă de perechi se deschid într-un cont alimentat.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Ce metode de plată poate folosi contul?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay și transfer bancar. Formularul de înregistrare nu debitează un card. Metoda și orice comision apar înainte să confirmi o depunere în cont.',
+                        'a' => 'Metodele depind de regiune. Managerul personal îți spune pe care le poți folosi și orice comision, înainte să confirmi o depunere. Formularul de înregistrare nu debitează un card.',
                     ],
                     [
                         'q' => 'Cum funcționează retragerile?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Conexiunea este criptată?',
-                        'a' => 'Site-ul este servit prin HTTPS. Păstrează-ți datele de autentificare pentru tine după ce există un cont. {brand} nu are nevoie de permisiuni suplimentare pe telefon.',
+                        'a' => 'Site-ul este servit prin HTTPS. Păstrează-ți datele de autentificare pentru tine după ce există un cont.',
                     ],
                     [
                         'q' => 'Pot pierde bani?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Despre',
         'title' => 'O notă scurtă. Apoi decizi tu.',
-        'lead' => '{brand} ține ecranul mic dinadins. Piața este zgomotoasă. Nota este un cuvânt, în limbaj simplu, și nu trimite niciodată un ordin fără tine.',
+        'lead' => '{brand} ține ecranul mic dinadins. Piața este zgomotoasă. Nota este o indicație scurtă — cumpără, ține sau urmărește — în limbaj simplu, și nu trimite niciodată un ordin fără tine.',
         'cta' => 'Deschide contul',
-        'caption' => 'Un birou. Un grafic verde.',
+        'caption' => 'O echipă. Un grafic verde.',
         'facts_title' => 'Patru lucruri de știut întâi',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Piețe pe acest ecran',
-        'markets_lead' => 'Prețurile de mai jos sunt exemple, aceleași din banda de sus. Nu sunt un flux live. Contul alimentat este locul în care se deschide registrul de lucru.',
+        'markets_lead' => 'Prețurile de mai jos sunt exemple, aceleași din banda de sus. Nu sunt un flux live. Prețurile live se deschid într-un cont alimentat.',
     ],
     'product' => [
-        'eyebrow' => 'Produs',
+        'eyebrow' => 'Platformă',
         'title' => 'Grafic, notă, confirmare.',
-        'lead' => 'Platforma este trei piese pe un singur ecran. AI scrie nota. Butonul rămâne la tine.',
+        'lead' => 'Platforma este trei piese pe un singur ecran. AI scrie nota. Tu apeși confirmare.',
         'cta' => 'Deschide contul',
         'chart_cap' => 'Tu confirmi tranzacția.',
-        'parts_title' => 'Ce este pe ecran',
+        'parts_title' => 'Cum se leagă',
         'parts' => [
             [
                 'title' => 'Graficul',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Prețuri',
         'title' => 'Alimentare potrivită regiunii',
-        'lead' => 'Depunerea minimă depinde de regiunea în care ești. Un manager personal explică suma, metoda și cum se deblochează accesul după ce trimiți formularul.',
+        'lead' => 'Depunerea minimă depinde de regiunea în care ești. Un manager personal explică suma, metoda și cum se deblochează graficele odată ce contul este alimentat.',
         'access' => 'Acces la cont',
         'min_label' => 'Depunere minimă',
         'min_value' => 'Stabilită pentru regiunea ta',
         'unlock' => 'Graficele, instrumentele și ghidarea AI se deblochează după ce contul este alimentat. Managerul confirmă întâi detaliile.',
         'form_heading' => 'Creează-ți contul',
-        'form_title' => 'Deschidere în mai puțin de 2 minute',
+        'form_title' => 'Trimite o cerere în mai puțin de 2 minute',
     ],
     'signup' => [
         'eyebrow' => 'Începe',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Echipă',
-        'title' => 'Cine îți citește scrisoarea.',
-        'lead' => 'Șapte roluri. O întrebare ajunge la persoana care deține rolul. Helen Ward conduce biroul. Ea nu îți plasează ordinul.',
+        'title' => 'Cine îți citește e-mailul.',
+        'lead' => 'Șapte roluri. O întrebare ajunge la persoana care deține rolul. Helen Ward conduce echipa. Ea nu îți plasează ordinul.',
         'routes' => [
             'Comisioanele și depunerile merg la directorul financiar.',
             'Graficul și nota merg la directorul tehnic.',
             'O cerere nouă merge la directorul comercial, apoi la partenerul coordonator.',
             'Felul în care funcționează ecranul merge la directorul de produs.',
-            'O scrisoare despre o cerere deja trimisă merge la relații cu clienții.',
+            'Un e-mail despre o cerere deja trimisă merge la relații cu clienții.',
         ],
         'mail' => 'Scrie la {email} și pune rolul pe primul rând. Fără numere de card. Fără parole.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Suport pentru criptomonede',
+        'title' => 'Suport',
         'service_title' => 'Serviciu și suport',
-        'service' => 'Biroul este format din șapte oameni. Numește rolul pe primul rând și scrisoarea ajunge acolo. Nu sunăm pentru că a fost trimis un formular și nimeni nu confirmă un ordin în locul tău.',
+        'service' => 'Echipa este formată din șapte oameni. Numește rolul pe primul rând și e-mailul ajunge acolo. Nu sunăm doar pentru că a fost trimis un formular și nimeni nu confirmă un ordin în locul tău.',
         'write' => 'Scrie la {email}.',
         'hours_title' => 'Programul suportului',
         'hours' => 'Poșta este citită ziua și noaptea. Un răspuns durează, de obicei, câteva ore. Dacă nu putem răspunde imediat, răspunde următoarea persoană din acel rol.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Scrie cu întrebarea pe primul rând.',
-        'lead' => 'E-mail {email}. Un răspuns durează, de obicei, câteva ore. Biroul nu sună pentru că a fost trimis un formular.',
+        'lead' => 'E-mail {email}. Un răspuns durează, de obicei, câteva ore. Echipa nu sună doar pentru că a fost trimis un formular.',
         'topics' => [
             [
                 'title' => 'Formularul',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Termeni de utilizare',
             'updated' => 'Ultima actualizare: 18 noiembrie 2026',
-            'intro' => 'Accesând {brand}, ești de acord cu acești termeni de utilizare. Dacă nu ești de acord, nu folosi serviciile.',
+            'intro' => 'Folosind acest site, ești de acord cu acești termeni de utilizare. Dacă nu ești de acord, nu folosi serviciile.',
             'sections' => [
                 [
                     'h' => 'Eligibilitate',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Informare privind cookie-urile',
             'updated' => 'Ultima actualizare: 18 noiembrie 2026',
-            'intro' => '{brand} folosește cookie-uri necesare ca site-ul să funcționeze, ca să rețină alegerea de limbă și ca sesiunea de înregistrare să rămână corectă.',
+            'intro' => '{brand} folosește cookie-uri necesare ca site-ul să funcționeze, ca să rețină alegerea de limbă și ca formularul să fie protejat de abuz automat.',
             'sections' => [
                 [
                     'h' => 'Ce stocăm',
-                    'p' => 'Un cookie de limbă, un identificator de clic și un token de formular cu viață scurtă. Nu folosim pixeli de publicitate pe această pagină.',
+                    'p' => 'Un cookie de limbă, un identificator de clic și un token de formular cu viață scurtă. Nu folosim pixeli de publicitate pe acest site.',
                 ],
                 [
                     'h' => 'Control',

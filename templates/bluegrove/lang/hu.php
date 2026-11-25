@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Platform | {brand}',
-            'description' => 'Grafikon, jegyzet, megerősítés. A jegyzetet az MI írja. A gomb az Öné marad.',
+            'description' => 'Grafikon, jegyzet, megerősítés. A jegyzetet az MI írja. Ön nyomja a megerősítést.',
         ],
         'offer' => [
             'title' => 'Árazás | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Csapat | {brand}',
-            'description' => 'Ki olvassa a levelét a {brand} csapatában. Hét feladat, egy pult.',
+            'description' => 'Ki olvassa az e-mailjét a {brand} csapatában. Hét feladat, egy csapat.',
         ],
         'sign-up' => [
             'title' => 'Számla nyitása | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Rólunk',
-        'product' => 'Termék',
+        'product' => 'Platform',
         'faq' => 'Kérdések',
         'team' => 'Csapat',
         'contact' => 'Kapcsolat',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'Miben más a {brand}? Érthetően olvasható a piac. A képernyő, a grafikon melletti MI-jegyzettel, segít dönteni, és a kockázat szem előtt marad. Minden megbízást Ön hagy jóvá.',
+        'lead' => 'Érthetően olvasható a piac. Az MI-jegyzet a grafikon mellett van, hogy dönthessen, és a kockázat szem előtt maradjon. Minden megbízást Ön hagy jóvá.',
         'form_title' => 'Számla kérése',
         'first_name' => 'Keresztnév',
         'last_name' => 'Vezetéknév',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Kezdőknek',
-        'title' => 'Három lépés. Utána a piacon van.',
+        'title' => 'Három lépés az űrlaptól az első megbízásig.',
         'lead' => 'Nincs terminálzsargon — tiszta út a regisztrációtól az első pozícióig.',
         'watchlist' => 'Figyelőlista',
         'fund' => 'Minimum',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'MI a szalagon',
+        'eyebrow' => 'MI a grafikon mellett',
         'title' => 'Jel, amelyet egy pillantással elolvas',
         'lead' => 'A piaci zaj bemegy. Egy rövid jegyzet jön ki. Ön dönt.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Kezdés',
             ],
             [
-                'title' => '6 hónap tapasztalat',
-                'text' => 'A szalaggal már otthonosan mozog. A jegyzet egy szó marad.',
+                'title' => 'Amikor a grafikon már ismerős',
+                'text' => 'A szalaggal már otthonosan mozog. A jegyzet rövid marad.',
                 'mark' => 'Nyugodt',
             ],
             [
-                'title' => '1+ év kereskedés',
+                'title' => 'Amikor gyakrabban kereskedik',
                 'text' => 'A méretet Ön választja. Megerősítés előtt emlékeztető jelenik meg.',
                 'mark' => 'Az Ön szava',
             ],
             [
-                'title' => '2+ év',
+                'title' => 'Amikor több párt használ',
                 'text' => 'Több pár, ugyanaz a szabály. Semmi nem küld megbízást Ön nélkül.',
                 'mark' => 'Ön dönt',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'egy rövid jegyzet',
     ],
     'voices' => [
-        'eyebrow' => 'A pultról',
+        'eyebrow' => 'A csapattól',
         'title' => 'Az embereknek tetszik, milyen egyszerű.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kijev',
-                'quote' => 'Az első képernyőtől világos. A jegyzet egy szó, és a gombot továbbra is én nyomom meg.',
+                'quote' => 'Az első képernyőtől világos. A jegyzet rövid, és a megerősítést továbbra is én nyomom meg.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Kezdés',
         'title' => 'Hozza létre a {brand} számláját',
-        'lead' => 'Csatlakozzon egy prémium platformhoz, amely egyszerű marad — MI-vezetés az első naptól.',
-        'form_title' => 'Kevesebb mint 2 perc alatt',
+        'lead' => 'Egy platform, amely egyszerű marad — rövid MI-jegyzet az első képernyőtől.',
+        'form_title' => 'Kérés küldése 2 percen belül',
     ],
     'faq' => [
         'eyebrow' => 'Kérdések',
         'title' => 'Gyors válaszok',
         'more' => 'A teljes GYIK elolvasása →',
         'page_title' => 'Válaszok, mielőtt bármit feltöltene',
-        'page_lead' => 'Kezdés, a jegyzet, a pénz és a biztonság. Ha a kérdése nincs itt, írjon a(z) {email} címre.',
+        'page_lead' => 'Kezdés, a jegyzet, a pénz és a biztonság — a gyakori kérdések. Ha a kérdése nincs itt, írjon a(z) {email} címre.',
         'items' => [
             [
                 'q' => 'Kell kereskedési tapasztalat?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Mi történik a küldés után?',
-                        'a' => 'A kérés mentésre kerül. Az oldalon megerősítést lát. Ez nem ígéret arra, hogy a számla már nyitva van, és senkit nem küldenek, hogy felhívja Önt.',
+                        'a' => 'A kérés mentésre kerül. Az oldalon megerősítést lát. Ez nem ígéret arra, hogy a számla már nyitva van, és nem hívunk csak azért, mert űrlapot küldött.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Mely piacok látszanak?',
-                        'a' => 'A minták: BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD és GBP/USD. A működő könyv a feltöltött számlában nyílik meg.',
+                        'a' => 'A minták: BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD és GBP/USD. Az élő árak és a teljes párlista a feltöltött számlában nyílik meg.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Milyen fizetési módokat használhat a számla?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay és banki átutalás. A regisztrációs űrlap nem terheli a kártyát. A mód és az esetleges díj a számlán belüli befizetés megerősítése előtt látszik.',
+                        'a' => 'A módok a régiótól függenek. A személyes menedzser megmondja, melyeket használhatja, és az esetleges díjat, mielőtt a befizetést megerősíti. A regisztrációs űrlap nem terheli a kártyát.',
                     ],
                     [
                         'q' => 'Hogyan működik a kifizetés?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'Titkosított a kapcsolat?',
-                        'a' => 'A webhely HTTPS-en fut. Ha már van számla, a belépést tartsa magánál. A {brand} nem kér extra engedélyeket a telefonján.',
+                        'a' => 'A webhely HTTPS-en fut. Ha már van számla, a belépést tartsa magánál.',
                     ],
                     [
                         'q' => 'Veszíthetek pénzt?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Rólunk',
         'title' => 'Egy rövid jegyzet. Aztán Ön dönt.',
-        'lead' => 'A {brand} szándékosan kicsinek tartja a képernyőt. A piac zajos. A jegyzet egy szó, közérthetően, és soha nem küld megbízást Ön nélkül.',
+        'lead' => 'A {brand} szándékosan kicsinek tartja a képernyőt. A piac zajos. A jegyzet rövid jelzés — vétel, tartás vagy figyelés — közérthetően, és soha nem küld megbízást Ön nélkül.',
         'cta' => 'Számla nyitása',
-        'caption' => 'Egy pult. Egy zöld grafikon.',
+        'caption' => 'Egy csapat. Egy zöld grafikon.',
         'facts_title' => 'Négy dolog, amit először érdemes tudni',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Piacok ezen a képernyőn',
-        'markets_lead' => 'A lenti árak minták, ugyanazok, mint a fenti szalagon. Nem élő adatfolyam. A működő könyv a feltöltött számlában nyílik meg.',
+        'markets_lead' => 'A lenti árak minták, ugyanazok, mint a fenti szalagon. Nem élő adatfolyam. Az élő árak a feltöltött számlában nyílnak meg.',
     ],
     'product' => [
-        'eyebrow' => 'Termék',
+        'eyebrow' => 'Platform',
         'title' => 'Grafikon, jegyzet, megerősítés.',
-        'lead' => 'A platform három darab egy képernyőn. A jegyzetet az MI írja. A gomb az Öné marad.',
+        'lead' => 'A platform három darab egy képernyőn. A jegyzetet az MI írja. Ön nyomja a megerősítést.',
         'cta' => 'Számla nyitása',
         'chart_cap' => 'Az ügyletet Ön erősíti meg.',
-        'parts_title' => 'Mi van a képernyőn',
+        'parts_title' => 'Hogyan illeszkedik össze',
         'parts' => [
             [
                 'title' => 'A grafikon',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Árazás',
         'title' => 'Feltöltés, amely illik a régiójához',
-        'lead' => 'A minimum befizetés attól a régiótól függ, ahol Ön van. A személyes menedzser elmagyarázza az összeget, a módot, és azt, hogyan nyílik meg a hozzáférés az űrlap elküldése után.',
+        'lead' => 'A minimum befizetés attól a régiótól függ, ahol Ön van. A személyes menedzser elmagyarázza az összeget, a módot, és azt, hogyan nyílnak meg a grafikonok, ha a számla fel van töltve.',
         'access' => 'Hozzáférés a számlához',
         'min_label' => 'Minimum befizetés',
         'min_value' => 'Az Ön régiójára beállítva',
         'unlock' => 'A grafikonok, az eszközök és az MI-vezetés akkor nyílnak meg, amikor a számla feltöltött. A részleteket először a menedzsere erősíti meg.',
         'form_heading' => 'Hozza létre a számláját',
-        'form_title' => 'Kevesebb mint 2 perc alatt',
+        'form_title' => 'Kérés küldése 2 percen belül',
     ],
     'signup' => [
         'eyebrow' => 'Kezdés',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Csapat',
-        'title' => 'Ki olvassa a levelét.',
-        'lead' => 'Hét feladat. A kérdés ahhoz megy, akié az a feladat. Helen Ward vezeti a pultot. Az Ön megbízását nem adja le.',
+        'title' => 'Ki olvassa az e-mailjét.',
+        'lead' => 'Hét feladat. A kérdés ahhoz megy, akié az a feladat. Helen Ward vezeti a csapatot. Az Ön megbízását nem adja le.',
         'routes' => [
             'A díjak és a befizetések a pénzügyi igazgatóhoz mennek.',
             'A grafikon és a jegyzet a műszaki igazgatóhoz megy.',
             'Egy új kérés a kereskedelmi igazgatóhoz megy, majd az ügyvezető partnerhez.',
             'A képernyő működése a termékigazgatóhoz megy.',
-            'Egy már elküldött kérésről szóló levél az ügyfélgondozáshoz megy.',
+            'Egy már elküldött kérésről szóló e-mail az ügyfélgondozáshoz megy.',
         ],
         'mail' => 'Írjon a(z) {email} címre, és a feladatot tegye az első sorba. Kártyaszám nélkül. Jelszó nélkül.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Kriptovaluta-támogatás',
+        'title' => 'Támogatás',
         'service_title' => 'Szolgáltatás és támogatás',
-        'service' => 'A pult hét ember. A feladatot írja az első sorba, és a levél oda megy. Nem hívunk azért, mert űrlap érkezett, és senki nem erősít meg megbízást Ön helyett.',
+        'service' => 'A csapat hét ember. A feladatot írja az első sorba, és az e-mail oda megy. Nem hívunk csak azért, mert űrlap érkezett, és senki nem erősít meg megbízást Ön helyett.',
         'write' => 'Írjon a(z) {email} címre.',
         'hours_title' => 'A támogatás ideje',
         'hours' => 'A leveleket nappal és éjjel olvassuk. Egy tipikus válasz néhány órát vesz igénybe. Ha nem tudunk azonnal válaszolni, az adott feladat következő embere válaszol.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kapcsolat',
         'title' => 'A kérdést tegye az első sorba.',
-        'lead' => 'Írjon a(z) {email} címre. Egy tipikus válasz néhány órát vesz igénybe. A pult nem hív azért, mert űrlap érkezett.',
+        'lead' => 'Írjon a(z) {email} címre. Egy tipikus válasz néhány órát vesz igénybe. A csapat nem hív csak azért, mert űrlap érkezett.',
         'topics' => [
             [
                 'title' => 'Az űrlap',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Felhasználási feltételek',
             'updated' => 'Utolsó frissítés: 2026. november 18.',
-            'intro' => 'A {brand} elérésével elfogadja ezeket a felhasználási feltételeket. Ha nem ért egyet, ne használja a szolgáltatásainkat.',
+            'intro' => 'A webhely használatával elfogadja ezeket a felhasználási feltételeket. Ha nem ért egyet, ne használja a szolgáltatásainkat.',
             'sections' => [
                 [
                     'h' => 'Jogosultság',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Süti tájékoztató',
             'updated' => 'Utolsó frissítés: 2026. november 18.',
-            'intro' => 'A {brand} olyan sütiket használ, amelyek a webhely működéséhez, a nyelvválasztás megjegyzéséhez és a regisztrációs munkamenet tisztaságához kellenek.',
+            'intro' => 'A {brand} olyan sütiket használ, amelyek a webhely működéséhez, a nyelvválasztás megjegyzéséhez és az űrlap automatikus visszaéléstől való védelméhez kellenek.',
             'sections' => [
                 [
                     'h' => 'Amit tárolunk',
-                    'p' => 'Egy nyelvi süti, egy kattintásazonosító és egy rövid életű űrlaptoken. Ezen az oldalon nem használunk hirdetési pixeleket.',
+                    'p' => 'Egy nyelvi süti, egy kattintásazonosító és egy rövid életű űrlaptoken. Ezen a webhelyen nem használunk hirdetési pixeleket.',
                 ],
                 [
                     'h' => 'Kezelés',

@@ -13,7 +13,7 @@ return [
         ],
         'product' => [
             'title' => 'Plataforma | {brand}',
-            'description' => 'Gráfico, nota, confirmação. A IA escreve o sinal. O botão fica contigo.',
+            'description' => 'Gráfico, nota, confirmação. A IA escreve o sinal. Tu carregas em confirmar.',
         ],
         'offer' => [
             'title' => 'Preços | {brand}',
@@ -21,7 +21,7 @@ return [
         ],
         'team' => [
             'title' => 'Equipa | {brand}',
-            'description' => 'Quem lê a tua carta na {brand}. Sete funções, uma mesa.',
+            'description' => 'Quem lê o teu e-mail na {brand}. Sete funções, uma equipa.',
         ],
         'sign-up' => [
             'title' => 'Abrir conta | {brand}',
@@ -58,7 +58,7 @@ return [
     ],
     'nav' => [
         'about' => 'Sobre',
-        'product' => 'Produto',
+        'product' => 'Plataforma',
         'faq' => 'FAQ',
         'team' => 'Equipa',
         'contact' => 'Contacto',
@@ -81,7 +81,7 @@ return [
     ],
     'hero' => [
         'title' => '{brand}',
-        'lead' => 'O que distingue a {brand}? Uma forma clara de ler o mercado. O ecrã, com uma nota de IA ao lado do gráfico, ajuda-te a decidir e a manter o risco à vista. Continuas a confirmar cada ordem.',
+        'lead' => 'Uma forma clara de ler o mercado. A nota de IA fica ao lado do gráfico para decidires e manteres o risco à vista. Continuas a confirmar cada ordem.',
         'form_title' => 'Pedir uma conta',
         'first_name' => 'Nome próprio',
         'last_name' => 'Apelido',
@@ -117,7 +117,7 @@ return [
     ],
     'howto' => [
         'eyebrow' => 'Feito para quem começa',
-        'title' => 'Três passos. Depois estás no mercado.',
+        'title' => 'Três passos do formulário à primeira ordem.',
         'lead' => 'Sem jargão de terminal — um caminho claro do registo à primeira posição.',
         'watchlist' => 'Lista de observação',
         'fund' => 'Mínimo',
@@ -139,7 +139,7 @@ return [
         ],
     ],
     'signal' => [
-        'eyebrow' => 'IA na fita',
+        'eyebrow' => 'IA ao lado do gráfico',
         'title' => 'Um sinal que lês de relance',
         'lead' => 'O ruído do mercado entra. Sai uma nota curta. Tu decides.',
         'items' => [
@@ -165,17 +165,17 @@ return [
                 'mark' => 'Início',
             ],
             [
-                'title' => '6 meses de experiência',
-                'text' => 'À vontade com a fita. A nota continua a ser uma palavra.',
+                'title' => 'Quando o gráfico já é familiar',
+                'text' => 'À vontade com a fita. A nota continua breve.',
                 'mark' => 'Estável',
             ],
             [
-                'title' => 'Mais de 1 ano a negociar',
+                'title' => 'Quando negocias com mais frequência',
                 'text' => 'Tu escolhes o tamanho. Um lembrete aparece antes de confirmares.',
                 'mark' => 'A tua escolha',
             ],
             [
-                'title' => 'Mais de 2 anos',
+                'title' => 'Quando usas mais pares',
                 'text' => 'Mais pares, a mesma regra. Nada envia uma ordem sem ti.',
                 'mark' => 'Tu decides',
             ],
@@ -187,13 +187,13 @@ return [
         'cap_b2' => 'uma nota curta',
     ],
     'voices' => [
-        'eyebrow' => 'Da mesa',
+        'eyebrow' => 'Da equipa',
         'title' => 'As pessoas gostam de como é claro.',
         'items' => [
             [
                 'name' => 'Marta K.',
                 'place' => 'Kiev',
-                'quote' => 'Claro desde o primeiro ecrã. A nota é uma palavra, e o botão carrego eu.',
+                'quote' => 'Claro desde o primeiro ecrã. A nota é breve, e confirmar carrego eu.',
             ],
             [
                 'name' => 'Daniel R.',
@@ -240,15 +240,15 @@ return [
     'join' => [
         'eyebrow' => 'Começar',
         'title' => 'Cria a tua conta {brand}',
-        'lead' => 'Uma plataforma premium que se mantém simples — orientação com IA desde o primeiro dia.',
-        'form_title' => 'Abre em menos de 2 minutos',
+        'lead' => 'Uma plataforma que se mantém simples — um sinal curto de IA desde o primeiro ecrã.',
+        'form_title' => 'Envia um pedido em menos de 2 minutos',
     ],
     'faq' => [
         'eyebrow' => 'FAQ',
         'title' => 'Respostas rápidas',
         'more' => 'Ler a FAQ completa →',
         'page_title' => 'Respostas antes de aplicares fundos',
-        'page_lead' => 'O início, a nota, o dinheiro e a segurança. Se a tua pergunta não está aqui, escreve para {email}.',
+        'page_lead' => 'O início, a nota, o dinheiro e a segurança — as perguntas frequentes. Se a tua pergunta não está aqui, escreve para {email}.',
         'items' => [
             [
                 'q' => 'Preciso de experiência a negociar?',
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'O que acontece depois de enviar?',
-                        'a' => 'O pedido fica guardado. Vês uma confirmação na página. Não é uma promessa de que a conta já está aberta, e ninguém é enviado para te ligar.',
+                        'a' => 'O pedido fica guardado. Vês uma confirmação na página. Não é uma promessa de que a conta já está aberta, e não ligamos só porque enviaste um formulário.',
                     ],
                 ],
             ],
@@ -300,7 +300,7 @@ return [
                     ],
                     [
                         'q' => 'Que mercados são mostrados?',
-                        'a' => 'Os exemplos são BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD e GBP/USD. O livro de trabalho abre-se numa conta financiada.',
+                        'a' => 'Os exemplos são BTC/USD, ETH/USD, SOL/USD, XRP/USD, EUR/USD e GBP/USD. Os preços em direto e a lista completa de pares abrem-se numa conta financiada.',
                     ],
                 ],
             ],
@@ -318,7 +318,7 @@ return [
                     ],
                     [
                         'q' => 'Que meios de pagamento pode a conta usar?',
-                        'a' => 'Visa, Mastercard, PayPal, Apple Pay, Google Pay e transferência bancária. O formulário de registo não debita um cartão. O meio e qualquer comissão aparecem antes de confirmares um depósito dentro da conta.',
+                        'a' => 'Os meios dependem da região. O gestor pessoal indica os que podes usar e qualquer comissão antes de confirmares um depósito. O formulário de registo não debita um cartão.',
                     ],
                     [
                         'q' => 'Como funcionam os levantamentos?',
@@ -340,7 +340,7 @@ return [
                     ],
                     [
                         'q' => 'A ligação está cifrada?',
-                        'a' => 'O sítio é servido por HTTPS. Mantém as tuas credenciais privadas quando existir uma conta. A {brand} não precisa de permissões extra no teu telemóvel.',
+                        'a' => 'O sítio é servido por HTTPS. Mantém as tuas credenciais privadas quando existir uma conta.',
                     ],
                     [
                         'q' => 'Posso perder dinheiro?',
@@ -353,9 +353,9 @@ return [
     'about' => [
         'eyebrow' => 'Sobre',
         'title' => 'Uma nota curta. Depois decides tu.',
-        'lead' => 'A {brand} mantém o ecrã pequeno de propósito. O mercado é ruidoso. A nota é uma palavra, em linguagem simples, e nunca envia uma ordem sem ti.',
+        'lead' => 'A {brand} mantém o ecrã pequeno de propósito. O mercado é ruidoso. A nota é um sinal curto — comprar, manter ou vigiar — em linguagem simples, e nunca envia uma ordem sem ti.',
         'cta' => 'Abrir conta',
-        'caption' => 'Uma mesa. Um gráfico verde.',
+        'caption' => 'Uma equipa. Um gráfico verde.',
         'facts_title' => 'Quatro coisas a saber primeiro',
         'facts' => [
             [
@@ -376,15 +376,15 @@ return [
             ],
         ],
         'markets_title' => 'Mercados neste ecrã',
-        'markets_lead' => 'Os preços abaixo são exemplos, os mesmos da fita no topo. Não são um feed em direto. O livro de trabalho abre-se numa conta financiada.',
+        'markets_lead' => 'Os preços abaixo são exemplos, os mesmos da fita no topo. Não são um feed em direto. Os preços em direto abrem-se numa conta financiada.',
     ],
     'product' => [
-        'eyebrow' => 'Produto',
+        'eyebrow' => 'Plataforma',
         'title' => 'Gráfico, nota, confirmação.',
-        'lead' => 'A plataforma são três peças num ecrã. A IA escreve a nota. O botão fica contigo.',
+        'lead' => 'A plataforma são três peças num ecrã. A IA escreve a nota. Tu carregas em confirmar.',
         'cta' => 'Abrir conta',
         'chart_cap' => 'Tu confirmas a operação.',
-        'parts_title' => 'O que está no ecrã',
+        'parts_title' => 'Como encaixa',
         'parts' => [
             [
                 'title' => 'O gráfico',
@@ -415,13 +415,13 @@ return [
     'offer' => [
         'eyebrow' => 'Preços',
         'title' => 'Um financiamento à medida da tua região',
-        'lead' => 'O depósito mínimo depende da região em que estás. Um gestor pessoal explica o montante, o meio e a forma como o acesso se desbloqueia depois de enviares o formulário.',
+        'lead' => 'O depósito mínimo depende da região em que estás. Um gestor pessoal explica o montante, o meio e a forma como os gráficos se desbloqueiam depois de a conta estar financiada.',
         'access' => 'Acesso à conta',
         'min_label' => 'Depósito mínimo',
         'min_value' => 'Definido para a tua região',
         'unlock' => 'Gráficos, ferramentas e orientação com IA desbloqueiam-se quando a conta está financiada. O teu gestor confirma primeiro os pormenores.',
         'form_heading' => 'Cria a tua conta',
-        'form_title' => 'Abre em menos de 2 minutos',
+        'form_title' => 'Envia um pedido em menos de 2 minutos',
     ],
     'signup' => [
         'eyebrow' => 'Começar',
@@ -431,14 +431,14 @@ return [
     ],
     'team' => [
         'eyebrow' => 'Equipa',
-        'title' => 'Quem lê a tua carta.',
-        'lead' => 'Sete funções. Uma pergunta vai para a pessoa que tem essa função. Helen Ward dirige a mesa. Ela não coloca a tua ordem.',
+        'title' => 'Quem lê o teu e-mail.',
+        'lead' => 'Sete funções. Uma pergunta vai para a pessoa que tem essa função. Helen Ward dirige a equipa. Ela não coloca a tua ordem.',
         'routes' => [
             'Comissões e depósitos vão para a diretora financeira.',
             'O gráfico e a nota vão para o diretor técnico.',
             'Um pedido novo vai para o diretor comercial e depois para o sócio-gerente.',
             'Como o ecrã funciona vai para a diretora de produto.',
-            'Uma carta sobre um pedido que já enviaste vai para o apoio ao cliente.',
+            'Um e-mail sobre um pedido que já enviaste vai para o apoio ao cliente.',
         ],
         'mail' => 'Escreve para {email} e põe a função na primeira linha. Sem números de cartão. Sem palavras-passe.',
         'ceo' => [
@@ -480,9 +480,9 @@ return [
         ],
     ],
     'support' => [
-        'title' => 'Apoio em criptomoedas',
+        'title' => 'Apoio',
         'service_title' => 'Serviço e apoio',
-        'service' => 'A mesa são sete pessoas. Indica a função na primeira linha e a carta chega lá. Não ligamos porque um formulário foi enviado, e ninguém confirma uma ordem por ti.',
+        'service' => 'A equipa são sete pessoas. Indica a função na primeira linha e o e-mail chega lá. Não ligamos só porque um formulário foi enviado, e ninguém confirma uma ordem por ti.',
         'write' => 'Escreve para {email}.',
         'hours_title' => 'Horário de apoio',
         'hours' => 'O correio é lido de dia e de noite. Uma resposta habitual demora algumas horas. Se não pudermos responder de imediato, responde a pessoa seguinte nessa função.',
@@ -491,7 +491,7 @@ return [
     'contact' => [
         'eyebrow' => 'Contacto',
         'title' => 'Escreve com a pergunta na primeira linha.',
-        'lead' => 'E-mail para {email}. Uma resposta habitual demora algumas horas. A mesa não liga porque um formulário foi enviado.',
+        'lead' => 'E-mail para {email}. Uma resposta habitual demora algumas horas. A equipa não liga só porque um formulário foi enviado.',
         'topics' => [
             [
                 'title' => 'O formulário',
@@ -587,7 +587,7 @@ return [
         'terms' => [
             'title' => 'Termos de utilização',
             'updated' => 'Última atualização: 18 de novembro de 2026',
-            'intro' => 'Ao acederes à {brand}, aceitas estes Termos de utilização. Se não concordares, não utilizes os nossos serviços.',
+            'intro' => 'Ao usares este sítio, aceitas estes Termos de utilização. Se não concordares, não utilizes os nossos serviços.',
             'sections' => [
                 [
                     'h' => 'Elegibilidade',
@@ -618,11 +618,11 @@ return [
         'cookie-policy' => [
             'title' => 'Aviso de cookies',
             'updated' => 'Última atualização: 18 de novembro de 2026',
-            'intro' => 'A {brand} utiliza cookies necessários para o sítio funcionar, recordar uma escolha de idioma e manter honesta uma sessão de registo.',
+            'intro' => 'A {brand} utiliza cookies necessários para o sítio funcionar, recordar uma escolha de idioma e proteger o formulário contra abusos automáticos.',
             'sections' => [
                 [
                     'h' => 'O que guardamos',
-                    'p' => 'Um cookie de idioma, um identificador de clique e um token de formulário de curta duração. Nesta página não usamos pixels de publicidade.',
+                    'p' => 'Um cookie de idioma, um identificador de clique e um token de formulário de curta duração. Neste sítio não usamos pixels de publicidade.',
                 ],
                 [
                     'h' => 'Controlo',
