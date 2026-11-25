@@ -563,6 +563,12 @@ class GoogleSearchConsoleClient
             throw new RuntimeException('Cannot fetch verification file: '.$e->getMessage());
         }
 
+        if ($this->looksLikeCloudflareChallenge($response)) {
+            // IUAM / managed challenge hides the HTML file from Google too.
+            // Ownership falls through to DNS TXT in verifySiteOwnership().
+            return;
+        }
+
         if ($response->status() < 200 || $response->status() >= 400) {
             throw new RuntimeException('Verification file HTTP '.$response->status().' at '.$url);
         }
@@ -624,11 +630,40 @@ class GoogleSearchConsoleClient
     {
         try {
             $response = $this->httpsGetPinned($host, 'https://'.$host.'/', timeout: 10, extraIps: $extraIps);
+            $status = $response->status();
 
-            return $response->status() >= 200 && $response->status() < 400;
+            if ($status >= 200 && $status < 400) {
+                return true;
+            }
+
+            return $this->looksLikeCloudflareChallenge($response);
         } catch (\Throwable) {
             return false;
         }
+    }
+
+    private function looksLikeCloudflareChallenge(Response $response): bool
+    {
+        if (strtolower((string) $response->header('Cf-Mitigated')) === 'challenge') {
+            return true;
+        }
+
+        $status = $response->status();
+        if (in_array($status, [401, 403], true)) {
+            if (trim((string) $response->header('Cf-Ray')) !== '') {
+                return true;
+            }
+            if (str_contains(strtolower((string) $response->header('Server')), 'cloudflare')) {
+                return true;
+            }
+        }
+
+        $body = strtolower((string) $response->body());
+
+        return str_contains($body, 'just a moment...')
+            || str_contains($body, 'checking your browser')
+            || str_contains($body, 'cf-mitigated')
+            || str_contains($body, 'выполнение проверки безопасности');
     }
 
     /**
@@ -757,7 +792,7 @@ class GoogleSearchConsoleClient
         try {
             return $this->verifySiteFile($accessToken, $siteUrl);
         } catch (RuntimeException $e) {
-            if (! self::isMissingVerificationTokenError($e->getMessage())) {
+            if (GoogleOAuthService::isDeadTokenError($e->getMessage())) {
                 throw $e;
             }
         }

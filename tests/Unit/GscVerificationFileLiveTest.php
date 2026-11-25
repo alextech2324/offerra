@@ -86,4 +86,51 @@ class GscVerificationFileLiveTest extends TestCase
 
         $this->assertSame(2, $gets);
     }
+
+    public function test_verification_file_cloudflare_challenge_does_not_block_submit_precheck(): void
+    {
+        Http::fake(function ($request) {
+            $url = $request->url();
+            if (str_contains($url, 'dns-query') || str_contains($url, 'dns.google')) {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => '104.21.50.179']],
+                ]);
+            }
+
+            return Http::response('<html><title>Just a moment...</title></html>', 403, [
+                'Cf-Mitigated' => 'challenge',
+                'Server' => 'cloudflare',
+                'Cf-Ray' => 'abc123-AMS',
+            ]);
+        });
+
+        app(GoogleSearchConsoleClient::class)
+            ->assertVerificationFileLive('lucrianza.live', 'google94a870f17d061816.html');
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'google94a870f17d061816.html'));
+    }
+
+    public function test_https_live_accepts_cloudflare_challenge_as_up(): void
+    {
+        Http::fake(function ($request) {
+            $url = $request->url();
+            if (str_contains($url, 'dns-query') || str_contains($url, 'dns.google')) {
+                return Http::response([
+                    'Status' => 0,
+                    'Answer' => [['data' => '104.21.50.179']],
+                ]);
+            }
+
+            return Http::response('<html><title>Just a moment...</title></html>', 403, [
+                'Cf-Mitigated' => 'challenge',
+                'Server' => 'cloudflare',
+                'Cf-Ray' => 'abc123-AMS',
+            ]);
+        });
+
+        app(GoogleSearchConsoleClient::class)->assertHttpsLive('lucrianza.live');
+
+        Http::assertSent(fn ($request) => $request->url() === 'https://lucrianza.live/');
+    }
 }
