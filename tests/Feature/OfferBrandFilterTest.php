@@ -60,4 +60,44 @@ class OfferBrandFilterTest extends TestCase
             ->assertJsonPath('active', 0)
             ->assertJsonPath('archived', 1);
     }
+
+    public function test_brand_lookup_counts_every_owners_funnel_when_user_cannot_see_all_offers(): void
+    {
+        $owner = User::factory()->create();
+        $viewer = User::factory()->create([
+            'can_see_all_offers' => false,
+            'can_manage_all_offers' => false,
+        ]);
+
+        Offer::query()->create([
+            'user_id' => $owner->id,
+            'folder' => 'spire-live',
+            'brand' => 'Spire Bondtron',
+            'domain' => 'spire-live.com',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'aurel',
+            'status' => 'deployed',
+            'from_search_team' => false,
+        ]);
+        Offer::query()->create([
+            'user_id' => $owner->id,
+            'folder' => 'spire-old',
+            'brand' => 'Spire Bondtron',
+            'domain' => 'spire-old.com',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'solano',
+            'status' => 'archived',
+            'archived_at' => now(),
+            'from_search_team' => false,
+        ]);
+
+        $this->actingAs($viewer)
+            ->getJson(route('offers.brand-lookup', ['brand' => 'spire bondtron']))
+            ->assertOk()
+            ->assertJsonPath('active', 1)
+            ->assertJsonPath('archived', 1)
+            ->assertJsonPath('templates.aurel', 1);
+    }
 }

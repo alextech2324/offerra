@@ -317,6 +317,7 @@ export default function OffersCreate({
     currencies = [],
     templates,
     brandTemplateUsage = {},
+    canSeeAllOffers = false,
     fresh = false,
     initialTemplate = null,
     initialBrand = null,
@@ -1616,15 +1617,15 @@ export default function OffersCreate({
                             {!brandLookupLoading && brandLookup && (
                                 <div className="field-hint" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
                                     {brandLookup.active === 0 && brandLookup.archived === 0 ? (
-                                        <span>Збігів за брендом «{brandLookup.brand}» немає.</span>
+                                        <span>У системі ще немає воронки «{brandLookup.brand}».</span>
                                     ) : (
                                         <>
                                             <span>
-                                                Уже є: <strong>{brandLookup.active}</strong> активні
+                                                У системі вже є: <strong>{brandLookup.active}</strong> активні
                                                 {' · '}
                                                 <strong>{brandLookup.archived}</strong> в архіві
                                             </span>
-                                            {brandLookup.active > 0 && (
+                                            {canSeeAllOffers && brandLookup.active > 0 && (
                                                 <a
                                                     className="btn btn-ghost btn-sm"
                                                     href={route('offers.index', { brand: brandLookup.brand })}
@@ -1634,7 +1635,7 @@ export default function OffersCreate({
                                                     Активні
                                                 </a>
                                             )}
-                                            {brandLookup.archived > 0 && (
+                                            {canSeeAllOffers && brandLookup.archived > 0 && (
                                                 <a
                                                     className="btn btn-ghost btn-sm"
                                                     href={route('offers.archive.index', { brand: brandLookup.brand })}

@@ -399,6 +399,7 @@ class OfferController extends Controller
             'currencies' => config('offerra.currencies'),
             'templates' => $catalog->forWizard(),
             'brandTemplateUsage' => $this->brandTemplateUsage(auth()->user()),
+            'canSeeAllOffers' => auth()->user()->canSeeAllOffers(),
             'fresh' => request()->boolean('fresh'),
             'initialTemplate' => request()->string('template')->toString() ?: null,
             'initialBrand' => request()->string('brand')->toString() ?: null,
@@ -424,18 +425,17 @@ class OfferController extends Controller
             ]);
         }
 
-        $user = $request->user();
         $needle = mb_strtolower($brand);
 
-        $activeQuery = Offer::query()
-            ->whereNotIn('status', ['archived', 'teardown_failed']);
-        $this->applyOfferVisibility($activeQuery, $user);
-
-        $activeRows = $activeQuery
+        // Always the whole panel: users without «усі оффери» still need to
+        // see that this brand/template already exists on someone else's funnel.
+        $activeRows = Offer::query()
+            ->whereNotIn('status', ['archived', 'teardown_failed'])
             ->whereRaw('LOWER(TRIM(brand)) = ?', [$needle])
             ->get(['template']);
 
-        $archived = $this->offerScopeQuery($user, archived: true)
+        $archived = Offer::query()
+            ->whereIn('status', ['archived', 'teardown_failed'])
             ->whereRaw('LOWER(TRIM(brand)) = ?', [$needle])
             ->count();
 
