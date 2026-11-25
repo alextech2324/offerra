@@ -73,6 +73,9 @@ class OfferController extends Controller
             ],
             'createdCounts' => $this->createdCounts($baseQuery, $today),
             'downCount' => $this->downOffersQuery($user)->count(),
+            'deployedCount' => $user->isAdmin()
+                ? Offer::query()->where('status', 'deployed')->count()
+                : 0,
             'perPageOptions' => self::PER_PAGE_OPTIONS,
             'canDeploy' => $deployReady,
             'hasCloudflarePrimary' => (bool) $settings?->hasCloudflareSlot('primary'),
@@ -948,9 +951,30 @@ class OfferController extends Controller
         return redirect()->back();
     }
 
-    public function scanAvailability(): RedirectResponse
+    public function scanAvailability(Request $request): RedirectResponse
     {
         $user = auth()->user();
+
+        if ($request->boolean('all')) {
+            if (! $user->isAdmin()) {
+                abort(403);
+            }
+
+            $count = Offer::query()->where('status', 'deployed')->count();
+
+            if ($count === 0) {
+                return redirect()
+                    ->back()
+                    ->with('warning', 'Немає задеплоєних оферів для перевірки.');
+            }
+
+            ScanDownOffersJob::dispatch(null, null, true);
+
+            return redirect()
+                ->back()
+                ->with('success', "Перевірка всіх {$count} оферів у черзі. Кружечки оновляться самі.");
+        }
+
         $count = $this->downOffersQuery($user)->count();
 
         if ($count === 0) {

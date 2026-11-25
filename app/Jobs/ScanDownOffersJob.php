@@ -10,7 +10,8 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Manual mass HTTPS recheck: all current red dots, or a selected id list.
+ * Manual mass HTTPS recheck: all current red dots, a selected id list,
+ * or (admin) every deployed offer regardless of the current dot.
  */
 class ScanDownOffersJob implements ShouldBeUnique, ShouldQueue
 {
@@ -28,6 +29,7 @@ class ScanDownOffersJob implements ShouldBeUnique, ShouldQueue
     public function __construct(
         public ?int $userId = null,
         public ?array $offerIds = null,
+        public bool $allDeployed = false,
     ) {
         $this->onQueue('gsc');
         if ($this->offerIds !== null) {
@@ -43,7 +45,9 @@ class ScanDownOffersJob implements ShouldBeUnique, ShouldQueue
             return 'scan-availability:ids:'.md5(implode(',', $this->offerIds));
         }
 
-        return 'scan-availability:down:'.($this->userId ?? 'all');
+        $scope = $this->allDeployed ? 'all' : 'down';
+
+        return 'scan-availability:'.$scope.':'.($this->userId ?? 'all');
     }
 
     public function handle(OfferAvailabilityProbe $probe): void
@@ -58,7 +62,9 @@ class ScanDownOffersJob implements ShouldBeUnique, ShouldQueue
             }
             $query->whereIn('id', $this->offerIds);
         } else {
-            $query->where('availability_status', 'down');
+            if (! $this->allDeployed) {
+                $query->where('availability_status', 'down');
+            }
             if ($this->userId !== null) {
                 $query->where('user_id', $this->userId);
             }
@@ -77,6 +83,7 @@ class ScanDownOffersJob implements ShouldBeUnique, ShouldQueue
         Log::info('Mass availability scan finished', [
             'user_id' => $this->userId,
             'ids' => $this->offerIds !== null ? count($this->offerIds) : null,
+            'all_deployed' => $this->allDeployed,
             ...$totals,
         ]);
     }

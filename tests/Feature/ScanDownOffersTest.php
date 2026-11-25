@@ -120,17 +120,94 @@ class ScanDownOffersTest extends TestCase
         $this->assertSame('down', $foreign->fresh()->availability_status);
     }
 
+    public function test_admin_queues_scan_of_every_deployed_offer(): void
+    {
+        Queue::fake();
+
+        $owner = User::factory()->create();
+        $admin = User::factory()->admin()->create();
+        $this->makeOffer($owner, 'green-all.live', 'ok');
+        $this->makeOffer($owner, 'red-all.live', 'down');
+
+        $this->actingAs($admin)
+            ->from(route('offers.index'))
+            ->post(route('offers.scan-availability'), ['all' => 1])
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        Queue::assertPushed(
+            ScanDownOffersJob::class,
+            fn (ScanDownOffersJob $job) => $job->userId === null
+                && $job->offerIds === null
+                && $job->allDeployed === true,
+        );
+    }
+
+    public function test_regular_user_cannot_queue_all_deployed_scan(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $this->makeOffer($user, 'mine-green.live', 'ok');
+
+        $this->actingAs($user)
+            ->from(route('offers.index'))
+            ->post(route('offers.scan-availability'), ['all' => 1])
+            ->assertForbidden();
+
+        Queue::assertNothingPushed();
+    }
+
+    public function test_job_probes_every_deployed_offer_when_all_flag_set(): void
+    {
+        $user = User::factory()->create();
+        $down = $this->makeOffer($user, 'all-red.live', 'down');
+        $ok = $this->makeOffer($user, 'all-green.live', 'ok');
+        $other = User::factory()->create();
+        $foreign = $this->makeOffer($other, 'all-foreign.live', 'ok');
+        $draft = Offer::query()->create([
+            'user_id' => $user->id,
+            'folder' => 'all-draft.live',
+            'brand' => 'ScanBrand',
+            'domain' => 'all-draft.live',
+            'geo' => 'IT',
+            'lang' => 'it',
+            'template' => 'vespera',
+            'status' => 'draft',
+            'from_search_team' => false,
+            'availability_status' => 'ok',
+        ]);
+
+        $probe = $this->mock(OfferAvailabilityProbe::class);
+        $probe->shouldReceive('checkAndUpdateMany')
+            ->once()
+            ->andReturnUsing(function (array $offers) use ($down, $ok, $foreign, $draft) {
+                $ids = collect($offers)->pluck('id')->sort()->values()->all();
+                $this->assertSame(
+                    collect([$down->id, $ok->id, $foreign->id])->sort()->values()->all(),
+                    $ids,
+                );
+                $this->assertNotContains($draft->id, $ids);
+
+                return ['ok' => 2, 'down' => 1, 'soft_fail' => 0];
+            });
+
+        (new ScanDownOffersJob(null, null, true))->handle($probe);
+    }
+
     public function test_job_sits_on_gsc_queue_and_is_unique_per_scope(): void
     {
         $all = new ScanDownOffersJob(null);
         $mine = new ScanDownOffersJob(7);
         $ids = new ScanDownOffersJob(null, [9, 3, 3, 1]);
+        $allDeployed = new ScanDownOffersJob(null, null, true);
 
         $this->assertSame('gsc', $all->queue);
         $this->assertSame('scan-availability:down:all', $all->uniqueId());
         $this->assertSame('scan-availability:down:7', $mine->uniqueId());
         $this->assertSame([1, 3, 9], $ids->offerIds);
         $this->assertSame('scan-availability:ids:'.md5('1,3,9'), $ids->uniqueId());
+        $this->assertSame('scan-availability:all:all', $allDeployed->uniqueId());
     }
 
     private function makeOffer(User $user, string $domain, string $availability): Offer

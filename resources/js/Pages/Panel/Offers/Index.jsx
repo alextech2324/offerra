@@ -612,9 +612,11 @@ export default function OffersIndex({
     spareCloudflareAccounts = [],
     originServers = [],
     downCount = 0,
+    deployedCount = 0,
 }) {
     const { flash, errors, auth } = usePage().props;
     const canDownloadOfferZip = Boolean(auth?.user?.can_download_offer_zip);
+    const isAdmin = auth?.user?.role === 'admin';
     const [deployingId, setDeployingId] = useState(null);
     const [zippingId, setZippingId] = useState(null);
     const [provisioningId, setProvisioningId] = useState(null);
@@ -633,6 +635,7 @@ export default function OffersIndex({
     const [cfSwitchOpen, setCfSwitchOpen] = useState(false);
     const [serverSwitchOpen, setServerSwitchOpen] = useState(false);
     const [scanningDown, setScanningDown] = useState(false);
+    const [scanningAll, setScanningAll] = useState(false);
     const selectAllRef = useRef(null);
     const [brandQuery, setBrandQuery] = useState(filters.brand ?? '');
     const [domainQuery, setDomainQuery] = useState(filters.domain ?? '');
@@ -1179,6 +1182,27 @@ export default function OffersIndex({
         });
     };
 
+    const scanAllDeployed = () => {
+        if (!isAdmin || scanningAll) {
+            return;
+        }
+        const n = Number(deployedCount) || 0;
+        if (n < 1) {
+            window.alert('Немає задеплоєних оферів для перевірки.');
+            return;
+        }
+        if (!window.confirm(
+            `Перевірити всі ${n} задеплоєні офери зараз?\nСкан іде в черзі, кружечки оновляться самі.`,
+        )) {
+            return;
+        }
+        setScanningAll(true);
+        router.post(route('offers.scan-availability'), { all: 1 }, {
+            preserveScroll: true,
+            onFinish: () => setScanningAll(false),
+        });
+    };
+
     const checkAvailability = (offer) => {
         if (checkingAvailabilityId) {
             return;
@@ -1411,12 +1435,25 @@ export default function OffersIndex({
                     <h2>Оффери</h2>
                     <p>Каталог згенерованих лендів — деплой на сервер</p>
                 </div>
-                <Link
-                    href={route('offers.create')}
-                    className="btn btn-primary offers-page-header__create"
-                >
-                    + Новий оффер
-                </Link>
+                <div className="offers-page-header__actions">
+                    {isAdmin && (
+                        <button
+                            type="button"
+                            className="btn btn-ghost btn-sm offers-page-header__scan-all"
+                            disabled={scanningAll || deployedCount < 1}
+                            title="Перевірити HTTPS усіх задеплоєних оферів"
+                            onClick={scanAllDeployed}
+                        >
+                            {scanningAll ? 'Запуск…' : 'Перевірити всі'}
+                        </button>
+                    )}
+                    <Link
+                        href={route('offers.create')}
+                        className="btn btn-primary offers-page-header__create"
+                    >
+                        + Новий оффер
+                    </Link>
+                </div>
             </header>
 
             {flash?.error && (
