@@ -61,7 +61,8 @@ window.APP_LANG = {
 <script src="<?= asset('static/js/jquery-3.5.1.min.dc5e7f18c8.js') ?>" defer></script>
 <script src="<?= asset('static/js/wf-runtime.js') ?>" defer></script>
 <script src="<?= asset('static/js/script.js') ?>"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.3/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.3/build/js/utils.js"></script>
 <script src="<?= asset_version('integration/validation.js') ?>"></script>
 <script>
 document.addEventListener('click', function (e) {

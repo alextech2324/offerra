@@ -264,12 +264,27 @@ form.js-lead-form button.submit {
     overflow: visible;
 }
 
-.register-form .iti .iti__country-container {
+.register-form .iti .iti__country-container,
+.register-form .iti .iti__flag-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 3;
     padding-left: 8px;
 }
 
-.register-form .iti--separate-dial-code .iti__selected-country {
+.register-form .iti--separate-dial-code .iti__selected-country,
+.register-form .iti--separate-dial-code .iti__selected-flag {
+    height: 100%;
+    padding: 0 8px 0 12px;
+    display: flex;
+    align-items: center;
     border-radius: 999px 0 0 999px;
+}
+
+.register-form .iti--separate-dial-code input[type="tel"] {
+    padding-left: var(--apx-iti-pad, 96px) !important;
 }
 
 .register-form .iti__selected-dial-code {

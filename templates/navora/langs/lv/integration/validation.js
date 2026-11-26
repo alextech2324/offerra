@@ -222,30 +222,46 @@ function setupFormValidation(form) {
   const singleCountry = onlyCountries.length === 1;
 
   const iti = window.intlTelInput(phone, {
-    utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js',
-    // The build bundled with audax knows showSelectedDialCode, not the older
-    // separateDialCode. It prints the +44 and moves the flag to the left edge;
-    // without it the country sits on the right with no dial code at all.
+    utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.3/build/js/utils.js',
+    // v18 uses separateDialCode (flag + dial on the left). v19+ renamed it
+    // to showSelectedDialCode — pass both so either build keeps the mask.
+    separateDialCode: true,
     showSelectedDialCode: true,
+    nationalMode: true,
+    formatOnDisplay: true,
+    autoPlaceholder: 'aggressive',
     initialCountry: singleCountry ? onlyCountries[0] : phoneCountry,
     onlyCountries: onlyCountries.length ? onlyCountries : undefined,
-    allowDropdown: !singleCountry,
-    autoPlaceholder: 'aggressive',
+    // Gold sample keeps the flag + dial + chevron even when GEO is a single country.
+    allowDropdown: true,
+    useFullscreenPopup: false,
   });
 
-  if (singleCountry) {
+  const syncItiPadding = () => {
     const wrap = phone.closest('.iti');
-    wrap?.classList.add('iti--single-country');
-    wrap?.querySelector('.iti__selected-country')?.setAttribute('aria-disabled', 'true');
-    wrap?.querySelector('.iti__selected-country')?.addEventListener(
-      'mousedown',
-      (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      },
-      true,
+    if (!wrap) return;
+    const cc = wrap.querySelector(
+      '.iti__country-container, .iti__flag-container, .iti__selected-flag',
     );
-  } else {
+    let pad = 80;
+    if (cc) {
+      const w = cc.getBoundingClientRect().width;
+      if (w > 8) pad = w + 12;
+    }
+    pad = Math.ceil(pad);
+    wrap.style.setProperty('--apx-iti-pad', `${pad}px`);
+    phone.style.paddingLeft = `${pad}px`;
+    const placeholder = phone.getAttribute('placeholder') || '';
+    const digits = placeholder.replace(/\D/g, '').length;
+    if (digits >= 6 && digits <= 15) {
+      phone.setAttribute('maxlength', String(digits));
+    }
+  };
+  syncItiPadding();
+  setTimeout(syncItiPadding, 0);
+  setTimeout(syncItiPadding, 120);
+
+  if (!singleCountry) {
     resolveVisitorPhoneCountry(form, onlyCountries).then((code) => {
       if (code && code !== phoneCountry) {
         iti.setCountry(code);
@@ -254,7 +270,10 @@ function setupFormValidation(form) {
     });
   }
 
-  phone.addEventListener('countrychange', () => syncPhoneCountryHidden(form, iti));
+  phone.addEventListener('countrychange', () => {
+    syncPhoneCountryHidden(form, iti);
+    syncItiPadding();
+  });
 
   phone.addEventListener('input', () => {
     clearFieldError(phone);

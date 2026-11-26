@@ -77,6 +77,13 @@ class NavoraTemplateTest extends TestCase
         $this->assertIsString($head);
         $this->assertStringNotContainsString('w-mod-js', $head);
         $this->assertStringContainsString('[data-w-id]{opacity:1!important', $head);
+        $this->assertStringContainsString('css2.css', $head);
+        $this->assertStringContainsString('inner-pages.css', $head);
+
+        $validation = file_get_contents(base_path('templates/navora/integration/validation.js'));
+        $this->assertIsString($validation);
+        $this->assertStringContainsString('separateDialCode: true', $validation);
+        $this->assertStringContainsString('allowDropdown: true', $validation);
     }
 
     public function test_navora_form_posts_to_send_php(): void

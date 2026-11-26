@@ -306,6 +306,15 @@ const rows = [
     ka: 'კავშირის შეცდომა. შეამოწმეთ ინტერნეტი და სცადეთ ხელახლა.', lv: 'Savienojuma kļūda. Pārbaudiet internetu un mēģiniet vēlreiz.', lt: 'Ryšio klaida. Patikrinkite internetą ir bandykite dar kartą.', ms: 'Ralat sambungan. Semak internet dan cuba lagi.',
     id: 'Kesalahan koneksi. Periksa internet dan coba lagi.', ja: '接続エラーです。インターネットを確認して再試行してください。',
   }],
+  ['Aguarde a chamada do gestor.', {
+    en: 'Please wait for the manager’s call.', it: 'Attendi la chiamata del manager.', es: 'Espere la llamada del gestor.', de: 'Bitte warten Sie auf den Anruf des Managers.',
+    fr: 'Attendez l’appel du gestionnaire.', pl: 'Poczekaj na telefon od menedżera.', nl: 'Wacht op de bel van de manager.', tr: 'Yöneticinin aramasını bekleyin.',
+    ro: 'Așteptați apelul managerului.', cs: 'Počkejte na hovor manažera.', sk: 'Počkajte na hovor manažéra.', hu: 'Várja a menedzser hívását.',
+    da: 'Vent på managerens opkald.', sv: 'Vänta på chefens samtal.', no: 'Vent på samtalen fra manageren.', fi: 'Odota esimiehen puhelua.',
+    el: 'Περιμένετε την κλήση του διαχειριστή.', hr: 'Pričekajte poziv menadžera.', sr: 'Sačekajte poziv menadžera.', sl: 'Počakajte na klic upravitelja.',
+    ka: 'დაელოდეთ მენეჯერის ზარს.', lv: 'Gaidiet menedžera zvanu.', lt: 'Palaukite vadybininko skambučio.', ms: 'Tunggu panggilan pengurus.',
+    id: 'Tunggu panggilan manajer.', ja: '担当者からの電話をお待ちください。',
+  }],
   ['Nome', {
     en: 'First name', it: 'Nome', es: 'Nombre', de: 'Vorname',
     fr: 'Prénom', pl: 'Imię', nl: 'Voornaam', tr: 'Ad',

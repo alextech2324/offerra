@@ -151,6 +151,18 @@ body{scroll-behavior:smooth;}
   }
 }
 
+body {
+  color: var(--text-color--text-primary, #fff);
+  font-family: Manrope, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.heading-style-h1 {
+  font-size: clamp(2rem, 8vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-color--text-primary, #fff);
+}
+
 /* Feature rows: copied 1:1 from pnaf-plataforma.site inline CSS */
 .layout1_component.main-flex {
     display: flex !important;

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-$subpage_heading = 'Aviso de privacidade';
+$subpage_heading = 'Política de privacidade';
 $page_canonical = page_url('privacy.php');
 $active_page = 'privacy';
 $page_description = 'Como a '.SITE_NAME.' trata dados pessoais.';

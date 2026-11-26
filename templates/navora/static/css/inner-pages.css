@@ -1,0 +1,177 @@
+/**
+ * Inner pages (about / faq / product / offer / contact / legal / register)
+ * — match home dark theme, readable prose, FAQ accordion polish.
+ */
+.section_content {
+  position: relative;
+  min-height: 60vh;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(109, 40, 217, 0.22), transparent 42%),
+    radial-gradient(circle at 88% 78%, rgba(0, 200, 255, 0.12), transparent 40%),
+    var(--background-color--background-primary, #090909);
+  color: var(--text-color--text-primary, #fff);
+}
+
+.page-wrapper > .navbar_component.w-nav {
+  background: #fff;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.page-wrapper > .navbar_component .navbar_link.w-nav-link {
+  color: #222 !important;
+}
+
+.page-wrapper > .navbar_component .navbar_link.w-nav-link:hover {
+  color: #6d28d9 !important;
+}
+
+.page-wrapper > .navbar_component .menu-icon1_line-top,
+.page-wrapper > .navbar_component .menu-icon1_line-middle,
+.page-wrapper > .navbar_component .menu-icon1_line-middle-inner,
+.page-wrapper > .navbar_component .menu-icon1_line-bottom {
+  background-color: #111827;
+}
+
+.section_content .container-large {
+  max-width: 920px;
+}
+
+.section_content .heading-style-h1,
+.section_content .heading-style-h2 {
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.section_content .heading-style-h3,
+.section_content .heading-style-h4 {
+  color: #f3f4f6;
+}
+
+.section_content .text-size-large {
+  color: #d1d5db;
+  line-height: 1.65;
+}
+
+.section_content .text-size-medium,
+.section_content .about-text p,
+.section_content .legal-content p,
+.section_content li {
+  color: #c8cdd6;
+  line-height: 1.75;
+}
+
+.section_content .legal-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section_content .legal-content h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+}
+
+.section_content .legal-content ul {
+  margin: 0.75rem 0 0.75rem 1.25rem;
+  padding: 0;
+}
+
+.section_content .legal-content li {
+  margin: 0.4rem 0;
+}
+
+.section_content a.button.w-button,
+.section_content .button.w-button {
+  display: inline-block;
+  background-color: #6d28d9 !important;
+  color: #fff !important;
+  border: 1px solid #6d28d9;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.section_content a.button.w-button:hover,
+.section_content .button.w-button:hover {
+  background-color: #7c3aed !important;
+  box-shadow: 0 8px 28px rgba(109, 40, 217, 0.35);
+}
+
+.section_content .faq_list {
+  margin-top: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.5rem 1.25rem 1rem;
+  overflow: hidden;
+}
+
+.section_content .faq_accordion {
+  width: 100%;
+}
+
+.section_content .faq_question {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 1rem;
+  padding: 1.15rem 0;
+}
+
+.section_content .faq_accordion:first-child .faq_question {
+  border-top: none;
+}
+
+.section_content .faq_question h3 {
+  color: #fff;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.section_content .faq_answer p {
+  color: #c8cdd6;
+  margin: 0 0 0.75rem;
+  line-height: 1.7;
+}
+
+.section_content .faq1_icon-wrapper .icon-1x1-medium {
+  width: 20px;
+  height: 20px;
+  opacity: 0.75;
+  filter: invert(1);
+  transition: transform 0.25s ease;
+}
+
+.section_content .faq_accordion.active .faq1_icon-wrapper .icon-1x1-medium {
+  transform: rotate(180deg);
+}
+
+.section_content .inner-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.section_content .inner-contact-grid ul {
+  margin: 0.75rem 0 0.75rem 1.15rem;
+  padding: 0;
+}
+
+.section_content .inner-panel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  .section_content .inner-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section_content .heading-style-h1 {
+    font-size: clamp(1.75rem, 8vw, 2.4rem);
+  }
+}

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-$subpage_heading = 'Informacja o prywatności';
+$subpage_heading = 'Privacy policy';
 $page_canonical = page_url('privacy.php');
 $active_page = 'privacy';
 $page_description = 'How '.SITE_NAME.' handles personal data.';
