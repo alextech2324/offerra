@@ -32,6 +32,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('offers:recheck-infra-dns')->everyMinute()->withoutOverlapping(10);
         $schedule->command('origin:sync-servers')->hourly()->withoutOverlapping(10);
         $schedule->command('origin:check-health')->everyFiveMinutes()->withoutOverlapping(5);
+        // Dead origin: wait 10 min, then 3 SSH confirms 1 min apart, then evacuate.
+        $schedule->command('origin:auto-evacuate')->everyMinute()->withoutOverlapping(5);
         $schedule->command('origin:billing-remind')->hourly()->withoutOverlapping(5);
         $schedule->command('backup:check')->hourly()->withoutOverlapping(5);
         // Self-heal any lander that lost required template functions (returns HTTP 500)

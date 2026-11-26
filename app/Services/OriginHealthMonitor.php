@@ -156,6 +156,20 @@ class OriginHealthMonitor
             )
             : null;
 
+        $autoEvac = $status === 'down'
+            ? [
+                'auto_evac_confirm_fails' => (int) ($previous['auto_evac_confirm_fails'] ?? 0),
+                'auto_evac_last_confirm_at' => $previous['auto_evac_last_confirm_at'] ?? null,
+                'auto_evac_at' => $previous['auto_evac_at'] ?? null,
+                'auto_evac_error' => $previous['auto_evac_error'] ?? null,
+            ]
+            : [
+                'auto_evac_confirm_fails' => 0,
+                'auto_evac_last_confirm_at' => null,
+                'auto_evac_at' => null,
+                'auto_evac_error' => null,
+            ];
+
         return [
             'status' => $status,
             'checked_at' => $now->toIso8601String(),
@@ -167,6 +181,7 @@ class OriginHealthMonitor
             'metrics' => $this->panelMetrics($result),
             'last_alert_at' => $previous['last_alert_at'] ?? null,
             'last_alert_kind' => $previous['last_alert_kind'] ?? null,
+            ...$autoEvac,
             '_alert_kind' => $alertKind,
         ];
     }
@@ -376,6 +391,7 @@ class OriginHealthMonitor
                 ...$identity,
                 $detail !== '' ? $detail : 'SSH/HTTP не відповідає',
                 "Оферів на цьому хості: {$offers}",
+                $offers > 0 ? 'Якщо SSH не оживе за 10 хв — автоматична евакуація.' : null,
                 '→ Перевірте сервер у розділі Origin-сервери.',
             ])),
             'degraded' => implode("\n", array_filter([
@@ -398,6 +414,14 @@ class OriginHealthMonitor
     /**
      * Hoster / purchase / paid-until so a down alert is identifiable without opening the panel.
      *
+     * @return list<string>
+     */
+    public function formatServerIdentity(OriginServer $server): array
+    {
+        return $this->serverIdentityLines($server);
+    }
+
+    /**
      * @return list<string>
      */
     private function serverIdentityLines(OriginServer $server): array
