@@ -1,0 +1,39 @@
+{
+  "name": "PNAF Plataforma",
+  "short_name": "PNAF",
+  "description": "Plataforma portuguesa para acompanhar ações e criptomoedas com apoio de IA.",
+  "lang": "pt-PT",
+  "start_url": "https://pnaf-plataforma.site/",
+  "scope": "https://pnaf-plataforma.site/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "icons": [
+    {
+      "src": "images/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "images/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "images/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

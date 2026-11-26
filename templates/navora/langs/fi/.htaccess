@@ -1,0 +1,11 @@
+RewriteEngine On
+
+RewriteRule ^robots\.txt$ robots.php [L]
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+<IfModule mod_headers.c>
+  SetEnvIf Request_URI "/integration/(validation\.js|default-integration\.css|visitor-geo\.php|form-token\.php)(\?.*)?$" integration_asset=1
+  Header set Cache-Control "no-cache, no-store, must-revalidate" env=integration_asset
+  Header set Pragma "no-cache" env=integration_asset
+  Header set Expires "0" env=integration_asset
+</IfModule>

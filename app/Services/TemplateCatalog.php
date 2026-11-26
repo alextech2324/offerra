@@ -181,6 +181,7 @@ class TemplateCatalog
     {
         return match ($templateId) {
             'default-pro' => 'Default Pro',
+            'navora' => 'Navora',
             default => $templateId,
         };
     }

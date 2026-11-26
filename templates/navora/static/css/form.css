@@ -1,0 +1,452 @@
+/* Honeypot — hidden from users, visible to naive bots */
+.apx-hp-wrap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lead-form-wrap {
+    --lead-accent: #2563eb;
+    --lead-bg: #ffffff;
+    --lead-text: #0f172a;
+    --lead-muted: #94a3b8;
+    --lead-border: #e2e8f0;
+    --lead-radius: 12px;
+    --lead-max: 460px;
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--lead-max);
+    margin: 0 auto;
+    padding: 5px 24px 20px 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.lead-form-wrap * {
+    box-sizing: border-box;
+}
+
+.lead-form-wrap .js-lead-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+.lead-form-wrap .lead-form-row {
+    display: flex;
+    gap: 12px;
+}
+
+.lead-form-wrap .lead-form-row>* {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.lead-form-wrap input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 16px;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.2;
+    color: var(--lead-text);
+    background: var(--lead-bg);
+    border: 1px solid var(--lead-border);
+    border-radius: var(--lead-radius);
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.lead-form-wrap input::placeholder {
+    color: var(--lead-muted);
+    opacity: 1;
+}
+
+.lead-form-wrap input:focus {
+    border-color: var(--lead-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lead-accent) 18%, transparent);
+}
+
+.lead-form-wrap .iti,
+form.js-lead-form .iti,
+.register-form .iti {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0;
+    clear: both;
+    overflow: visible;
+}
+
+.lead-form-wrap .lead-form-field--phone,
+form.js-lead-form .lead-form-field--phone,
+.register-form .form-group.reg-phone {
+    display: block;
+    width: 100%;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.lead-form-wrap .iti input[type="tel"],
+form.js-lead-form .iti input[type="tel"],
+.register-form .iti input[type="tel"] {
+    width: 100% !important;
+    min-height: 52px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 16px;
+    /* padding-left: ITI (separateDialCode) */
+}
+
+.lead-form-wrap button.submit,
+form.js-lead-form button.submit {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.lead-form-wrap button.submit {
+    width: 100%;
+    height: 54px;
+    margin: 0 0 0;
+    padding: 0 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--lead-accent);
+    border: none;
+    border-radius: var(--lead-radius);
+    cursor: pointer;
+    transition: filter .15s ease, opacity .15s ease;
+}
+
+.lead-form-wrap button.submit:hover {
+    filter: brightness(1.08);
+}
+
+.lead-form-wrap button.submit:disabled {
+    opacity: .6;
+    cursor: default;
+}
+
+@media (max-width: 480px) {
+    .lead-form-wrap {
+        padding: 20px 16px;
+    }
+
+    .lead-form-wrap .lead-form-row {
+        flex-direction: column;
+    }
+}
+
+/* ravalizio.it — тема форми під лендінг */
+.leadform .submit {
+    background: #2563eb !important;
+    color: #fff !important;
+    border-radius: 8px;
+}
+
+/* offer theme — zollabevtex.com glass registration form */
+.register-form.leadform {
+    --zbt-accent: #00188f;
+    --zbt-focus: #039e36;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 20px;
+    border-radius: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hero has mob + pc copies; must beat .register-form.leadform { display:flex } */
+.register-form.leadform.mob-form {
+    display: none;
+}
+@media (max-width: 1368px) {
+    .register-form.leadform.mob-form {
+        display: flex;
+    }
+    .register-form.leadform.form-pc {
+        display: none;
+    }
+}
+
+.register-form .block-center__wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.register-form .form-group {
+    margin-bottom: 14px;
+}
+
+.register-form .form-group.reg-phone {
+    margin-bottom: 20px;
+}
+
+.register-form .form-group label {
+    display: block;
+    margin: 0 0 8px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.register-form input[type="text"],
+.register-form input[type="email"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 52px;
+    padding: 14px 18px !important;
+    margin: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 999px !important;
+    font-size: 16px;
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.register-form .iti input[type="tel"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 52px;
+    padding-block: 14px !important;
+    padding-inline-end: 18px !important;
+    margin: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 999px !important;
+    font-size: 16px;
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.register-form input::placeholder {
+    color: #6b7280;
+    opacity: 1;
+}
+
+.register-form input:focus,
+.register-form .iti input:focus {
+    border-color: var(--zbt-focus) !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(3, 158, 54, 0.2);
+}
+
+.register-form .iti {
+    width: 100%;
+    display: block;
+    margin: 0;
+    overflow: visible;
+}
+
+.register-form .iti .iti__country-container {
+    padding-left: 8px;
+}
+
+.register-form .iti--separate-dial-code .iti__selected-country {
+    border-radius: 999px 0 0 999px;
+}
+
+.register-form .iti__selected-dial-code {
+    color: #000 !important;
+}
+
+.register-form .btn_send,
+.register-form .regFormButton.submit {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding: 15px 20px;
+    border: none !important;
+    border-radius: 8px !important;
+    background: var(--zbt-accent) !important;
+    color: #fff !important;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.25s ease, filter 0.25s ease;
+}
+
+.register-form .btn_send:hover,
+.register-form .regFormButton.submit:hover {
+    background: #0028c4 !important;
+    filter: brightness(1.05);
+}
+
+.register-form .btn-holder {
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    clear: both;
+}
+
+.register-form .error-msg.hide {
+    display: none;
+}
+
+@media (max-width: 479px) {
+    .register-form.leadform {
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+/* portionier-moye.org — thème formulaire FR (Webflow) */
+.leadform.form-reg.rf-form {
+    --pm-accent: #6D28D9;
+    --pm-focus: #039e36;
+    width: 500px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) 100%);
+}
+
+.leadform.form-reg.rf-form input[type="text"],
+.leadform.form-reg.rf-form input[type="email"] {
+    width: 100% !important;
+    padding: 25px !important;
+    margin-bottom: 15px;
+    border: 1px solid #000 !important;
+    border-radius: 15px !important;
+    font-size: 16px;
+    color: #000 !important;
+    background: #fff !important;
+    transition: border-color 0.3s ease;
+}
+
+.leadform.form-reg.rf-form .input-holder.reg-phone {
+    display: block;
+    width: 100%;
+    overflow: visible;
+    margin-bottom: 15px;
+}
+
+.leadform.form-reg.rf-form input:focus,
+.leadform.form-reg.rf-form .iti input:focus {
+    border-color: var(--pm-focus) !important;
+    outline: none;
+    box-shadow: none;
+}
+
+.leadform.form-reg.rf-form .btn_send,
+.leadform.form-reg.rf-form button.submit {
+    background-color: var(--pm-accent) !important;
+    border: none !important;
+    padding: 15px !important;
+    color: #fff !important;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px !important;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.leadform.form-reg.rf-form .btn_send:hover,
+.leadform.form-reg.rf-form button.submit:hover {
+    background-color: #8B5CF6 !important;
+}
+
+.leadform.form-reg.rf-form .iti {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    margin-bottom: 0;
+    overflow: visible;
+}
+
+.leadform.form-reg.rf-form .iti__country-container,
+.leadform.form-reg.rf-form .iti__flag-container {
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 3;
+}
+
+.leadform.form-reg.rf-form .iti--separate-dial-code .iti__selected-country,
+.leadform.form-reg.rf-form .iti--separate-dial-code .iti__selected-flag {
+    height: 100%;
+    padding: 0 8px 0 12px;
+    display: flex;
+    align-items: center;
+}
+
+.leadform.form-reg.rf-form .iti input[type="tel"],
+.leadform.form-reg.rf-form .iti input.iti__tel-input {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 25px 16px 25px 96px !important;
+    margin-bottom: 0 !important;
+    border: 1px solid #000 !important;
+    border-radius: 15px !important;
+    font-size: 16px;
+    color: #000 !important;
+    background: #fff !important;
+}
+
+.leadform.form-reg.rf-form .iti__selected-dial-code {
+    display: inline !important;
+    color: #000 !important;
+    font-size: 16px;
+    line-height: 1;
+    margin-left: 6px;
+}
+
+.leadform.form-reg.rf-form .form-reg {
+    padding-bottom: 0;
+    margin-top: 90px;
+}
+
+.leadform.form-reg.rf-form .form-img {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.leadform.form-reg.rf-form .form-img img {
+    height: 28px;
+    width: auto;
+}
+
+@media (max-width: 767px) {
+    .leadform.form-reg.rf-form {
+        width: 100%;
+    }
+}
+
