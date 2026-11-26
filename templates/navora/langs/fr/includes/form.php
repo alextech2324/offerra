@@ -23,7 +23,7 @@ $lead_cookie = site_slug().'_lead';
   <div class="form-already-registered hidden" data-already-registered>
     <p class="form-already-registered__title">Demande déjà reçue</p>
     <p class="form-already-registered__text">
-      Votre demande auprès de <?= e(SITE_NAME) ?> a été reçue. Attendez l’appel du gestionnaire.
+      Votre demande auprès de <?= e(SITE_NAME) ?> was received. Aguarde a chamada do gestor.
     </p>
   </div>
 

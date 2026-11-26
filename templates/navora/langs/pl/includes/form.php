@@ -23,7 +23,7 @@ $lead_cookie = site_slug().'_lead';
   <div class="form-already-registered hidden" data-already-registered>
     <p class="form-already-registered__title">Wniosek już otrzymany</p>
     <p class="form-already-registered__text">
-      Twoje zgłoszenie w <?= e(SITE_NAME) ?> zostało przyjęte. Poczekaj na telefon od opiekuna.
+      Twoje zgłoszenie w <?= e(SITE_NAME) ?> was received. Aguarde a chamada do gestor.
     </p>
   </div>
 

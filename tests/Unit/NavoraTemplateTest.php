@@ -59,6 +59,26 @@ class NavoraTemplateTest extends TestCase
         $this->assertStringEndsWith(DIRECTORY_SEPARATOR.'pt', $catalog->previewRootPath('navora', 'pt'));
     }
 
+    public function test_navora_english_pack_is_not_mixed_portuguese(): void
+    {
+        $index = file_get_contents(base_path('templates/navora/langs/en/index.php'));
+        $this->assertIsString($index);
+        $this->assertStringNotContainsString('Porque conhecer', $index);
+        $this->assertStringNotContainsString('Ferramentas da', $index);
+        $this->assertStringNotContainsString('opacity: 0', $index);
+        $this->assertStringContainsString('Why get to know', $index);
+        $this->assertStringContainsString('tools to track and control risk', $index);
+        $privacy = file_get_contents(base_path('templates/navora/langs/en/privacy.php'));
+        $this->assertIsString($privacy);
+        $this->assertStringNotContainsString('telefone, idioma', $privacy);
+        $this->assertStringContainsString('Name, email, phone', $privacy);
+
+        $head = file_get_contents(base_path('templates/navora/includes/head.php'));
+        $this->assertIsString($head);
+        $this->assertStringNotContainsString('w-mod-js', $head);
+        $this->assertStringContainsString('[data-w-id]{opacity:1!important', $head);
+    }
+
     public function test_navora_form_posts_to_send_php(): void
     {
         $form = file_get_contents(base_path('templates/navora/includes/form.php'));

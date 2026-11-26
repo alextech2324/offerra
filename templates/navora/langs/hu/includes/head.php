@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__.'/config.php';
 $page_title = $page_title ?? page_title('AI market analysis and trading tools');
-$page_description = $page_description ?? (SITE_NAME.' ajuda a acompanhar ações e criptomoedas com IA. Desde '.min_deposit_label().'. No promised return.');
+$page_description = $page_description ?? (SITE_NAME.' helps you follow stocks and crypto with AI. From '.min_deposit_label().'. No promised return.');
 $page_canonical = $page_canonical ?? page_url();
 $page_noindex = $page_noindex ?? false;
 $og_image = canonical_url(og_image_path());
 ?><!DOCTYPE html>
-<html class="w-mod-js w-mod-ix" lang="<?= e(site_locale()) ?>">
+<html lang="<?= e(site_locale()) ?>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,8 +37,7 @@ $og_image = canonical_url(og_image_path());
 <link rel="preload" href="<?= asset('static/images/investor.webp') ?>" as="image" type="image/webp" fetchpriority="high">
 <link href="<?= asset('static/css/normalize.css') ?>" rel="stylesheet">
 <link href="<?= asset('static/css/wf-theme.css') ?>" rel="stylesheet">
-<link href="<?= asset('static/css/wf-base.css') ?>" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="<?= asset('static/css/wf-base.css') ?>" rel="stylesheet"></noscript>
+<link href="<?= asset('static/css/wf-base.css') ?>" rel="stylesheet">
 <link href="<?= asset('static/css/main.css') ?>" rel="stylesheet">
 <link href="<?= asset('static/css/home-review.css') ?>" rel="stylesheet">
 <link href="<?= asset('static/css/form.css') ?>" rel="stylesheet">
@@ -59,7 +58,11 @@ $og_image = canonical_url(og_image_path());
   }
   form.js-lead-form input,form.leadform input{min-height:48px;box-sizing:border-box}
   .iti{width:100%;min-height:48px}
-  a.button.w-button{background-color:#1565c0!important;color:#fff!important}
+  [data-w-id]{opacity:1!important;transform:none!important;-webkit-transform:none!important}
+  .navbar_component.w-nav{background:#fff}
+  .navbar_link.w-nav-link{color:#111}
+  .navbar_link.w-nav-link:hover{color:#5217BF}
+  .menu-icon1_line-top,.menu-icon1_line-middle,.menu-icon1_line-bottom{background-color:#111}
   .legal-page{max-width:760px;margin:0 auto;padding:3rem 1.25rem 4rem;color:#e8edf5;line-height:1.65}
   .legal-page h1{font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 1rem}
   .legal-page h2{margin:2rem 0 .75rem;font-size:1.25rem}

@@ -23,7 +23,7 @@ $lead_cookie = site_slug().'_lead';
   <div class="form-already-registered hidden" data-already-registered>
     <p class="form-already-registered__title">Žiadosť už prijatá</p>
     <p class="form-already-registered__text">
-      Vaša žiadosť u <?= e(SITE_NAME) ?> bola prijatá. Počkajte na hovor manažéra.
+      Vaša žiadosť u <?= e(SITE_NAME) ?> was received. Aguarde a chamada do gestor.
     </p>
   </div>
 

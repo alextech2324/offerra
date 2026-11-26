@@ -61,10 +61,8 @@ require __DIR__ . '/includes/header.php';
 <div class="container-medium">
 <div class="layout1_component main-flex">
 <div class="layout1_content-left" data-w-id="2a2160c4-51d5-418c-ce07-7978ef29ff5d" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <div class="text-block-max">
@@ -74,10 +72,8 @@ require __DIR__ . '/includes/header.php';
 </div>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="9a914867-0092-21bf-63cc-727a4a9409fd" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <img alt="Análise de ações com apoio de ferramentas digitais" class="flex-image" loading="lazy" src="<?= asset('static/images/investor1.webp') ?>">
@@ -92,10 +88,8 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left is-right" data-w-id="c8d3a442-7e6b-afaa-23f7-91bebe60c241" id="w-node-23c7fcd4-4cfd-9f6c-b408-5a76c71bf848" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Ferramentas de análise assistida para quem está a desenvolver experiência nos mercados</h3>
@@ -103,10 +97,8 @@ require __DIR__ . '/includes/header.php';
 <p class="text-size-regular"><?= e(SITE_NAME) ?> reúne ferramentas que ajudam a interpretar os mercados de forma mais estruturada. Em vez de alternar repetidamente entre inúmeros gráficos, pode rever configurações e sinais organizados para análise. Nenhum montante é aplicado em seu nome sem a confirmação do enquadramento correspondente. O objetivo é simplificar o processo de análise, não prometer resultados.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="a990032b-f4b2-9409-b721-c086f525b6fb" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <div class="layout1_image-wrapper">
@@ -124,10 +116,8 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component img-text-flex">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="84c3d8b1-2224-2557-e5d0-25b9f9c2d71c" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Comece a partir de <?= e(min_deposit_label()) ?> — utilização simples</h3>
@@ -145,10 +135,8 @@ require __DIR__ . '/includes/header.php';
 </div>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="56619977-0c40-7464-843f-74b2769150b4" style="
-                        opacity: 0;
-                        transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                          rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                          skew(0deg, 0deg);
+                        opacity: 1;
+                        transform: none;
                         transform-style: preserve-3d;
                       ">
 <div class="layout1_image-wrapper">
@@ -228,10 +216,8 @@ require __DIR__ . '/includes/header.php';
 <div class="w-layout-grid layout1_content img-flex-item">
 <div class="layout-component" data-w-id="2a2160c4-51d5-418c-ce07-7978ef29ff5d" style="
                   max-width: max-content !important;
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Análise inteligente dos mercados através de inteligência artificial adaptativa</h3>
@@ -239,10 +225,8 @@ require __DIR__ . '/includes/header.php';
 <p class="text-size-regular"><?= e(SITE_NAME) ?> reúne algoritmos adaptativos que acompanham em permanência diversos sinais de mercado: preços, volume, notícias, tendências nas redes sociais, indicadores macroeconómicos e métricas técnicas. A inteligência artificial destaca padrões para análise, projeta possíveis cenários e ajuda a identificar períodos de maior exposição, sem se deixar influenciar por decisões emocionais. Os parâmetros ajustam-se ao ritmo dos mercados para apoiar uma abordagem disciplinada entre risco e oportunidade — sem assegurar resultados.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="9a914867-0092-21bf-63cc-727a4a9409fd" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
@@ -260,10 +244,8 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left is-right" data-w-id="c8d3a442-7e6b-afaa-23f7-91bebe60c241" id="w-node-risk-clarity" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Parâmetros de risco ajustáveis às suas prioridades e ao seu perfil</h3>
@@ -271,10 +253,8 @@ require __DIR__ . '/includes/header.php';
 <p class="text-size-regular">As prioridades variam de pessoa para pessoa: alguns utilizadores valorizam maior estabilidade, enquanto outros toleram mais oscilações. Na <?= e(SITE_NAME) ?>, pode definir o seu perfil de risco, desde uma abordagem prudente a uma orientação equilibrada ou mais dinâmica. Também pode ajustar elementos como o tamanho das posições, stop-loss, take-profit e frequência de entradas e saídas. Desta forma, as configurações aproximam-se dos seus objetivos e da exposição que está preparado para aceitar.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="a990032b-f4b2-9409-b721-c086f525b6fb" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
@@ -292,10 +272,8 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="84c3d8b1-2224-2557-e5d0-25b9f9c2d71c" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Informação transparente sobre a conta e gestão do capital</h3>
@@ -307,10 +285,8 @@ require __DIR__ . '/includes/header.php';
 </div>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="56619977-0c40-7464-843f-74b2769150b4" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
@@ -344,10 +320,8 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="7861ebe2-0a40-a895-b575-5d598576d4fa" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Suporte de IA para interpretar o mercado com maior clareza</h3>
@@ -355,10 +329,8 @@ require __DIR__ . '/includes/header.php';
 <p class="text-size-regular">Não precisa de passar o dia a observar gráficos. A IA da <?= e(SITE_NAME) ?> agrega preços, volumes e sinais pertinentes para tornar o contexto mais fácil de interpretar. Não consegue prever o futuro com certeza nem decide por si. Mesmo com apoio tecnológico, o trading envolve possibilidade de perda: deve estabelecer os seus limites e decidir se e quando avançar.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="e32b15ff-9b23-9d4e-02c6-908bb65a9541" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
@@ -376,10 +348,8 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left is-right" data-w-id="6707cc12-56ed-d80c-79b5-e1a2c78b3a76" id="w-node-03b1e5d4-0c28-9009-361c-0301dafb753f" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Um ponto de partida acessível, com ferramentas simples e orientação prática</h3>
@@ -387,10 +357,8 @@ require __DIR__ . '/includes/header.php';
 <p class="text-size-regular"><?= e(SITE_NAME) ?> foi desenvolvida para pessoas com diferentes níveis de experiência e recursos. A interface estrutura o percurso com etapas claras, opções acessíveis e explicações diretas. Depois de compreender as condições aplicáveis, quem está a começar pode testar uma estratégia automatizada em cerca de 10–15 minutos. Vídeos, guias e suporte ajudam na utilização das funcionalidades disponíveis.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="c49c59bf-ad88-2aa7-4649-79cf495dfad3" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
@@ -408,10 +376,8 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="6a979576-837f-8a7b-1a04-ddd9ba22ba22" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Acompanhamento dedicado no uso da plataforma</h3>
@@ -889,7 +855,7 @@ require __DIR__ . '/includes/header.php';
 
 <?php
   $form_id = "registrationForm-cta";
-  $form_class = "leadform register-form bottom form-reg c-form registrationForm flex-column js-lead-form form-pc";
+  $form_class = "leadform register-form bottom form-reg c-form registrationForm flex-column js-lead-form";
   $form_submit = 'Enviar';
   require __DIR__ . '/includes/form.php';
 ?>

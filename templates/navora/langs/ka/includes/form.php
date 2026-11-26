@@ -23,7 +23,7 @@ $lead_cookie = site_slug().'_lead';
   <div class="form-already-registered hidden" data-already-registered>
     <p class="form-already-registered__title">მოთხოვნა უკვე მიღებულია</p>
     <p class="form-already-registered__text">
-      თქვენი მოთხოვნა <?= e(SITE_NAME) ?> მიღებულია. დაელოდეთ მენეჯერის ზარს.
+      თქვენი მოთხოვნა <?= e(SITE_NAME) ?> was received. Aguarde a chamada do gestor.
     </p>
   </div>
 

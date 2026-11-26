@@ -18,7 +18,7 @@ require __DIR__.'/header.php';
     <?php if (! empty($subpage_form)): ?>
       <?php
         $form_id = $form_id ?? 'subpage-form';
-        $form_class = $form_class ?? 'leadform register-form bottom form-reg c-form registrationForm flex-column js-lead-form form-pc';
+        $form_class = $form_class ?? 'leadform register-form bottom form-reg c-form registrationForm flex-column js-lead-form';
         $form_submit = $form_submit ?? 'Kirim';
         require __DIR__.'/form.php';
       ?>

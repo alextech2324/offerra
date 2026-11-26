@@ -10,7 +10,7 @@ $nav_home = page_url();
         <span style="color:black;font-weight:700;font-size:15px"><?= e(SITE_NAME) ?></span>
       </a>
     </div>
-    <nav class="navbar_menu is-page-height-tablet w-nav-menu" role="navigation" aria-label="Principal">
+    <nav class="navbar_menu is-page-height-tablet w-nav-menu" role="navigation" aria-label="Menu">
       <div class="navbar_menu-links">
         <a class="navbar_link w-nav-link" href="<?= e($nav_home) ?>#why-invest">Hvorfor investere</a>
         <a class="navbar_link w-nav-link" href="<?= e($nav_home) ?>#how-it-works">Sådan starter du</a>

@@ -37,7 +37,7 @@
               </div>
             </div>
           </div>
-          <p style="margin-top:40px"><?= e(SITE_NAME) ?> disponibiliza uma plataforma de trading online com registo claro e ferramentas para analisar os mercados. Quer esteja a começar ou já tenha experiência, pode acompanhar a informação de forma mais simples, sem qualquer promessa de resultados. A proteção dos dados e a compreensão dos riscos são prioridades. Ao utilizar <?= e(SITE_NAME) ?>, encontra recursos de acompanhamento — não rendimentos automáticos.</p>
+          <p style="margin-top:40px"><?= e(SITE_NAME) ?> provides an online trading platform with a clear signup and tools to analyse the markets. Whether you are starting or already have experience, you can follow the information more simply, with no promised results. Data protection and understanding the risks are priorities. When you use <?= e(SITE_NAME) ?>, you find tracking resources — not automatic returns.</p>
           <p class="footer-copyright">© <?= e(SITE_NAME) ?> <?= date('Y') ?></p>
         </div>
       </div>
@@ -49,13 +49,13 @@
 <script>
 window.APP_LANG = {
   valPhoneInvalid: <?= json_encode('Įveskite tinkamą numerį', JSON_UNESCAPED_UNICODE) ?>,
-  valPhoneCountry: <?= json_encode('Código de país inválido', JSON_UNESCAPED_UNICODE) ?>,
-  valPhoneShort: <?= json_encode('O número é demasiado curto', JSON_UNESCAPED_UNICODE) ?>,
-  valPhoneLong: <?= json_encode('O número é demasiado longo', JSON_UNESCAPED_UNICODE) ?>,
-  valPhoneRequired: <?= json_encode('Insira o número de telefone', JSON_UNESCAPED_UNICODE) ?>,
+  valPhoneCountry: <?= json_encode('Neteisingas šalies kodas', JSON_UNESCAPED_UNICODE) ?>,
+  valPhoneShort: <?= json_encode('Numeris per trumpas', JSON_UNESCAPED_UNICODE) ?>,
+  valPhoneLong: <?= json_encode('Numeris per ilgas', JSON_UNESCAPED_UNICODE) ?>,
+  valPhoneRequired: <?= json_encode('Įveskite telefono numerį', JSON_UNESCAPED_UNICODE) ?>,
   valSessionExpired: <?= json_encode('Sesija baigėsi. Įkelkite puslapį iš naujo.', JSON_UNESCAPED_UNICODE) ?>,
-  valGenericError: <?= json_encode('Algo correu mal. Tente novamente mais tarde.', JSON_UNESCAPED_UNICODE) ?>,
-  valConnectionError: <?= json_encode('Erro de ligação. Verifique a internet e tente novamente.', JSON_UNESCAPED_UNICODE) ?>
+  valGenericError: <?= json_encode('Kažkas nepavyko. Bandykite vėliau.', JSON_UNESCAPED_UNICODE) ?>,
+  valConnectionError: <?= json_encode('Ryšio klaida. Patikrinkite internetą ir bandykite dar kartą.', JSON_UNESCAPED_UNICODE) ?>
 };
 </script>
 <script src="<?= asset('static/js/jquery-3.5.1.min.dc5e7f18c8.js') ?>" defer></script>

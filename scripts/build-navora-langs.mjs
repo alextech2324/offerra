@@ -1,6 +1,6 @@
 /**
- * Copy templates/navora/langs/pt → langs/{lang}
- * then apply EN body pack + per-lang chrome, and patch config SITE_LANG.
+ * Sync shared includes into langs/pt, copy pt → langs/{lang},
+ * then apply per-lang chrome and a complete EN body pack.
  *
  *   node scripts/build-navora-langs.mjs
  *   node scripts/build-navora-langs.mjs it
@@ -101,6 +101,22 @@ function patchConfig(langDir, loc) {
   fs.writeFileSync(configPath, text, 'utf8');
 }
 
+const SHARED_INCLUDES = path.resolve(__dirname, '..', 'templates', 'navora', 'includes');
+for (const name of fs.readdirSync(SHARED_INCLUDES)) {
+  if (name === 'config.php') continue;
+  fs.copyFileSync(path.join(SHARED_INCLUDES, name), path.join(PT_DIR, 'includes', name));
+}
+
+const PT_LEFTOVERS = [
+  'Porque conhecer',
+  'Ferramentas da',
+  'Conheça <?= e(SITE_NAME)',
+  'perspetiva',
+  'utilizadores',
+  'disponibiliza uma plataforma',
+  'Página de contacto',
+];
+
 const only = process.argv[2] ? [process.argv[2]] : Object.keys(LOCALES);
 
 for (const lang of only) {
@@ -111,8 +127,15 @@ for (const lang of only) {
     fs.rmSync(dest, { recursive: true, force: true });
     copyDir(PT_DIR, dest);
   }
-  const chromeHits = lang === 'pt' ? 0 : applyPack(dest, chromePack(lang));
   const enHits = lang === 'pt' ? 0 : applyPack(dest, EN_PACK);
+  const chromeHits = lang === 'pt' ? 0 : applyPack(dest, chromePack(lang));
   patchConfig(dest, loc);
+  if (lang === 'en') {
+    const enIndex = fs.readFileSync(path.join(dest, 'index.php'), 'utf8');
+    const leftover = PT_LEFTOVERS.filter((s) => enIndex.includes(s));
+    if (leftover.length) {
+      console.warn(`en leftovers: ${leftover.join(' | ')}`);
+    }
+  }
   console.log(`${lang}: chrome=${chromeHits} en=${enHits}`);
 }

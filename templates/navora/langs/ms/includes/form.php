@@ -23,7 +23,7 @@ $lead_cookie = site_slug().'_lead';
   <div class="form-already-registered hidden" data-already-registered>
     <p class="form-already-registered__title">Permintaan sudah diterima</p>
     <p class="form-already-registered__text">
-      Permintaan anda dengan <?= e(SITE_NAME) ?> telah diterima. Tunggu panggilan pengurus.
+      Permintaan anda dengan <?= e(SITE_NAME) ?> was received. Aguarde a chamada do gestor.
     </p>
   </div>
 

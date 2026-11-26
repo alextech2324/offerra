@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
 $page_title = page_title('AI market analysis and trading tools');
-$page_description = SITE_NAME . ' ajuda a acompanhar ações e criptomoedas com IA. Desde ' . min_deposit_label() . '. No promised return.';
+$page_description = SITE_NAME . ' helps you follow stocks and crypto with AI. From ' . min_deposit_label() . '. No promised return.';
 $page_canonical = page_url();
 $active_page = 'home';
 require __DIR__ . '/includes/head.php';
@@ -25,10 +25,10 @@ require __DIR__ . '/includes/header.php';
 ?>
 
     <div class="spacer-small">
-<img alt="Pessoa a consultar gráficos de mercado no computador" class="hero-main-image" src="<?= asset('static/images/investor.webp') ?>" width="720" height="404" loading="eager" fetchpriority="high" decoding="async">
+<img alt="Person reviewing market charts on a computer" class="hero-main-image" src="<?= asset('static/images/investor.webp') ?>" width="720" height="404" loading="eager" fetchpriority="high" decoding="async">
 </div>
 <div class="spacer-small"></div>
-<p class="text-size-large">Conheça <?= e(SITE_NAME) ?>, uma plataforma com AI tools to follow stocks and crypto. Pode começar a partir de <?= e(min_deposit_label()) ?>, even without prior experience, e consultar informação atualizada para estruturar a sua análise. Results are not promised.</p>
+<p class="text-size-large">Get to know <?= e(SITE_NAME) ?>, a platform with AI tools to follow stocks and crypto. You can start from <?= e(min_deposit_label()) ?>, even without prior experience, and use up-to-date information to structure your analysis. Results are not promised.</p>
 </div>
 
 <?php
@@ -56,15 +56,13 @@ require __DIR__ . '/includes/header.php';
 </div>
 </section>
 <section class="section_layout1" id="why-invest">
-<h2 class="heading-style-h3" style="font-weight: bold; text-align: center; margin-bottom: 60px;">Why learn about <?= e(SITE_NAME) ?></h2>
+<h2 class="heading-style-h3" style="font-weight: bold; text-align: center; margin-bottom: 60px;">Why get to know <?= e(SITE_NAME) ?></h2>
 <div class="padding-global padding-section-small">
 <div class="container-medium">
 <div class="layout1_component main-flex">
 <div class="layout1_content-left" data-w-id="2a2160c4-51d5-418c-ce07-7978ef29ff5d" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <div class="text-block-max">
@@ -74,13 +72,11 @@ require __DIR__ . '/includes/header.php';
 </div>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="9a914867-0092-21bf-63cc-727a4a9409fd" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
-<img alt="Análise de ações com apoio de ferramentas digitais" class="flex-image" loading="lazy" src="<?= asset('static/images/investor1.webp') ?>">
+<img alt="Stock analysis with digital tools" class="flex-image" loading="lazy" src="<?= asset('static/images/investor1.webp') ?>">
 </div>
 </div>
 </div>
@@ -92,25 +88,21 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left is-right" data-w-id="c8d3a442-7e6b-afaa-23f7-91bebe60c241" id="w-node-23c7fcd4-4cfd-9f6c-b408-5a76c71bf848" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Assisted analysis tools for people still building market experience</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular"><?= e(SITE_NAME) ?> reúne ferramentas que ajudam a interpretar os mercados de forma mais estruturada. Em vez de alternar repetidamente entre inúmeros gráficos, pode rever configurações e sinais organizados para análise. Nenhum montante é aplicado em seu nome sem a confirmação do enquadramento correspondente. O objetivo é simplificar o processo de análise, não prometer resultados.</p>
+<p class="text-size-regular"><?= e(SITE_NAME) ?> brings together tools that help you read the markets in a more structured way. Instead of jumping between countless charts, you can review organised setups and signals. Nothing is applied in your name without the matching confirmation. The aim is to simplify analysis, not to promise results.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="a990032b-f4b2-9409-b721-c086f525b6fb" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <div class="layout1_image-wrapper">
-<img alt="Acompanhamento de investimentos a partir de casa" class="layout1_image feature-2 flex-image" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/investathome.webp') ?>">
+<img alt="Following investments from home" class="layout1_image feature-2 flex-image" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/investathome.webp') ?>">
 </div>
 </div>
 </div>
@@ -124,35 +116,31 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component img-text-flex">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="84c3d8b1-2224-2557-e5d0-25b9f9c2d71c" style="
-                          opacity: 0;
-                          transform: translate3d(0px, 24px, 0px)
-                            scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
-                            rotateZ(0deg) skew(0deg, 0deg);
+                          opacity: 1;
+                          transform: none;
                           transform-style: preserve-3d;
                         ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Start from <?= e(min_deposit_label()) ?> — simple to use</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular">Com um depósito inicial desde <?= e(min_deposit_label()) ?>, poderá conhecer as ferramentas analíticas da <?= e(SITE_NAME) ?>. Esse montante não é aconselhamento, recomendação nem garantia de valorização. Pode ajudá-lo a explorar a interface antes de decidir se pretende aumentar a exposição.</p>
+<p class="text-size-regular">With an initial deposit from <?= e(min_deposit_label()) ?>, you can try the analysis tools on <?= e(SITE_NAME) ?>. That amount is not advice, a recommendation or a guarantee of growth. It can help you explore the interface before you decide whether to increase exposure.</p>
 <div class="spacer-medium"></div>
-<h3 class="heading-style-h4" style="font-weight: bold;">Mais clareza para gerir a sua utilização</h3>
+<h3 class="heading-style-h4" style="font-weight: bold;">Clearer control over how you use the account</h3>
 <div class="spacer-medium"></div>
-<p class="text-size-regular">Com <?= e(SITE_NAME) ?>, mantém o acompanhamento e a gestão do seu capital. Pode optar por conservar os fundos ou pedir um levantamento, respeitando as condições aplicáveis. Os detalhes de utilização são expostos de forma clara, sem custos ocultos apresentados fora do processo.</p>
+<p class="text-size-regular">With <?= e(SITE_NAME) ?>, you keep tracking and control of your capital. You can hold funds or request a withdrawal under the applicable conditions. Usage details are shown clearly, without hidden fees presented outside the process.</p>
 <div class="spacer-medium"></div>
 <div class="button-group">
-<a class="button w-button" href="<?= page_url('sign.php') ?>">Atidaryti sąskaitą já</a>
+<a class="button w-button" href="<?= page_url('sign.php') ?>">Atidaryti sąskaitą dabar</a>
 </div>
 <br>
 </div>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="56619977-0c40-7464-843f-74b2769150b4" style="
-                        opacity: 0;
-                        transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                          rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                          skew(0deg, 0deg);
+                        opacity: 1;
+                        transform: none;
                         transform-style: preserve-3d;
                       ">
 <div class="layout1_image-wrapper">
-<img alt="Ilustração da evolução de um investimento ao longo do tempo" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/investgrowth.webp') ?>">
+<img alt="Illustration of an investment over time" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/investgrowth.webp') ?>">
 </div>
 </div>
 </div>
@@ -168,7 +156,7 @@ require __DIR__ . '/includes/header.php';
 <div class="pricing_component">
 <div class="text-align-center">
 <div class="max-width-medium align-center">
-<h2 class="heading-style-h2" style="font-weight: bold;">De que forma a <?= e(SITE_NAME) ?> utiliza a IA para apoiar a análise de investimentos</h2> 
+<h2 class="heading-style-h2" style="font-weight: bold;">How <?= e(SITE_NAME) ?> uses AI to support investment analysis</h2> 
 <div class="spacer-small"></div>
 </div>
 </div>
@@ -178,26 +166,26 @@ require __DIR__ . '/includes/header.php';
 <div class="pricing_plan is-main">
 <div class="pricing-header">
 <div class="pricing-tag">
-<h3 class="heading-style-h4" style="font-weight: bold;">Abra a sua conta em poucos passos e conheça a <?= e(SITE_NAME) ?></h3>
+<h3 class="heading-style-h4" style="font-weight: bold;">Open your account in a few steps and get to know <?= e(SITE_NAME) ?></h3>
 </div>
-<p>Depois de concluir o registo, terá apoio para preparar a conta. A ativação pode ficar pronta em poucos minutos, embora o prazo dependa das verificações exigidas.</p>
+<p>After you finish registration, you get help preparing the account. Activation can complete in a few minutes, though the timing depends on the required checks.</p>
 </div>
 <div class="pricing-header">
 <div class="pricing-tag">
-<h3 class="heading-style-h4" style="font-weight: bold;">Uma estrutura de apoio para decisões mais esclarecidas</h3>
+<h3 class="heading-style-h4" style="font-weight: bold;">A support structure for more informed decisions</h3>
 </div>
-<p>Na <?= e(SITE_NAME) ?>, pode definir uma forma de acompanhamento alinhada com os seus objetivos e com a perda que aceita suportar. Platforma não promete uma valorização automática e regular; ajuda a seguir as regras e os limites que escolheu.</p>
+<p>On <?= e(SITE_NAME) ?>, you can set a tracking approach that matches your goals and the loss you are prepared to take. The platform does not promise automatic, regular growth; it helps you follow the rules and limits you chose.</p>
 </div>
 </div>
 </div>
 <div class="pricing_plan" data-w-id="">
 <div class="pricing-header">
 <h3 class="heading-style-h4" style="font-weight: bold;">Automated tracking and AI-assisted analysis</h3>
-<p class="text-size-large"><?= e(SITE_NAME) ?> trata dados de mercado e destaca situações que poderá querer analisar. Quando existe automatização, esta segue regras que pode consultar e alterar; não impede oscilações nem afasta o risco de perda.</p>
+<p class="text-size-large"><?= e(SITE_NAME) ?> processes market data and highlights situations you may want to review. When automation is used, it follows rules you can inspect and change; it does not stop price swings or remove the risk of loss.</p>
 </div>
 <div class="pricing-header">
-<h3 class="heading-style-h4" style="font-weight: bold;">Maior flexibilidade para administrar o capital</h3>
-<p class="text-size-large">Pode pedir um levantamento ou manter o capital na conta, conforme as condições aplicáveis. Antes de confirmar, verifique sempre a disponibilidade, os prazos e eventuais encargos.</p>
+<h3 class="heading-style-h4" style="font-weight: bold;">More flexibility to manage capital</h3>
+<p class="text-size-large">You can request a withdrawal or keep capital in the account, subject to the applicable conditions. Before you confirm, always check availability, timelines and any fees.</p>
 </div>
 <img alt="" class="testimonial-pattern-image" loading="lazy" src="<?= asset('static/images/testimonial-pattern.svg') ?>">
 </div>
@@ -214,7 +202,7 @@ require __DIR__ . '/includes/header.php';
 <div class="header49_component">
 <div class="">
 <div class="header49_content-left">
-<h2 class="heading-style-h2" style="font-weight: bold; text-align: center;">Ferramentas da <?= e(SITE_NAME) ?> para acompanhar e controlar o risco</h2> 
+<h2 class="heading-style-h2" style="font-weight: bold; text-align: center;"><?= e(SITE_NAME) ?> tools to track and control risk</h2> 
 </div>
 </div>
 </div>
@@ -228,25 +216,21 @@ require __DIR__ . '/includes/header.php';
 <div class="w-layout-grid layout1_content img-flex-item">
 <div class="layout-component" data-w-id="2a2160c4-51d5-418c-ce07-7978ef29ff5d" style="
                   max-width: max-content !important;
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Adaptive AI analysis of the markets</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular"><?= e(SITE_NAME) ?> reúne algoritmos adaptativos que acompanham em permanência diversos sinais de mercado: preços, volume, notícias, tendências nas redes sociais, indicadores macroeconómicos e métricas técnicas. A inteligência artificial destaca padrões para análise, projeta possíveis cenários e ajuda a identificar períodos de maior exposição, sem se deixar influenciar por decisões emocionais. Os parâmetros ajustam-se ao ritmo dos mercados para apoiar uma abordagem disciplinada entre risco e oportunidade — sem assegurar resultados.</p>
+<p class="text-size-regular"><?= e(SITE_NAME) ?> brings together adaptive algorithms that continuously follow market signals: prices, volume, news, social trends, macro indicators and technical metrics. The AI highlights patterns for analysis, outlines possible scenarios and helps flag periods of higher exposure, without being driven by emotional decisions. Parameters adjust to market pace to support a disciplined view of risk and opportunity — without guaranteeing results.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="9a914867-0092-21bf-63cc-727a4a9409fd" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Ecrã de análise de mercado" class="layout1_image feature-1" loading="lazy" width="1024" height="1024" src="<?= asset('static/images/Kiintell.webp') ?>">
+<img alt="Market analysis screen" class="layout1_image feature-1" loading="lazy" width="1024" height="1024" src="<?= asset('static/images/Kiintell.webp') ?>">
 </div>
 </div>
 </div>
@@ -260,25 +244,21 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left is-right" data-w-id="c8d3a442-7e6b-afaa-23f7-91bebe60c241" id="w-node-risk-clarity" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Risk parameters you can match to your priorities</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular">As prioridades variam de pessoa para pessoa: alguns utilizadores valorizam maior estabilidade, enquanto outros toleram mais oscilações. Na <?= e(SITE_NAME) ?>, pode definir o seu perfil de risco, desde uma abordagem prudente a uma orientação equilibrada ou mais dinâmica. Também pode ajustar elementos como o tamanho das posições, stop-loss, take-profit e frequência de entradas e saídas. Desta forma, as configurações aproximam-se dos seus objetivos e da exposição que está preparado para aceitar.</p>
+<p class="text-size-regular">Priorities differ from person to person: some users want more stability, others accept larger swings. On <?= e(SITE_NAME) ?> you can set your risk profile, from a cautious approach to a balanced or more dynamic one. You can also adjust position size, stop-loss, take-profit and how often you enter or exit. That way the setup sits closer to your goals and the exposure you are prepared to accept.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="a990032b-f4b2-9409-b721-c086f525b6fb" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Gráfico de cotações" class="layout1_image feature-2" loading="lazy" width="1024" height="1024" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/charts.webp') ?>">
+<img alt="Price chart" class="layout1_image feature-2" loading="lazy" width="1024" height="1024" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/charts.webp') ?>">
 </div>
 </div>
 </div>
@@ -292,29 +272,25 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="84c3d8b1-2224-2557-e5d0-25b9f9c2d71c" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">Clear information on the account and capital</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular">Na <?= e(SITE_NAME) ?>, a atividade da conta é apresentada com clareza. Compras, vendas, alterações e custos permanecem registados em detalhe e com atualização em tempo real. O painel disponibiliza saldo, histórico, gráficos, indicadores e posições de risco, mantendo visíveis os elementos relevantes. A decisão continua consigo: a plataforma apoia o processo, mas não substitui o seu discernimento.</p>
+<p class="text-size-regular">On <?= e(SITE_NAME) ?>, account activity is shown clearly. Buys, sells, changes and costs stay recorded in detail and update in real time. The dashboard shows balance, history, charts, indicators and risk positions, keeping the relevant items visible. The decision stays with you: the platform supports the process, it does not replace your judgement.</p>
 <div class="spacer-medium"></div>
 <div class="button-group">
-<a class="button w-button" href="<?= page_url('sign.php') ?>">Atidaryti sąskaitą já</a>
+<a class="button w-button" href="<?= page_url('sign.php') ?>">Atidaryti sąskaitą dabar</a>
 </div>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="56619977-0c40-7464-843f-74b2769150b4" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Utilizador a rever a conta de investimento" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/happyinvestor.webp') ?>">
+<img alt="User reviewing an investment account" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/happyinvestor.webp') ?>">
 </div>
 </div>
 </div>
@@ -331,7 +307,7 @@ require __DIR__ . '/includes/header.php';
 <div class="header49_component">
 <div class="">
 <div class="header49_content-left">
-<h2 class="heading-style-h2" style="font-weight: bold; text-align: center;">O que a <?= e(SITE_NAME) ?> disponibiliza — acompanhamento mais estruturado e responsável</h2>
+<h2 class="heading-style-h2" style="font-weight: bold; text-align: center;">What <?= e(SITE_NAME) ?> provides — more structured, responsible tracking</h2>
 </div>
 </div>
 </div>
@@ -344,25 +320,21 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="7861ebe2-0a40-a895-b575-5d598576d4fa" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">AI support to read the market with more clarity</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular">Não precisa de passar o dia a observar gráficos. A IA da <?= e(SITE_NAME) ?> agrega preços, volumes e sinais pertinentes para tornar o contexto mais fácil de interpretar. Não consegue prever o futuro com certeza nem decide por si. Mesmo com apoio tecnológico, o trading envolve possibilidade de perda: deve estabelecer os seus limites e decidir se e quando avançar.</p>
+<p class="text-size-regular">You do not need to watch charts all day. The AI on <?= e(SITE_NAME) ?> gathers prices, volumes and relevant signals so the context is easier to read. It cannot predict the future with certainty and it does not decide for you. Even with technical support, trading can lose money: set your limits and decide whether and when to go ahead.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="e32b15ff-9b23-9d4e-02c6-908bb65a9541" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Gráfico financeiro no painel de análise" class="layout1_image feature-1" loading="lazy" width="1024" height="1024" src="<?= asset('static/images/charts2.webp') ?>">
+<img alt="Financial chart on the analysis dashboard" class="layout1_image feature-1" loading="lazy" width="1024" height="1024" src="<?= asset('static/images/charts2.webp') ?>">
 </div>
 </div>
 </div>
@@ -376,25 +348,21 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left is-right" data-w-id="6707cc12-56ed-d80c-79b5-e1a2c78b3a76" id="w-node-03b1e5d4-0c28-9009-361c-0301dafb753f" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <h3 class="heading-style-h4" style="font-weight: bold;">An accessible starting point with simple tools and practical guidance</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular"><?= e(SITE_NAME) ?> foi desenvolvida para pessoas com diferentes níveis de experiência e recursos. A interface estrutura o percurso com etapas claras, opções acessíveis e explicações diretas. Depois de compreender as condições aplicáveis, quem está a começar pode testar uma estratégia automatizada em cerca de 10–15 minutos. Vídeos, guias e suporte ajudam na utilização das funcionalidades disponíveis.</p>
+<p class="text-size-regular"><?= e(SITE_NAME) ?> was built for people with different levels of experience and resources. The interface structures the path with clear steps, accessible options and direct explanations. After you understand the applicable conditions, a beginner can try an automated setup in about 10–15 minutes. Videos, guides and support help you use the available features.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="c49c59bf-ad88-2aa7-4649-79cf495dfad3" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Investidor a analisar o mercado" class="layout1_image feature-2" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/charts3.webp') ?>">
+<img alt="Investor analysing the market" class="layout1_image feature-2" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/charts3.webp') ?>">
 </div>
 </div>
 </div>
@@ -408,23 +376,21 @@ require __DIR__ . '/includes/header.php';
 <div class="layout1_component">
 <div class="w-layout-grid layout1_content">
 <div class="layout1_content-left" data-w-id="6a979576-837f-8a7b-1a04-ddd9ba22ba22" style="
-                      opacity: 0;
-                      transform: translate3d(0px, 24px, 0px) scale3d(1, 1, 1)
-                        rotateX(0deg) rotateY(0deg) rotateZ(0deg)
-                        skew(0deg, 0deg);
+                      opacity: 1;
+                      transform: none;
                       transform-style: preserve-3d;
                     ">
-<h3 class="heading-style-h4" style="font-weight: bold;">Acompanhamento dedicado no uso da plataforma</h3>
+<h3 class="heading-style-h4" style="font-weight: bold;">Dedicated support while you use the platform</h3>
 <div class="spacer-small"></div>
-<p class="text-size-regular">Após o primeiro depósito, poderá existir um contacto de apoio individual, dependendo das condições do serviço. Esse contacto pode apresentar as funcionalidades, ajudar a interpretar as definições iniciais e responder a dúvidas de utilização, sem escolher o seu perfil ou executar decisões por si.</p>
+<p class="text-size-regular">After the first deposit, you may get an individual support contact, depending on the service terms. That contact can show the features, help you read the initial settings and answer usage questions, without choosing your profile or placing decisions for you.</p>
 <div class="spacer-medium"></div>
 <h3 class="heading-style-h4" style="font-weight: bold;">Follow the markets at your pace, without artificial expectations</h3>
 <div class="spacer-medium"></div>
-<p class="text-size-regular">Com <?= e(SITE_NAME) ?>, pode acompanhar vários mercados num só ambiente, a partir de qualquer lugar. Isso não quer dizer que o capital seja movimentado automaticamente nem que exista crescimento garantido. Verifique o saldo, as condições de levantamento e os limites que definiu. Como o trading pode resultar em perdas, utilize apenas um montante adequado à sua situação financeira.</p>
+<p class="text-size-regular">With <?= e(SITE_NAME) ?> you can follow several markets in one place, from anywhere. That does not mean capital moves automatically or that growth is guaranteed. Check the balance, withdrawal terms and the limits you set. Because trading can result in losses, use only an amount that fits your financial situation.</p>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="ce588eda-85ca-ff61-6af7-7e16d4980d77">
 <div class="layout1_image-wrapper">
-<img alt="Pessoas a acompanhar os mercados em conjunto" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/happyinvestors.webp') ?>">
+<img alt="People following the markets together" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="<?= asset('static/images/happyinvestors.webp') ?>">
 </div>
 </div>
 </div>
@@ -440,80 +406,80 @@ require __DIR__ . '/includes/header.php';
 <section class="cv2-review" id="brand-review" aria-labelledby="brand-review-heading">
   <div class="cv2-review__inner">
         <p class="cv2-review__badge">Read this information before opening an account</p>
-            <h2 class="cv2-review__title" id="brand-review-heading"><?= e(SITE_NAME) ?>: funcionamento e limites a conhecer</h2>
-            <p class="cv2-review__lead"><?= e(SITE_NAME) ?> é uma plataforma comercial com ferramentas de trading e análise assistida por IA para pessoas em <?= e(geo_country_name()) ?> que procuram acompanhar vários mercados num único espaço. Nesta página, explicamos a finalidade do serviço, os primeiros passos, os riscos e os cuidados a considerar perante suspeitas de fraude. O objetivo é esclarecer o percurso antes do registo, não prometer rentabilidade.</p>
+            <h2 class="cv2-review__title" id="brand-review-heading"><?= e(SITE_NAME) ?>: how it works and the limits to know</h2>
+            <p class="cv2-review__lead"><?= e(SITE_NAME) ?> is a commercial platform with trading tools and AI-assisted analysis for people in <?= e(geo_country_name()) ?> who want to follow several markets in one place. This page explains the purpose of the service, the first steps, the risks and what to watch for if fraud is a concern. The aim is to clarify the path before registration, not to promise a return.</p>
     
         <article class="cv2-review__block" id="brand-review-what">
-      <h3 class="cv2-review__h3">O que disponibiliza a <?= e(SITE_NAME) ?> e a quem se destina?</h3>
-      <p><?= e(SITE_NAME) ?> oferece um painel central, gráficos, dados de mercado e ferramentas de apoio à análise. Após criar a conta e, quando aplicável, efetuar o depósito mínimo indicado, poderá consultar os vários ecrãs, configurar alertas e escolher preferências de risco. Não é um banco, não substitui um consultor de investimento autorizado e não funciona como um sistema autónomo sem a sua participação. O conteúdo apresenta ferramentas de acesso aos mercados, não aconselhamento personalizado. Continua a ser responsável pelos fundos envolvidos e pelas ordens que decidir confirmar.</p>      <p>O nome da marca surge no título, no rodapé e nas secções legais para facilitar a confirmação de que se encontra no domínio correto, e não numa cópia. A interface pode ser utilizada por iniciantes e por pessoas com experiência: comece pelas opções fundamentais e avance para funcionalidades adicionais quando forem úteis. Os instrumentos realmente disponíveis — incluindo ações, forex ou criptoativos — devem ser confirmados na conta, não deduzidos de uma mensagem comercial. Para questões de funcionamento, consulte a página Contacto; esta não apresenta recomendações de compra.</p>    </article>
+      <h3 class="cv2-review__h3">What does <?= e(SITE_NAME) ?> provide and who is it for?</h3>
+      <p><?= e(SITE_NAME) ?> offers a central dashboard, charts, market data and tools that support analysis. After you open an account and, where applicable, make the stated minimum deposit, you can view the screens, set alerts and choose risk preferences. It is not a bank, it does not replace an authorised investment adviser and it does not run as an autonomous system without you. The content presents tools for market access, not personal advice. You remain responsible for the funds involved and for the orders you confirm.</p>      <p>The brand name appears in the title, footer and legal sections so you can confirm you are on the right domain, not a copy. The interface can be used by beginners and by people with experience: start with the basics and move to extra features when they help. The instruments actually available — including stocks, forex or crypto — should be confirmed in the account, not inferred from a sales line. For how-to questions, use the Contact page; it does not give buy recommendations.</p>    </article>
         <article class="cv2-review__block" id="brand-review-how">
-      <h3 class="cv2-review__h3">Como se pode usar a <?= e(SITE_NAME) ?> no dia a dia?</h3>
-      <p>Em geral, começa por criar a conta, validar o acesso, explorar o painel e, se decidir prosseguir, adicionar o depósito mínimo indicado. As cinco etapas anteriores descrevem o percurso sem atalhos comerciais. A IA reúne dados como cotações, volumes e sinais para apoiar a pesquisa, mas não decide por si. Preferências, limites e confirmações continuam sob o seu comando. Os levantamentos seguem as condições apresentadas antes da validação, podendo os prazos depender do banco ou da rede de pagamentos.</p>      <p>No acompanhamento diário, consulta os mercados selecionados, avalia o contexto e só atua se a decisão fizer sentido para o seu horizonte. Não há sessões sem risco nem calendários de ganhos. Se o ritmo do mercado não se adequar ao seu plano, pode optar por não operar. Conforme a disponibilidade, saldo, histórico e controlos de segurança ficam acessíveis para verificar a atividade. É uma ferramenta de acompanhamento, não uma promessa de resultados.</p>    </article>
+      <h3 class="cv2-review__h3">How can you use <?= e(SITE_NAME) ?> day to day?</h3>
+      <p>In general you start by creating the account, validating access, exploring the dashboard and, if you decide to continue, adding the stated minimum deposit. Those earlier steps describe the path without sales shortcuts. The AI gathers quotes, volumes and signals to support research, but it does not decide for you. Preferences, limits and confirmations stay under your control. Withdrawals follow the terms shown before you confirm, and timelines can depend on the bank or payment network.</p>      <p>In daily use you review the selected markets, assess the context and act only if the decision fits your horizon. There are no risk-free sessions and no calendars of gains. If the market pace does not fit your plan, you can choose not to trade. Where available, balance, history and security controls stay accessible so you can check activity. It is a tracking tool, not a promise of results.</p>    </article>
         <article class="cv2-review__block" id="brand-review-legit">
-      <h3 class="cv2-review__h3">A <?= e(SITE_NAME) ?> é uma fraude ou apresenta riscos comerciais?</h3>
-      <p>A pergunta «A <?= e(SITE_NAME) ?> é uma fraude?» surge frequentemente quando uma nova marca apresenta funcionalidades baseadas em IA. Nos esquemas fraudulentos, é habitual haver pressão para transferir dinheiro sem proteção, promessas de ganhos fixos ou obstáculos ao levantamento acompanhados de pedidos de pagamentos adicionais. A <?= e(SITE_NAME) ?> não promove rendimentos garantidos nem um calendário de ganhos e recomenda que consulte depósitos, limites e levantamentos antes de confirmar. Isto não prova que um serviço esteja isento de problemas; apenas permite verificar melhor as condições. O risco essencial continua associado aos mercados: mesmo com uma interface clara, pode perder parte ou todo o capital.</p>      <p>Avalie qualquer serviço financeiro com perguntas semelhantes: o endereço corresponde à marca, as condições estão disponíveis e o apoio explica os procedimentos sem lhe indicar que operação deve executar? Uma promessa de quantia fixa por dia não demonstra segurança, mesmo quando o site parece profissional. Na <?= e(SITE_NAME) ?>, o suporte esclarece questões de conta, documentação e prazos, mas não fornece aconselhamento de investimento personalizado. Se algo não for claro, não avance com a abertura da conta nem envie fundos. Esta página também não constitui uma certificação jurídica de que «isto não é uma fraude».</p>    </article>
+      <h3 class="cv2-review__h3">Is <?= e(SITE_NAME) ?> a scam, or does it carry commercial risks?</h3>
+      <p>The question “Is <?= e(SITE_NAME) ?> a scam?” often appears when a new brand shows AI features. Fraud schemes usually press you to send money without protection, promise fixed gains or block withdrawals while asking for extra payments. <?= e(SITE_NAME) ?> does not promote guaranteed returns or a calendar of gains, and it asks you to check deposits, limits and withdrawals before you confirm. That does not prove a service is problem-free; it only helps you review the terms. The core risk is still the markets: even with a clear interface, you can lose some or all of your capital.</p>      <p>Judge any financial service with similar questions: does the address match the brand, are the terms available, and does support explain the process without telling you which trade to place? A promise of a fixed amount per day does not prove safety, even when the site looks professional. On <?= e(SITE_NAME) ?>, support answers account, document and timeline questions, but it does not give personal investment advice. If something is unclear, do not open an account or send funds. This page is also not a legal certificate that “this is not a scam”.</p>    </article>
         <article class="cv2-review__block" id="brand-review-geo">
-      <h3 class="cv2-review__h3">Qual é o contexto em <?= e(geo_country_name()) ?> — e o que não representa a <?= e(SITE_NAME) ?>?</h3>
-      <p>Em <?= e(geo_country_name()) ?>, a autoridade financeira local participa na supervisão dos mercados e de determinadas atividades de investimento. <?= e(SITE_NAME) ?> não afirma possuir autorização, ser uma instituição de crédito ou ter validação oficial para este conteúdo. A referência a um regulador serve apenas para enquadrar o país; não funciona como selo de confiança. Antes de depositar, confirme o site, os dados legais e se compreende o serviço.</p>      <p>A interface e o apoio destinam-se a utilizadores na língua desta página. Prazos bancários, documentação solicitada e métodos de pagamento podem variar consoante a conta. Esta página não substitui aconselhamento jurídico ou fiscal. Trading e investimento podem gerar perdas; arrisque apenas um montante que consiga suportar. Consulte Condições e Privacidade para conhecer os detalhes, em vez de se basear apenas num resumo comercial.</p>    </article>
+      <h3 class="cv2-review__h3">What is the context in <?= e(geo_country_name()) ?> — and what <?= e(SITE_NAME) ?> is not?</h3>
+      <p>In <?= e(geo_country_name()) ?>, the local financial authority takes part in supervising markets and certain investment activities. <?= e(SITE_NAME) ?> does not claim authorisation, bank status or official validation for this content. Mentioning a regulator only sets the country context; it is not a trust badge. Before you deposit, confirm the site, the legal details and that you understand the service.</p>      <p>The interface and support are aimed at users in this page language. Bank timelines, requested documents and payment methods can vary by account. This page does not replace legal or tax advice. Trading and investing can produce losses; risk only an amount you can bear. Read Terms and Privacy for the details instead of relying on a sales summary.</p>    </article>
     
         <article class="cv2-review__block" id="brand-review-who">
-      <h3 class="cv2-review__h3">Para quem pode fazer sentido a <?= e(SITE_NAME) ?> — e quando procurar outra opção</h3>
+      <h3 class="cv2-review__h3">Who <?= e(SITE_NAME) ?> may suit — and when to look elsewhere</h3>
       <div class="cv2-review__who">
                 <div class="cv2-review__who-card">
-          <h4>Para quem está a descobrir os mercados e prefere orientação ao longo do percurso</h4>
-          <p>Pretende conhecer a interface, o depósito mínimo e os limites antes de aumentar a exposição. A <?= e(SITE_NAME) ?> favorece uma entrada esclarecida, não uma resposta especulativa imediata. Leia os guias com atenção e não copie exemplos de ganhos apresentados noutras páginas.</p>
+          <h4>For people discovering the markets who prefer guidance along the way</h4>
+          <p>You want to understand the interface, the minimum deposit and the limits before increasing exposure. <?= e(SITE_NAME) ?> favours a clear start, not an immediate speculative answer. Read the guides carefully and do not copy gain examples shown on other pages.</p>
         </div>
                 <div class="cv2-review__who-card">
-          <h4>Para quem dispõe de pouco tempo e quer concentrar o acompanhamento</h4>
-          <p>Já acompanha alguns ativos e quer reduzir a necessidade de alternar entre aplicações. O painel e os alertas permitem reunir o contexto num único espaço, mas não substituem um plano próprio nem uma reserva de liquidez.</p>
+          <h4>For people with little time who want tracking in one place</h4>
+          <p>You already follow some assets and want to stop switching between apps. The dashboard and alerts gather the context in one place, but they do not replace your own plan or a cash buffer.</p>
         </div>
                 <div class="cv2-review__who-card">
-          <h4>Para quem já negoceia e procura estruturar melhor a análise</h4>
-          <p>Já conhece os riscos e procura listas, painéis e sínteses que tornem a pesquisa mais organizada. As funções de IA são ferramentas auxiliares para selecionar, excluir e registar informação. Se pretende um sistema que distribua pagamentos regulares, esta não é a finalidade da plataforma.</p>
+          <h4>For people who already trade and want more structured analysis</h4>
+          <p>You already know the risks and want lists, dashboards and summaries that make research more organised. AI features are helper tools to select, filter and record information. If you want a system that pays out regular amounts, that is not what this platform is for.</p>
         </div>
               </div>
     </article>
     
         <article class="cv2-review__block" id="brand-review-table">
-      <h3 class="cv2-review__h3">O que a <?= e(SITE_NAME) ?> pode disponibilizar, sem prometer retornos</h3>
-            <p>Síntese das funcionalidades destacadas pela plataforma. Cada linha descreve uma possibilidade de utilização, não um resultado financeiro. Confirme na sua conta quais os recursos que estão efetivamente disponíveis.</p>
+      <h3 class="cv2-review__h3">What <?= e(SITE_NAME) ?> can provide, without promising returns</h3>
+            <p>A summary of features the platform highlights. Each line describes a possible use, not a financial result. Confirm in your account which resources are actually available.</p>
             <dl class="cv2-review__table">
                 <div class="cv2-review__row">
           <dt>Unified dashboard and tracked markets</dt>
-          <dd>Um espaço central para consultar saldo, instrumentos disponíveis e acessos rápidos a gráficos ou listas, evitando a troca constante entre ecrãs.</dd>
+          <dd>A central place to check balance, available instruments and shortcuts to charts or lists, without constant switching between screens.</dd>
         </div>
                 <div class="cv2-review__row">
-          <dt>Análise de dados com assistência de inteligência artificial</dt>
-          <dd>Sínteses e padrões sinalizados para serem avaliados posteriormente. A IA não prevê resultados nem substitui as regras de risco que cabe a si estabelecer.</dd>
+          <dt>Data analysis with artificial-intelligence assistance</dt>
+          <dd>Summaries and flagged patterns for you to review later. The AI does not forecast results and does not replace the risk rules you set.</dd>
         </div>
                 <div class="cv2-review__row">
-          <dt>Alertas e níveis escolhidos pelo utilizador</dt>
-          <dd>Receba notificações quando as condições selecionadas mudarem. Um excesso de alertas pode dificultar a interpretação, por isso conserve apenas os que apoiam o seu plano.</dd>
+          <dt>Alerts and levels you choose</dt>
+          <dd>Get notifications when the conditions you selected change. Too many alerts can make the picture harder to read, so keep only those that support your plan.</dd>
         </div>
                 <div class="cv2-review__row">
-          <dt>Preferências e limites de exposição</dt>
-          <dd>Indicações sobre o tamanho das posições e os limites que configurou. Ajudam a manter disciplina, mas não conseguem impedir todas as perdas causadas pelos mercados.</dd>
+          <dt>Preferences and exposure limits</dt>
+          <dd>Notes on position size and the limits you configured. They help keep discipline, but they cannot stop every market-driven loss.</dd>
         </div>
                 <div class="cv2-review__row">
-          <dt>Montante mínimo e métodos de depósito indicados</dt>
-          <dd>O montante inicial, a partir de <?= e(min_deposit_label()) ?>, dá acesso a determinadas funções; não é uma recomendação. Confirme antes os montantes, possíveis custos e prazos de processamento.</dd>
+          <dt>Stated minimum amount and deposit methods</dt>
+          <dd>The starting amount, from <?= e(min_deposit_label()) ?>, unlocks certain functions; it is not a recommendation. Confirm amounts, possible fees and processing times first.</dd>
         </div>
                 <div class="cv2-review__row">
-          <dt>Levantamentos e acompanhamento do saldo</dt>
-          <dd>Os pedidos são tratados de acordo com as regras da conta. Ao prazo da plataforma podem somar-se os tempos do banco ou da rede utilizada. Um processo de levantamento claro não elimina o risco das posições que permanecerem abertas.</dd>
+          <dt>Withdrawals and balance tracking</dt>
+          <dd>Requests are handled under the account rules. The platform timeline can add bank or network times. A clear withdrawal process does not remove the risk of positions that stay open.</dd>
         </div>
                 <div class="cv2-review__row">
-          <dt>Segurança da sessão e verificações de acesso</dt>
-          <dd>Ligação protegida e mecanismos de verificação, quando disponíveis. Estas salvaguardas ajudam a proteger o acesso, mas não garantem o valor das posições.</dd>
+          <dt>Session security and access checks</dt>
+          <dd>A protected connection and verification steps, where available. These safeguards help protect access, but they do not guarantee the value of positions.</dd>
         </div>
                 <div class="cv2-review__row">
-          <dt>Assistência operacional para a conta</dt>
-          <dd>Apoio relativo a documentos, prazos e utilização dos ecrãs. Não abrange aconselhamento personalizado nem validação de uma operação especulativa.</dd>
+          <dt>Operational help for the account</dt>
+          <dd>Help with documents, timelines and how to use the screens. It does not cover personal advice or validation of a speculative trade.</dd>
         </div>
               </dl>
     </article>
     
-        <p class="cv2-review__disclaimer">Aviso: a negociação de instrumentos financeiros e ativos digitais pode resultar na perda parcial ou total do capital. A <?= e(SITE_NAME) ?> fornece informação, ferramentas e acesso, mas não aconselhamento individual nem promessa de rentabilidade. Leia as condições, não tome exemplos de ganhos como referência e arrisque apenas um montante cuja perda conseguiria suportar.</p>
+        <p class="cv2-review__disclaimer">Warning: trading financial instruments and digital assets can result in partial or total loss of capital. <?= e(SITE_NAME) ?> provides information, tools and access, not individual advice or a promised return. Read the terms, do not treat gain examples as a benchmark and risk only an amount whose loss you could bear.</p>
       </div>
 </section>
 
@@ -536,37 +502,37 @@ require __DIR__ . '/includes/header.php';
 <div class="spacer-xxlarge"></div>
 <div class="testimonial18_list">
 <div class="testimonial18_card">
-<div class="testimonial18_rating-wrapper" role="img" aria-label="Avaliação ilustrativa de 5 em 5">
+<div class="testimonial18_rating-wrapper" role="img" aria-label="Illustrative 5 out of 5 rating">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 </div>
-<h3 class="text-size-medium">Explore a plataforma a partir de <?= e(min_deposit_label()) ?></h3>
-<p class="text-size-regular">Comecei sem conhecimentos neste tema. Criar a conta e explorar os primeiros ecrãs de <?= e(SITE_NAME) ?> foi simples, sem pressão para aumentar o montante depositado. Prefiro avançar ao meu ritmo e verificar os limites antes de qualquer operação.</p>
+<h3 class="text-size-medium">Explore the platform from <?= e(min_deposit_label()) ?></h3>
+<p class="text-size-regular">I started with no knowledge of this topic. Opening the account and exploring the first <?= e(SITE_NAME) ?> screens was simple, with no pressure to raise the deposited amount. I prefer to move at my own pace and check the limits before any trade.</p>
 <div class="text-size-small">
 <strong>Marta Ferreira</strong>
 </div>
 <img alt="" class="testimonial-pattern-image" loading="lazy" src="<?= asset('static/images/testimonial-pattern.svg') ?>">
 </div>
 <div class="testimonial18_card">
-<div class="testimonial18_rating-wrapper" role="img" aria-label="Avaliação ilustrativa de 5 em 5">
+<div class="testimonial18_rating-wrapper" role="img" aria-label="Illustrative 5 out of 5 rating">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 </div>
-<h3 class="text-size-medium">Um início acompanhado para quem está a começar</h3>
-<p class="text-size-regular">O início na <?= e(SITE_NAME) ?> foi tranquilo. O apoio mostrou-me como interpretar o painel, sem me indicar uma estratégia de investimento. Mantenho uma postura cautelosa, pois os mercados oscilam e não há resultados garantidos.</p>
+<h3 class="text-size-medium">A guided start for beginners</h3>
+<p class="text-size-regular">Starting on <?= e(SITE_NAME) ?> was calm. Support showed me how to read the dashboard, without telling me an investment strategy. I stay cautious, because markets move and results are not guaranteed.</p>
 <div class="text-size-small">
 <strong>Carolina Rodrigues</strong>
 </div>
 <img alt="" class="testimonial-pattern-image" loading="lazy" src="<?= asset('static/images/testimonial-pattern.svg') ?>">
 </div>
 <div class="testimonial18_card">
-<div class="testimonial18_rating-wrapper" role="img" aria-label="Avaliação ilustrativa de 5 em 5">
+<div class="testimonial18_rating-wrapper" role="img" aria-label="Illustrative 5 out of 5 rating">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
@@ -574,22 +540,22 @@ require __DIR__ . '/includes/header.php';
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 </div>
 <h3 class="text-size-medium">Capital and decisions stay with you</h3>
-<p class="text-size-regular">Antes acompanhava os meus fundos de forma pouco estruturada; agora uso a <?= e(SITE_NAME) ?> para observar os mercados com mais método. Ainda assim, qualquer desempenho permanece imprevisível.</p>
+<p class="text-size-regular">I used to track my funds in a messy way; now I use <?= e(SITE_NAME) ?> to watch the markets with more method. Even so, any performance stays unpredictable.</p>
 <div class="text-size-small">
 <strong>João Teixeira</strong>
 </div>
 <img alt="" class="testimonial-pattern-image" loading="lazy" src="<?= asset('static/images/testimonial-pattern.svg') ?>">
 </div>
 <div class="testimonial18_card">
-<div class="testimonial18_rating-wrapper" role="img" aria-label="Avaliação ilustrativa de 5 em 5">
+<div class="testimonial18_rating-wrapper" role="img" aria-label="Illustrative 5 out of 5 rating">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 <img alt="" class="testimonial18_rating-icon" src="<?= asset('static/images/star.svg') ?>" width="20" height="20">
 </div>
-<h3 class="text-size-medium">Acompanhe os mercados em mobilidade</h3>
-<p class="text-size-regular">Queria consultar o painel durante deslocações. A versão móvel da <?= e(SITE_NAME) ?> é intuitiva, mas continuo eu a decidir se avanço ou não, sem basear-me em promessas de rendimento.</p>
+<h3 class="text-size-medium">Follow the markets on the move</h3>
+<p class="text-size-regular">I wanted to check the dashboard while travelling. The mobile version of <?= e(SITE_NAME) ?> is intuitive, but I still decide whether to go ahead, without relying on promised returns.</p>
 <div class="text-size-small">
 <strong>Sofia Pereira</strong>
 </div>
@@ -606,9 +572,9 @@ require __DIR__ . '/includes/header.php';
     <div class="lx-agg-body">
       <div class="lx-agg-left">
         <span class="lx-agg-badge">Information note</span>
-        <h3 class="lx-agg-h3">Relatos de utilização, não uma classificação oficial</h3>
+        <h3 class="lx-agg-h3">Usage reports, not an official rating</h3>
       </div>
-      <p class="lx-agg-meta">Os textos acima descrevem formas de usar a plataforma. Não são uma média verificada nem um resultado financeiro.</p>
+      <p class="lx-agg-meta">The texts above describe ways of using the platform. They are not a verified average or a financial result.</p>
     </div>
   </div>
 </div>
@@ -617,7 +583,7 @@ require __DIR__ . '/includes/header.php';
 <div class="padding-global padding-section-medium">
 <div class="container-medium">
 <div class="text-align-center">
-<h2 class="heading-style-h2" id="payments-heading" style="font-weight: bold;">Pagamentos e mercados</h2>
+<h2 class="heading-style-h2" id="payments-heading" style="font-weight: bold;">Payments and markets</h2>
 <div class="spacer-medium"></div>
 <div class="partners-grid">
 <div class="partner-logo">
@@ -710,14 +676,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            Que montante preciso de ter para começar na <?= e(SITE_NAME) ?>?
+            How much do I need to start on <?= e(SITE_NAME) ?>?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>Pode começar com um montante a partir de <?= e(min_deposit_label()) ?>. Muitos utilizadores optam por testar primeiro com prudência, explorar as ferramentas e ajustar a utilização aos seus objetivos e à sua tolerância ao risco. O montante mínimo indicado não constitui uma recomendação de investimento: utilize apenas fundos compatíveis com a sua situação financeira. Os mercados podem oscilar e não há resultados assegurados.</p>
+          <p>You can start with an amount from <?= e(min_deposit_label()) ?>. Many users prefer to test cautiously first, explore the tools and match usage to their goals and risk tolerance. The stated minimum is not an investment recommendation: use only funds that fit your financial situation. Markets can move and results are not assured.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -725,14 +691,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            Quanto tempo costuma demorar um levantamento na <?= e(SITE_NAME) ?>?
+            How long does a withdrawal usually take on <?= e(SITE_NAME) ?>?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>Em regra, os pedidos de levantamento são processados pela plataforma no prazo máximo de 24 horas. O banco ou o método selecionado poderá demorar mais 1 a 3 dias úteis até disponibilizar os fundos. Antes de validar o pedido, confirme os prazos, eventuais custos e verificações aplicáveis. O apoio ao cliente poderá esclarecer o estado do levantamento.</p>
+          <p>As a rule, withdrawal requests are processed by the platform within 24 hours. The bank or selected method may take another 1 to 3 business days to make funds available. Before you confirm, check timelines, any fees and the applicable checks. Support can clarify the status of the withdrawal.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -740,14 +706,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            Como é que a <?= e(SITE_NAME) ?> protege os meus dados e a conta?
+            How does <?= e(SITE_NAME) ?> protect my data and account?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>Enquanto serviço digital, <?= e(SITE_NAME) ?> combina várias medidas de proteção, como encriptação, verificação de contas e monitorização regular de riscos técnicos. Sempre que essa opção esteja disponível, poderá também configurar controlos adicionais no seu perfil. Estas medidas reforçam a segurança do acesso e das operações, mas não impedem perdas provocadas pelas oscilações dos mercados.</p>
+          <p>As a digital service, <?= e(SITE_NAME) ?> combines several protections, such as encryption, account checks and regular monitoring of technical risks. Where that option is available, you can also set extra controls in your profile. These measures strengthen access and operations security, but they do not stop losses caused by market swings.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -755,14 +721,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            Tenho de possuir experiência para utilizar a <?= e(SITE_NAME) ?>?
+            Do I need experience to use <?= e(SITE_NAME) ?>?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>Não. A <?= e(SITE_NAME) ?> foi concebida para que novos utilizadores possam começar sem uma curva de aprendizagem excessiva. O ecrã orienta a configuração e a utilização, enquanto as opções ajustáveis permitem um acompanhamento mais controlado. Uma interface simples não elimina os riscos: conheça as ferramentas e as suas limitações antes de realizar operações.</p>
+          <p>No. <?= e(SITE_NAME) ?> was designed so new users can start without an excessive learning curve. The screen guides setup and use, while adjustable options allow more controlled tracking. A simple interface does not remove the risks: know the tools and their limits before you trade.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -770,14 +736,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            A <?= e(SITE_NAME) ?> promete algum rendimento?
+            Does <?= e(SITE_NAME) ?> promise a return?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>Não. A <?= e(SITE_NAME) ?> disponibiliza recursos de negociação e análise com apoio de IA para facilitar o acompanhamento dos mercados, mas não garante rendimentos, lucros diários ou resultados determinados. O desempenho pode variar consoante as condições do mercado, as definições escolhidas e o capital utilizado. Avalie a possibilidade de perder dinheiro antes de depositar ou abrir uma posição.</p>
+          <p>No. <?= e(SITE_NAME) ?> provides trading and analysis resources with AI support to make market tracking easier, but it does not guarantee returns, daily profits or predetermined results. Performance can vary with market conditions, the settings you choose and the capital used. Consider the chance of losing money before you deposit or open a position.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -785,14 +751,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            Que mercados posso consultar através da <?= e(SITE_NAME) ?>?
+            Which markets can I follow through <?= e(SITE_NAME) ?>?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>Dependendo da disponibilidade, a <?= e(SITE_NAME) ?> poderá apresentar informação sobre ações, forex e criptoativos, juntamente com painéis de análise associados. A oferta de instrumentos pode diferir entre contas, pelo que deverá consultar a lista no seu próprio painel. Os dados servem para apoiar a análise e não substituem a sua avaliação.</p>
+          <p>Depending on availability, <?= e(SITE_NAME) ?> may show information on stocks, forex and crypto, together with related analysis panels. The instrument list can differ between accounts, so check the list in your own dashboard. The data supports analysis and does not replace your own assessment.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -800,14 +766,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            Como começo a trabalhar com a <?= e(SITE_NAME) ?>?
+            How do I start working with <?= e(SITE_NAME) ?>?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>Depois de criar a conta e efetuar o depósito mínimo indicado, aceda ao painel para explorar gráficos, mercados e ferramentas de análise. Em seguida, defina as suas preferências e limites de risco, avançando de acordo com o seu ritmo. A <?= e(SITE_NAME) ?> apresenta um percurso organizado, sem incentivar decisões precipitadas. Para esclarecimentos operacionais, recorra ao apoio ao cliente.</p>
+          <p>After you create the account and make the stated minimum deposit, open the dashboard to explore charts, markets and analysis tools. Then set your preferences and risk limits, moving at your own pace. <?= e(SITE_NAME) ?> presents an organised path, without pushing rushed decisions. For operational questions, use customer support.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -815,14 +781,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            De que forma posso obter ajuda para a minha conta <?= e(SITE_NAME) ?>?
+            How can I get help for my <?= e(SITE_NAME) ?> account?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>O suporte da <?= e(SITE_NAME) ?> está disponível para questões relacionadas com a conta, depósitos, levantamentos e navegação nos ecrãs. Pode enviar o pedido através da página de Contacto. A equipa esclarece os procedimentos aplicáveis, mas não presta aconselhamento de investimento personalizado nem promete resultados.</p>
+          <p><?= e(SITE_NAME) ?> support is available for account, deposit, withdrawal and screen-navigation questions. You can send the request through the Contact page. The team explains the applicable procedures, but it does not give personal investment advice or promise results.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -830,14 +796,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            A <?= e(SITE_NAME) ?> é uma fraude?
+            Is <?= e(SITE_NAME) ?> a scam?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>É uma questão legítima quando surge uma plataforma que combina formulários com funcionalidades associadas à IA. A <?= e(SITE_NAME) ?> disponibiliza ferramentas para observar os mercados, não um rendimento prometido ou uma solução isenta de risco. Depósitos bloqueados, lucros garantidos ou cobranças adicionais para libertar um levantamento são sinais de alerta. Os processos de depósito e levantamento devem ser explicados antes da confirmação. Esta informação não equivale a uma certificação jurídica e o capital continua sujeito a perdas. Se não estiver seguro, não abra uma conta.</p>
+          <p>It is a fair question when a platform combines forms with AI features. <?= e(SITE_NAME) ?> provides tools to watch the markets, not a promised return or a risk-free solution. Blocked deposits, guaranteed profits or extra charges to release a withdrawal are warning signs. Deposit and withdrawal processes should be explained before you confirm. This information is not a legal certificate and capital remains subject to loss. If you are not sure, do not open an account.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -845,14 +811,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            A <?= e(SITE_NAME) ?> está relacionada com alguma entidade regulada?
+            Is <?= e(SITE_NAME) ?> linked to a regulated entity?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>As autoridades financeiras locais participam na supervisão dos mercados e de diversos intervenientes. A <?= e(SITE_NAME) ?> não declara possuir autorização, estatuto bancário ou uma licença de aconselhamento de investimento apresentada como validação oficial. A menção a um regulador serve apenas para contextualizar os residentes e não demonstra que o serviço tenha sido aprovado. Leia a informação legal do domínio, confirme o endereço do site e não considere material promocional como prova de autorização.</p>
+          <p>Local financial authorities take part in supervising markets and various participants. <?= e(SITE_NAME) ?> does not claim authorisation, bank status or an investment-advice licence presented as official validation. Mentioning a regulator only sets context for residents and does not show that the service was approved. Read the domain’s legal information, confirm the site address and do not treat promotional material as proof of authorisation.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -860,14 +826,14 @@ require __DIR__ . '/includes/header.php';
       <div class="faq_accordion">
         <div class="faq_question">
           <h3 class="text-size-large text-weight-semibold" style="font-weight: bold;">
-            Posso utilizar a <?= e(SITE_NAME) ?> se viver em <?= e(geo_country_name()) ?>?
+            Can I use <?= e(SITE_NAME) ?> if I live in <?= e(geo_country_name()) ?>?
           </h3>
           <div class="faq1_icon-wrapper">
             <img src="<?= asset('static/images/dropdown.svg') ?>" loading="lazy" alt="" class="icon-1x1-medium">
           </div>
         </div>
         <div class="faq_answer">
-          <p>A interface e o apoio foram estruturados para utilizadores desta língua, incluindo orientações sobre contas, depósitos e levantamentos. A elegibilidade, a documentação necessária e os métodos de pagamento disponíveis são verificados durante o registo. Ser residente em <?= e(geo_country_name()) ?> não elimina o risco de mercado nem a obrigação de ler os termos. Se não cumprir os critérios de acesso, não prossiga nem envie fundos.</p>
+          <p>The interface and support were built for users of this language, including guidance on accounts, deposits and withdrawals. Eligibility, required documents and available payment methods are checked during registration. Living in <?= e(geo_country_name()) ?> does not remove market risk or the need to read the terms. If you do not meet the access criteria, do not continue or send funds.</p>
           <div class="spacer-small"></div>
         </div>
       </div>
@@ -889,7 +855,7 @@ require __DIR__ . '/includes/header.php';
 
 <?php
   $form_id = "registrationForm-cta";
-  $form_class = "leadform register-form bottom form-reg c-form registrationForm flex-column js-lead-form form-pc";
+  $form_class = "leadform register-form bottom form-reg c-form registrationForm flex-column js-lead-form";
   $form_submit = 'Siųsti';
   require __DIR__ . '/includes/form.php';
 ?>

@@ -23,7 +23,7 @@ $lead_cookie = site_slug().'_lead';
   <div class="form-already-registered hidden" data-already-registered>
     <p class="form-already-registered__title">リクエストは受信済みです</p>
     <p class="form-already-registered__text">
-      リクエスト先 <?= e(SITE_NAME) ?> を受け取りました。担当者からの電話をお待ちください。
+      リクエスト先 <?= e(SITE_NAME) ?> was received. Aguarde a chamada do gestor.
     </p>
   </div>
 
