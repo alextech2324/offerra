@@ -13,7 +13,7 @@ class OfferManageAccessTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_regular_user_cannot_archive_own_offer(): void
+    public function test_regular_user_can_archive_own_offer(): void
     {
         Queue::fake();
 
@@ -21,6 +21,23 @@ class OfferManageAccessTest extends TestCase
         $offer = $this->makeOffer($owner, 'owned-by-user.com');
 
         $this->actingAs($owner)
+            ->from(route('offers.index'))
+            ->post(route('offers.archive', $offer))
+            ->assertRedirect();
+
+        $this->assertSame('archiving', $offer->fresh()->status);
+        Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
+    }
+
+    public function test_regular_user_cannot_archive_someone_elses_offer(): void
+    {
+        Queue::fake();
+
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $offer = $this->makeOffer($owner, 'not-mine.com');
+
+        $this->actingAs($other)
             ->post(route('offers.archive', $offer))
             ->assertForbidden();
 
@@ -28,7 +45,23 @@ class OfferManageAccessTest extends TestCase
         Queue::assertNothingPushed();
     }
 
-    public function test_manage_all_user_cannot_archive_offers(): void
+    public function test_see_all_without_manage_cannot_archive_someone_elses_offer(): void
+    {
+        Queue::fake();
+
+        $owner = User::factory()->create();
+        $viewer = User::factory()->seeAllOffers()->create();
+        $offer = $this->makeOffer($owner, 'view-only.com');
+
+        $this->actingAs($viewer)
+            ->post(route('offers.archive', $offer))
+            ->assertForbidden();
+
+        $this->assertSame('generated', $offer->fresh()->status);
+        Queue::assertNothingPushed();
+    }
+
+    public function test_manage_all_user_can_archive_someone_elses_offer(): void
     {
         Queue::fake();
 
@@ -37,11 +70,12 @@ class OfferManageAccessTest extends TestCase
         $offer = $this->makeOffer($owner, 'managed-by-teammate.com');
 
         $this->actingAs($manager)
+            ->from(route('offers.index'))
             ->post(route('offers.archive', $offer))
-            ->assertForbidden();
+            ->assertRedirect();
 
-        $this->assertSame('generated', $offer->fresh()->status);
-        Queue::assertNothingPushed();
+        $this->assertSame('archiving', $offer->fresh()->status);
+        Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
     }
 
     public function test_admin_can_archive_any_offer(): void
@@ -61,13 +95,14 @@ class OfferManageAccessTest extends TestCase
         Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
     }
 
-    public function test_regular_user_cannot_bulk_archive_stale_dead(): void
+    public function test_regular_user_can_bulk_archive_own_stale_dead(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)
+            ->from(route('offers.archive.index'))
             ->post(route('offers.stale-dead.archive'))
-            ->assertForbidden();
+            ->assertRedirect();
     }
 
     public function test_regular_user_cannot_restore_someone_elses_offer(): void
@@ -93,6 +128,23 @@ class OfferManageAccessTest extends TestCase
             ->from(route('offers.archive.index'))
             ->post(route('offers.restore', $offer))
             ->assertRedirect();
+    }
+
+    public function test_manage_all_user_can_purge_someone_elses_offer(): void
+    {
+        Queue::fake();
+
+        $owner = User::factory()->create();
+        $manager = User::factory()->manageAllOffers()->create();
+        $offer = $this->makeOffer($owner, 'purge-other.com');
+
+        $this->actingAs($manager)
+            ->from(route('offers.index'))
+            ->delete(route('offers.destroy', $offer))
+            ->assertRedirect();
+
+        $this->assertSame('purging', $offer->fresh()->status);
+        Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
     }
 
     public function test_admin_can_grant_manage_all_access(): void

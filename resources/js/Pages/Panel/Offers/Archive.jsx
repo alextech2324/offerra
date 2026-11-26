@@ -270,7 +270,7 @@ export default function Archive({
                     </p>
                 </header>
 
-                <StaleDeadBanner hint={staleDeadHint} canArchive={Boolean(auth?.user?.can_archive_offers)} />
+                <StaleDeadBanner hint={staleDeadHint} canArchive />
 
                 {flash?.success && (
                     <div className="card" style={{ marginBottom: '1rem' }}>
@@ -542,7 +542,7 @@ export default function Archive({
                                                         Поновити
                                                     </button>
                                                 )}
-                                                {auth?.user?.can_archive_offers && offer.status === 'teardown_failed' && (
+                                                {canManageOffer(offer) && offer.status === 'teardown_failed' && (
                                                     <button
                                                         type="button"
                                                         className="btn btn-ghost btn-sm"

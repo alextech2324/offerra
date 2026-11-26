@@ -139,10 +139,6 @@ class StaleDeadOfferService
 
     public function archiveAllFor(User $user, int $days = self::DEAD_AFTER_DAYS): int
     {
-        if (! $user->canArchiveOffers()) {
-            return 0;
-        }
-
         $snapshot = $this->readSnapshot();
         $ids = $this->snapshotIdsFor($user, $snapshot);
 

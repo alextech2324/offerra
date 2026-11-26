@@ -1119,7 +1119,7 @@ class OfferController extends Controller
                 'weekStart' => $today->copy()->startOfWeek()->toDateString(),
                 'monthStart' => $today->copy()->startOfMonth()->toDateString(),
             ],
-            'staleDeadHint' => $user->canArchiveOffers() ? $staleDead->hintFor($user) : null,
+            'staleDeadHint' => $staleDead->hintFor($user),
             'canManageAllOffers' => $user->canManageAllOffers(),
             'geoPresets' => config('offerra.geo_presets'),
             'templates' => app(TemplateCatalog::class)->forPicker(),
@@ -1129,8 +1129,6 @@ class OfferController extends Controller
 
     public function archiveStaleDead(StaleDeadOfferService $staleDead): RedirectResponse
     {
-        $this->authorizeArchive();
-
         $enqueued = $staleDead->archiveAllFor(auth()->user());
 
         if ($enqueued === 0) {
@@ -1146,7 +1144,9 @@ class OfferController extends Controller
 
     public function archive(Offer $offer, OfferTeardownService $teardown): RedirectResponse
     {
-        $this->authorizeArchive();
+        if (! auth()->user()?->canArchiveOffer($offer)) {
+            abort(403);
+        }
 
         try {
             $teardown->enqueueArchive($offer, auth()->user());
@@ -1182,7 +1182,9 @@ class OfferController extends Controller
 
     public function retryArchive(Offer $offer, OfferTeardownService $teardown): RedirectResponse
     {
-        $this->authorizeArchive();
+        if (! auth()->user()?->canArchiveOffer($offer)) {
+            abort(403);
+        }
 
         if ($offer->status !== 'teardown_failed') {
             return redirect()->back()->withErrors(['archive' => 'Повтор доступний лише для офферів з помилкою архівації.']);
@@ -1237,13 +1239,6 @@ class OfferController extends Controller
         $user = auth()->user();
 
         if (! $user->canManageOffer($offer)) {
-            abort(403);
-        }
-    }
-
-    private function authorizeArchive(): void
-    {
-        if (! auth()->user()?->canArchiveOffers()) {
             abort(403);
         }
     }

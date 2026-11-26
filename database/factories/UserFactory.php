@@ -51,6 +51,14 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function seeAllOffers(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'can_see_all_offers' => true,
+            'can_manage_all_offers' => false,
+        ]);
+    }
+
     public function manageAllOffers(): static
     {
         return $this->state(fn (array $attributes) => [

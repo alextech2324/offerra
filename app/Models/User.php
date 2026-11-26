@@ -86,9 +86,17 @@ class User extends Authenticatable
         return $this->isAdmin() || (bool) $this->can_manage_all_offers;
     }
 
+    /**
+     * Archive in the caller's scope (own offers, or everyone's if they may manage all).
+     */
     public function canArchiveOffers(): bool
     {
-        return $this->isAdmin();
+        return true;
+    }
+
+    public function canArchiveOffer(Offer $offer): bool
+    {
+        return $this->canManageOffer($offer);
     }
 
     public function canDownloadOfferZip(): bool
