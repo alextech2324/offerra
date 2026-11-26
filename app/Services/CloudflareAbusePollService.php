@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Jobs\ArchiveCfAbuseOfferJob;
 use App\Models\CloudflareAbuseReport;
 use App\Models\CloudflareAccount;
 use App\Models\Offer;
+use App\Models\User;
 use App\Models\UserSetting;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\Cache;
@@ -15,16 +17,19 @@ class CloudflareAbusePollService
     /** @var list<string> */
     public const NOTIFY_TYPES = ['PHISH', 'THREAT', 'GEN'];
 
+    public const AUTO_ARCHIVE_AFTER_MINUTES = 3;
+
     /** @var list<string> */
     private const INACTIVE_STATUSES = ['archived', 'archiving', 'purging', 'teardown_failed'];
 
     public function __construct(
         private readonly CloudflareClient $cloudflare,
         private readonly TelegramNotifier $telegram,
+        private readonly OfferTeardownService $teardown,
     ) {}
 
     /**
-     * @return array{accounts: int, fetched: int, new: int, notified: int, forbidden: int, errors: int}
+     * @return array{accounts: int, fetched: int, new: int, notified: int, archived: int, forbidden: int, errors: int}
      */
     public function poll(): array
     {
@@ -33,6 +38,7 @@ class CloudflareAbusePollService
             'fetched' => 0,
             'new' => 0,
             'notified' => 0,
+            'archived' => 0,
             'forbidden' => 0,
             'errors' => 0,
         ];
@@ -46,6 +52,8 @@ class CloudflareAbusePollService
             $stats['forbidden'] += $result['forbidden'] ? 1 : 0;
             $stats['errors'] += $result['error'] ? 1 : 0;
         }
+
+        $stats['archived'] = $this->archiveDueOffers();
 
         return $stats;
     }
@@ -190,9 +198,7 @@ class CloudflareAbusePollService
 
         $this->markLiveOfferAbused($offer);
 
-        $offer->loadMissing('user.settings');
-        $settings = $offer->user?->settings;
-        $sent = $settings ? $this->telegram->send($settings, $this->telegramText($offer, $row)) : false;
+        $sent = $this->notifyTelegram($offer, $row);
 
         if (! $sent) {
             Log::warning('cf_abuse.telegram_failed', [
@@ -222,6 +228,105 @@ class CloudflareAbusePollService
         }
 
         $offer->forceFill(['cf_abuse_at' => now()])->save();
+        $this->scheduleAutoArchive($offer);
+    }
+
+    public function archiveDueOffers(): int
+    {
+        $cutoff = now()->subMinutes(self::AUTO_ARCHIVE_AFTER_MINUTES);
+        $offers = Offer::query()
+            ->with('user')
+            ->whereNotIn('status', self::INACTIVE_STATUSES)
+            ->whereNotNull('cf_abuse_at')
+            ->where('cf_abuse_at', '<=', $cutoff)
+            ->orderBy('id')
+            ->get();
+
+        $archived = 0;
+        foreach ($offers as $offer) {
+            if ($this->archiveOfferNow($offer)) {
+                $archived++;
+            }
+        }
+
+        return $archived;
+    }
+
+    public function archiveOfferNow(Offer $offer): bool
+    {
+        $offer->refresh();
+        if (in_array($offer->status, self::INACTIVE_STATUSES, true)) {
+            return false;
+        }
+
+        $actor = $offer->user
+            ?? User::query()->where('role', User::ROLE_ADMIN)->orderBy('id')->first();
+        if (! $actor) {
+            Log::warning('cf_abuse.auto_archive_no_actor', [
+                'offer_id' => $offer->id,
+                'domain' => $offer->domain,
+            ]);
+
+            return false;
+        }
+
+        try {
+            $this->teardown->enqueueArchive($offer, $actor, Offer::ARCHIVE_REASON_CF_ABUSE);
+        } catch (\Throwable $e) {
+            $msg = $e->getMessage();
+            if (str_contains($msg, 'вже архівується') || str_contains($msg, 'в архіві')) {
+                return false;
+            }
+
+            Log::warning('cf_abuse.auto_archive_failed', [
+                'offer_id' => $offer->id,
+                'domain' => $offer->domain,
+                'error' => $msg,
+            ]);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function scheduleAutoArchive(Offer $offer): void
+    {
+        ArchiveCfAbuseOfferJob::dispatch($offer->id)
+            ->delay(now()->addMinutes(self::AUTO_ARCHIVE_AFTER_MINUTES));
+    }
+
+    private function notifyTelegram(Offer $offer, CloudflareAbuseReport $row): bool
+    {
+        $text = $this->telegramText($offer, $row);
+        $sent = false;
+        $seen = [];
+
+        $offer->loadMissing('user.settings');
+        $candidates = [];
+        if ($offer->user?->settings instanceof UserSetting) {
+            $candidates[] = $offer->user->settings;
+        }
+
+        $admins = User::query()->where('role', User::ROLE_ADMIN)->with('settings')->get();
+        foreach ($admins as $admin) {
+            if ($admin->settings instanceof UserSetting) {
+                $candidates[] = $admin->settings;
+            }
+        }
+
+        foreach ($candidates as $settings) {
+            $id = (int) $settings->id;
+            if (isset($seen[$id])) {
+                continue;
+            }
+            $seen[$id] = true;
+            if ($this->telegram->send($settings, $text)) {
+                $sent = true;
+            }
+        }
+
+        return $sent;
     }
 
     private function matchOffer(string $domain): ?Offer
@@ -303,7 +408,7 @@ class CloudflareAbusePollService
             $templateLine,
             $created !== null ? 'Створено: '.$created : null,
             '',
-            'Заархівуйте офер у панелі, поки хостер не перевірив origin:',
+            'Автоматично заархівується через '.self::AUTO_ARCHIVE_AFTER_MINUTES.' хв, щоб хостер не вимкнув origin.',
             $url,
         ], static fn ($line) => $line !== null));
     }

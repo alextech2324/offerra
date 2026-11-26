@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\ArchiveCfAbuseOfferJob;
 use App\Jobs\ArchiveOfferJob;
 use App\Models\CloudflareAbuseReport;
 use App\Models\CloudflareAccount;
@@ -63,6 +64,7 @@ class CloudflareAbusePollTest extends TestCase
 
     public function test_new_phish_report_notifies_live_offer_owner_once(): void
     {
+        Queue::fake();
         [$offer] = $this->liveOfferWithTelegram('phish-me.live');
 
         Http::fake($this->cfReportsFake('acct1', [
@@ -83,6 +85,7 @@ class CloudflareAbusePollTest extends TestCase
                         && str_contains($text, (string) $user?->email)
                         && str_contains($text, 'GEO: IT / it')
                         && str_contains($text, 'Шаблон: default')
+                        && str_contains($text, 'Автоматично заархівується через 3 хв')
                         && $created !== null
                         && str_contains($text, 'Створено: '.$created);
                 })
@@ -104,10 +107,72 @@ class CloudflareAbusePollTest extends TestCase
         ]);
         $this->assertNotNull(CloudflareAbuseReport::query()->where('cf_report_id', 'rep-phish')->value('notified_at'));
         $this->assertNotNull($offer->fresh()->cf_abuse_at);
+        $this->assertSame('deployed', $offer->fresh()->status);
+        Queue::assertPushed(ArchiveCfAbuseOfferJob::class, function (ArchiveCfAbuseOfferJob $job) use ($offer) {
+            if ($job->offerId !== $offer->id || $job->delay === null) {
+                return false;
+            }
+
+            $seconds = $job->delay->getTimestamp() - now()->getTimestamp();
+
+            return $seconds >= 170 && $seconds <= 190;
+        });
+        Queue::assertNotPushed(ArchiveOfferJob::class);
+    }
+
+    public function test_auto_archive_job_archives_live_abused_offer(): void
+    {
+        Queue::fake();
+
+        [$offer] = $this->liveOfferWithTelegram('auto-archive.live');
+        $offer->forceFill(['cf_abuse_at' => now()->subMinutes(3)])->save();
+
+        (new ArchiveCfAbuseOfferJob($offer->id))->handle(app(CloudflareAbusePollService::class));
+
+        $this->assertSame('archiving', $offer->fresh()->status);
+        $this->assertSame(Offer::ARCHIVE_REASON_CF_ABUSE, $offer->fresh()->archive_reason);
+        Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
+    }
+
+    public function test_auto_archive_job_skips_already_archived_offer(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $this->settingsWithCf($user, telegram: true);
+        $offer = $this->makeOffer($user, 'already-archived.live', 'archived', Offer::ARCHIVE_REASON_CF_ABUSE);
+        $offer->forceFill(['cf_abuse_at' => now()->subMinutes(5)])->save();
+
+        (new ArchiveCfAbuseOfferJob($offer->id))->handle(app(CloudflareAbusePollService::class));
+
+        $this->assertSame('archived', $offer->fresh()->status);
+        Queue::assertNothingPushed();
+    }
+
+    public function test_poll_archives_offers_whose_abuse_is_older_than_three_minutes(): void
+    {
+        Queue::fake();
+
+        [$offer] = $this->liveOfferWithTelegram('due-archive.live');
+        $offer->forceFill(['cf_abuse_at' => now()->subMinutes(4)])->save();
+
+        Http::fake($this->cfReportsFake('acct1', []));
+
+        $this->mock(TelegramNotifier::class, function ($mock): void {
+            $mock->shouldReceive('send')->never();
+        });
+
+        $stats = app(CloudflareAbusePollService::class)->poll();
+
+        $this->assertSame(1, $stats['archived']);
+        $this->assertSame('archiving', $offer->fresh()->status);
+        $this->assertSame(Offer::ARCHIVE_REASON_CF_ABUSE, $offer->fresh()->archive_reason);
+        Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
     }
 
     public function test_archived_offer_is_stored_without_telegram(): void
     {
+        Queue::fake();
         $user = User::factory()->create();
         $this->settingsWithCf($user);
         $this->makeOffer($user, 'already-gone.live', 'archived');
@@ -132,6 +197,7 @@ class CloudflareAbusePollTest extends TestCase
 
     public function test_dmca_is_stored_without_telegram(): void
     {
+        Queue::fake();
         $this->liveOfferWithTelegram('copyright.live');
 
         Http::fake($this->cfReportsFake('acct1', [
@@ -146,6 +212,7 @@ class CloudflareAbusePollTest extends TestCase
 
         $this->assertSame(1, $stats['new']);
         $this->assertSame(0, $stats['notified']);
+        Queue::assertNotPushed(ArchiveCfAbuseOfferJob::class);
     }
 
     public function test_duplicate_cloudflare_slots_make_one_http_request(): void

@@ -1509,7 +1509,7 @@ export default function OffersIndex({
                         <span className="availability-dot availability-dot--abuse" aria-hidden="true" />
                         <strong>{abuseCount}</strong>
                         {' '}
-                        оферів з Cloudflare abuse — хтось не заархівував після пуша.
+                        оферів з Cloudflare abuse — автоархів через 3 хв, або зараз кнопкою.
                     </button>
                     <button
                         type="button"

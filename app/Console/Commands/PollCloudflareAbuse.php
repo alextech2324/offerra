@@ -9,7 +9,7 @@ class PollCloudflareAbuse extends Command
 {
     protected $signature = 'cloudflare:poll-abuse';
 
-    protected $description = 'Poll Cloudflare incoming abuse reports and Telegram the offer owner';
+    protected $description = 'Poll Cloudflare incoming abuse reports, Telegram, then auto-archive after 3 minutes';
 
     public function handle(CloudflareAbusePollService $poller): int
     {
@@ -20,6 +20,7 @@ class PollCloudflareAbuse extends Command
             .' fetched='.$stats['fetched']
             .' new='.$stats['new']
             .' notified='.$stats['notified']
+            .' archived='.$stats['archived']
             .' forbidden='.$stats['forbidden']
             .' errors='.$stats['errors']
         );
