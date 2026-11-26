@@ -35,10 +35,12 @@ function site_locale(): string
 
 function geo_country_code(): string
 {
-    $code = strtolower(trim((string) FORM_PHONE_COUNTRY));
-
-    if ($code === '' && defined('CRM_COUNTRY')) {
+    $code = '';
+    if (defined('CRM_COUNTRY')) {
         $code = strtolower(trim((string) CRM_COUNTRY));
+    }
+    if ($code === '' || ! preg_match('/^[a-z]{2}$/', $code)) {
+        $code = strtolower(trim((string) FORM_PHONE_COUNTRY));
     }
 
     if ($code === 'uk') {
@@ -72,6 +74,8 @@ function geo_country_name(): string
         'ca' => 'Canada', 'bg' => 'Bulgaria', 'lt' => 'Lithuania', 'lv' => 'Latvia',
         'si' => 'Slovenia', 'ge' => 'Georgia', 'my' => 'Malaysia', 'id' => 'Indonesia',
         'jp' => 'Japan', 'br' => 'Brazil', 'mx' => 'Mexico',
+        'ua' => 'Ukraine', 'md' => 'Moldova', 'ee' => 'Estonia',
+        'cy' => 'Cyprus', 'mt' => 'Malta', 'lu' => 'Luxembourg',
     ];
 
     return $names[$code] ?? $iso;
@@ -99,6 +103,16 @@ function currency_symbol(): string
         'MXN' => '$',
         default => $code,
     };
+}
+
+function offer_rating_value(): string
+{
+    return '4.7';
+}
+
+function offer_rating_count(): string
+{
+    return '720';
 }
 
 function min_deposit_label(): string

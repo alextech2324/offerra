@@ -68,6 +68,10 @@ class NavoraTemplateTest extends TestCase
         $this->assertStringNotContainsString('opacity: 0', $index);
         $this->assertStringContainsString('Why get to know', $index);
         $this->assertStringContainsString('tools to track and control risk', $index);
+        $this->assertStringContainsString('Reviews of', $index);
+        $this->assertStringContainsString('Informational analysis', $index);
+        $this->assertStringContainsString('compiled reviews', $index);
+        $this->assertStringNotContainsString('Usage reports, not an official rating', $index);
         $privacy = file_get_contents(base_path('templates/navora/langs/en/privacy.php'));
         $this->assertIsString($privacy);
         $this->assertStringNotContainsString('telefone, idioma', $privacy);
@@ -84,6 +88,22 @@ class NavoraTemplateTest extends TestCase
         $this->assertIsString($validation);
         $this->assertStringContainsString('separateDialCode: true', $validation);
         $this->assertStringContainsString('allowDropdown: false', $validation);
+
+        $this->assertStringContainsString('geo_country_name()', $index);
+        $this->assertStringContainsString('min_deposit_label()', $index);
+        $this->assertStringContainsString('itemprop="ratingValue"', $index);
+        $this->assertStringContainsString('itemprop="ratingCount"', $index);
+        $this->assertStringContainsString('offer_rating_value()', $index);
+        $this->assertStringContainsString('SoftwareApplication', $index);
+        $this->assertStringNotContainsString('United Kingdom', $index);
+        $this->assertStringNotContainsString('£250', $index);
+
+        $schema = file_get_contents(base_path('templates/navora/includes/schema.php'));
+        $this->assertIsString($schema);
+        $this->assertStringContainsString('aggregateRating', $schema);
+        $this->assertStringContainsString('offer_rating_value()', $schema);
+        $this->assertStringContainsString('offer_rating_count()', $schema);
+        $this->assertStringContainsString('SoftwareApplication', $schema);
     }
 
     public function test_navora_form_posts_to_send_php(): void

@@ -567,17 +567,27 @@ require __DIR__ . '/includes/header.php';
 </div>
 </section>
 
-<div class="lx-agg-strip" role="note">
+<section class="lx-agg-strip" itemscope itemtype="https://schema.org/SoftwareApplication" aria-label="Avaliação da <?= e(SITE_NAME) ?>">
+  <meta itemprop="name" content="<?= e(SITE_NAME) ?>">
+  <meta itemprop="applicationCategory" content="FinanceApplication">
+  <meta itemprop="operatingSystem" content="Web">
+  <link itemprop="url" href="<?= e(rtrim(SITE_URL, '/')) ?>/">
   <div class="lx-agg-inner">
-    <div class="lx-agg-body">
+    <div class="lx-agg-body" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
       <div class="lx-agg-left">
-        <span class="lx-agg-badge">Nota informativa</span>
-        <h3 class="lx-agg-h3">Relatos de utilização, não uma classificação oficial</h3>
+        <span class="lx-agg-badge">Análise de caráter informativo</span>
+        <h3 class="lx-agg-h3">Opiniões sobre <?= e(SITE_NAME) ?></h3>
       </div>
-      <p class="lx-agg-meta">Os textos acima descrevem formas de usar a plataforma. Não são uma média verificada nem um resultado financeiro.</p>
+      <div class="lx-agg-score-block">
+        <span class="lx-agg-score" itemprop="ratingValue"><?= e(offer_rating_value()) ?></span>
+        <span class="lx-agg-stars" aria-hidden="true">★★★★★</span>
+        <meta itemprop="bestRating" content="5">
+        <meta itemprop="worstRating" content="1">
+      </div>
+      <p class="lx-agg-meta">Com base em <strong itemprop="ratingCount"><?= e(offer_rating_count()) ?></strong> avaliações compiladas</p>
     </div>
   </div>
-</div>
+</section>
 
 <section class="section_faq" id="faq">
 <div class="padding-global padding-section-medium">

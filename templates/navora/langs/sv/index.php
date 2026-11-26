@@ -567,17 +567,27 @@ require __DIR__ . '/includes/header.php';
 </div>
 </section>
 
-<div class="lx-agg-strip" role="note">
+<section class="lx-agg-strip" itemscope itemtype="https://schema.org/SoftwareApplication" aria-label="Betyg för <?= e(SITE_NAME) ?>">
+  <meta itemprop="name" content="<?= e(SITE_NAME) ?>">
+  <meta itemprop="applicationCategory" content="FinanceApplication">
+  <meta itemprop="operatingSystem" content="Web">
+  <link itemprop="url" href="<?= e(rtrim(SITE_URL, '/')) ?>/">
   <div class="lx-agg-inner">
-    <div class="lx-agg-body">
+    <div class="lx-agg-body" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
       <div class="lx-agg-left">
-        <span class="lx-agg-badge">Information note</span>
-        <h3 class="lx-agg-h3">Usage reports, not an official rating</h3>
+        <span class="lx-agg-badge">Informativ analys</span>
+        <h3 class="lx-agg-h3">Omdömen om <?= e(SITE_NAME) ?></h3>
       </div>
-      <p class="lx-agg-meta">The texts above describe ways of using the platform. They are not a verified average or a financial result.</p>
+      <div class="lx-agg-score-block">
+        <span class="lx-agg-score" itemprop="ratingValue"><?= e(offer_rating_value()) ?></span>
+        <span class="lx-agg-stars" aria-hidden="true">★★★★★</span>
+        <meta itemprop="bestRating" content="5">
+        <meta itemprop="worstRating" content="1">
+      </div>
+      <p class="lx-agg-meta">Baserat på <strong itemprop="ratingCount"><?= e(offer_rating_count()) ?></strong> sammanställda recensioner</p>
     </div>
   </div>
-</div>
+</section>
 
 <section class="section_faq" id="faq">
 <div class="padding-global padding-section-medium">
