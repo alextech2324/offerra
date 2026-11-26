@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/offers/create', [OfferController::class, 'create'])->name('offers.create');
     Route::get('/offers/brand-lookup', [OfferController::class, 'brandLookup'])->name('offers.brand-lookup');
     Route::post('/offers/stale-dead/archive', [OfferController::class, 'archiveStaleDead'])->name('offers.stale-dead.archive');
+    Route::post('/offers/cf-abuse/archive', [OfferController::class, 'archiveCfAbuse'])->name('offers.cf-abuse.archive');
     Route::post('/offers', [OfferController::class, 'store'])->name('offers.store');
     Route::post('/offers/bulk', [OfferController::class, 'storeBulk'])->name('offers.bulk');
     Route::post('/offers/bulk-action', [OfferController::class, 'bulkAction'])->name('offers.bulk-action');

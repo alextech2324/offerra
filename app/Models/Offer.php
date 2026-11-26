@@ -63,6 +63,7 @@ class Offer extends Model
         'availability_checked_at',
         'availability_error',
         'availability_fail_streak',
+        'cf_abuse_at',
     ];
 
     protected function casts(): array
@@ -76,6 +77,7 @@ class Offer extends Model
             'google_index_checked_at' => 'datetime',
             'availability_checked_at' => 'datetime',
             'availability_fail_streak' => 'integer',
+            'cf_abuse_at' => 'datetime',
             'provision_infrastructure' => 'boolean',
             'vitals_enabled' => 'boolean',
             'from_search_team' => 'boolean',
@@ -274,6 +276,7 @@ class Offer extends Model
                 ?->timezone('Europe/Kyiv')
                 ->format('Y-m-d H:i'),
             'availability_error' => $this->availability_error,
+            'cf_abuse' => $this->cf_abuse_at !== null,
             'infra_meta' => $this->infra_meta ?? [],
         ];
     }

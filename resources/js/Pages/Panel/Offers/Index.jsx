@@ -329,7 +329,11 @@ function availabilityDot(offer, { onClick, busy = false } = {}) {
     let title = checked;
     let label = 'Доступність ще не перевірена';
 
-    if (status === 'ok') {
+    if (offer.cf_abuse) {
+        tone = 'abuse';
+        title = `Cloudflare abuse\n${checked}${error}`;
+        label = 'Cloudflare abuse';
+    } else if (status === 'ok') {
         tone = 'ok';
         title = `Сайт відкривається\n${checked}`;
         label = 'Сайт доступний';
@@ -534,6 +538,12 @@ function buildActiveFilterChips(filters, users) {
             label: '● Red (down)',
             clear: { availability: '' },
         });
+    } else if (filters.availability === 'abuse') {
+        chips.push({
+            id: 'availability',
+            label: '● Orange (CF abuse)',
+            clear: { availability: '' },
+        });
     } else if (filters.availability === 'unchecked') {
         chips.push({
             id: 'availability',
@@ -612,6 +622,7 @@ export default function OffersIndex({
     spareCloudflareAccounts = [],
     originServers = [],
     downCount = 0,
+    abuseCount = 0,
     deployedCount = 0,
 }) {
     const { flash, errors, auth } = usePage().props;
@@ -636,6 +647,7 @@ export default function OffersIndex({
     const [serverSwitchOpen, setServerSwitchOpen] = useState(false);
     const [scanningDown, setScanningDown] = useState(false);
     const [scanningAll, setScanningAll] = useState(false);
+    const [archivingAbuse, setArchivingAbuse] = useState(false);
     const selectAllRef = useRef(null);
     const [brandQuery, setBrandQuery] = useState(filters.brand ?? '');
     const [domainQuery, setDomainQuery] = useState(filters.domain ?? '');
@@ -1166,6 +1178,22 @@ export default function OffersIndex({
         );
     };
 
+    const archiveAllAbuse = () => {
+        if (!isAdmin || archivingAbuse || abuseCount < 1) {
+            return;
+        }
+        if (!window.confirm(
+            `Заархівувати всі ${abuseCount} оферів з Cloudflare abuse?\nЗнімемо з origin і Cloudflare, домен лишиться в Dynadot.`,
+        )) {
+            return;
+        }
+        setArchivingAbuse(true);
+        router.post(route('offers.cf-abuse.archive'), {}, {
+            preserveScroll: true,
+            onFinish: () => setArchivingAbuse(false),
+        });
+    };
+
     const scanAllDown = () => {
         if (scanningDown || downCount < 1) {
             return;
@@ -1470,6 +1498,30 @@ export default function OffersIndex({
                 </div>
             )}
 
+            {isAdmin && abuseCount > 0 && (
+                <div className="cf-abuse-banner" role="status">
+                    <button
+                        type="button"
+                        className="cf-abuse-banner__text"
+                        onClick={() => reloadOffers({ availability: 'abuse' })}
+                        title="Показати лише офери з Cloudflare abuse"
+                    >
+                        <span className="availability-dot availability-dot--abuse" aria-hidden="true" />
+                        <strong>{abuseCount}</strong>
+                        {' '}
+                        оферів з Cloudflare abuse — хтось не заархівував після пуша.
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-sm cf-abuse-banner__archive"
+                        disabled={archivingAbuse}
+                        onClick={archiveAllAbuse}
+                    >
+                        {archivingAbuse ? 'Запуск…' : 'Заархівувати всі'}
+                    </button>
+                </div>
+            )}
+
             {downCount > 0 && (
                 <div className="down-scan-banner" role="status">
                     <div className="down-scan-banner__text">
@@ -1726,6 +1778,7 @@ export default function OffersIndex({
                     <option value="">● Status</option>
                     <option value="ok">● Green</option>
                     <option value="down">● Red</option>
+                    <option value="abuse">● Orange</option>
                     <option value="unchecked">● Gray</option>
                 </select>
                 <select

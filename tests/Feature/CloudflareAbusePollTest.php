@@ -103,6 +103,7 @@ class CloudflareAbusePollTest extends TestCase
             'offer_id' => $offer->id,
         ]);
         $this->assertNotNull(CloudflareAbuseReport::query()->where('cf_report_id', 'rep-phish')->value('notified_at'));
+        $this->assertNotNull($offer->fresh()->cf_abuse_at);
     }
 
     public function test_archived_offer_is_stored_without_telegram(): void
@@ -220,6 +221,70 @@ class CloudflareAbusePollTest extends TestCase
         $this->assertSame('archiving', $offer->fresh()->status);
         $this->assertSame(Offer::ARCHIVE_REASON_CF_ABUSE, $offer->fresh()->archive_reason);
         Queue::assertPushed(ArchiveOfferJob::class);
+    }
+
+    public function test_admin_sees_abuse_banner_count_and_can_archive_all(): void
+    {
+        Queue::fake();
+
+        [$offer] = $this->liveOfferWithTelegram('banner-phish.live');
+        $offer->forceFill(['cf_abuse_at' => now(), 'status' => 'deployed'])->save();
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('offers.index'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Panel/Offers/Index')
+                ->where('abuseCount', 1)
+                ->where('offers.data.0.cf_abuse', true));
+
+        $this->actingAs($admin)
+            ->from(route('offers.index'))
+            ->post(route('offers.cf-abuse.archive'))
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->assertSame('archiving', $offer->fresh()->status);
+        $this->assertSame(Offer::ARCHIVE_REASON_CF_ABUSE, $offer->fresh()->archive_reason);
+        Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
+    }
+
+    public function test_regular_user_cannot_bulk_archive_cf_abuse(): void
+    {
+        Queue::fake();
+
+        [$offer] = $this->liveOfferWithTelegram('no-bulk.live');
+        $offer->forceFill(['cf_abuse_at' => now()])->save();
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('offers.index'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->where('abuseCount', 0));
+
+        $this->actingAs($user)
+            ->post(route('offers.cf-abuse.archive'))
+            ->assertForbidden();
+
+        $this->assertSame('deployed', $offer->fresh()->status);
+        Queue::assertNothingPushed();
+    }
+
+    public function test_orange_filter_lists_only_cf_abuse_offers(): void
+    {
+        $user = User::factory()->admin()->create();
+        $abused = $this->makeOffer($user, 'orange-dot.live', 'deployed');
+        $abused->forceFill(['cf_abuse_at' => now(), 'availability_status' => 'ok'])->save();
+        $this->makeOffer($user, 'still-green.live', 'deployed');
+
+        $this->actingAs($user)
+            ->get(route('offers.index', ['availability' => 'abuse']))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('offers.total', 1)
+                ->where('offers.data.0.domain', 'orange-dot.live')
+                ->where('offers.data.0.cf_abuse', true));
     }
 
     public function test_archive_page_filters_by_reason(): void

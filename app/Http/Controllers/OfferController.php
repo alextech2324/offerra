@@ -73,6 +73,9 @@ class OfferController extends Controller
             ],
             'createdCounts' => $this->createdCounts($baseQuery, $today),
             'downCount' => $this->downOffersQuery($user)->count(),
+            'abuseCount' => $user->isAdmin()
+                ? $this->abuseOffersQuery()->count()
+                : 0,
             'deployedCount' => $user->isAdmin()
                 ? Offer::query()->where('status', 'deployed')->count()
                 : 0,
@@ -260,7 +263,8 @@ class OfferController extends Controller
     {
         $query = Offer::query()
             ->where('status', 'deployed')
-            ->where('availability_status', 'down');
+            ->where('availability_status', 'down')
+            ->whereNull('cf_abuse_at');
 
         if (! $user->canManageAllOffers()) {
             $query->where('user_id', $user->id);
@@ -317,15 +321,17 @@ class OfferController extends Controller
         }
 
         if (($filters['availability'] ?? '') === 'ok') {
-            $query->where('availability_status', 'ok');
+            $query->where('availability_status', 'ok')->whereNull('cf_abuse_at');
         } elseif (($filters['availability'] ?? '') === 'down') {
-            $query->where('availability_status', 'down');
+            $query->where('availability_status', 'down')->whereNull('cf_abuse_at');
+        } elseif (($filters['availability'] ?? '') === 'abuse') {
+            $query->whereNotNull('cf_abuse_at');
         } elseif (($filters['availability'] ?? '') === 'unchecked') {
             $query->where(function (Builder $builder): void {
                 $builder->whereNull('availability_status')
                     ->orWhere('availability_status', 'unchecked')
                     ->orWhere('availability_status', '');
-            });
+            })->whereNull('cf_abuse_at');
         }
 
         if (($filters['archive_status'] ?? '') === 'archived') {
@@ -1125,6 +1131,53 @@ class OfferController extends Controller
             'templates' => app(TemplateCatalog::class)->forPicker(),
             'brandTemplateUsage' => $this->brandTemplateUsage($user),
         ]);
+    }
+
+    /**
+     * Live offers that still have an unarchived Cloudflare abuse report.
+     */
+    private function abuseOffersQuery(): Builder
+    {
+        return Offer::query()
+            ->whereNotIn('status', ['archived', 'archiving', 'purging', 'teardown_failed'])
+            ->whereNotNull('cf_abuse_at');
+    }
+
+    public function archiveCfAbuse(OfferTeardownService $teardown): RedirectResponse
+    {
+        $user = auth()->user();
+        if (! $user?->isAdmin()) {
+            abort(403);
+        }
+
+        $offers = $this->abuseOffersQuery()->orderBy('id')->get();
+        if ($offers->isEmpty()) {
+            return redirect()
+                ->back()
+                ->with('warning', 'Немає оферів з Cloudflare abuse для архівації.');
+        }
+
+        $queued = 0;
+        foreach ($offers as $offer) {
+            try {
+                $teardown->enqueueArchive($offer, $user, Offer::ARCHIVE_REASON_CF_ABUSE);
+                $queued++;
+            } catch (\Throwable $e) {
+                if (str_contains($e->getMessage(), 'вже архівується') || str_contains($e->getMessage(), 'в архіві')) {
+                    continue;
+                }
+            }
+        }
+
+        if ($queued === 0) {
+            return redirect()
+                ->back()
+                ->with('warning', 'Немає оферів з Cloudflare abuse для архівації.');
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', "Архівація {$queued} оферів з Cloudflare abuse у черзі.");
     }
 
     public function archiveStaleDead(StaleDeadOfferService $staleDead): RedirectResponse

@@ -155,6 +155,10 @@ class CloudflareAbusePollService
             return ['created' => false, 'notified' => false];
         }
 
+        if ($offer && in_array($type, self::NOTIFY_TYPES, true)) {
+            $this->markLiveOfferAbused($offer);
+        }
+
         return [
             'created' => true,
             'notified' => $this->notifyIfNeeded($row, $offer),
@@ -184,6 +188,8 @@ class CloudflareAbusePollService
             return false;
         }
 
+        $this->markLiveOfferAbused($offer);
+
         $offer->loadMissing('user.settings');
         $settings = $offer->user?->settings;
         $sent = $settings ? $this->telegram->send($settings, $this->telegramText($offer, $row)) : false;
@@ -203,6 +209,19 @@ class CloudflareAbusePollService
         ])->save();
 
         return $sent;
+    }
+
+    private function markLiveOfferAbused(Offer $offer): void
+    {
+        if (in_array($offer->status, self::INACTIVE_STATUSES, true)) {
+            return;
+        }
+
+        if ($offer->cf_abuse_at !== null) {
+            return;
+        }
+
+        $offer->forceFill(['cf_abuse_at' => now()])->save();
     }
 
     private function matchOffer(string $domain): ?Offer
