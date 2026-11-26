@@ -360,18 +360,20 @@ class OriginHealthMonitor
     /**
      * @param  array<string, mixed>  $result
      */
-    private function alertTextForServer(OriginServer $server, array $result, string $kind): string
+    public function alertTextForServer(OriginServer $server, array $result, string $kind): string
     {
         $host = trim((string) $server->host);
         $label = $server->displayLabel();
         $offers = $this->offerCountOnHost($host);
         $issues = is_array($result['issues'] ?? null) ? $result['issues'] : [];
         $detail = $issues !== [] ? implode(', ', $issues) : (string) ($result['message'] ?? '');
+        $identity = $this->serverIdentityLines($server);
 
         return match ($kind) {
             'down' => implode("\n", array_filter([
                 '🔴 Origin недоступний',
                 "Сервер: {$host}".($label !== $host ? " ({$label})" : ''),
+                ...$identity,
                 $detail !== '' ? $detail : 'SSH/HTTP не відповідає',
                 "Оферів на цьому хості: {$offers}",
                 '→ Перевірте сервер у розділі Origin-сервери.',
@@ -379,6 +381,7 @@ class OriginHealthMonitor
             'degraded' => implode("\n", array_filter([
                 '⚠️ Origin з проблемами',
                 "Сервер: {$host}".($label !== $host ? " ({$label})" : ''),
+                ...$identity,
                 $detail !== '' ? $detail : 'Сервер живий, але є проблеми',
                 "Оферів на цьому хості: {$offers}",
                 '→ Перевірте диск, nginx/php-fpm або SSH-креди.',
@@ -386,9 +389,50 @@ class OriginHealthMonitor
             default => implode("\n", array_filter([
                 '✅ Origin знову доступний',
                 "Сервер: {$host}".($label !== $host ? " ({$label})" : ''),
+                ...$identity,
                 "Оферів на цьому хості: {$offers}",
             ])),
         };
+    }
+
+    /**
+     * Hoster / purchase / paid-until so a down alert is identifiable without opening the panel.
+     *
+     * @return list<string>
+     */
+    private function serverIdentityLines(OriginServer $server): array
+    {
+        $hoster = trim((string) ($server->hoster ?? ''));
+        $price = trim((string) ($server->price ?? ''));
+        $bought = $server->created_at?->timezone(config('app.timezone'))->format('d.m.Y');
+        $until = $server->paid_until?->format('d.m.Y');
+        $days = $server->daysUntilPaid();
+        $paidLine = null;
+
+        if ($until) {
+            $when = match (true) {
+                $days === 1 => 'завтра',
+                $days === 0 => 'сьогодні',
+                is_int($days) && $days < 0 => 'прострочено '.abs($days).' дн.',
+                is_int($days) => 'ще '.$days.' дн.',
+                default => null,
+            };
+            $paidLine = "Оплачено до: {$until}".($when ? " ({$when})" : '');
+        }
+
+        $role = match ($server->role()) {
+            OriginServer::ROLE_SPARE => 'запасний',
+            OriginServer::ROLE_DRAIN => 'звільняється',
+            default => 'пул',
+        };
+
+        return array_values(array_filter([
+            $hoster !== '' ? "Хостер: {$hoster}" : null,
+            $bought ? "Куплений: {$bought}" : null,
+            $paidLine,
+            "Роль: {$role}",
+            $price !== '' ? "Ціна: {$price}" : null,
+        ]));
     }
 
     private function offerCountOnHost(string $host, ?int $userId = null): int
