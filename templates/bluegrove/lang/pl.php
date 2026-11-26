@@ -248,7 +248,7 @@ return [
         'title' => 'Krótkie odpowiedzi',
         'more' => 'Czytaj całe FAQ →',
         'page_title' => 'Odpowiedzi, zanim cokolwiek zasilisz',
-        'page_lead' => 'Start, notatka, pieniądze i bezpieczeństwo — częste pytania. Jeśli pytania tu nie ma, napisz na {email}.',
+        'page_lead' => 'Start, notatka, pieniądze i bezpieczeństwo — częste pytania. Jeśli pytania tu nie ma, osobisty opiekun omawia je na rozmowie.',
         'items' => [
             [
                 'q' => 'Czy potrzebuję doświadczenia w obrocie?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Czy jest wsparcie?',
-                'a' => 'Tak. Zespół czyta pocztę 24 godziny na dobę w sprawach wpłat i założenia rachunku.',
+                'a' => 'Tak. Po formularzu dzwoni do ciebie osobisty opiekun. Biurko jest obsadzone przez całą dobę.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Co się dzieje po wysłaniu?',
-                        'a' => 'Zgłoszenie zostaje zapisane. Na stronie widać potwierdzenie. To nie jest obietnica, że rachunek już jest otwarty, i nie dzwonimy tylko dlatego, że wysłałeś formularz.',
+                        'a' => 'Zgłoszenie zostaje zapisane. Na stronie widać potwierdzenie. To nie jest obietnica, że rachunek już jest otwarty. Osobisty opiekun dzwoni w sprawie kolejnego kroku.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Czym to nie jest',
-                'text' => 'To nie jest feed cen na żywo, obietnica zysku ani formularz, który pobiera kartę.',
+                'text' => 'Notowania na tej stronie to przykłady. Nikt nie obiecuje zysku, a formularz nigdy nie prosi o kartę.',
             ],
         ],
         'markets_title' => 'Rynki na tym ekranie',
@@ -440,7 +440,7 @@ return [
             'To, jak działa ekran, idzie do dyrektora produktu.',
             'E-mail o zgłoszeniu, które już zostało wysłane, idzie do obsługi klienta.',
         ],
-        'mail' => 'Napisz na {email} i w pierwszym wierszu podaj rolę. Bez numerów kart. Bez haseł.',
+        'mail' => 'Po formularzu dzwoni do ciebie osobisty opiekun. Nie wysyłaj numerów kart ani haseł.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Dyrektor generalny (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Wsparcie',
         'service_title' => 'Usługa i wsparcie',
-        'service' => 'Zespół to siedem osób. Nazwij rolę w pierwszym wierszu, a e-mail tam trafi. Nie dzwonimy tylko dlatego, że formularz został wysłany, i nikt nie potwierdza zlecenia za ciebie.',
-        'write' => 'Napisz na {email}.',
+        'service' => 'Po formularzu dzwoni do ciebie osobisty opiekun. Taka jest ścieżka wsparcia — nie drugi e-mail, i nikt nie potwierdza zlecenia za ciebie.',
+        'write' => 'Nie musisz pisać drugi raz. Opiekun już ma zgłoszenie.',
         'hours_title' => 'Godziny wsparcia',
-        'hours' => 'Poczta jest czytana w dzień i w nocy. Odpowiedź zwykle zajmuje kilka godzin. Jeśli nie damy rady od razu, odpisuje kolejna osoba na tej roli.',
+        'hours' => 'Biurko jest obsadzone w dzień i w nocy. Typowa rozmowa zajmuje kilka godzin. Jeśli twój opiekun nie odbierze od razu, dzwoni kolejna osoba na tej roli.',
         'never' => 'Nie wysyłaj numeru karty, hasła ani kodu jednorazowego.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Napisz, a pytanie daj w pierwszym wierszu.',
-        'lead' => 'E-mail {email}. Odpowiedź zwykle zajmuje kilka godzin. Zespół nie dzwoni tylko dlatego, że formularz został wysłany.',
+        'lead' => 'Po formularzu dzwoni do ciebie osobisty opiekun. Typowa rozmowa zajmuje kilka godzin. Drugi e-mail nie jest potrzebny.',
         'topics' => [
             [
                 'title' => 'Formularz',
@@ -516,7 +516,7 @@ return [
             'Adres strony',
             'Jedno pytanie, prostymi słowami',
         ],
-        'omit_title' => 'Tego nie dodawaj',
+        'omit_title' => 'Tego nie trzeba',
         'omit' => [
             'Numery kart',
             'Hasła i kody jednorazowe',

@@ -248,7 +248,7 @@ return [
         'title' => 'Korta svar',
         'more' => 'Läs hela FAQ →',
         'page_title' => 'Svar innan du sätter in något',
-        'page_lead' => 'Start, noteringen, pengar och säkerhet — de vanliga frågorna. Om din fråga inte finns här, skriv till {email}.',
+        'page_lead' => 'Start, noteringen, pengar och säkerhet — de vanliga frågorna. Om din fråga inte finns här tar en personlig manager den i samtalet.',
         'items' => [
             [
                 'q' => 'Behöver jag handelserfarenhet?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Finns det support?',
-                'a' => 'Ja. Teamet läser mejl 24 timmar om dygnet om insättningar och kontostart.',
+                'a' => 'Ja. Efter formuläret ringer en personlig manager dig. Desken är bemannad dag och natt.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Vad händer efter att jag har skickat?',
-                        'a' => 'Förfrågan sparas. Du ser en bekräftelse på sidan. Det är inte ett löfte om att ett konto redan är öppet, och vi ringer inte bara för att du har skickat ett formulär.',
+                        'a' => 'Förfrågan sparas. Du ser en bekräftelse på sidan. Det är inte ett löfte om att ett konto redan är öppet. En personlig manager ringer dig om nästa steg.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Vad det inte är',
-                'text' => 'Inte ett live-kursflöde, inte ett löfte om vinst och inte ett formulär som tar emot ett kort.',
+                'text' => 'Kurserna på den här sidan är exempel. Ingen lovar vinst, och formuläret frågar aldrig efter ett kort.',
             ],
         ],
         'markets_title' => 'Marknader på den här skärmen',
@@ -440,7 +440,7 @@ return [
             'Hur skärmen fungerar går till produktdirektören.',
             'Ett mejl om en förfrågan du redan har skickat går till kundvård.',
         ],
-        'mail' => 'Skriv till {email} och sätt rollen på första raden. Inga kortnummer. Inga lösenord.',
+        'mail' => 'Efter formuläret ringer en personlig manager dig. Skicka inga kortnummer eller lösenord.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Verkställande direktör (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Support',
         'service_title' => 'Service och support',
-        'service' => 'Teamet är sju personer. Namnge rollen på första raden så går mejlet dit. Vi ringer inte bara för att ett formulär har skickats, och ingen bekräftar en order åt dig.',
-        'write' => 'Skriv till {email}.',
+        'service' => 'Efter formuläret ringer en personlig manager dig. Det är supportvägen — inte ett andra mejl, och ingen bekräftar en order åt dig.',
+        'write' => 'Du behöver inte skriva igen. Managern har redan förfrågan.',
         'hours_title' => 'Supporttider',
-        'hours' => 'Mejl läses dag och natt. Ett typiskt svar tar några timmar. Om vi inte kan svara genast svarar nästa person i den rollen.',
+        'hours' => 'Desken är bemannad dag och natt. Ett typiskt samtal tar några timmar. Om din manager inte kan svara genast ringer nästa person i den rollen.',
         'never' => 'Skicka inte ett kortnummer, ett lösenord eller en engångskod.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Skriv med frågan på första raden.',
-        'lead' => 'Mejla {email}. Ett typiskt svar tar några timmar. Teamet ringer inte bara för att ett formulär har skickats.',
+        'lead' => 'Efter formuläret ringer en personlig manager dig. Ett typiskt samtal tar några timmar. Du behöver inte ett andra mejl.',
         'topics' => [
             [
                 'title' => 'Formuläret',
@@ -516,7 +516,7 @@ return [
             'Sidan du var på',
             'En fråga, med vanliga ord',
         ],
-        'omit_title' => 'Lämna bort det här',
+        'omit_title' => 'Detta behövs inte',
         'omit' => [
             'Kortnummer',
             'Lösenord och engångskoder',

@@ -248,7 +248,7 @@ return [
         'title' => 'Īsas atbildes',
         'more' => 'Lasīt pilnos BUJ →',
         'page_title' => 'Atbildes, pirms kaut ko finansējat',
-        'page_lead' => 'Sākums, piezīme, nauda un drošība — biežie jautājumi. Ja jūsu jautājuma šeit nav, rakstiet uz {email}.',
+        'page_lead' => 'Sākums, piezīme, nauda un drošība — biežie jautājumi. Ja jūsu jautājuma šeit nav, personīgais menedžeris to apspriež zvanā.',
         'items' => [
             [
                 'q' => 'Vai vajag tirdzniecības pieredzi?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Vai atbalsts ir pieejams?',
-                'a' => 'Jā. Komanda lasa vēstules 24 stundas diennaktī par iemaksām un konta atvēršanu.',
+                'a' => 'Jā. Pēc veidlapas jums piezvana personīgais menedžeris. Galds ir nosegts dienā un naktī.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Kas notiek pēc nosūtīšanas?',
-                        'a' => 'Pieprasījums tiek saglabāts. Lapā redzat apstiprinājumu. Tas nav solījums, ka konts jau ir atvērts, un mēs nezvanām tikai tāpēc, ka esat nosūtījis veidlapu.',
+                        'a' => 'Pieprasījums tiek saglabāts. Lapā redzat apstiprinājumu. Tas nav solījums, ka konts jau ir atvērts. Personīgais menedžeris piezvana par nākamo soli.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Kas tas nav',
-                'text' => 'Ne tiešā cenu plūsma, ne peļņas solījums un ne veidlapa, kas ņem karti.',
+                'text' => 'Šīs lapas cenas ir paraugi. Neviens nesola peļņu, un veidlapa nekad nejautā pēc kartes.',
             ],
         ],
         'markets_title' => 'Tirgi šajā ekrānā',
@@ -440,7 +440,7 @@ return [
             'Kā darbojas ekrāns, aiziet produkta direktorei.',
             'E-pasts par jau nosūtītu pieprasījumu aiziet klientu aprūpei.',
         ],
-        'mail' => 'Rakstiet uz {email} un darbu lieciet pirmajā rindā. Nekādu kartes numuru. Nekādu paroļu.',
+        'mail' => 'Pēc veidlapas jums piezvana personīgais menedžeris. Nesūtiet kartes numurus vai paroles.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Galvenā izpilddirektore (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Atbalsts',
         'service_title' => 'Pakalpojums un atbalsts',
-        'service' => 'Komanda ir septiņi cilvēki. Nosauciet darbu pirmajā rindā, un e-pasts aiziet tur. Mēs nezvanām tikai tāpēc, ka veidlapa nosūtīta, un neviens rīkojumu jūsu vietā neapstiprina.',
-        'write' => 'Rakstiet uz {email}.',
+        'service' => 'Pēc veidlapas jums piezvana personīgais menedžeris. Tāds ir atbalsta ceļš — ne otrs e-pasts, un neviens rīkojumu jūsu vietā neapstiprina.',
+        'write' => 'Nav jāraksta vēlreiz. Menedžerim pieprasījums jau ir.',
         'hours_title' => 'Atbalsta stundas',
-        'hours' => 'Vēstules tiek lasītas dienā un naktī. Parasta atbilde aizņem dažas stundas. Ja nevaram atbildēt uzreiz, atbild nākamais cilvēks tajā lomā.',
+        'hours' => 'Galds ir nosegts dienā un naktī. Parasts zvans aizņem dažas stundas. Ja jūsu menedžeris nevar atbildēt uzreiz, zvana nākamais cilvēks tajā lomā.',
         'never' => 'Nesūtiet kartes numuru, paroli vai vienreizējo kodu.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakti',
         'title' => 'Rakstiet, jautājumu liekot pirmajā rindā.',
-        'lead' => 'Rakstiet uz {email}. Parasta atbilde aizņem dažas stundas. Komanda nezvana tikai tāpēc, ka veidlapa nosūtīta.',
+        'lead' => 'Pēc veidlapas jums piezvana personīgais menedžeris. Parasts zvans aizņem dažas stundas. Otrs e-pasts nav vajadzīgs.',
         'topics' => [
             [
                 'title' => 'Veidlapa',
@@ -516,7 +516,7 @@ return [
             'Lapu, kurā bijāt',
             'Vienu jautājumu, vienkāršiem vārdiem',
         ],
-        'omit_title' => 'Šo atstājiet ārā',
+        'omit_title' => 'Tas nav vajadzīgs',
         'omit' => [
             'Kartes numurus',
             'Paroles un vienreizējos kodus',

@@ -248,7 +248,7 @@ return [
         'title' => 'Răspunsuri scurte',
         'more' => 'Citește toate întrebările →',
         'page_title' => 'Răspunsuri înainte să alimentezi ceva',
-        'page_lead' => 'Start, nota, banii și siguranța — întrebările frecvente. Dacă întrebarea nu este aici, scrie la {email}.',
+        'page_lead' => 'Start, nota, banii și siguranța — întrebările frecvente. Dacă întrebarea nu este aici, un manager personal o discută la telefon.',
         'items' => [
             [
                 'q' => 'Am nevoie de experiență de tranzacționare?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Există suport?',
-                'a' => 'Da. Echipa citește poșta 24 de ore pe zi pentru depuneri și deschiderea contului.',
+                'a' => 'Da. După formular, un manager personal te sună. Echipa e acoperită ziua și noaptea.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Ce se întâmplă după ce trimit?',
-                        'a' => 'Cererea este salvată. Vezi o confirmare pe pagină. Nu este o promisiune că un cont este deja deschis și nu sunăm doar pentru că ai trimis un formular.',
+                        'a' => 'Cererea este salvată. Vezi o confirmare pe pagină. Nu este o promisiune că un cont este deja deschis. Un manager personal te sună pentru pasul următor.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Ce nu este',
-                'text' => 'Nu este un flux de prețuri live, nu este o promisiune de profit și nu este un formular care preia un card.',
+                'text' => 'Cotațiile de pe această pagină sunt exemple. Nimeni nu promite un profit, iar formularul nu cere niciodată un card.',
             ],
         ],
         'markets_title' => 'Piețe pe acest ecran',
@@ -440,7 +440,7 @@ return [
             'Felul în care funcționează ecranul merge la directorul de produs.',
             'Un e-mail despre o cerere deja trimisă merge la relații cu clienții.',
         ],
-        'mail' => 'Scrie la {email} și pune rolul pe primul rând. Fără numere de card. Fără parole.',
+        'mail' => 'După formular, un manager personal te sună. Nu trimite numere de card sau parole.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Director general (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Suport',
         'service_title' => 'Serviciu și suport',
-        'service' => 'Echipa este formată din șapte oameni. Numește rolul pe primul rând și e-mailul ajunge acolo. Nu sunăm doar pentru că a fost trimis un formular și nimeni nu confirmă un ordin în locul tău.',
-        'write' => 'Scrie la {email}.',
+        'service' => 'După formular, un manager personal te sună. Acesta e canalul de suport — nu un al doilea e-mail, și nimeni nu confirmă un ordin în locul tău.',
+        'write' => 'Nu trebuie să scrii din nou. Managerul are deja cererea.',
         'hours_title' => 'Programul suportului',
-        'hours' => 'Poșta este citită ziua și noaptea. Un răspuns durează, de obicei, câteva ore. Dacă nu putem răspunde imediat, răspunde următoarea persoană din acel rol.',
+        'hours' => 'Echipa e acoperită ziua și noaptea. Un apel durează, de obicei, câteva ore. Dacă managerul tău nu poate răspunde imediat, sună următoarea persoană din acel rol.',
         'never' => 'Nu trimite un număr de card, o parolă sau un cod de unică folosință.',
     ],
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Scrie cu întrebarea pe primul rând.',
-        'lead' => 'E-mail {email}. Un răspuns durează, de obicei, câteva ore. Echipa nu sună doar pentru că a fost trimis un formular.',
+        'lead' => 'După formular, un manager personal te sună. Un apel durează, de obicei, câteva ore. Nu ai nevoie de un al doilea e-mail.',
         'topics' => [
             [
                 'title' => 'Formularul',
@@ -516,7 +516,7 @@ return [
             'Pagina pe care erai',
             'O singură întrebare, în cuvinte simple',
         ],
-        'omit_title' => 'Lasă asta deoparte',
+        'omit_title' => 'Asta nu este necesar',
         'omit' => [
             'Numere de card',
             'Parole și coduri de unică folosință',

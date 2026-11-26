@@ -248,7 +248,7 @@ return [
         'title' => 'Korte antwoorden',
         'more' => 'Lees de volledige FAQ →',
         'page_title' => 'Antwoorden voordat je iets stort',
-        'page_lead' => 'Start, de notitie, geld en veiligheid — de veelgestelde vragen. Staat je vraag er niet bij, schrijf dan naar {email}.',
+        'page_lead' => 'Start, de notitie, geld en veiligheid — de veelgestelde vragen. Staat je vraag er niet bij, dan neemt een persoonlijke manager die in het gesprek op.',
         'items' => [
             [
                 'q' => 'Heb ik handelservaring nodig?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Is er support?',
-                'a' => 'Ja. Het team leest e-mail 24 uur per dag voor stortingen en het openen van een account.',
+                'a' => 'Ja. Na het formulier belt een persoonlijke manager je. De desk is dag en nacht bezet.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Wat gebeurt er nadat ik verstuur?',
-                        'a' => 'Het verzoek wordt bewaard. Je ziet een bevestiging op de pagina. Dat is geen belofte dat een account al open is, en we bellen niet alleen omdat je een formulier hebt verstuurd.',
+                        'a' => 'Het verzoek wordt bewaard. Je ziet een bevestiging op de pagina. Dat is geen belofte dat een account al open is. Een persoonlijke manager belt je over de volgende stap.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Wat het niet is',
-                'text' => 'Geen live koersfeed, geen winstbelofte en geen formulier dat een kaart afschrijft.',
+                'text' => 'De koersen op deze pagina zijn voorbeelden. Niemand belooft winst, en het formulier vraagt nooit om een kaart.',
             ],
         ],
         'markets_title' => 'Markten op dit scherm',
@@ -440,7 +440,7 @@ return [
             'Hoe het scherm werkt gaat naar de productdirecteur.',
             'Een e-mail over een verzoek dat je al verstuurde gaat naar klantenzorg.',
         ],
-        'mail' => 'Schrijf naar {email} en zet de rol op de eerste regel. Geen kaartnummers. Geen wachtwoorden.',
+        'mail' => 'Na het formulier belt een persoonlijke manager je. Stuur geen kaartnummers of wachtwoorden.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Algemeen directeur (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Support',
         'service_title' => 'Dienst en support',
-        'service' => 'Het team is zeven mensen. Noem de rol op de eerste regel en de e-mail gaat daarheen. We bellen niet alleen omdat een formulier is verstuurd, en niemand bevestigt een order voor je.',
-        'write' => 'Schrijf naar {email}.',
+        'service' => 'Na het formulier belt een persoonlijke manager je. Dat is het supportkanaal — geen tweede e-mail, en niemand bevestigt een order voor je.',
+        'write' => 'Je hoeft niet opnieuw te schrijven. De manager heeft het verzoek al.',
         'hours_title' => 'Supporturen',
-        'hours' => 'E-mail wordt dag en nacht gelezen. Een antwoord duurt doorgaans een paar uur. Kunnen we niet meteen antwoorden, dan antwoordt de volgende persoon in die rol.',
+        'hours' => 'De desk is dag en nacht bezet. Een typisch gesprek duurt een paar uur. Kan jouw manager niet meteen opnemen, dan belt de volgende persoon in die rol.',
         'never' => 'Stuur geen kaartnummer, wachtwoord of eenmalige code.',
     ],
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Schrijf met de vraag op de eerste regel.',
-        'lead' => 'E-mail {email}. Een antwoord duurt doorgaans een paar uur. Het team belt niet alleen omdat een formulier is verstuurd.',
+        'lead' => 'Na het formulier belt een persoonlijke manager je. Een typisch gesprek duurt een paar uur. Een tweede e-mail is niet nodig.',
         'topics' => [
             [
                 'title' => 'Het formulier',
@@ -516,7 +516,7 @@ return [
             'De pagina waar je was',
             'Eén vraag, in gewone woorden',
         ],
-        'omit_title' => 'Laat dit weg',
+        'omit_title' => 'Dit is niet nodig',
         'omit' => [
             'Kaartnummers',
             'Wachtwoorden en eenmalige codes',

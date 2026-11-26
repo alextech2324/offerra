@@ -248,7 +248,7 @@ return [
         'title' => 'Jawapan ringkas',
         'more' => 'Baca soalan lazim penuh →',
         'page_title' => 'Jawapan sebelum anda membiayai apa-apa',
-        'page_lead' => 'Permulaan, nota, wang dan keselamatan — soalan lazim. Jika soalan anda tiada di sini, tulis ke {email}.',
+        'page_lead' => 'Permulaan, nota, wang dan keselamatan — soalan lazim. Jika soalan anda tiada di sini, pengurus peribadi membincangkannya dalam panggilan.',
         'items' => [
             [
                 'q' => 'Perlukah saya berpengalaman berdagang?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Adakah sokongan tersedia?',
-                'a' => 'Ya. Pasukan membaca mel 24 jam sehari untuk deposit dan pembukaan akaun.',
+                'a' => 'Ya. Selepas borang, pengurus peribadi menghubungi anda. Meja dijaga siang dan malam.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Apa yang berlaku selepas saya hantar?',
-                        'a' => 'Permohonan disimpan. Anda melihat pengesahan di halaman. Ini bukan janji bahawa akaun sudah terbuka, dan kami tidak menelefon hanya kerana anda menghantar borang.',
+                        'a' => 'Permintaan disimpan. Anda nampak pengesahan pada halaman. Ini bukan janji bahawa akaun sudah dibuka. Pengurus peribadi menghubungi anda tentang langkah seterusnya.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Apa yang bukan',
-                'text' => 'Bukan suapan harga langsung, bukan janji keuntungan, dan bukan borang yang mengambil kad.',
+                'text' => 'Harga di halaman ini ialah contoh. Tiada siapa menjanjikan keuntungan, dan borang tidak pernah meminta kad.',
             ],
         ],
         'markets_title' => 'Pasaran pada skrin ini',
@@ -440,7 +440,7 @@ return [
             'Cara skrin berfungsi pergi kepada pengarah produk.',
             'E-mel tentang permohonan yang sudah anda hantar pergi kepada jagaan pelanggan.',
         ],
-        'mail' => 'Tulis ke {email} dan letakkan tugas pada baris pertama. Tiada nombor kad. Tiada kata laluan.',
+        'mail' => 'Selepas borang, pengurus peribadi menghubungi anda. Jangan hantar nombor kad atau kata laluan.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Ketua eksekutif (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Sokongan',
         'service_title' => 'Perkhidmatan dan sokongan',
-        'service' => 'Pasukan ini tujuh orang. Namakan tugas pada baris pertama dan e-mel pergi ke sana. Kami tidak menelefon hanya kerana borang dihantar, dan tiada sesiapa mengesahkan pesanan untuk anda.',
-        'write' => 'Tulis ke {email}.',
+        'service' => 'Selepas borang, pengurus peribadi menghubungi anda. Itulah laluan sokongan — bukan e-mel kedua, dan tiada sesiapa mengesahkan pesanan untuk anda.',
+        'write' => 'Anda tidak perlu menulis lagi. Pengurus sudah ada permintaan itu.',
         'hours_title' => 'Waktu sokongan',
-        'hours' => 'Mel dibaca sepanjang siang dan malam. Balasan biasa mengambil masa beberapa jam. Jika kami tidak dapat menjawab serta-merta, orang seterusnya dalam peranan itu membalas.',
+        'hours' => 'Meja dijaga siang dan malam. Panggilan biasa mengambil masa beberapa jam. Jika pengurus anda tidak dapat menjawab serta-merta, orang seterusnya dalam peranan itu menelefon.',
         'never' => 'Jangan hantar nombor kad, kata laluan atau kod sekali guna.',
     ],
     'contact' => [
         'eyebrow' => 'Hubungi',
         'title' => 'Tulis dengan soalan pada baris pertama.',
-        'lead' => 'E-mel {email}. Balasan biasa mengambil masa beberapa jam. Pasukan tidak menelefon hanya kerana borang dihantar.',
+        'lead' => 'Selepas borang, pengurus peribadi menghubungi anda. Panggilan biasa mengambil masa beberapa jam. E-mel kedua tidak diperlukan.',
         'topics' => [
             [
                 'title' => 'Borang',
@@ -516,7 +516,7 @@ return [
             'Halaman yang anda berada',
             'Satu soalan, dalam kata-kata yang mudah',
         ],
-        'omit_title' => 'Tinggalkan ini',
+        'omit_title' => 'Ini tidak diperlukan',
         'omit' => [
             'Nombor kad',
             'Kata laluan dan kod sekali guna',

@@ -196,11 +196,11 @@ return [
         'title' => 'Quick answers',
         'more' => 'Read the full FAQ →',
         'page_title' => 'Answers before you fund anything',
-        'page_lead' => 'Start, the note, money, and safety — the common questions. If yours is not here, write to {email}.',
+        'page_lead' => 'Start, the note, money, and safety — the common questions. If yours is not here, a personal manager covers it on the call.',
         'items' => [
             ['q' => 'Do I need trading experience?', 'a' => 'No. {brand} is built for first-time investors — AI notes in plain language.'],
             ['q' => 'What is the minimum deposit?', 'a' => 'It depends on the region you are in. After you send the form, a personal manager explains the amount, the method, and the next step. Nothing is charged on this website.'],
-            ['q' => 'Is support available?', 'a' => 'Yes. The team reads mail 24 hours a day for deposits and account setup.'],
+            ['q' => 'Is support available?', 'a' => 'Yes. After the form, a personal manager calls you. The desk is covered day and night.'],
         ],
         'groups' => [
             [
@@ -210,7 +210,7 @@ return [
                     ['q' => 'How do I start?', 'a' => 'Leave your name, email, and phone on the Open account form. That form stores the request. It does not open a funded account by itself and it does not take a deposit. Funding happens later, inside the account. The minimum depends on your region; a personal manager confirms it with you.'],
                     ['q' => 'Do I need trading experience?', 'a' => 'No. The note is one word — buy, hold, or watch — with a short sentence under it. You can read the three steps on the home page before you send anything.'],
                     ['q' => 'What do I send in the form?', 'a' => 'First name, last name, email, and a phone number with a country code. No card number, no password, and no photo of an identity document on this website.'],
-                    ['q' => 'What happens after I submit?', 'a' => 'The request is saved. You see a confirmation on the page. This is not a promise that an account is already open, and nobody will call you just because you sent the form.'],
+                    ['q' => 'What happens after I submit?', 'a' => 'The request is saved. You see a confirmation on the page. This is not a promise that an account is already open. A personal manager calls you about the next step.'],
                 ],
             ],
             [
@@ -255,7 +255,7 @@ return [
             ['title' => 'What it is', 'text' => 'A screen for crypto and FX with one short note: buy, hold, or watch.'],
             ['title' => 'What you do', 'text' => 'You read the note, look at the chart, and confirm the order yourself.'],
             ['title' => 'What this site is', 'text' => 'A place to read how it works and to leave a request. The minimum deposit depends on your region — a personal manager explains the details after the form.'],
-            ['title' => 'What it is not', 'text' => 'Not a live price feed, not a promise of profit, and not a form that takes a card.'],
+            ['title' => 'What it is not', 'text' => 'The quotes on this page are samples. Nobody is promising a profit, and the form never asks for a card.'],
         ],
         'markets_title' => 'Markets on this screen',
         'markets_lead' => 'The prices below are samples, the same ones in the quotes at the top. They are not a live feed. Live prices open in a funded account.',
@@ -304,7 +304,7 @@ return [
             'How the screen works goes to the product director.',
             'An email about a request you already sent goes to client care.',
         ],
-        'mail' => 'Write to {email} and name the role in the first line. No card numbers. No passwords.',
+        'mail' => 'A personal manager calls you after the form. Do not send card numbers or passwords.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Chief executive (CEO)',
@@ -322,16 +322,16 @@ return [
     'support' => [
         'title' => 'Support',
         'service_title' => 'Service and support',
-        'service' => 'The team is seven people. Name the role in the first line and the email goes there. We do not call just because you sent a form, and nobody confirms an order for you.',
-        'write' => 'Write to {email}.',
+        'service' => 'After you send the form, a personal manager calls you. That is the support path — not a second email, and nobody confirms an order for you.',
+        'write' => 'You do not need to write again. The manager already has the request.',
         'hours_title' => 'Support hours',
-        'hours' => 'Mail is read day and night. A typical reply takes a few hours. If we cannot answer at once, the next person in that role replies.',
+        'hours' => 'The desk is covered day and night. A typical call takes a few hours. If your manager cannot answer at once, the next person in that role calls.',
         'never' => 'Do not send a card number, a password, or a one-time code.',
     ],
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Write with the question in the first line.',
-        'lead' => 'Email {email}. A typical reply takes a few hours. The team does not call just because you sent a form.',
+        'lead' => 'A personal manager calls you after the form. A typical call takes a few hours. You do not need a second email.',
         'topics' => [
             ['title' => 'The form', 'text' => 'What was saved, a duplicate email, or a wrong country code.'],
             ['title' => 'Deposits', 'text' => 'The minimum depends on your region. A personal manager explains methods and fees before you confirm.'],
@@ -344,7 +344,7 @@ return [
             'The page you were on',
             'One question, in plain words',
         ],
-        'omit_title' => 'Leave this out',
+        'omit_title' => 'This is not needed',
         'omit' => [
             'Card numbers',
             'Passwords and one-time codes',

@@ -248,7 +248,7 @@ return [
         'title' => 'Rýchle odpovede',
         'more' => 'Prečítať celé FAQ →',
         'page_title' => 'Odpovede skôr, než čokoľvek vložíte',
-        'page_lead' => 'Začiatok, poznámka, peniaze a bezpečie — časté otázky. Ak tu vaša otázka nie je, napíšte na {email}.',
+        'page_lead' => 'Začiatok, poznámka, peniaze a bezpečie — časté otázky. Ak tu vaša otázka nie je, osobný manažér ju preberie v hovore.',
         'items' => [
             [
                 'q' => 'Potrebujem skúsenosti s obchodovaním?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Je podpora k dispozícii?',
-                'a' => 'Áno. Tím číta poštu 24 hodín denne k vkladom a založeniu účtu.',
+                'a' => 'Áno. Po formulári vám zavolá osobný manažér. Tím je k dispozícii cez deň aj v noci.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Čo sa stane po odoslaní?',
-                        'a' => 'Žiadosť sa uloží. Na stránke uvidíte potvrdenie. Nie je to sľub, že účet je už otvorený, a nevoláme len preto, že ste odoslali formulár.',
+                        'a' => 'Žiadosť sa uloží. Na stránke uvidíte potvrdenie. Nie je to sľub, že účet je už otvorený. Osobný manažér vám zavolá kvôli ďalšiemu kroku.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Čo to nie je',
-                'text' => 'Nie je to živý zdroj cien, nie je to sľub zisku a nie je to formulár, ktorý berie kartu.',
+                'text' => 'Kurzy na tejto stránke sú ukážky. Nikto nesľubuje zisk a formulár sa nikdy nepýta na kartu.',
             ],
         ],
         'markets_title' => 'Trhy na tejto obrazovke',
@@ -440,7 +440,7 @@ return [
             'Ako obrazovka funguje, ide produktovej riaditeľke.',
             'E-mail o žiadosti, ktorú ste už poslali, ide do starostlivosti o klientov.',
         ],
-        'mail' => 'Napíšte na {email} a rolu dajte do prvého riadka. Žiadne čísla kariet. Žiadne heslá.',
+        'mail' => 'Po formulári vám zavolá osobný manažér. Neposielajte čísla kariet ani heslá.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Generálna riaditeľka (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Podpora',
         'service_title' => 'Služba a podpora',
-        'service' => 'Tím je sedem ľudí. Rolu napíšte do prvého riadka a e-mail tam pôjde. Nevoláme len preto, že prišiel formulár, a nikto za vás nepotvrdí pokyn.',
-        'write' => 'Napíšte na {email}.',
+        'service' => 'Po formulári vám zavolá osobný manažér. Takto ide podpora — nie druhý e-mail, a nikto za vás nepotvrdí pokyn.',
+        'write' => 'Nemusíte písať znova. Manažér už má žiadosť.',
         'hours_title' => 'Hodiny podpory',
-        'hours' => 'Pošta sa číta cez deň aj v noci. Odpoveď zvyčajne trvá pár hodín. Ak nevieme odpovedať hneď, odpovie ďalší človek v tej role.',
+        'hours' => 'Tím je k dispozícii cez deň aj v noci. Typický hovor trvá pár hodín. Ak váš manažér nemôže hneď, zavolá ďalší človek v tej role.',
         'never' => 'Neposielajte číslo karty, heslo ani jednorazový kód.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Otázku dajte do prvého riadka.',
-        'lead' => 'Napíšte na {email}. Odpoveď zvyčajne trvá pár hodín. Tím nevolá len preto, že prišiel formulár.',
+        'lead' => 'Po formulári vám zavolá osobný manažér. Typický hovor trvá pár hodín. Druhý e-mail nepotrebujete.',
         'topics' => [
             [
                 'title' => 'Formulár',
@@ -516,7 +516,7 @@ return [
             'Stránku, na ktorej ste boli',
             'Jednu otázku, obyčajnými slovami',
         ],
-        'omit_title' => 'Toto vynechajte',
+        'omit_title' => 'Toto nie je potrebné',
         'omit' => [
             'Čísla kariet',
             'Heslá a jednorazové kódy',

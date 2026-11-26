@@ -248,7 +248,7 @@ return [
         'title' => 'Brzi odgovori',
         'more' => 'Pročitajte sva pitanja →',
         'page_title' => 'Odgovori prije nego što išta uplatite',
-        'page_lead' => 'Početak, bilješka, novac i sigurnost — česta pitanja. Ako vašeg pitanja nema ovdje, pišite na {email}.',
+        'page_lead' => 'Početak, bilješka, novac i sigurnost — česta pitanja. Ako vašeg pitanja nema ovdje, osobni menadžer to pokriva na pozivu.',
         'items' => [
             [
                 'q' => 'Treba li mi iskustvo u trgovanju?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Je li podrška dostupna?',
-                'a' => 'Da. Tim čita poštu 24 sata dnevno za uplate i otvaranje računa.',
+                'a' => 'Da. Nakon obrasca zove vas osobni menadžer. Stol je pokriven danju i noću.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Što se događa nakon slanja?',
-                        'a' => 'Zahtjev se sprema. Na stranici vidite potvrdu. To nije obećanje da je račun već otvoren i ne zovemo samo zato što ste poslali obrazac.',
+                        'a' => 'Zahtjev se sprema. Na stranici vidite potvrdu. To nije obećanje da je račun već otvoren. Osobni menadžer zove vas zbog sljedećeg koraka.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Što nije',
-                'text' => 'Nije izvor cijena uživo, nije obećanje dobiti i nije obrazac koji uzima karticu.',
+                'text' => 'Tečajevi na ovoj stranici su primjeri. Nitko ne obećava dobit, a obrazac nikad ne traži karticu.',
             ],
         ],
         'markets_title' => 'Tržišta na ovom zaslonu',
@@ -440,7 +440,7 @@ return [
             'Kako zaslon radi, ide direktorici proizvoda.',
             'E-mail o zahtjevu koji ste već poslali ide u skrb o klijentima.',
         ],
-        'mail' => 'Pišite na {email} i ulogu stavite u prvi redak. Bez brojeva kartica. Bez lozinki.',
+        'mail' => 'Nakon obrasca zove vas osobni menadžer. Ne šaljite brojeve kartica ni lozinke.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Glavna izvršna direktorica (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Podrška',
         'service_title' => 'Usluga i podrška',
-        'service' => 'Tim je sedam ljudi. Ulogu napišite u prvi redak i e-mail ide tamo. Ne zovemo samo zato što je stigao obrazac i nitko umjesto vas ne potvrđuje nalog.',
-        'write' => 'Pišite na {email}.',
+        'service' => 'Nakon obrasca zove vas osobni menadžer. To je put podrške — ne drugi e-mail, i nitko umjesto vas ne potvrđuje nalog.',
+        'write' => 'Ne trebate ponovno pisati. Menadžer već ima zahtjev.',
         'hours_title' => 'Radno vrijeme podrške',
-        'hours' => 'Pošta se čita danju i noću. Uobičajen odgovor traje nekoliko sati. Ako ne možemo odgovoriti odmah, odgovara sljedeća osoba u toj ulozi.',
+        'hours' => 'Stol je pokriven danju i noću. Uobičajen poziv traje nekoliko sati. Ako vaš menadžer ne može odmah, zove sljedeća osoba u toj ulozi.',
         'never' => 'Ne šaljite broj kartice, lozinku ni jednokratnu šifru.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Pitanje stavite u prvi redak.',
-        'lead' => 'Pišite na {email}. Uobičajen odgovor traje nekoliko sati. Tim ne zove samo zato što je stigao obrazac.',
+        'lead' => 'Nakon obrasca zove vas osobni menadžer. Uobičajen poziv traje nekoliko sati. Drugi e-mail nije potreban.',
         'topics' => [
             [
                 'title' => 'Obrazac',
@@ -516,7 +516,7 @@ return [
             'Stranicu na kojoj ste bili',
             'Jedno pitanje, običnim riječima',
         ],
-        'omit_title' => 'Ovo izostavite',
+        'omit_title' => 'Ovo nije potrebno',
         'omit' => [
             'Brojeve kartica',
             'Lozinke i jednokratne šifre',

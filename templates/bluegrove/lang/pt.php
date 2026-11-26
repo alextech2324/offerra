@@ -248,7 +248,7 @@ return [
         'title' => 'Respostas rápidas',
         'more' => 'Ler a FAQ completa →',
         'page_title' => 'Respostas antes de aplicares fundos',
-        'page_lead' => 'O início, a nota, o dinheiro e a segurança — as perguntas frequentes. Se a tua pergunta não está aqui, escreve para {email}.',
+        'page_lead' => 'O início, a nota, o dinheiro e a segurança — as perguntas frequentes. Se a tua pergunta não está aqui, um gestor pessoal trata-a na chamada.',
         'items' => [
             [
                 'q' => 'Preciso de experiência a negociar?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Há apoio?',
-                'a' => 'Sim. A equipa lê o correio 24 horas por dia para depósitos e abertura de conta.',
+                'a' => 'Sim. Depois do formulário, um gestor pessoal liga-te. A equipa está coberta de dia e de noite.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'O que acontece depois de enviar?',
-                        'a' => 'O pedido fica guardado. Vês uma confirmação na página. Não é uma promessa de que a conta já está aberta, e não ligamos só porque enviaste um formulário.',
+                        'a' => 'O pedido fica guardado. Vês uma confirmação na página. Não é uma promessa de que a conta já está aberta. Um gestor pessoal liga-te sobre o passo seguinte.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'O que não é',
-                'text' => 'Não é um feed de preços em direto, não é uma promessa de lucro e não é um formulário que debite um cartão.',
+                'text' => 'As cotações nesta página são exemplos. Ninguém promete lucro, e o formulário nunca pede um cartão.',
             ],
         ],
         'markets_title' => 'Mercados neste ecrã',
@@ -440,7 +440,7 @@ return [
             'Como o ecrã funciona vai para a diretora de produto.',
             'Um e-mail sobre um pedido que já enviaste vai para o apoio ao cliente.',
         ],
-        'mail' => 'Escreve para {email} e põe a função na primeira linha. Sem números de cartão. Sem palavras-passe.',
+        'mail' => 'Depois do formulário, um gestor pessoal liga-te. Não envies números de cartão nem palavras-passe.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Diretora executiva (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Apoio',
         'service_title' => 'Serviço e apoio',
-        'service' => 'A equipa são sete pessoas. Indica a função na primeira linha e o e-mail chega lá. Não ligamos só porque um formulário foi enviado, e ninguém confirma uma ordem por ti.',
-        'write' => 'Escreve para {email}.',
+        'service' => 'Depois do formulário, um gestor pessoal liga-te. Esse é o canal de apoio — não um segundo e-mail, e ninguém confirma uma ordem por ti.',
+        'write' => 'Não precisas de escrever outra vez. O gestor já tem o pedido.',
         'hours_title' => 'Horário de apoio',
-        'hours' => 'O correio é lido de dia e de noite. Uma resposta habitual demora algumas horas. Se não pudermos responder de imediato, responde a pessoa seguinte nessa função.',
+        'hours' => 'A equipa está coberta de dia e de noite. Uma chamada habitual demora algumas horas. Se o teu gestor não puder atender de imediato, liga a pessoa seguinte nessa função.',
         'never' => 'Não envies um número de cartão, uma palavra-passe nem um código de utilização única.',
     ],
     'contact' => [
         'eyebrow' => 'Contacto',
         'title' => 'Escreve com a pergunta na primeira linha.',
-        'lead' => 'E-mail para {email}. Uma resposta habitual demora algumas horas. A equipa não liga só porque um formulário foi enviado.',
+        'lead' => 'Depois do formulário, um gestor pessoal liga-te. Uma chamada habitual demora algumas horas. Não precisas de um segundo e-mail.',
         'topics' => [
             [
                 'title' => 'O formulário',
@@ -516,7 +516,7 @@ return [
             'A página em que estavas',
             'Uma pergunta, em palavras simples',
         ],
-        'omit_title' => 'Deixa isto de fora',
+        'omit_title' => 'Isto não é necessário',
         'omit' => [
             'Números de cartão',
             'Palavras-passe e códigos de utilização única',

@@ -248,7 +248,7 @@ return [
         'title' => 'Gyors válaszok',
         'more' => 'A teljes GYIK elolvasása →',
         'page_title' => 'Válaszok, mielőtt bármit feltöltene',
-        'page_lead' => 'Kezdés, a jegyzet, a pénz és a biztonság — a gyakori kérdések. Ha a kérdése nincs itt, írjon a(z) {email} címre.',
+        'page_lead' => 'Kezdés, a jegyzet, a pénz és a biztonság — a gyakori kérdések. Ha a kérdése nincs itt, egy személyes menedzser a hívásban veszi fel.',
         'items' => [
             [
                 'q' => 'Kell kereskedési tapasztalat?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Elérhető a támogatás?',
-                'a' => 'Igen. A csapat a nap 24 órájában olvassa a leveleket a befizetésről és a számla megnyitásáról.',
+                'a' => 'Igen. Az űrlap után egy személyes menedzser felhívja. Az asztal nappal és éjjel le van fedve.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Mi történik a küldés után?',
-                        'a' => 'A kérés mentésre kerül. Az oldalon megerősítést lát. Ez nem ígéret arra, hogy a számla már nyitva van, és nem hívunk csak azért, mert űrlapot küldött.',
+                        'a' => 'A kérés elmentésre kerül. Az oldalon megerősítést lát. Ez nem ígéret, hogy a számla már nyitva van. Egy személyes menedzser felhívja a következő lépésről.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Mi nem ez',
-                'text' => 'Nem élő árfolyam, nem ígéret a nyereségre, és nem olyan űrlap, amely kártyát fogad.',
+                'text' => 'Az oldalon lévő árfolyamok minták. Senki nem ígér nyereséget, és az űrlap soha nem kér kártyát.',
             ],
         ],
         'markets_title' => 'Piacok ezen a képernyőn',
@@ -440,7 +440,7 @@ return [
             'A képernyő működése a termékigazgatóhoz megy.',
             'Egy már elküldött kérésről szóló e-mail az ügyfélgondozáshoz megy.',
         ],
-        'mail' => 'Írjon a(z) {email} címre, és a feladatot tegye az első sorba. Kártyaszám nélkül. Jelszó nélkül.',
+        'mail' => 'Az űrlap után egy személyes menedzser felhívja. Ne küldjön kártyaszámot vagy jelszót.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Vezérigazgató (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Támogatás',
         'service_title' => 'Szolgáltatás és támogatás',
-        'service' => 'A csapat hét ember. A feladatot írja az első sorba, és az e-mail oda megy. Nem hívunk csak azért, mert űrlap érkezett, és senki nem erősít meg megbízást Ön helyett.',
-        'write' => 'Írjon a(z) {email} címre.',
+        'service' => 'Az űrlap után egy személyes menedzser felhívja. Ez a támogatási út — nem egy második e-mail, és senki nem erősít meg megbízást Ön helyett.',
+        'write' => 'Nem kell újra írnia. A menedzsernek már megvan a kérés.',
         'hours_title' => 'A támogatás ideje',
-        'hours' => 'A leveleket nappal és éjjel olvassuk. Egy tipikus válasz néhány órát vesz igénybe. Ha nem tudunk azonnal válaszolni, az adott feladat következő embere válaszol.',
+        'hours' => 'Az asztal nappal és éjjel le van fedve. Egy tipikus hívás néhány órát vesz igénybe. Ha a menedzsere nem tud azonnal válaszolni, az adott feladat következő embere hív.',
         'never' => 'Ne küldjön kártyaszámot, jelszót vagy egyszeri kódot.',
     ],
     'contact' => [
         'eyebrow' => 'Kapcsolat',
         'title' => 'A kérdést tegye az első sorba.',
-        'lead' => 'Írjon a(z) {email} címre. Egy tipikus válasz néhány órát vesz igénybe. A csapat nem hív csak azért, mert űrlap érkezett.',
+        'lead' => 'Az űrlap után egy személyes menedzser felhívja. Egy tipikus hívás néhány órát vesz igénybe. Második e-mailre nincs szükség.',
         'topics' => [
             [
                 'title' => 'Az űrlap',
@@ -516,7 +516,7 @@ return [
             'Az oldal, amelyen volt',
             'Egy kérdés, közérthetően',
         ],
-        'omit_title' => 'Ezt hagyja ki',
+        'omit_title' => 'Erre nincs szükség',
         'omit' => [
             'Kártyaszámok',
             'Jelszavak és egyszeri kódok',

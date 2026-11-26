@@ -248,7 +248,7 @@ return [
         'title' => 'Krátké odpovědi',
         'more' => 'Přečíst celé dotazy →',
         'page_title' => 'Odpovědi, než cokoli financuješ',
-        'page_lead' => 'Začátek, poznámka, peníze a bezpečí — časté otázky. Když tu ta tvoje není, napiš na {email}.',
+        'page_lead' => 'Začátek, poznámka, peníze a bezpečí — časté otázky. Když tu ta tvoje není, osobní manažer ji vezme v hovoru.',
         'items' => [
             [
                 'q' => 'Potřebuji zkušenost s obchodováním?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Je k dispozici podpora?',
-                'a' => 'Ano. Tým čte poštu 24 hodin denně kvůli vkladům a založení účtu.',
+                'a' => 'Ano. Po formuláři ti zavolá osobní manažer. Tým je k dispozici ve dne i v noci.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Co se stane po odeslání?',
-                        'a' => 'Žádost se uloží. Na stránce uvidíš potvrzení. Není to slib, že účet už je otevřený, a nikdo ti nezavolá jen proto, žes odeslal formulář.',
+                        'a' => 'Žádost se uloží. Na stránce uvidíš potvrzení. Není to slib, že účet už je otevřený. Osobní manažer ti zavolá kvůli dalšímu kroku.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Co to není',
-                'text' => 'Není to živý tok cen, slib zisku ani formulář, který strhne kartu.',
+                'text' => 'Kurzy na této stránce jsou ukázky. Nikdo neslibuje zisk a formulář se nikdy neptá na kartu.',
             ],
         ],
         'markets_title' => 'Trhy na této obrazovce',
@@ -440,7 +440,7 @@ return [
             'To, jak obrazovka funguje, jde produktovému řediteli.',
             'E-mail o žádosti, která už byla odeslaná, jde do péče o klienty.',
         ],
-        'mail' => 'Napiš na {email} a roli uveď na prvním řádku. Žádná čísla karet. Žádná hesla.',
+        'mail' => 'Po formuláři ti zavolá osobní manažer. Neposílej čísla karet ani hesla.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Generální ředitel (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Podpora',
         'service_title' => 'Služba a podpora',
-        'service' => 'Tým je sedm lidí. Pojmenuj roli na prvním řádku a e-mail tam dojde. Nevoláme jen proto, žes odeslal formulář, a nikdo za tebe nepotvrdí příkaz.',
-        'write' => 'Napiš na {email}.',
+        'service' => 'Po formuláři ti zavolá osobní manažer. Takhle funguje podpora — ne druhý e-mail, a nikdo za tebe nepotvrdí příkaz.',
+        'write' => 'Nemusíš psát znovu. Manažer už má žádost.',
         'hours_title' => 'Hodiny podpory',
-        'hours' => 'Pošta se čte ve dne i v noci. Odpověď obvykle trvá několik hodin. Když nestihneme odpovědět hned, ozve se další člověk v té roli.',
+        'hours' => 'Tým je k dispozici ve dne i v noci. Typický hovor trvá několik hodin. Když tvůj manažer nemůže hned, zavolá další člověk v té roli.',
         'never' => 'Neposílej číslo karty, heslo ani jednorázový kód.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Napiš a otázku dej na první řádek.',
-        'lead' => 'E-mail {email}. Odpověď obvykle trvá několik hodin. Tým nevolá jen proto, žes odeslal formulář.',
+        'lead' => 'Po formuláři ti zavolá osobní manažer. Typický hovor trvá několik hodin. Druhý e-mail nepotřebuješ.',
         'topics' => [
             [
                 'title' => 'Formulář',
@@ -516,7 +516,7 @@ return [
             'Adresa stránky',
             'Jedna otázka, obyčejnými slovy',
         ],
-        'omit_title' => 'Tohle vynech',
+        'omit_title' => 'Tohle není potřeba',
         'omit' => [
             'Čísla karet',
             'Hesla a jednorázové kódy',

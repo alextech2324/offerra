@@ -248,7 +248,7 @@ return [
         'title' => 'Korte svar',
         'more' => 'Les hele FAQ →',
         'page_title' => 'Svar før du setter inn noe',
-        'page_lead' => 'Start, notatet, penger og sikkerhet — de vanlige spørsmålene. Hvis spørsmålet ditt ikke er her, skriv til {email}.',
+        'page_lead' => 'Start, notatet, penger og sikkerhet — de vanlige spørsmålene. Hvis spørsmålet ditt ikke er her, tar en personlig manager det i samtalen.',
         'items' => [
             [
                 'q' => 'Trenger jeg handelserfaring?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Finnes det støtte?',
-                'a' => 'Ja. Teamet leser e-post 24 timer i døgnet om innskudd og kontooppretting.',
+                'a' => 'Ja. Etter skjemaet ringer en personlig manager deg. Desken er dekket dag og natt.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Hva skjer etter at jeg har sendt?',
-                        'a' => 'Forespørselen lagres. Du ser en bekreftelse på siden. Det er ikke et løfte om at en konto allerede er åpen, og vi ringer ikke bare fordi du har sendt et skjema.',
+                        'a' => 'Forespørselen lagres. Du ser en bekreftelse på siden. Det er ikke et løfte om at en konto allerede er åpen. En personlig manager ringer deg om neste steg.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Det det ikke er',
-                'text' => 'Ikke en live kursfeed, ikke et løfte om gevinst og ikke et skjema som tar imot et kort.',
+                'text' => 'Kursene på denne siden er eksempler. Ingen lover gevinst, og skjemaet spør aldri etter et kort.',
             ],
         ],
         'markets_title' => 'Markeder på denne skjermen',
@@ -440,7 +440,7 @@ return [
             'Hvordan skjermen virker, går til produktdirektøren.',
             'En e-post om en forespørsel du allerede har sendt, går til kundeomsorg.',
         ],
-        'mail' => 'Skriv til {email}, og sett rollen på første linje. Ingen kortnumre. Ingen passord.',
+        'mail' => 'Etter skjemaet ringer en personlig manager deg. Ikke send kortnumre eller passord.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Administrerende direktør (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Support',
         'service_title' => 'Tjeneste og støtte',
-        'service' => 'Teamet er sju personer. Nevn rollen på første linje, så går e-posten dit. Vi ringer ikke bare fordi et skjema er sendt, og ingen bekrefter en ordre for deg.',
-        'write' => 'Skriv til {email}.',
+        'service' => 'Etter skjemaet ringer en personlig manager deg. Det er supportveien — ikke en ny e-post, og ingen bekrefter en ordre for deg.',
+        'write' => 'Du trenger ikke skrive igjen. Manageren har allerede forespørselen.',
         'hours_title' => 'Støttetider',
-        'hours' => 'E-post leses dag og natt. Et typisk svar tar noen timer. Hvis vi ikke kan svare med en gang, svarer neste person i den rollen.',
+        'hours' => 'Desken er dekket dag og natt. Et typisk anrop tar noen timer. Hvis manageren din ikke kan svare med en gang, ringer neste person i den rollen.',
         'never' => 'Ikke send et kortnummer, et passord eller en engangskode.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Skriv med spørsmålet på første linje.',
-        'lead' => 'Send e-post til {email}. Et typisk svar tar noen timer. Teamet ringer ikke bare fordi et skjema er sendt.',
+        'lead' => 'Etter skjemaet ringer en personlig manager deg. Et typisk anrop tar noen timer. Du trenger ikke en ny e-post.',
         'topics' => [
             [
                 'title' => 'Skjemaet',
@@ -516,7 +516,7 @@ return [
             'Siden du var på',
             'Ett spørsmål, med vanlige ord',
         ],
-        'omit_title' => 'La dette ligge',
+        'omit_title' => 'Dette trengs ikke',
         'omit' => [
             'Kortnumre',
             'Passord og engangskoder',

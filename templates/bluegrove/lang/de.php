@@ -248,7 +248,7 @@ return [
         'title' => 'Kurze Antworten',
         'more' => 'Zur vollständigen FAQ →',
         'page_title' => 'Antworten, bevor du etwas einzahlst',
-        'page_lead' => 'Start, Hinweis, Geld und Sicherheit — die häufigen Fragen. Fehlt deine, schreib an {email}.',
+        'page_lead' => 'Start, Hinweis, Geld und Sicherheit — die häufigen Fragen. Fehlt deine, klärt sie ein persönlicher Manager am Telefon.',
         'items' => [
             [
                 'q' => 'Brauche ich Handelserfahrung?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Gibt es Support?',
-                'a' => 'Ja. Das Team liest die Post rund um die Uhr zu Einzahlungen und zur Kontoeröffnung.',
+                'a' => 'Ja. Nach dem Formular ruft dich ein persönlicher Manager an. Das Team ist Tag und Nacht erreichbar.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Was passiert nach dem Absenden?',
-                        'a' => 'Die Anfrage wird gespeichert. Du siehst eine Bestätigung auf der Seite. Das ist kein Versprechen, dass ein Konto schon offen ist, und wir rufen nicht an, nur weil du ein Formular abgeschickt hast.',
+                        'a' => 'Die Anfrage wird gespeichert. Du siehst eine Bestätigung auf der Seite. Das ist kein Versprechen, dass ein Konto schon offen ist. Ein persönlicher Manager ruft dich zum nächsten Schritt an.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Was es nicht ist',
-                'text' => 'Kein Live-Kursfeed, kein Gewinnversprechen und kein Formular, das eine Karte belastet.',
+                'text' => 'Die Kurse auf dieser Seite sind Beispiele. Niemand verspricht einen Gewinn, und das Formular fragt nie nach einer Karte.',
             ],
         ],
         'markets_title' => 'Märkte auf diesem Bildschirm',
@@ -440,7 +440,7 @@ return [
             'Wie der Bildschirm funktioniert, geht an die Produktdirektorin.',
             'Eine E-Mail zu einer Anfrage, die du schon gesendet hast, geht an die Kundenbetreuung.',
         ],
-        'mail' => 'Schreib an {email} und setze die Rolle in die erste Zeile. Keine Kartennummern. Keine Passwörter.',
+        'mail' => 'Nach dem Formular ruft dich ein persönlicher Manager an. Keine Kartennummern. Keine Passwörter.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Vorstandsvorsitzende (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Support',
         'service_title' => 'Service und Support',
-        'service' => 'Das Team sind sieben Personen. Nenne die Rolle in der ersten Zeile, dann kommt die E-Mail dort an. Wir rufen nicht an, nur weil ein Formular gesendet wurde, und niemand bestätigt eine Order für dich.',
-        'write' => 'Schreib an {email}.',
+        'service' => 'Nach dem Formular ruft dich ein persönlicher Manager an. So läuft der Support — nicht über eine zweite E-Mail, und niemand bestätigt eine Order für dich.',
+        'write' => 'Du musst nicht noch einmal schreiben. Der Manager hat die Anfrage schon.',
         'hours_title' => 'Supportzeiten',
-        'hours' => 'Post wird Tag und Nacht gelesen. Eine Antwort dauert in der Regel ein paar Stunden. Können wir nicht sofort antworten, antwortet die nächste Person in dieser Rolle.',
+        'hours' => 'Das Team ist Tag und Nacht erreichbar. Ein Anruf dauert in der Regel ein paar Stunden. Kann dein Manager nicht sofort rangehen, ruft die nächste Person in dieser Rolle an.',
         'never' => 'Sende keine Kartennummer, kein Passwort und keinen Einmalcode.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Schreib mit der Frage in der ersten Zeile.',
-        'lead' => 'E-Mail an {email}. Eine Antwort dauert in der Regel ein paar Stunden. Das Team ruft nicht an, nur weil ein Formular gesendet wurde.',
+        'lead' => 'Nach dem Formular ruft dich ein persönlicher Manager an. Ein Anruf dauert in der Regel ein paar Stunden. Du brauchst keine zweite E-Mail.',
         'topics' => [
             [
                 'title' => 'Das Formular',
@@ -516,7 +516,7 @@ return [
             'Die Seite, auf der du warst',
             'Eine Frage, in klaren Worten',
         ],
-        'omit_title' => 'Das lässt du weg',
+        'omit_title' => 'Das brauchst du nicht',
         'omit' => [
             'Kartennummern',
             'Passwörter und Einmalcodes',

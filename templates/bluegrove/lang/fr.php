@@ -248,7 +248,7 @@ return [
         'title' => 'Réponses rapides',
         'more' => 'Lire la FAQ complète →',
         'page_title' => 'Des réponses avant d’apporter des fonds',
-        'page_lead' => 'Le départ, la note, l’argent et la sécurité — les questions fréquentes. Si la vôtre n’est pas ici, écrivez à {email}.',
+        'page_lead' => 'Le départ, la note, l’argent et la sécurité — les questions fréquentes. Si la vôtre n’est pas ici, un interlocuteur personnel la reprend au téléphone.',
         'items' => [
             [
                 'q' => 'Faut-il une expérience de trading ?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Y a-t-il une assistance ?',
-                'a' => 'Oui. L’équipe lit le courrier 24 heures sur 24 pour les versements et l’ouverture de compte.',
+                'a' => 'Oui. Après le formulaire, un interlocuteur personnel vous appelle. L’équipe est joignable jour et nuit.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Que se passe-t-il après l’envoi ?',
-                        'a' => 'La demande est enregistrée. Vous voyez une confirmation sur la page. Ce n’est pas la promesse qu’un compte est déjà ouvert, et nous n’appelons pas seulement parce que vous avez envoyé un formulaire.',
+                        'a' => 'La demande est enregistrée. Vous voyez une confirmation sur la page. Ce n’est pas la promesse qu’un compte est déjà ouvert. Un interlocuteur personnel vous appelle pour l’étape suivante.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Ce que ce n’est pas',
-                'text' => 'Pas un flux de prix en direct, pas une promesse de gain, et pas un formulaire qui débite une carte.',
+                'text' => 'Les cours sur cette page sont des exemples. Personne ne promet un gain, et le formulaire ne demande jamais une carte.',
             ],
         ],
         'markets_title' => 'Marchés sur cet écran',
@@ -440,7 +440,7 @@ return [
             'Le fonctionnement de l’écran va à la directrice produit.',
             'Un e-mail sur une demande déjà envoyée va à la relation client.',
         ],
-        'mail' => 'Écrivez à {email} et mettez la fonction en première ligne. Pas de numéros de carte. Pas de mots de passe.',
+        'mail' => 'Après le formulaire, un interlocuteur personnel vous appelle. N’envoyez ni numéros de carte ni mots de passe.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Directrice générale (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Assistance',
         'service_title' => 'Service et assistance',
-        'service' => 'L’équipe, ce sont sept personnes. Nommez la fonction en première ligne et l’e-mail y arrive. Nous n’appelons pas seulement parce qu’un formulaire a été envoyé, et personne ne confirme un ordre à votre place.',
-        'write' => 'Écrivez à {email}.',
+        'service' => 'Après le formulaire, un interlocuteur personnel vous appelle. C’est le chemin du support — pas un second e-mail, et personne ne confirme un ordre à votre place.',
+        'write' => 'Vous n’avez pas besoin d’écrire une seconde fois. Le responsable a déjà la demande.',
         'hours_title' => 'Horaires d’assistance',
-        'hours' => 'Le courrier est lu jour et nuit. Une réponse habituelle prend quelques heures. Si nous ne pouvons pas répondre tout de suite, la personne suivante dans ce rôle répond.',
+        'hours' => 'L’équipe est joignable jour et nuit. Un appel prend d’habitude quelques heures. Si votre interlocuteur ne peut pas répondre tout de suite, la personne suivante dans ce rôle appelle.',
         'never' => 'N’envoyez pas de numéro de carte, de mot de passe ni de code à usage unique.',
     ],
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Écrivez avec la question en première ligne.',
-        'lead' => 'E-mail à {email}. Une réponse habituelle prend quelques heures. L’équipe n’appelle pas seulement parce qu’un formulaire a été envoyé.',
+        'lead' => 'Après le formulaire, un interlocuteur personnel vous appelle. Un appel prend d’habitude quelques heures. Vous n’avez pas besoin d’un second e-mail.',
         'topics' => [
             [
                 'title' => 'Le formulaire',
@@ -516,7 +516,7 @@ return [
             'La page où vous étiez',
             'Une question, en mots simples',
         ],
-        'omit_title' => 'À laisser de côté',
+        'omit_title' => 'Ceci n’est pas nécessaire',
         'omit' => [
             'Numéros de carte',
             'Mots de passe et codes à usage unique',

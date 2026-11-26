@@ -248,7 +248,7 @@ return [
         'title' => 'Lyhyet vastaukset',
         'more' => 'Lue koko UKK →',
         'page_title' => 'Vastauksia ennen kuin rahoitat mitään',
-        'page_lead' => 'Aloitus, muistiinpano, raha ja turvallisuus — yleiset kysymykset. Jos sinun ei ole tässä, kirjoita {email}.',
+        'page_lead' => 'Aloitus, muistiinpano, raha ja turvallisuus — yleiset kysymykset. Jos sinun ei ole tässä, henkilökohtainen manageri käy sen läpi puhelussa.',
         'items' => [
             [
                 'q' => 'Tarvitsenko kaupankäyntikokemusta?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Onko tukea saatavilla?',
-                'a' => 'Kyllä. Tiimi lukee postia 24 tuntia vuorokaudessa talletuksista ja tilin avaamisesta.',
+                'a' => 'Kyllä. Lomakkeen jälkeen henkilökohtainen manageri soittaa sinulle. Pöytä on miehitetty päivin ja öin.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Mitä tapahtuu lähettämisen jälkeen?',
-                        'a' => 'Pyyntö tallentuu. Näet vahvistuksen sivulla. Se ei ole lupaus, että tili on jo auki, emmekä soita vain siksi, että lähetimme lomakkeen.',
+                        'a' => 'Pyyntö tallentuu. Näet vahvistuksen sivulla. Se ei ole lupaus, että tili on jo auki. Henkilökohtainen manageri soittaa sinulle seuraavasta askeleesta.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Mikä se ei ole',
-                'text' => 'Ei reaaliaikainen kurssisyöte, ei lupaus voitosta eikä lomake, joka veloittaa kortin.',
+                'text' => 'Tämän sivun kurssit ovat esimerkkejä. Kukaan ei lupaa voittoa, eikä lomake koskaan kysy korttia.',
             ],
         ],
         'markets_title' => 'Markkinat tällä näytöllä',
@@ -440,7 +440,7 @@ return [
             'Se, miten näyttö toimii, menee tuotejohtajalle.',
             'Sähköposti jo lähetetystä pyynnöstä menee asiakaspalveluun.',
         ],
-        'mail' => 'Kirjoita {email} ja laita tehtävä ensimmäiselle riville. Ei korttinumeroita. Ei salasanoja.',
+        'mail' => 'Lomakkeen jälkeen henkilökohtainen manageri soittaa sinulle. Älä lähetä korttinumeroita tai salasanoja.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Toimitusjohtaja (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Tuki',
         'service_title' => 'Palvelu ja tuki',
-        'service' => 'Tiimi on seitsemän ihmistä. Nimeä tehtävä ensimmäisellä rivillä, niin sähköposti menee sinne. Emme soita vain siksi, että lomake lähetettiin, eikä kukaan vahvista toimeksiantoa puolestasi.',
-        'write' => 'Kirjoita osoitteeseen {email}.',
+        'service' => 'Lomakkeen jälkeen henkilökohtainen manageri soittaa sinulle. Se on tukipolku — ei toinen sähköposti, eikä kukaan vahvista toimeksiantoa puolestasi.',
+        'write' => 'Sinun ei tarvitse kirjoittaa uudestaan. Managerilla on pyyntö jo.',
         'hours_title' => 'Tuen ajat',
-        'hours' => 'Posti luetaan päivin ja öin. Vastaus kestää yleensä muutaman tunnin. Jos emme voi vastata heti, vastaa seuraava ihminen samassa tehtävässä.',
+        'hours' => 'Pöytä on miehitetty päivin ja öin. Tyypillinen puhelu kestää muutaman tunnin. Jos managerisi ei voi vastata heti, seuraava ihminen samassa tehtävässä soittaa.',
         'never' => 'Älä lähetä kortin numeroa, salasanaa tai kertakoodia.',
     ],
     'contact' => [
         'eyebrow' => 'Yhteys',
         'title' => 'Kirjoita niin, että kysymys on ensimmäisellä rivillä.',
-        'lead' => 'Sähköposti {email}. Vastaus kestää yleensä muutaman tunnin. Tiimi ei soita vain siksi, että lomake lähetettiin.',
+        'lead' => 'Lomakkeen jälkeen henkilökohtainen manageri soittaa sinulle. Tyypillinen puhelu kestää muutaman tunnin. Toista sähköpostia ei tarvita.',
         'topics' => [
             [
                 'title' => 'Lomake',
@@ -516,7 +516,7 @@ return [
             'Sivu, jolla olit',
             'Yksi kysymys, selvin sanoin',
         ],
-        'omit_title' => 'Jätä tämä pois',
+        'omit_title' => 'Tätä ei tarvita',
         'omit' => [
             'Kortin numerot',
             'Salasanat ja kertakoodit',

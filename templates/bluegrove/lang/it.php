@@ -248,7 +248,7 @@ return [
         'title' => 'Risposte rapide',
         'more' => 'Leggi la FAQ completa →',
         'page_title' => 'Risposte prima di finanziare qualsiasi cosa',
-        'page_lead' => 'Inizio, la nota, il denaro e la sicurezza — le domande frequenti. Se la tua non è qui, scrivi a {email}.',
+        'page_lead' => 'Inizio, la nota, il denaro e la sicurezza — le domande frequenti. Se la tua non è qui, un manager personale la affronta nella chiamata.',
         'items' => [
             [
                 'q' => 'Mi serve esperienza di trading?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'C’è assistenza?',
-                'a' => 'Sì. Il team legge la posta 24 ore su 24 per versamenti e apertura del conto.',
+                'a' => 'Sì. Dopo il modulo, un manager personale ti chiama. Il desk è coperto giorno e notte.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Che cosa succede dopo l’invio?',
-                        'a' => 'La richiesta viene salvata. Vedi una conferma sulla pagina. Non è una promessa che il conto sia già aperto, e non chiamiamo solo perché hai inviato un modulo.',
+                        'a' => 'La richiesta viene salvata. Vedi una conferma sulla pagina. Non è una promessa che il conto sia già aperto. Un manager personale ti chiama per il passo successivo.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Che cosa non è',
-                'text' => 'Non è un flusso di prezzi in tempo reale, non è una promessa di profitto e non è un modulo che addebita una carta.',
+                'text' => 'Le quotazioni in questa pagina sono esempi. Nessuno promette un profitto, e il modulo non chiede mai una carta.',
             ],
         ],
         'markets_title' => 'Mercati su questo schermo',
@@ -440,7 +440,7 @@ return [
             'Come funziona lo schermo va alla direttrice di prodotto.',
             'Un’e-mail su una richiesta già inviata va all’assistenza clienti.',
         ],
-        'mail' => 'Scrivi a {email} e metti il ruolo nella prima riga. Niente numeri di carta. Niente password.',
+        'mail' => 'Dopo il modulo, un manager personale ti chiama. Non inviare numeri di carta né password.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Amministratore delegato (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Assistenza',
         'service_title' => 'Servizio e assistenza',
-        'service' => 'Il team è di sette persone. Indica il ruolo nella prima riga e l’e-mail arriva lì. Non chiamiamo solo perché è stato inviato un modulo, e nessuno conferma un ordine al posto tuo.',
-        'write' => 'Scrivi a {email}.',
+        'service' => 'Dopo il modulo, un manager personale ti chiama. Quello è il canale di supporto — non una seconda e-mail, e nessuno conferma un ordine al posto tuo.',
+        'write' => 'Non devi scrivere di nuovo. Il manager ha già la richiesta.',
         'hours_title' => 'Orari di assistenza',
-        'hours' => 'La posta si legge giorno e notte. Una risposta tipica richiede qualche ora. Se non possiamo rispondere subito, risponde la persona successiva in quel ruolo.',
+        'hours' => 'Il desk è coperto giorno e notte. Una chiamata tipica richiede qualche ora. Se il tuo manager non può rispondere subito, chiama la persona successiva in quel ruolo.',
         'never' => 'Non inviare un numero di carta, una password o un codice monouso.',
     ],
     'contact' => [
         'eyebrow' => 'Contatti',
         'title' => 'Scrivi con la domanda nella prima riga.',
-        'lead' => 'E-mail a {email}. Una risposta tipica richiede qualche ora. Il team non chiama solo perché è stato inviato un modulo.',
+        'lead' => 'Dopo il modulo, un manager personale ti chiama. Una chiamata tipica richiede qualche ora. Non serve una seconda e-mail.',
         'topics' => [
             [
                 'title' => 'Il modulo',
@@ -516,7 +516,7 @@ return [
             'La pagina in cui ti trovavi',
             'Una domanda, in parole semplici',
         ],
-        'omit_title' => 'Lascia fuori questo',
+        'omit_title' => 'Questo non serve',
         'omit' => [
             'Numeri di carta',
             'Password e codici monouso',

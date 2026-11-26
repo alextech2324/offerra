@@ -248,7 +248,7 @@ return [
         'title' => 'Hitri odgovori',
         'more' => 'Preberite vsa vprašanja →',
         'page_title' => 'Odgovori, preden karkoli nakažete',
-        'page_lead' => 'Začetek, opomba, denar in varnost — pogosta vprašanja. Če vašega vprašanja ni tukaj, pišite na {email}.',
+        'page_lead' => 'Začetek, opomba, denar in varnost — pogosta vprašanja. Če vašega vprašanja ni tukaj, ga osebni upravitelj pokrije v klicu.',
         'items' => [
             [
                 'q' => 'Ali potrebujem izkušnje s trgovanjem?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Ali je podpora na voljo?',
-                'a' => 'Da. Ekipa bere pošto 24 ur na dan za pologe in odprtje računa.',
+                'a' => 'Da. Po obrazcu vas pokliče osebni upravitelj. Miza je pokrita podnevi in ponoči.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Kaj se zgodi po oddaji?',
-                        'a' => 'Zahteva se shrani. Na strani vidite potrditev. To ni obljuba, da je račun že odprt, in ne kličemo samo zato, ker ste poslali obrazec.',
+                        'a' => 'Zahteva se shrani. Na strani vidite potrditev. To ni obljuba, da je račun že odprt. Osebni upravitelj vas pokliče glede naslednjega koraka.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Kaj ni',
-                'text' => 'Ni vir cen v živo, ni obljuba dobička in ni obrazec, ki sprejme kartico.',
+                'text' => 'Tečaji na tej strani so primeri. Nihče ne obljublja dobička, obrazec pa nikoli ne zahteva kartice.',
             ],
         ],
         'markets_title' => 'Trgi na tem zaslonu',
@@ -440,7 +440,7 @@ return [
             'Kako zaslon deluje, gre produktni direktorici.',
             'E-pošta o zahtevi, ki ste jo že poslali, gre v skrb za stranke.',
         ],
-        'mail' => 'Pišite na {email} in vlogo postavite v prvo vrstico. Brez številk kartic. Brez gesel.',
+        'mail' => 'Po obrazcu vas pokliče osebni upravitelj. Ne pošiljajte številk kartic ali gesel.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Glavna izvršna direktorica (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Podpora',
         'service_title' => 'Storitev in podpora',
-        'service' => 'Ekipa je sedem ljudi. Vlogo zapišite v prvo vrstico in e-pošta gre tja. Ne kličemo samo zato, ker je prišel obrazec, in nihče namesto vas ne potrdi naročila.',
-        'write' => 'Pišite na {email}.',
+        'service' => 'Po obrazcu vas pokliče osebni upravitelj. To je pot podpore — ne drugo e-poštno sporočilo, in nihče namesto vas ne potrdi naročila.',
+        'write' => 'Ni treba pisati znova. Upravitelj že ima zahtevo.',
         'hours_title' => 'Ure podpore',
-        'hours' => 'Pošta se bere podnevi in ponoči. Običajen odgovor traja nekaj ur. Če ne moremo odgovoriti takoj, odgovori naslednja oseba v tej vlogi.',
+        'hours' => 'Miza je pokrita podnevi in ponoči. Običajen klic traja nekaj ur. Če vaš upravitelj ne more takoj, pokliče naslednja oseba v tej vlogi.',
         'never' => 'Ne pošiljajte številke kartice, gesla ali enkratne kode.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Vprašanje postavite v prvo vrstico.',
-        'lead' => 'Pišite na {email}. Običajen odgovor traja nekaj ur. Ekipa ne kliče samo zato, ker je prišel obrazec.',
+        'lead' => 'Po obrazcu vas pokliče osebni upravitelj. Običajen klic traja nekaj ur. Drugo e-poštno sporočilo ni potrebno.',
         'topics' => [
             [
                 'title' => 'Obrazec',
@@ -516,7 +516,7 @@ return [
             'Stran, na kateri ste bili',
             'Eno vprašanje, z navadnimi besedami',
         ],
-        'omit_title' => 'To izpustite',
+        'omit_title' => 'Tega ni treba',
         'omit' => [
             'Številke kartic',
             'Gesla in enkratne kode',

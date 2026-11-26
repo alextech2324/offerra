@@ -248,7 +248,7 @@ return [
         'title' => 'Trumpi atsakymai',
         'more' => 'Skaityti visus DUK →',
         'page_title' => 'Atsakymai prieš ką nors finansuojant',
-        'page_lead' => 'Pradžia, pastaba, pinigai ir saugumas — dažni klausimai. Jei jūsų klausimo čia nėra, rašykite {email}.',
+        'page_lead' => 'Pradžia, pastaba, pinigai ir saugumas — dažni klausimai. Jei jūsų klausimo čia nėra, asmeninis vadybininkas jį aptaria skambutyje.',
         'items' => [
             [
                 'q' => 'Ar reikia prekybos patirties?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Ar yra palaikymas?',
-                'a' => 'Taip. Komanda skaito laiškus 24 valandas per parą dėl įnašų ir paskyros atidarymo.',
+                'a' => 'Taip. Po formos jums paskambina asmeninis vadybininkas. Stalas dengiamas dieną ir naktį.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Kas vyksta po pateikimo?',
-                        'a' => 'Prašymas išsaugomas. Puslapyje matote patvirtinimą. Tai nėra pažadas, kad paskyra jau atidaryta, ir neskambiname tik todėl, kad išsiuntėte formą.',
+                        'a' => 'Užklausa išsaugoma. Puslapyje matote patvirtinimą. Tai ne pažadas, kad sąskaita jau atidaryta. Asmeninis vadybininkas skambina dėl kito žingsnio.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Kas tai nėra',
-                'text' => 'Ne tiesioginis kainų srautas, ne pelno pažadas ir ne forma, kuri ima kortelę.',
+                'text' => 'Šio puslapio kainos yra pavyzdžiai. Niekas nežada pelno, o forma niekada neprašo kortelės.',
             ],
         ],
         'markets_title' => 'Rinkos šiame ekrane',
@@ -440,7 +440,7 @@ return [
             'Kaip veikia ekranas, eina produkto direktoriui.',
             'El. laiškas apie jau išsiųstą prašymą eina klientų priežiūrai.',
         ],
-        'mail' => 'Rašykite {email} ir darbą dėkite pirmoje eilutėje. Jokių kortelės numerių. Jokių slaptažodžių.',
+        'mail' => 'Po formos jums paskambina asmeninis vadybininkas. Nesiųskite kortelės numerių ar slaptažodžių.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Generalinė direktorė (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Pagalba',
         'service_title' => 'Paslauga ir palaikymas',
-        'service' => 'Komanda yra septyni žmonės. Įvardykite darbą pirmoje eilutėje ir el. laiškas ten nueina. Neskambiname tik todėl, kad forma išsiųsta, ir niekas pavedimo už jus nepatvirtina.',
-        'write' => 'Rašykite {email}.',
+        'service' => 'Po formos jums paskambina asmeninis vadybininkas. Toks yra palaikymo kelias — ne antras laiškas, ir niekas pavedimo už jus nepatvirtina.',
+        'write' => 'Nereikia rašyti dar kartą. Vadybininkas jau turi užklausą.',
         'hours_title' => 'Palaikymo valandos',
-        'hours' => 'Laiškai skaitomi dieną ir naktį. Įprastas atsakymas užtrunka kelias valandas. Jei iš karto atsakyti negalime, atsako kitas tos rolės žmogus.',
+        'hours' => 'Stalas dengiamas dieną ir naktį. Įprastas skambutis užtrunka kelias valandas. Jei jūsų vadybininkas negali iš karto, skambina kitas tos rolės žmogus.',
         'never' => 'Nesiųskite kortelės numerio, slaptažodžio ar vienkartinio kodo.',
     ],
     'contact' => [
         'eyebrow' => 'Kontaktai',
         'title' => 'Rašykite, klausimą dėdami pirmoje eilutėje.',
-        'lead' => 'Rašykite {email}. Įprastas atsakymas užtrunka kelias valandas. Komanda neskambina tik todėl, kad forma išsiųsta.',
+        'lead' => 'Po formos jums paskambina asmeninis vadybininkas. Įprastas skambutis užtrunka kelias valandas. Antro laiško nereikia.',
         'topics' => [
             [
                 'title' => 'Forma',
@@ -516,7 +516,7 @@ return [
             'Puslapį, kuriame buvote',
             'Vieną klausimą, paprastais žodžiais',
         ],
-        'omit_title' => 'To nedėkite',
+        'omit_title' => 'Šito nereikia',
         'omit' => [
             'Kortelės numerių',
             'Slaptažodžių ir vienkartinių kodų',

@@ -248,7 +248,7 @@ return [
         'title' => 'Respuestas rápidas',
         'more' => 'Leer la FAQ completa →',
         'page_title' => 'Respuestas antes de aportar fondos',
-        'page_lead' => 'El inicio, la nota, el dinero y la seguridad: las preguntas frecuentes. Si la tuya no está, escribe a {email}.',
+        'page_lead' => 'El inicio, la nota, el dinero y la seguridad: las preguntas frecuentes. Si la tuya no está, un gestor personal la trata en la llamada.',
         'items' => [
             [
                 'q' => '¿Necesito experiencia operando?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => '¿Hay soporte?',
-                'a' => 'Sí. El equipo lee el correo las 24 horas para ingresos y apertura de cuenta.',
+                'a' => 'Sí. Después del formulario, un gestor personal te llama. El equipo está cubierto las 24 horas.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => '¿Qué pasa después de enviar?',
-                        'a' => 'La solicitud se guarda. Ves una confirmación en la página. No es una promesa de que la cuenta ya esté abierta, y no llamamos solo porque hayas enviado un formulario.',
+                        'a' => 'La solicitud se guarda. Ves una confirmación en la página. No es una promesa de que la cuenta ya esté abierta. Un gestor personal te llama para el siguiente paso.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Qué no es',
-                'text' => 'No es un feed de precios en vivo, no es una promesa de beneficio y no es un formulario que cargue una tarjeta.',
+                'text' => 'Los precios de esta página son ejemplos. Nadie promete un beneficio, y el formulario nunca pide una tarjeta.',
             ],
         ],
         'markets_title' => 'Mercados en esta pantalla',
@@ -440,7 +440,7 @@ return [
             'Cómo funciona la pantalla va a la directora de producto.',
             'Un correo sobre una solicitud que ya enviaste va a atención al cliente.',
         ],
-        'mail' => 'Escribe a {email} y pon la función en la primera línea. Sin números de tarjeta. Sin contraseñas.',
+        'mail' => 'Después del formulario, un gestor personal te llama. No envíes números de tarjeta ni contraseñas.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Directora general (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Soporte',
         'service_title' => 'Servicio y soporte',
-        'service' => 'El equipo son siete personas. Indica la función en la primera línea y el correo llega allí. No llamamos solo porque se haya enviado un formulario, y nadie confirma una orden por ti.',
-        'write' => 'Escribe a {email}.',
+        'service' => 'Después del formulario, un gestor personal te llama. Ese es el canal de soporte: no un segundo correo, y nadie confirma una orden por ti.',
+        'write' => 'No hace falta escribir otra vez. El gestor ya tiene la solicitud.',
         'hours_title' => 'Horario de soporte',
-        'hours' => 'El correo se lee de día y de noche. Una respuesta habitual tarda unas horas. Si no podemos responder al momento, responde la siguiente persona en esa función.',
+        'hours' => 'El equipo está cubierto de día y de noche. Una llamada habitual tarda unas horas. Si tu gestor no puede atender al momento, llama la siguiente persona en esa función.',
         'never' => 'No envíes un número de tarjeta, una contraseña ni un código de un solo uso.',
     ],
     'contact' => [
         'eyebrow' => 'Contacto',
         'title' => 'Escribe con la pregunta en la primera línea.',
-        'lead' => 'Correo a {email}. Una respuesta habitual tarda unas horas. El equipo no llama solo porque se haya enviado un formulario.',
+        'lead' => 'Después del formulario, un gestor personal te llama. Una llamada habitual tarda unas horas. No hace falta un segundo correo.',
         'topics' => [
             [
                 'title' => 'El formulario',
@@ -516,7 +516,7 @@ return [
             'La página en la que estabas',
             'Una pregunta, en palabras llanas',
         ],
-        'omit_title' => 'Deja esto fuera',
+        'omit_title' => 'Esto no hace falta',
         'omit' => [
             'Números de tarjeta',
             'Contraseñas y códigos de un solo uso',

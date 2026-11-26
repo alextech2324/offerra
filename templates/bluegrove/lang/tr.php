@@ -248,7 +248,7 @@ return [
         'title' => 'Kısa yanıtlar',
         'more' => 'Tüm SSS metnini okuyun →',
         'page_title' => 'Herhangi bir tutar yatırmadan önce yanıtlar',
-        'page_lead' => 'Başlangıç, not, para ve güvenlik — sık sorulanlar. Sorunuz burada yoksa {email} adresine yazın.',
+        'page_lead' => 'Başlangıç, not, para ve güvenlik — sık sorulanlar. Sorunuz burada yoksa kişisel yönetici bunu telefonda ele alır.',
         'items' => [
             [
                 'q' => 'İşlem deneyimi gerekir mi?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Destek var mı?',
-                'a' => 'Evet. Ekip, para yatırma ve hesap kurulumu için postayı günde 24 saat okur.',
+                'a' => 'Evet. Formdan sonra kişisel bir yönetici sizi arar. Masa gece gündüz açıktır.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Gönderdikten sonra ne olur?',
-                        'a' => 'Başvuru kaydedilir. Sayfada bir onay görürsünüz. Bu, hesabın çoktan açıldığına dair bir söz değildir ve form gönderildiği için aramayız.',
+                        'a' => 'Başvuru kaydedilir. Sayfada bir onay görürsünüz. Bu, hesabın çoktan açıldığına dair bir söz değildir. Kişisel bir yönetici sonraki adım için sizi arar.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Ne değildir',
-                'text' => 'Canlı fiyat akışı değildir, kâr vaadi değildir ve kart bilgisi alan bir form değildir.',
+                'text' => 'Bu sayfadaki fiyatlar örnektir. Kimse kâr vaat etmez ve form asla kart sormaz.',
             ],
         ],
         'markets_title' => 'Bu ekrandaki piyasalar',
@@ -440,7 +440,7 @@ return [
             'Ekranın nasıl çalıştığı ürün direktörüne gider.',
             'Daha önce gönderdiğiniz bir başvuruya dair e-posta müşteri ilişkilerine gider.',
         ],
-        'mail' => '{email} adresine yazın ve görevi ilk satıra koyun. Kart numarası yok. Parola yok.',
+        'mail' => 'Formdan sonra kişisel bir yönetici sizi arar. Kart numarası veya parola göndermeyin.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Genel müdür (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Destek',
         'service_title' => 'Hizmet ve destek',
-        'service' => 'Ekip yedi kişidir. Görevi ilk satırda yazın, e-posta oraya gider. Form gönderildiği için aramayız ve kimse sizin yerinize bir emri onaylamaz.',
-        'write' => '{email} adresine yazın.',
+        'service' => 'Formdan sonra kişisel bir yönetici sizi arar. Destek yolu budur — ikinci bir e-posta değil, ve kimse sizin yerinize bir emri onaylamaz.',
+        'write' => 'Yeniden yazmanız gerekmez. Yönetici başvuruyu zaten aldı.',
         'hours_title' => 'Destek saatleri',
-        'hours' => 'Posta gece gündüz okunur. Yanıt genellikle birkaç saat sürer. Hemen yanıtlayamazsak o görevdeki sonraki kişi yanıtlar.',
+        'hours' => 'Masa gece gündüz açıktır. Tipik bir arama birkaç saat sürer. Yöneticiniz hemen cevap veremezse o görevdeki sonraki kişi arar.',
         'never' => 'Kart numarası, parola ya da tek kullanımlık kod göndermeyin.',
     ],
     'contact' => [
         'eyebrow' => 'İletişim',
         'title' => 'Soruyu ilk satıra yazın.',
-        'lead' => 'E-posta {email}. Yanıt genellikle birkaç saat sürer. Ekip, form gönderildiği için aramaz.',
+        'lead' => 'Formdan sonra kişisel bir yönetici sizi arar. Tipik bir arama birkaç saat sürer. İkinci bir e-postaya gerek yoktur.',
         'topics' => [
             [
                 'title' => 'Form',
@@ -516,7 +516,7 @@ return [
             'Bulunduğunuz sayfa',
             'Tek soru, sade sözcüklerle',
         ],
-        'omit_title' => 'Bunları koymayın',
+        'omit_title' => 'Buna gerek yok',
         'omit' => [
             'Kart numaraları',
             'Parolalar ve tek kullanımlık kodlar',

@@ -248,7 +248,7 @@ return [
         'title' => 'Jawaban singkat',
         'more' => 'Baca pertanyaan umum selengkapnya →',
         'page_title' => 'Jawaban sebelum Anda mendanai apa pun',
-        'page_lead' => 'Awal, catatan, uang, dan keamanan — pertanyaan yang sering muncul. Jika pertanyaan Anda tidak ada di sini, tulis ke {email}.',
+        'page_lead' => 'Awal, catatan, uang, dan keamanan — pertanyaan yang sering muncul. Jika pertanyaan Anda tidak ada di sini, manajer pribadi membahasnya di panggilan.',
         'items' => [
             [
                 'q' => 'Apakah saya perlu pengalaman trading?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Apakah dukungan tersedia?',
-                'a' => 'Ya. Tim membaca surat 24 jam sehari untuk deposit dan pembukaan akun.',
+                'a' => 'Ya. Setelah formulir, manajer pribadi menelepon Anda. Meja dijaga siang dan malam.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Apa yang terjadi setelah saya kirim?',
-                        'a' => 'Permintaan tersimpan. Anda melihat konfirmasi di halaman. Ini bukan janji bahwa akun sudah terbuka, dan kami tidak menelepon hanya karena Anda mengirim formulir.',
+                        'a' => 'Permintaan disimpan. Anda melihat konfirmasi di halaman. Ini bukan janji bahwa akun sudah terbuka. Manajer pribadi menelepon Anda tentang langkah berikutnya.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Apa yang bukan',
-                'text' => 'Bukan umpan harga langsung, bukan janji laba, dan bukan formulir yang menerima kartu.',
+                'text' => 'Harga di halaman ini adalah contoh. Tidak ada yang menjanjikan laba, dan formulir tidak pernah meminta kartu.',
             ],
         ],
         'markets_title' => 'Pasar di layar ini',
@@ -440,7 +440,7 @@ return [
             'Cara layar bekerja pergi ke direktur produk.',
             'Email tentang permintaan yang sudah Anda kirim pergi ke layanan klien.',
         ],
-        'mail' => 'Tulis ke {email} dan cantumkan pekerjaan di baris pertama. Tanpa nomor kartu. Tanpa kata sandi.',
+        'mail' => 'Setelah formulir, manajer pribadi menelepon Anda. Jangan kirim nomor kartu atau kata sandi.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Direktur utama (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Dukungan',
         'service_title' => 'Layanan dan dukungan',
-        'service' => 'Tim ini tujuh orang. Sebut pekerjaan di baris pertama dan email pergi ke sana. Kami tidak menelepon hanya karena formulir terkirim, dan tidak ada yang mengonfirmasi order untuk Anda.',
-        'write' => 'Tulis ke {email}.',
+        'service' => 'Setelah formulir, manajer pribadi menelepon Anda. Itulah jalur dukungan — bukan email kedua, dan tidak ada yang mengonfirmasi order untuk Anda.',
+        'write' => 'Anda tidak perlu menulis lagi. Manajer sudah punya permintaan itu.',
         'hours_title' => 'Jam dukungan',
-        'hours' => 'Surat dibaca sepanjang siang dan malam. Balasan biasa butuh beberapa jam. Jika kami tidak dapat menjawab segera, orang berikutnya dalam peran itu yang membalas.',
+        'hours' => 'Meja dijaga siang dan malam. Panggilan biasa butuh beberapa jam. Jika manajer Anda tidak dapat menjawab segera, orang berikutnya dalam peran itu yang menelepon.',
         'never' => 'Jangan kirim nomor kartu, kata sandi, atau kode sekali pakai.',
     ],
     'contact' => [
         'eyebrow' => 'Kontak',
         'title' => 'Tulis dengan pertanyaan di baris pertama.',
-        'lead' => 'Email {email}. Balasan biasa butuh beberapa jam. Tim tidak menelepon hanya karena formulir terkirim.',
+        'lead' => 'Setelah formulir, manajer pribadi menelepon Anda. Panggilan biasa butuh beberapa jam. Anda tidak perlu email kedua.',
         'topics' => [
             [
                 'title' => 'Formulir',
@@ -516,7 +516,7 @@ return [
             'Halaman tempat Anda berada',
             'Satu pertanyaan, dengan kata yang lugas',
         ],
-        'omit_title' => 'Jangan sertakan ini',
+        'omit_title' => 'Ini tidak diperlukan',
         'omit' => [
             'Nomor kartu',
             'Kata sandi dan kode sekali pakai',

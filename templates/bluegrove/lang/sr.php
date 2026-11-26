@@ -248,7 +248,7 @@ return [
         'title' => 'Brzi odgovori',
         'more' => 'Pročitajte sva pitanja →',
         'page_title' => 'Odgovori pre nego što išta uplatite',
-        'page_lead' => 'Početak, beleška, novac i bezbednost — česta pitanja. Ako vašeg pitanja nema ovde, pišite na {email}.',
+        'page_lead' => 'Početak, beleška, novac i bezbednost — česta pitanja. Ako vašeg pitanja nema ovde, lični menadžer to pokriva na pozivu.',
         'items' => [
             [
                 'q' => 'Da li mi treba iskustvo u trgovanju?',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'q' => 'Da li je podrška dostupna?',
-                'a' => 'Da. Tim čita poštu 24 sata dnevno za uplate i otvaranje računa.',
+                'a' => 'Da. Posle obrasca zove vas lični menadžer. Sto je pokriven danju i noću.',
             ],
         ],
         'groups' => [
@@ -282,7 +282,7 @@ return [
                     ],
                     [
                         'q' => 'Šta se dešava posle slanja?',
-                        'a' => 'Zahtev se čuva. Na stranici vidite potvrdu. To nije obećanje da je račun već otvoren i ne zovemo samo zato što ste poslali obrazac.',
+                        'a' => 'Zahtev se čuva. Na stranici vidite potvrdu. To nije obećanje da je račun već otvoren. Lični menadžer zove vas zbog sledećeg koraka.',
                     ],
                 ],
             ],
@@ -372,7 +372,7 @@ return [
             ],
             [
                 'title' => 'Šta nije',
-                'text' => 'Nije izvor cena uživo, nije obećanje dobiti i nije obrazac koji uzima karticu.',
+                'text' => 'Kursevi na ovoj stranici su primeri. Niko ne obećava dobit, a obrazac nikad ne traži karticu.',
             ],
         ],
         'markets_title' => 'Tržišta na ovom ekranu',
@@ -440,7 +440,7 @@ return [
             'Kako ekran radi, ide direktorki proizvoda.',
             'E-mail o zahtevu koji ste već poslali ide u brigu o klijentima.',
         ],
-        'mail' => 'Pišite na {email} i ulogu stavite u prvi red. Bez brojeva kartica. Bez lozinki.',
+        'mail' => 'Posle obrasca zove vas lični menadžer. Ne šaljite brojeve kartica ni lozinke.',
         'ceo' => [
             'name' => 'Helen Ward',
             'role' => 'Glavna izvršna direktorka (CEO)',
@@ -482,16 +482,16 @@ return [
     'support' => [
         'title' => 'Podrška',
         'service_title' => 'Usluga i podrška',
-        'service' => 'Tim je sedam ljudi. Ulogu napišite u prvi red i e-mail ide tamo. Ne zovemo samo zato što je stigao obrazac i niko umesto vas ne potvrđuje nalog.',
-        'write' => 'Pišite na {email}.',
+        'service' => 'Posle obrasca zove vas lični menadžer. To je put podrške — ne drugi e-mail, i niko umesto vas ne potvrđuje nalog.',
+        'write' => 'Ne trebate ponovo da pišete. Menadžer već ima zahtev.',
         'hours_title' => 'Radno vreme podrške',
-        'hours' => 'Pošta se čita danju i noću. Uobičajen odgovor traje nekoliko sati. Ako ne možemo da odgovorimo odmah, odgovara sledeća osoba u toj ulozi.',
+        'hours' => 'Sto je pokriven danju i noću. Uobičajen poziv traje nekoliko sati. Ako vaš menadžer ne može odmah, zove sledeća osoba u toj ulozi.',
         'never' => 'Ne šaljite broj kartice, lozinku ni jednokratni kod.',
     ],
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Pitanje stavite u prvi red.',
-        'lead' => 'Pišite na {email}. Uobičajen odgovor traje nekoliko sati. Tim ne zove samo zato što je stigao obrazac.',
+        'lead' => 'Posle obrasca zove vas lični menadžer. Uobičajen poziv traje nekoliko sati. Drugi e-mail nije potreban.',
         'topics' => [
             [
                 'title' => 'Obrazac',
@@ -516,7 +516,7 @@ return [
             'Stranicu na kojoj ste bili',
             'Jedno pitanje, običnim rečima',
         ],
-        'omit_title' => 'Ovo izostavite',
+        'omit_title' => 'Ovo nije potrebno',
         'omit' => [
             'Brojeve kartica',
             'Lozinke i jednokratne kodove',
