@@ -291,6 +291,17 @@ form.js-lead-form button.submit {
     color: #000 !important;
 }
 
+.register-form .iti__arrow,
+.register-form .iti--allow-dropdown .iti__arrow {
+    display: none !important;
+}
+
+.register-form .iti__selected-flag,
+.register-form .iti__selected-country {
+    pointer-events: none;
+    cursor: default;
+}
+
 .register-form .btn_send,
 .register-form .regFormButton.submit {
     width: 100%;

@@ -232,8 +232,7 @@ function setupFormValidation(form) {
     autoPlaceholder: 'aggressive',
     initialCountry: singleCountry ? onlyCountries[0] : phoneCountry,
     onlyCountries: onlyCountries.length ? onlyCountries : undefined,
-    // Gold sample keeps the flag + dial + chevron even when GEO is a single country.
-    allowDropdown: true,
+    allowDropdown: false,
     useFullscreenPopup: false,
   });
 

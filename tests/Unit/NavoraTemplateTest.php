@@ -83,7 +83,7 @@ class NavoraTemplateTest extends TestCase
         $validation = file_get_contents(base_path('templates/navora/integration/validation.js'));
         $this->assertIsString($validation);
         $this->assertStringContainsString('separateDialCode: true', $validation);
-        $this->assertStringContainsString('allowDropdown: true', $validation);
+        $this->assertStringContainsString('allowDropdown: false', $validation);
     }
 
     public function test_navora_form_posts_to_send_php(): void
