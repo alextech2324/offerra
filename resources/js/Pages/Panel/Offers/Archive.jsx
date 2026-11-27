@@ -33,17 +33,6 @@ function formatCreatedDate(value) {
     return `${day}.${month}.${year}`;
 }
 
-function statusBadge(status) {
-    switch (status) {
-        case 'archived':
-            return <span className="badge badge-ok">В архіві</span>;
-        case 'teardown_failed':
-            return <span className="badge badge-error">Помилка</span>;
-        default:
-            return <span className="badge">{status}</span>;
-    }
-}
-
 function buildQueryParams(filters, overrides = {}) {
     const merged = { ...filters, ...overrides };
     const params = {};
@@ -469,7 +458,6 @@ export default function Archive({
                                 <th>GEO</th>
                                 <th>Cloudflare</th>
                                 <th>Реєстратор</th>
-                                <th>Статус</th>
                                 <th>Чому</th>
                                 <th>Архівовано</th>
                                 <th>Дії</th>
@@ -529,14 +517,13 @@ export default function Archive({
                                         </td>
                                         <td>{offer.dynadot_account ?? '—'}</td>
                                         <td>
-                                            {statusBadge(offer.status)}
+                                            {offer.archive_reason_label ?? 'Вручну'}
                                             {teardownErrors.length > 0 && (
                                                 <p className="field-hint" style={{ color: '#f87171', marginTop: '0.25rem' }}>
                                                     {teardownErrors.join(' · ')}
                                                 </p>
                                             )}
                                         </td>
-                                        <td>{offer.archive_reason_label ?? 'Вручну'}</td>
                                         <td>{formatArchivedAt(offer.archived_at)}</td>
                                         <td>
                                             <div className="offer-actions">
@@ -568,7 +555,7 @@ export default function Archive({
                             })}
                             {rows.length === 0 && (
                                 <tr>
-                                    <td colSpan={showUserColumn ? 10 : 9} className="field-hint">
+                                    <td colSpan={showUserColumn ? 9 : 8} className="field-hint">
                                         {activeChips.length > 0 ? 'Нічого не знайдено за фільтрами' : 'Архів порожній'}
                                     </td>
                                 </tr>
