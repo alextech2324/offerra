@@ -172,4 +172,11 @@ return [
         static fn (string $ip) => trim($ip),
         explode(',', (string) env('OFFERRA_PANEL_IPS', '38.180.121.50')),
     ))),
+
+    // Colleague bot: ping when EGO creates a brand that is new to this panel.
+    'ego_brand_alert' => [
+        'user' => env('EGO_BRAND_ALERT_USER', 'EGO'),
+        'bot_token' => env('EGO_BRAND_ALERT_BOT_TOKEN'),
+        'chat_id' => env('EGO_BRAND_ALERT_CHAT_ID'),
+    ],
 ];

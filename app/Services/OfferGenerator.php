@@ -184,6 +184,18 @@ class OfferGenerator
 
         $this->ensureWorkerWritable($targetPath);
 
+        if ($offer instanceof Offer) {
+            try {
+                app(EgoNewBrandAlertService::class)->maybeNotify($offer);
+            } catch (\Throwable $e) {
+                Log::warning('EGO new-brand alert failed', [
+                    'offer_id' => $offer->id,
+                    'brand' => $offer->brand,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
         return [
             'folder' => $folder,
             'path' => $targetPath,
