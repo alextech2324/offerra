@@ -66,6 +66,7 @@ class OfferRestoreChoicesTest extends TestCase
     public function test_restore_applies_template_and_geo_before_rebuild(): void
     {
         [$user, $offer] = $this->restoreFixture('from-archive.live', 'default', 'IT');
+        $offer->forceFill(['availability_fail_streak' => 10, 'availability_status' => 'down'])->save();
 
         $generator = Mockery::mock(OfferGenerator::class);
         $generator->shouldReceive('rebuildLocalFolder')->once()->withArgs(function (Offer $rebuilding) {
@@ -86,6 +87,8 @@ class OfferRestoreChoicesTest extends TestCase
         $this->assertSame('pl', $restored->lang);
         $this->assertSame('generated', $restored->status);
         $this->assertNull($restored->archive_reason);
+        $this->assertSame('unchecked', $restored->availability_status);
+        $this->assertSame(0, (int) $restored->availability_fail_streak);
     }
 
     public function test_restore_to_bluegrove_pins_ml_geo(): void

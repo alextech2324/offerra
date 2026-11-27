@@ -306,7 +306,7 @@ class DeployService
             }
 
             if ($fresh && ($fresh->infra_meta['dns'] ?? null) === 'done') {
-                app(OfferGscSubmitter::class)->queueAfterDns($fresh, 20);
+                app(OfferGscSubmitter::class)->queueAfterDns($fresh);
             }
 
             return $fresh;

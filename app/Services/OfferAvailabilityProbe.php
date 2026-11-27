@@ -231,7 +231,7 @@ class OfferAvailabilityProbe
 
         if ($nextStatus === 'ok') {
             try {
-                app(OfferGscSubmitter::class)->queue($offer->fresh() ?? $offer, 5);
+                app(OfferGscSubmitter::class)->queue($offer->fresh() ?? $offer, 0);
             } catch (\Throwable $e) {
                 Log::info('Auto GSC queue after availability skipped', [
                     'offer' => $offer->id,

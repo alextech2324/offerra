@@ -16,6 +16,7 @@ class SettleLiveDnsTest extends TestCase
 
     public function test_live_deployed_offer_is_settled_without_waiting_on_dns(): void
     {
+        Queue::fake();
         $user = User::factory()->create();
         $offer = Offer::query()->create([
             'user_id' => $user->id,
@@ -48,13 +49,9 @@ class SettleLiveDnsTest extends TestCase
     public function test_settling_live_dns_queues_auto_gsc_probe(): void
     {
         Queue::fake();
-        config(['services.google.client_id' => 'test-client']);
 
         $user = User::factory()->create();
-        $user->settings()->create([
-            'google_oauth_refresh_token' => 'refresh-token',
-            'gsc_verification_filename' => 'googleabc123.html',
-        ]);
+        $user->settings()->create([]);
         $offer = Offer::query()->create([
             'user_id' => $user->id,
             'folder' => 'live-gsc.test',

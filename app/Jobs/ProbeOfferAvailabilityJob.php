@@ -11,7 +11,8 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
 /**
- * After DNS is ready: poll HTTPS every minute until live, then auto-queue GSC.
+ * After DNS is ready on create/restore: probe HTTPS now, retry red once a minute,
+ * give up after 10 reds. Green → GSC immediately.
  */
 class ProbeOfferAvailabilityJob implements ShouldBeUnique, ShouldQueue
 {
@@ -19,10 +20,12 @@ class ProbeOfferAvailabilityJob implements ShouldBeUnique, ShouldQueue
 
     public int $timeout = 90;
 
-    /** Keep polling up to ~7 days (once per minute). */
-    public int $tries = 10080;
+    /** Deploy can lag behind DNS; do not count those waits as HTTPS failures. */
+    public int $tries = 120;
 
     public int $uniqueFor = 3600;
+
+    public const MAX_FAILS = 10;
 
     private const RETRY_SECONDS = 60;
 
@@ -63,23 +66,29 @@ class ProbeOfferAvailabilityJob implements ShouldBeUnique, ShouldQueue
             return;
         }
 
-        $probe->checkAndUpdate($offer);
+        if ((int) $offer->availability_fail_streak >= self::MAX_FAILS
+            && $offer->availability_status === 'down') {
+            return;
+        }
+
+        $probe->checkAndUpdate($offer, immediate: true);
         $fresh = $offer->fresh() ?? $offer;
 
         if ($fresh->availability_status === 'ok') {
-            $gsc->queue($fresh, 5);
+            $gsc->queue($fresh, 0);
 
             return;
         }
 
+        $fails = (int) $fresh->availability_fail_streak;
         Log::info('Offer still not live after DNS — retry in 1 minute', [
             'offer' => $fresh->id,
             'domain' => $fresh->domain,
             'error' => $fresh->availability_error,
-            'attempt' => $this->attempts(),
+            'fails' => $fails,
         ]);
 
-        if ($this->attempts() < $this->tries) {
+        if ($fails < self::MAX_FAILS) {
             $this->release(self::RETRY_SECONDS);
         }
     }

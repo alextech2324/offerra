@@ -59,6 +59,7 @@ class QueuePendingGsc extends Command
                 $query->whereNull('availability_status')
                     ->orWhere('availability_status', '!=', 'ok');
             })
+            ->where('availability_fail_streak', '<', ProbeOfferAvailabilityJob::MAX_FAILS)
             ->orderBy('id')
             ->limit(400)
             ->get();

@@ -86,6 +86,7 @@ class OfferRestoreService
             'availability_status' => 'unchecked',
             'availability_error' => null,
             'availability_checked_at' => null,
+            'availability_fail_streak' => 0,
             'submitted_for_indexing' => false,
             // Start a new 14-day brand shield immediately, same as adding a domain.
             // Inspect still waits: it requires submitted_for_indexing.

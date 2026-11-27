@@ -27,7 +27,7 @@ class OfferGscSubmitter
     }
 
     /**
-     * DNS done + deployed + Google connected — enough to start waiting for live HTTPS.
+     * DNS green on a new/restored lander — probe HTTPS even before Google is connected.
      */
     public function shouldProbeAfterDns(Offer $offer): bool
     {
@@ -48,14 +48,7 @@ class OfferGscSubmitter
             return false;
         }
 
-        $settings = $this->ownerSettings($offer);
-        if (! $settings) {
-            return false;
-        }
-
-        return $settings->hasGoogleOAuth()
-            && filled($settings->gsc_verification_filename)
-            && filled(config('services.google.client_id'));
+        return (int) $offer->availability_fail_streak < ProbeOfferAvailabilityJob::MAX_FAILS;
     }
 
     public function shouldQueue(Offer $offer): bool
@@ -72,7 +65,7 @@ class OfferGscSubmitter
         return $this->canSubmit($offer);
     }
 
-    public function queueAfterDns(Offer $offer, int $delaySeconds = 15): void
+    public function queueAfterDns(Offer $offer, int $delaySeconds = 0): void
     {
         if (! $this->shouldProbeAfterDns($offer)) {
             return;
@@ -95,10 +88,8 @@ class OfferGscSubmitter
         }
 
         $pending = SubmitOfferToGscJob::dispatch($offer->id, $force);
-        // Spread a batch of greens so they do not all hit GSC sites.add in the same minute.
-        $spread = max(0, $delaySeconds) + (($offer->id % 10) * 8);
-        if ($spread > 0) {
-            $pending->delay(now()->addSeconds($spread));
+        if ($delaySeconds > 0) {
+            $pending->delay(now()->addSeconds($delaySeconds + (($offer->id % 10) * 8)));
         }
     }
 
