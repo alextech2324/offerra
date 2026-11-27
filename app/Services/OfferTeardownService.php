@@ -36,6 +36,41 @@ class OfferTeardownService
         $this->enqueueTeardown($offer, $initiatedBy, purge: true);
     }
 
+    /**
+     * Archive already tore down origin/Cloudflare. Drop the DB row (and leftover local files).
+     */
+    public function deleteFromArchive(Offer $offer): void
+    {
+        if (! in_array($offer->status, ['archived', 'teardown_failed'], true)) {
+            throw new RuntimeException('Видалити з бази можна лише офер з архіву.');
+        }
+
+        try {
+            $this->verificationFiles->delete($offer);
+        } catch (\Throwable $e) {
+            Log::warning('Archive DB delete: verification files', [
+                'offer_id' => $offer->id,
+                'domain' => $offer->domain,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        try {
+            $localPath = rtrim($this->offersPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$offer->folder;
+            if (File::isDirectory($localPath)) {
+                File::deleteDirectory($localPath);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Archive DB delete: local folder', [
+                'offer_id' => $offer->id,
+                'domain' => $offer->domain,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        $offer->delete();
+    }
+
     private function enqueueTeardown(Offer $offer, User $initiatedBy, bool $purge, string $reason = Offer::ARCHIVE_REASON_MANUAL): void
     {
         if (in_array($offer->status, ['archiving', 'purging', 'archived'], true)) {

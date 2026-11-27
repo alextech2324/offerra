@@ -1219,13 +1219,24 @@ class OfferController extends Controller
         $this->authorizeOfferManagement($offer);
 
         $domain = $offer->domain;
+        $fromArchive = in_array($offer->status, ['archived', 'teardown_failed'], true);
 
         try {
-            $teardown->enqueuePurge($offer, auth()->user());
+            if ($fromArchive) {
+                $teardown->deleteFromArchive($offer);
+            } else {
+                $teardown->enqueuePurge($offer, auth()->user());
+            }
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
                 ->withErrors(['delete' => $e->getMessage()]);
+        }
+
+        if ($fromArchive) {
+            return redirect()
+                ->back()
+                ->with('success', "Офер {$domain} видалено з бази. Відновити не вийде.");
         }
 
         return redirect()

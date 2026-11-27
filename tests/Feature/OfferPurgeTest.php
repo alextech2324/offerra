@@ -32,6 +32,55 @@ class OfferPurgeTest extends TestCase
         Queue::assertPushed(ArchiveOfferJob::class, fn (ArchiveOfferJob $job) => $job->offerId === $offer->id);
     }
 
+    public function test_archive_trash_deletes_row_from_database(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $offer = $this->makeOffer($user, 'gone-from-archive.com', 'archived');
+
+        $this->actingAs($user)
+            ->from(route('offers.archive.index'))
+            ->delete(route('offers.destroy', $offer))
+            ->assertRedirect(route('offers.archive.index'))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('offers', ['id' => $offer->id]);
+        Queue::assertNothingPushed();
+    }
+
+    public function test_archive_trash_deletes_teardown_failed_row(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $offer = $this->makeOffer($user, 'failed-teardown.com', 'teardown_failed');
+
+        $this->actingAs($user)
+            ->from(route('offers.archive.index'))
+            ->delete(route('offers.destroy', $offer))
+            ->assertRedirect(route('offers.archive.index'));
+
+        $this->assertDatabaseMissing('offers', ['id' => $offer->id]);
+        Queue::assertNothingPushed();
+    }
+
+    public function test_cannot_delete_someone_elses_archived_offer(): void
+    {
+        Queue::fake();
+
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $offer = $this->makeOffer($owner, 'not-your-archive.com', 'archived');
+
+        $this->actingAs($other)
+            ->delete(route('offers.destroy', $offer))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('offers', ['id' => $offer->id, 'status' => 'archived']);
+        Queue::assertNothingPushed();
+    }
+
     public function test_cannot_purge_someone_elses_offer(): void
     {
         Queue::fake();
@@ -64,7 +113,7 @@ class OfferPurgeTest extends TestCase
         $this->assertFalse((bool) ($offer->teardown_meta['purge'] ?? false));
     }
 
-    private function makeOffer(User $user, string $domain): Offer
+    private function makeOffer(User $user, string $domain, string $status = 'generated'): Offer
     {
         return Offer::query()->create([
             'user_id' => $user->id,
@@ -74,7 +123,7 @@ class OfferPurgeTest extends TestCase
             'geo' => 'IT',
             'lang' => 'it',
             'template' => 'default',
-            'status' => 'generated',
+            'status' => $status,
             'from_search_team' => false,
         ]);
     }

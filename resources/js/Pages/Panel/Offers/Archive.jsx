@@ -4,6 +4,28 @@ import StaleDeadBanner from '@/Components/StaleDeadBanner';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useState } from 'react';
 
+function TrashIcon() {
+    return (
+        <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M3 6h18" />
+            <path d="M8 6V4h8v2" />
+            <path d="M19 6l-1 14H6L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+        </svg>
+    );
+}
+
 function formatArchivedAt(value) {
     if (!value) {
         return '—';
@@ -143,6 +165,7 @@ export default function Archive({
     const { auth, errors, flash } = usePage().props;
     const rows = offers?.data ?? [];
     const [retryingId, setRetryingId] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
     const [restoringOffer, setRestoringOffer] = useState(null);
     const [copiedDomainId, setCopiedDomainId] = useState(null);
     const [brandQuery, setBrandQuery] = useState(filters.brand ?? '');
@@ -245,6 +268,22 @@ export default function Archive({
         setRestoringOffer(offer);
     };
 
+    const deleteOffer = (offer) => {
+        const ok = window.confirm(
+            `Видалити ${offer.domain} назавжди з бази?\n\n`
+            + 'Офер зникне з архіву. Поновити не вийде.',
+        );
+        if (!ok) {
+            return;
+        }
+
+        setDeletingId(offer.id);
+        router.delete(route('offers.destroy', offer.id), {
+            preserveScroll: true,
+            onFinish: () => setDeletingId(null),
+        });
+    };
+
     return (
         <PanelLayout title="Архів доменів" fullWidth>
             <div className="offers-page">
@@ -267,9 +306,9 @@ export default function Archive({
                     </div>
                 )}
 
-                {errors?.archive && (
+                {(errors?.archive || errors?.delete) && (
                     <div className="card" style={{ marginBottom: '1rem', borderColor: '#f87171' }}>
-                        <p className="card-desc" style={{ color: '#f87171' }}>{errors.archive}</p>
+                        <p className="card-desc" style={{ color: '#f87171' }}>{errors.archive || errors.delete}</p>
                     </div>
                 )}
 
@@ -531,7 +570,7 @@ export default function Archive({
                                                     <button
                                                         type="button"
                                                         className="btn btn-ghost btn-sm"
-                                                        disabled={restoringOffer?.id === offer.id}
+                                                        disabled={restoringOffer?.id === offer.id || deletingId === offer.id}
                                                         onClick={() => restoreOffer(offer)}
                                                         title="Поновити оффер з даних у БД"
                                                     >
@@ -542,10 +581,26 @@ export default function Archive({
                                                     <button
                                                         type="button"
                                                         className="btn btn-ghost btn-sm"
-                                                        disabled={retryingId === offer.id}
+                                                        disabled={retryingId === offer.id || deletingId === offer.id}
                                                         onClick={() => retryArchive(offer)}
                                                     >
                                                         {retryingId === offer.id ? '…' : 'Повтор'}
+                                                    </button>
+                                                )}
+                                                {canManageOffer(offer) && (
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-ghost btn-sm btn-purge"
+                                                        disabled={deletingId === offer.id || restoringOffer?.id === offer.id}
+                                                        onClick={() => deleteOffer(offer)}
+                                                        title="Видалити назавжди з бази, без відновлення"
+                                                        aria-label={`Видалити ${offer.domain}`}
+                                                    >
+                                                        {deletingId === offer.id ? (
+                                                            <span className="btn-spinner" aria-hidden="true" />
+                                                        ) : (
+                                                            <TrashIcon />
+                                                        )}
                                                     </button>
                                                 )}
                                             </div>
@@ -555,7 +610,7 @@ export default function Archive({
                             })}
                             {rows.length === 0 && (
                                 <tr>
-                                    <td colSpan={showUserColumn ? 9 : 8} className="field-hint">
+                                    <td colSpan={showUserColumn ? 10 : 9} className="field-hint">
                                         {activeChips.length > 0 ? 'Нічого не знайдено за фільтрами' : 'Архів порожній'}
                                     </td>
                                 </tr>
