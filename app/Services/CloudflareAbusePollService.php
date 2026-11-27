@@ -198,6 +198,16 @@ class CloudflareAbusePollService
 
         $this->markLiveOfferAbused($offer);
 
+        if ($this->offerAlreadyNotified($offer, $row)) {
+            $row->forceFill([
+                'offer_id' => $row->offer_id ?: $offer->id,
+                'user_id' => $row->user_id ?: $offer->user_id,
+                'notified_at' => now(),
+            ])->save();
+
+            return false;
+        }
+
         $sent = $this->notifyTelegram($offer, $row);
 
         if (! $sent) {
@@ -296,37 +306,31 @@ class CloudflareAbusePollService
             ->delay(now()->addMinutes(self::AUTO_ARCHIVE_AFTER_MINUTES));
     }
 
+    private function offerAlreadyNotified(Offer $offer, CloudflareAbuseReport $row): bool
+    {
+        $query = CloudflareAbuseReport::query()
+            ->whereNotNull('notified_at')
+            ->where('id', '!=', $row->id)
+            ->where(function ($inner) use ($offer): void {
+                $inner->where('offer_id', $offer->id);
+                $domain = strtolower(trim((string) $offer->domain));
+                if ($domain !== '') {
+                    $inner->orWhereRaw('LOWER(domain) = ?', [$domain]);
+                }
+            });
+
+        return $query->exists();
+    }
+
     private function notifyTelegram(Offer $offer, CloudflareAbuseReport $row): bool
     {
-        $text = $this->telegramText($offer, $row);
-        $sent = false;
-        $seen = [];
-
         $offer->loadMissing('user.settings');
-        $candidates = [];
-        if ($offer->user?->settings instanceof UserSetting) {
-            $candidates[] = $offer->user->settings;
+        $settings = $offer->user?->settings;
+        if (! $settings instanceof UserSetting) {
+            return false;
         }
 
-        $admins = User::query()->where('role', User::ROLE_ADMIN)->with('settings')->get();
-        foreach ($admins as $admin) {
-            if ($admin->settings instanceof UserSetting) {
-                $candidates[] = $admin->settings;
-            }
-        }
-
-        foreach ($candidates as $settings) {
-            $id = (int) $settings->id;
-            if (isset($seen[$id])) {
-                continue;
-            }
-            $seen[$id] = true;
-            if ($this->telegram->send($settings, $text)) {
-                $sent = true;
-            }
-        }
-
-        return $sent;
+        return $this->telegram->send($settings, $this->telegramText($offer, $row));
     }
 
     private function matchOffer(string $domain): ?Offer

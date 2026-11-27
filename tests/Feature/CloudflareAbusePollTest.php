@@ -120,6 +120,49 @@ class CloudflareAbusePollTest extends TestCase
         Queue::assertNotPushed(ArchiveOfferJob::class);
     }
 
+    public function test_phish_notifies_only_the_offer_owner_not_admins(): void
+    {
+        Queue::fake();
+        [$offer] = $this->liveOfferWithTelegram('ego-phish.live');
+        $admin = User::factory()->admin()->create();
+        $this->settingsWithCf($admin, telegram: true);
+
+        Http::fake($this->cfReportsFake('acct1', [
+            ['id' => 'rep-ego', 'domain' => 'ego-phish.live', 'type' => 'PHISH', 'status' => 'accepted'],
+        ]));
+
+        $this->mock(TelegramNotifier::class, function ($mock) use ($offer): void {
+            $mock->shouldReceive('send')
+                ->once()
+                ->withArgs(fn ($settings) => (int) $settings->user_id === (int) $offer->user_id)
+                ->andReturn(true);
+        });
+
+        $stats = app(CloudflareAbusePollService::class)->poll();
+        $this->assertSame(1, $stats['notified']);
+    }
+
+    public function test_second_phish_report_same_offer_does_not_telegram_again(): void
+    {
+        Queue::fake();
+        [$offer] = $this->liveOfferWithTelegram('twice-phish.live');
+
+        Http::fake($this->cfReportsFake('acct1', [
+            ['id' => 'rep-a', 'domain' => 'twice-phish.live', 'type' => 'PHISH', 'status' => 'accepted'],
+            ['id' => 'rep-b', 'domain' => 'twice-phish.live', 'type' => 'PHISH', 'status' => 'accepted'],
+        ]));
+
+        $this->mock(TelegramNotifier::class, function ($mock): void {
+            $mock->shouldReceive('send')->once()->andReturn(true);
+        });
+
+        $stats = app(CloudflareAbusePollService::class)->poll();
+        $this->assertSame(2, $stats['new']);
+        $this->assertSame(1, $stats['notified']);
+        $this->assertSame($offer->id, CloudflareAbuseReport::query()->where('cf_report_id', 'rep-b')->value('offer_id'));
+        $this->assertNotNull(CloudflareAbuseReport::query()->where('cf_report_id', 'rep-b')->value('notified_at'));
+    }
+
     public function test_auto_archive_job_archives_live_abused_offer(): void
     {
         Queue::fake();
