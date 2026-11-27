@@ -467,6 +467,8 @@ export default function Archive({
                                 <th>Бренд</th>
                                 <th>Шаблон</th>
                                 <th>GEO</th>
+                                <th>Cloudflare</th>
+                                <th>Реєстратор</th>
                                 <th>Статус</th>
                                 <th>Чому</th>
                                 <th>Архівовано</th>
@@ -520,6 +522,13 @@ export default function Archive({
                                         <td>{offer.template}</td>
                                         <td>{offer.geo}</td>
                                         <td>
+                                            {offer.cloudflare_account ?? '—'}
+                                            {offer.cloudflare_slot === 'backup' || offer.cloudflare_slot === 'spare' ? (
+                                                <span className="muted" style={{ marginLeft: '0.35rem' }}>· запасний</span>
+                                            ) : null}
+                                        </td>
+                                        <td>{offer.dynadot_account ?? '—'}</td>
+                                        <td>
                                             {statusBadge(offer.status)}
                                             {teardownErrors.length > 0 && (
                                                 <p className="field-hint" style={{ color: '#f87171', marginTop: '0.25rem' }}>
@@ -559,7 +568,7 @@ export default function Archive({
                             })}
                             {rows.length === 0 && (
                                 <tr>
-                                    <td colSpan={showUserColumn ? 8 : 7} className="field-hint">
+                                    <td colSpan={showUserColumn ? 10 : 9} className="field-hint">
                                         {activeChips.length > 0 ? 'Нічого не знайдено за фільтрами' : 'Архів порожній'}
                                     </td>
                                 </tr>

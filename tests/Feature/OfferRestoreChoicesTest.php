@@ -19,7 +19,15 @@ class OfferRestoreChoicesTest extends TestCase
     public function test_archive_table_includes_template_label(): void
     {
         $user = User::factory()->create();
-        $this->makeArchivedOffer($user, 'archive-tpl.live', 'noctra', 'IT');
+        $user->settings()->create([
+            'cloudflare_account_name' => 'CF Night',
+            'dynadot_account_name' => 'Dyn Main',
+            'dynadot_api_key' => 'dyn-key',
+        ]);
+        $this->makeArchivedOffer($user, 'archive-tpl.live', 'noctra', 'IT', [
+            'cloudflare_account_name' => 'CF Spare',
+            'dynadot_account_name' => 'Dyn Restore',
+        ]);
 
         $this->actingAs($user)
             ->get(route('offers.archive.index'))
@@ -30,8 +38,29 @@ class OfferRestoreChoicesTest extends TestCase
                 ->where('offers.data.0.geo', 'IT')
                 ->where('offers.data.0.archive_reason', 'cf_abuse')
                 ->where('offers.data.0.archive_reason_label', 'CF abuse')
+                ->where('offers.data.0.cloudflare_account', 'CF Spare')
+                ->where('offers.data.0.dynadot_account', 'Dyn Restore')
                 ->has('templates')
                 ->has('geoPresets'));
+    }
+
+    public function test_archive_table_falls_back_to_owner_provider_names(): void
+    {
+        $user = User::factory()->create();
+        $user->settings()->create([
+            'cloudflare_account_name' => 'Owner CF',
+            'dynadot_account_name' => 'Owner Dyn',
+            'dynadot_api_key' => 'dyn-key',
+        ]);
+        $this->makeArchivedOffer($user, 'archive-fallback.live', 'default', 'IT');
+
+        $this->actingAs($user)
+            ->get(route('offers.archive.index'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Panel/Offers/Archive')
+                ->where('offers.data.0.cloudflare_account', 'Owner CF')
+                ->where('offers.data.0.dynadot_account', 'Owner Dyn'));
     }
 
     public function test_restore_applies_template_and_geo_before_rebuild(): void
@@ -131,9 +160,9 @@ class OfferRestoreChoicesTest extends TestCase
         return [$user, $offer];
     }
 
-    private function makeArchivedOffer(User $user, string $domain, string $template, string $geo): Offer
+    private function makeArchivedOffer(User $user, string $domain, string $template, string $geo, array $extra = []): Offer
     {
-        return Offer::query()->create([
+        return Offer::query()->create(array_merge([
             'user_id' => $user->id,
             'folder' => $domain,
             'brand' => 'RestoreBrand',
@@ -148,6 +177,6 @@ class OfferRestoreChoicesTest extends TestCase
             'archive_reason' => Offer::ARCHIVE_REASON_CF_ABUSE,
             'from_search_team' => false,
             'provision_infrastructure' => true,
-        ]);
+        ], $extra));
     }
 }

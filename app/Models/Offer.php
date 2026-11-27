@@ -237,12 +237,12 @@ class Offer extends Model
             'vitals_enabled' => (bool) $this->vitals_enabled,
             'status' => $this->status,
             'deploy_panel' => $this->deploy_panel_name,
-            'cloudflare_account' => $this->cloudflare_account_name,
+            'cloudflare_account' => $this->panelCloudflareAccountName(),
             'cloudflare_slot' => $this->cloudflareSlotForPanel(),
             'edge' => '',
             'edge_label' => '—',
             ...$this->ownerCloudflarePanelFields(),
-            'dynadot_account' => $this->dynadot_account_name,
+            'dynadot_account' => $this->panelRegistrarAccountName(),
             'deployed_at' => $this->deployed_at?->timezone('Europe/Kyiv')->format('Y-m-d H:i'),
             'deploy_error' => $this->deploy_error,
             'archived_at' => $this->archived_at?->timezone('Europe/Kyiv')->format('Y-m-d H:i'),
@@ -322,6 +322,38 @@ class Offer extends Model
             'owner_cf_primary_name' => $primary !== '' ? $primary : 'Основний CF',
             'owner_has_cf_primary' => (bool) $settings?->hasCloudflareSlot('primary'),
         ];
+    }
+
+    private function panelCloudflareAccountName(): ?string
+    {
+        $name = trim((string) ($this->cloudflare_account_name ?? ''));
+        if ($name !== '') {
+            return $name;
+        }
+
+        $this->loadMissing('user.settings');
+        $fallback = trim((string) ($this->user?->settings?->cloudflare_account_name ?? ''));
+
+        return $fallback !== '' ? $fallback : null;
+    }
+
+    private function panelRegistrarAccountName(): ?string
+    {
+        $name = trim((string) ($this->dynadot_account_name ?? ''));
+        if ($name === '') {
+            $this->loadMissing('user.settings');
+            $name = trim((string) ($this->user?->settings?->dynadot_account_name ?? ''));
+        }
+        if ($name !== '') {
+            return $name;
+        }
+
+        $this->loadMissing('user.settings');
+        if (filled($this->dynadot_api_key) || filled($this->user?->settings?->dynadot_api_key)) {
+            return 'Dynadot';
+        }
+
+        return null;
     }
 
     private function cloudflareSlotForPanel(): string
