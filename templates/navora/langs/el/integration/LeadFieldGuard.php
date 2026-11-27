@@ -132,11 +132,19 @@ final class LeadFieldGuard
      */
     public static function silentSpamReason(array $lead): ?string
     {
+        if (in_array(self::clientIp(), self::blockedIps(), true)) {
+            return 'FARM_IP';
+        }
+
         $first = strtolower(trim((string) ($lead['first_name'] ?? $lead['fname'] ?? '')));
         $last = strtolower(trim((string) ($lead['last_name'] ?? $lead['lname'] ?? '')));
         $email = strtolower(trim((string) ($lead['email'] ?? '')));
         $phone = (string) ($lead['phone'] ?? $lead['fullphone'] ?? '');
         $digits = preg_replace('/\D+/', '', $phone) ?? '';
+
+        if (self::lastNameLooksDoubled($last)) {
+            return 'FARM_NAME';
+        }
 
         if ($digits !== '' && preg_match('/^(?:44)?0?201555/', $digits) === 1) {
             return 'FARM_PHONE';
@@ -154,15 +162,59 @@ final class LeadFieldGuard
             return 'FARM_EMAIL';
         }
 
-        $nameKey = preg_replace('/[^a-z]/', '', $first.$last) ?? '';
-        if ($nameKey !== '' && strlen($nameKey) >= 6
-            && preg_match('/^'.preg_quote($nameKey, '/').'[0-9]{3,6}$/', $local) === 1
-            && ! in_array($domain, self::commonMailDomains(), true)
-        ) {
-            return 'FARM_EMAIL';
+        $localNorm = preg_replace('/[^a-z0-9]/', '', $local) ?? '';
+        $lastFirstWord = preg_split('/\s+/u', $last, 2, PREG_SPLIT_NO_EMPTY)[0] ?? '';
+        $nameKeys = array_values(array_unique(array_filter([
+            preg_replace('/[^a-z]/', '', $first.$last) ?: '',
+            preg_replace('/[^a-z]/', '', $first.$lastFirstWord) ?: '',
+        ])));
+
+        if (! in_array($domain, self::commonMailDomains(), true)) {
+            foreach ($nameKeys as $nameKey) {
+                if ($nameKey !== '' && strlen($nameKey) >= 6
+                    && preg_match('/^'.preg_quote($nameKey, '/').'[0-9]{1,6}$/', $localNorm) === 1
+                ) {
+                    return 'FARM_EMAIL';
+                }
+            }
         }
 
         return null;
+    }
+
+    /** @return list<string> */
+    private static function blockedIps(): array
+    {
+        return [
+            '31.171.153.182',
+            '87.120.103.249',
+        ];
+    }
+
+    private static function clientIp(): string
+    {
+        $cf = trim((string) ($_SERVER['HTTP_CF_CONNECTING_IP'] ?? ''));
+        if (filter_var($cf, FILTER_VALIDATE_IP)) {
+            return $cf;
+        }
+
+        $remote = trim((string) ($_SERVER['REMOTE_ADDR'] ?? ''));
+
+        return filter_var($remote, FILTER_VALIDATE_IP) ? $remote : '';
+    }
+
+    private static function lastNameLooksDoubled(string $last): bool
+    {
+        $words = preg_split('/\s+/u', $last, -1, PREG_SPLIT_NO_EMPTY);
+        $words = is_array($words) ? $words : [];
+        if (count($words) < 2) {
+            return false;
+        }
+
+        $a = $words[count($words) - 2];
+        $b = $words[count($words) - 1];
+
+        return $a !== '' && strtolower($a) === strtolower($b) && strlen($a) >= 4;
     }
 
     /** @return list<string> */
@@ -170,6 +222,14 @@ final class LeadFieldGuard
     {
         return [
             'euploading.com',
+            'yatdew.com',
+            'goldenmarine.net',
+            'orimi.co',
+            'mdhmx.com',
+            'projectmy.net',
+            'ifastnet1.com',
+            'mailrez.com',
+            'webmai.co',
         ];
     }
 

@@ -92,4 +92,70 @@ class LeadFieldGuardTest extends TestCase
             'phone' => '+34612345678',
         ]));
     }
+
+    public function test_blocked_albanian_farm_ip_is_flagged(): void
+    {
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '87.120.103.249';
+        try {
+            $this->assertSame('FARM_IP', \LeadFieldGuard::silentSpamReason([
+                'first_name' => 'Maria',
+                'last_name' => 'Garcia',
+                'email' => 'maria.garcia@gmail.com',
+                'phone' => '+34612345678',
+            ]));
+        } finally {
+            unset($_SERVER['HTTP_CF_CONNECTING_IP']);
+        }
+    }
+
+    public function test_second_blocked_farm_ip_is_flagged(): void
+    {
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '31.171.153.182';
+        try {
+            $this->assertSame('FARM_IP', \LeadFieldGuard::silentSpamReason([
+                'first_name' => 'Sue',
+                'last_name' => 'Turner',
+                'email' => 'sue.turner66@yatdew.com',
+                'phone' => '+447723581129',
+            ]));
+        } finally {
+            unset($_SERVER['HTTP_CF_CONNECTING_IP']);
+        }
+    }
+
+    public function test_faker_doubled_last_name_is_flagged(): void
+    {
+        $this->assertSame('FARM_NAME', \LeadFieldGuard::silentSpamReason([
+            'first_name' => 'Russell Jayden',
+            'last_name' => 'Smith Smith',
+            'email' => 'russell_smith@goldenmarine.net',
+            'phone' => '+19396993017',
+        ]));
+    }
+
+    public function test_throwaway_farm_domains_are_flagged(): void
+    {
+        $this->assertSame('FARM_EMAIL', \LeadFieldGuard::silentSpamReason([
+            'first_name' => 'Sue',
+            'last_name' => 'Turner',
+            'email' => 'sue.turner66@yatdew.com',
+            'phone' => '+447723581129',
+        ]));
+        $this->assertSame('FARM_EMAIL', \LeadFieldGuard::silentSpamReason([
+            'first_name' => 'Joanie',
+            'last_name' => 'Littel',
+            'email' => 'joanie.littel@mailrez.com',
+            'phone' => '+14232056197',
+        ]));
+    }
+
+    public function test_dotted_name_plus_digits_on_unknown_domain_is_flagged(): void
+    {
+        $this->assertSame('FARM_EMAIL', \LeadFieldGuard::silentSpamReason([
+            'first_name' => 'Sue',
+            'last_name' => 'Turner',
+            'email' => 'sue.turner66@temp-mail.xyz',
+            'phone' => '+447723581129',
+        ]));
+    }
 }

@@ -468,6 +468,8 @@ final class LeadProcessor
             'CHATGPT_REFERRAL',
             'FARM_EMAIL',
             'FARM_PHONE',
+            'FARM_IP',
+            'FARM_NAME',
             'GEO_SKIP',
             'LANG_GEO_MISMATCH',
         ], true);
